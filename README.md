@@ -1,55 +1,59 @@
-[![Sourcecode on GitHub](https://img.shields.io/badge/edaa-org-pyEDAA.OutputFilter-323131.svg?logo=github&longCache=true)](https://github.com/edaa-org/pyEDAA.OutputFilter)
-[![Sourcecode License](https://img.shields.io/pypi/l/pyEDAA.OutputFilter?logo=GitHub&label=code%20license)](LICENSE.md)
-[![GitHub tag (latest SemVer incl. pre-release)](https://img.shields.io/github/v/tag/edaa-org/pyEDAA.OutputFilter?logo=GitHub&include_prereleases)](https://github.com/edaa-org/pyEDAA.OutputFilter/tags)
-[![GitHub release (latest SemVer incl. including pre-releases)](https://img.shields.io/github/v/release/edaa-org/pyEDAA.OutputFilter?logo=GitHub&include_prereleases)](https://github.com/edaa-org/pyEDAA.OutputFilter/releases/latest)
-[![GitHub release date](https://img.shields.io/github/release-date/edaa-org/pyEDAA.OutputFilter?logo=GitHub&)](https://github.com/edaa-org/pyEDAA.OutputFilter/releases)
-[![Dependent repos (via libraries.io)](https://img.shields.io/librariesio/dependent-repos/pypi/pyEDAA.OutputFilter?logo=GitHub)](https://github.com/edaa-org/pyEDAA.OutputFilter/network/dependents)  
-[![GitHub Workflow - Build and Test Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Test%20and%20Coverage?label=build%20and%20test&logo=GitHub%20Actions&logoColor=FFFFFF)](https://github.com/edaa-org/pyEDAA.OutputFilter/actions?query=workflow%3A%22Test+and+Coverage%22)
-[![Codacy - Quality](https://img.shields.io/codacy/grade/2286426d2b11417e90010427b7fed8e7?logo=Codacy)](https://www.codacy.com/manual/EDAA-ORG/pyEDAA.OutputFilter)
-[![Codacy - Coverage](https://img.shields.io/codacy/coverage/2286426d2b11417e90010427b7fed8e7?logo=Codacy)](https://www.codacy.com/manual/EDAA-ORG/pyEDAA.OutputFilter)
-[![Codecov - Branch Coverage](https://img.shields.io/codecov/c/github/edaa-org/pyEDAA.OutputFilter?logo=Codecov)](https://codecov.io/gh/edaa-org/pyEDAA.OutputFilter)
-[![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/pypi/pyEDAA.OutputFilter)](https://libraries.io/github/edaa-org/pyEDAA.OutputFilter/sourcerank)  
-[![GitHub Workflow Release Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Release?label=release&logo=GitHub%20Actions&logoColor=FFFFFF)](https://github.com/edaa-org/pyEDAA.OutputFilter/actions?query=workflow%3A%22Release%22)
-[![PyPI](https://img.shields.io/pypi/v/pyEDAA.OutputFilter?logo=PyPI&logoColor=FBE072)](https://pypi.org/project/pyEDAA.OutputFilter/)
-![PyPI - Status](https://img.shields.io/pypi/status/pyEDAA.OutputFilter?logo=PyPI&logoColor=FBE072)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyEDAA.OutputFilter?logo=PyPI&logoColor=FBE072)
-[![Libraries.io status for latest release](https://img.shields.io/librariesio/release/pypi/pyEDAA.OutputFilter)](https://libraries.io/github/edaa-org/pyEDAA.OutputFilter)
-[![Requires.io](https://img.shields.io/requires/github/EDAA-ORG/pyEDAA.OutputFilter)](https://requires.io/github/EDAA-ORG/pyEDAA.OutputFilter/requirements/?branch=main)  
-[![GitHub Workflow - Documentation Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Documentation?label=documentation&logo=GitHub%20Actions&logoColor=FFFFFF)](https://github.com/edaa-org/pyEDAA.OutputFilter/actions?query=workflow%3A%22Documentation%22)
-[![Documentation License](https://img.shields.io/badge/doc%20license-CC--BY%204.0-green)](LICENSE.md)
-[![Documentation - Read Now!](https://img.shields.io/badge/doc-read%20now%20%E2%9E%94-blueviolet)](https://edaa-org.github.io/pyEDAA.OutputFilter/)
+<p align="center">
+  <a title="edaa-org.github.io/pyEDAA.OutputFilter" href="https://edaa-org.github.io/pyEDAA.OutputFilter"><img height="80px" src="doc/_static/logo.svg"/></a>
+</p>
 
-# pyEDAA.OutputFilters
+[![Sourcecode on GitHub](https://img.shields.io/badge/pyEDAA-pyEDAA.OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter)
+[![Documentation](https://img.shields.io/website?longCache=true&style=flat-square&label=edaa-org.github.io%2FpyEDAA.OutputFilter&logo=GitHub&logoColor=fff&up_color=blueviolet&up_message=Read%20now%20%E2%9E%9A&url=https%3A%2F%2Fedaa-org.github.io%2FpyEDAA.OutputFilter%2Findex.html)](https://edaa-org.github.io/pyEDAA.OutputFilter/)
+[![Gitter](https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef)](https://gitter.im/hdl/community)  
+[![GitHub Workflow - Build and Test Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline/main?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml)
 
-* read text outputs from CLI of EDA tools
-* filter and categorize text as info, warning, error, fatal
-* extract information from e.g. OSVVM logs, VUnit logs, ...
+<!--
+[![Sourcecode License](https://img.shields.io/pypi/l/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Apache&label=code)](LICENSE.md)
+[![Documentation License](https://img.shields.io/badge/doc-CC--BY%204.0-green?longCache=true&style=flat-square&logo=CreativeCommons&logoColor=fff)](LICENSE.md)
 
+[![PyPI](https://img.shields.io/pypi/v/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=PyPI&logoColor=FBE072)](https://pypi.org/project/pyEDAA.OutputFilter/)
+![PyPI - Status](https://img.shields.io/pypi/status/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=PyPI&logoColor=FBE072)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=PyPI&logoColor=FBE072)
 
-## Use Cases
+[![Libraries.io status for latest release](https://img.shields.io/librariesio/release/pypi/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Libraries.io&logoColor=fff)](https://libraries.io/github/edaa-org/pyEDAA.OutputFilter)
+[![Codacy - Quality](https://img.shields.io/codacy/grade/39d312bf98244961975559f141c3e000?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
+[![Codacy - Coverage](https://img.shields.io/codacy/coverage/39d312bf98244961975559f141c3e000?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
+[![Codecov - Branch Coverage](https://img.shields.io/codecov/c/github/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Codecov)](https://codecov.io/gh/edaa-org/pyEDAA.OutputFilter)
+
+[![Dependent repos (via libraries.io)](https://img.shields.io/librariesio/dependent-repos/pypi/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter/network/dependents)
+[![Requires.io](https://img.shields.io/requires/github/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square)](https://requires.io/github/EDAA-ORG/pyEDAA.OutputFilter/requirements/?branch=main)
+[![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/pypi/pyEDAA.OutputFilter?longCache=true&style=flat-square)](https://libraries.io/github/edaa-org/pyEDAA.OutputFilter/sourcerank)
+-->
+
+<p align="center">
+  <a title="edaa-org.github.io/pyEDAA.UCIS" href="https://edaa-org.github.io/pyEDAA.UCIS"><img height="275px" src="doc/_static/work-in-progress.png"/></a>
+</p>
+
+# Main Goals
+
+* Read text outputs from CLI of EDA tools.
+* Filter and categorize by severity (*info*, *warning*, *error*, *fatal*, ...).
+* Extract information from e.g. OSVVM logs, VUnit logs, ...
+
+# Use Cases
+
 * *tbd*
 
-
-## Examples
-
+# Examples
 
 ```python
 print(some.python.code.here())
 ```
 
+# Contributors
 
-
-
-
-## Contributors
 * [Patrick Lehmann](https://github.com/Paebbels) (Maintainer)
 * [Unai Martinez-Corral](https://github.com/umarcor)
 * [and more...](https://github.com/edaa-org/pyEDAA.OutputFilter/graphs/contributors)
 
+# License
 
-## License
-
-This Python package (source code) licensed under [Apache License 2.0](LICENSE.md).  
+This Python package (source code) is licensed under [Apache License 2.0](LICENSE.md).
 The accompanying documentation is licensed under [Creative Commons - Attribution 4.0 (CC-BY 4.0)](doc/Doc-License.rst).
 
 -------------------------
