@@ -14,8 +14,6 @@ jobs:
     uses: pyTooling/Actions/.github/workflows/Parameters.yml@r0
     with:
       name: pyEDAA.OutputFilter
-      python_version: '3.9'
-      python_version_list: '3.6 3.7 3.8 3.9'
 
 #  UnitTesting:
 #    uses: pyTooling/Actions/.github/workflows/UnitTesting.yml@r0
@@ -103,4 +101,5 @@ jobs:
 #        ${{ fromJson(needs.Params.outputs.params).artifacts.unittesting }}-3.7
 #        ${{ fromJson(needs.Params.outputs.params).artifacts.unittesting }}-3.8
 #        ${{ fromJson(needs.Params.outputs.params).artifacts.unittesting }}-3.9
+#        ${{ fromJson(needs.Params.outputs.params).artifacts.unittesting }}-3.10
 #        ${{ fromJson(needs.Params.outputs.params).artifacts.coverage }}
