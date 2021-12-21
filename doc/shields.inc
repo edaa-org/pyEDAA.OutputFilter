@@ -4,11 +4,11 @@
    # percent encoding so that the URL is properly parsed.
 
 .. # Sourcecode link to GitHub
-.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-pyEDAA.OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
-.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-pyEDAA.OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter

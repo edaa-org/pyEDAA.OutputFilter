@@ -2,7 +2,7 @@
   <a title="edaa-org.github.io/pyEDAA.OutputFilter" href="https://edaa-org.github.io/pyEDAA.OutputFilter"><img height="80px" src="doc/_static/logo.svg"/></a>
 </p>
 
-[![Sourcecode on GitHub](https://img.shields.io/badge/pyEDAA-pyEDAA.OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter)
+[![Sourcecode on GitHub](https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter)
 [![Documentation](https://img.shields.io/website?longCache=true&style=flat-square&label=edaa-org.github.io%2FpyEDAA.OutputFilter&logo=GitHub&logoColor=fff&up_color=blueviolet&up_message=Read%20now%20%E2%9E%9A&url=https%3A%2F%2Fedaa-org.github.io%2FpyEDAA.OutputFilter%2Findex.html)](https://edaa-org.github.io/pyEDAA.OutputFilter/)
 [![Gitter](https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef)](https://gitter.im/hdl/community)  
 [![GitHub Workflow - Build and Test Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline/main?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml)
