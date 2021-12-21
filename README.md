@@ -26,7 +26,7 @@
 -->
 
 <p align="center">
-  <a title="edaa-org.github.io/pyEDAA.UCIS" href="https://edaa-org.github.io/pyEDAA.UCIS"><img height="275px" src="doc/_static/work-in-progress.png"/></a>
+  <a title="edaa-org.github.io/pyEDAA.OutputFilter" href="https://edaa-org.github.io/pyEDAA.OutputFilter"><img height="275px" src="doc/_static/work-in-progress.png"/></a>
 </p>
 
 # Main Goals
