@@ -1,5 +1,5 @@
 
-from pydecor import export
+from pyTooling.Decorators import export
 
 __version__ = "0.1.0"
 
