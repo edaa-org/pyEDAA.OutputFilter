@@ -89,10 +89,10 @@ jobs:
     needs:
       - Params
       #- UnitTesting
-      #- PublishTestResults
       #- Coverage
       - BuildTheDocs
       - PublishToGitHubPages
+      #- PublishTestResults
     with:
       package: ${{ fromJson(needs.Params.outputs.params).artifacts.package }}
       remaining: |
