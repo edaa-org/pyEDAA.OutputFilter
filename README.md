@@ -6,6 +6,7 @@
 [![Documentation](https://img.shields.io/website?longCache=true&style=flat-square&label=edaa-org.github.io%2FpyEDAA.OutputFilter&logo=GitHub&logoColor=fff&up_color=blueviolet&up_message=Read%20now%20%E2%9E%9A&url=https%3A%2F%2Fedaa-org.github.io%2FpyEDAA.OutputFilter%2Findex.html)](https://edaa-org.github.io/pyEDAA.OutputFilter/)
 [![Gitter](https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef)](https://gitter.im/hdl/community)  
 [![GitHub Workflow - Build and Test Status](https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline/main?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml)
+[![Codacy - Quality](https://img.shields.io/codacy/grade/4918480c41594ffbb62f8ff98433b800?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
 
 <!--
 [![Sourcecode License](https://img.shields.io/pypi/l/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Apache&label=code)](LICENSE.md)
@@ -16,8 +17,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=PyPI&logoColor=FBE072)
 
 [![Libraries.io status for latest release](https://img.shields.io/librariesio/release/pypi/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Libraries.io&logoColor=fff)](https://libraries.io/github/edaa-org/pyEDAA.OutputFilter)
-[![Codacy - Quality](https://img.shields.io/codacy/grade/39d312bf98244961975559f141c3e000?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
-[![Codacy - Coverage](https://img.shields.io/codacy/coverage/39d312bf98244961975559f141c3e000?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
+[![Codacy - Coverage](https://img.shields.io/codacy/coverage/4918480c41594ffbb62f8ff98433b800?longCache=true&style=flat-square&logo=Codacy)](https://app.codacy.com/gh/edaa-org/pyEDAA.OutputFilter)
 [![Codecov - Branch Coverage](https://img.shields.io/codecov/c/github/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Codecov)](https://codecov.io/gh/edaa-org/pyEDAA.OutputFilter)
 
 [![Dependent repos (via libraries.io)](https://img.shields.io/librariesio/dependent-repos/pypi/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub)](https://GitHub.com/edaa-org/pyEDAA.OutputFilter/network/dependents)
