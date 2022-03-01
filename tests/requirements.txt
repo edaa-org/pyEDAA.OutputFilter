@@ -4,5 +4,5 @@
 Coverage>=5.5
 
 # Test Runner
-pytest>=6.2.4
+pytest>=7.0.1
 pytest-cov>=2.12.1
