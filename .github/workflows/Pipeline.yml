@@ -13,7 +13,6 @@ jobs:
     with:
       name: pyEDAA.OutputFilter
       python_version_list: "3.6 3.7 3.8 3.9 3.10"
-      exclude_list: "windows:3.11"
 
   UnitTesting:
     uses: pyTooling/Actions/.github/workflows/UnitTesting.yml@dev
