@@ -168,5 +168,5 @@ intersphinx_mapping = {
 extlinks = {
 	'ghissue': ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/issues/%s', 'issue #'),
 	'ghpull':  ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/pull/%s', 'pull request #'),
-	'ghsrc':   ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/blob/main/%s', ''),
+	'ghsrc':   ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/blob/main/%s', None),
 }
