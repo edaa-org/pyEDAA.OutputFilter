@@ -41,7 +41,8 @@ Proposal to define an abstract model for outputs from EDA tools and logging libr
 
     <br>
 
-.. _contributors:
+
+.. _CONTRIBUTORS:
 
 Contributors
 ************
@@ -49,6 +50,11 @@ Contributors
 * `Patrick Lehmann <https://GitHub.com/Paebbels>`__ (Maintainer)
 * `Unai Martinez-Corral <https://GitHub.com/umarcor/>`__
 * `and more... <https://GitHub.com/edaa-org/pyEDAA.OutputFilter/graphs/contributors>`__
+
+
+.. _LICENSE:
+
+.. todo:: add license texts here
 
 .. toctree::
    :hidden:

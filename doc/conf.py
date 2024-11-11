@@ -18,7 +18,7 @@ sys_path.insert(0, abspath('..'))
 # Project information
 # ==============================================================================
 project =   "pyEDAA.OutputFilter"
-copyright = "2021-2023 Patrick Lehmann - Boetzingen, Germany"
+copyright = "2021-2024 Patrick Lehmann - Boetzingen, Germany"
 author =    "Patrick Lehmann"
 
 version = "latest"     # The short X.Y version.
@@ -53,7 +53,7 @@ pygments_style = 'stata-dark'
 # ==============================================================================
 prologPath = Path("prolog.inc")
 try:
-	with prologPath.open("r") as fileHandle:
+	with prologPath.open("r", encoding="utf-8") as fileHandle:
 		rst_prolog = fileHandle.read()
 except Exception as ex:
 	print(f"[ERROR:] While reading '{prologPath}'.")
@@ -166,7 +166,7 @@ intersphinx_mapping = {
 # Sphinx.Ext.ExtLinks
 # ==============================================================================
 extlinks = {
-	'ghissue': ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/issues/%s', 'issue #'),
-	'ghpull':  ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/pull/%s', 'pull request #'),
+	'ghissue': ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/issues/%s', 'issue #%s'),
+	'ghpull':  ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/pull/%s', 'pull request #%s'),
 	'ghsrc':   ('https://GitHub.com/edaa-org/pyEDAA.OutputFilter/blob/main/%s', None),
 }
