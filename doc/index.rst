@@ -47,8 +47,8 @@ Proposal to define an abstract model for outputs from EDA tools and logging libr
 Contributors
 ************
 
-* `Patrick Lehmann <https://GitHub.com/Paebbels>`__ (Maintainer)
-* `Unai Martinez-Corral <https://GitHub.com/umarcor/>`__
+* :gh:`Patrick Lehmann <Paebbels>` (Maintainer)
+* :gh:`Unai Martinez-Corral <umarcor>`
 * `and more... <https://GitHub.com/edaa-org/pyEDAA.OutputFilter/graphs/contributors>`__
 
 
@@ -63,13 +63,31 @@ Contributors
 
 .. raw:: latex
 
+   \part{References and Reports}
+
+.. toctree::
+   :caption: References and Reports
+   :hidden:
+
+   Python Class Reference <pyEDAA.OutputFilter/pyEDAA.outputFilter>
+   unittests/index
+   coverage/index
+   Doc. Coverage Report <DocCoverage>
+   Static Type Check Report ➚ <typing/index>
+
+.. Coverage Report ➚ <coverage/index>
+
+.. raw:: latex
+
    \part{Appendix}
 
 .. toctree::
    :caption: Appendix
    :hidden:
 
+   License
+   Doc-License
+   Glossary
    genindex
-
-.. #
-   py-modindex
+   Python Module Index <modindex>
+   TODO

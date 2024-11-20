@@ -31,7 +31,7 @@
 
 # Main Goals
 
-* Read text outputs from CLI of EDA tools.
+* Analyze text outputs from CLI of EDA tools.
 * Filter and categorize by severity (*info*, *warning*, *error*, *fatal*, ...).
 * Extract information from e.g. OSVVM logs, VUnit logs, ...
 
