@@ -1,0 +1,59 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+===================
+pyEDAA.OutputFilter
+===================
+
+.. automodule:: pyEDAA.OutputFilter
+
+
+.. currentmodule:: pyEDAA.OutputFilter
+
+
+**Exceptions**
+
+- :py:exc:`FilterException`:
+  Base exception derived from :exc:`Exception <python:Exception>` for all custom exceptions.
+
+
+
+**Classes**
+
+- :py:class:`Filter`:
+  Undocumented.
+
+
+
+---------------------
+
+**Exceptions**
+
+
+
+
+.. autoexception:: FilterException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: FilterException
+      :parts: 1
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: Filter
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Filter
+      :parts: 1
