@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2017-2024 Patrick Lehmann - Boetzingen, Germany                                                            #
+# Copyright 2017-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
 # Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
@@ -32,7 +32,7 @@
 """An abstraction layer of EDA tool output filters."""
 __author__ =    "Patrick Lehmann"
 __email__ =     "Paebbels@gmail.com"
-__copyright__ = "2014-2024, Patrick Lehmann"
+__copyright__ = "2014-2025, Patrick Lehmann"
 __license__ =   "Apache License, Version 2.0"
 __version__ =   "0.1.0"
 __keywords__ =  ["cli", "abstraction layer", "eda", "filter", "classification"]
