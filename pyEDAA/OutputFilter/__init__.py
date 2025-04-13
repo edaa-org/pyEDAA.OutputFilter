@@ -43,8 +43,8 @@ from pyTooling.Exceptions  import ExceptionBase
 
 
 @export
-class FilterException(ExceptionBase):
-	pass
+class OutputFilterException(ExceptionBase):
+	"""Base-class for all pyEDAA.OutputFilter specific exceptions."""
 
 
 @export
