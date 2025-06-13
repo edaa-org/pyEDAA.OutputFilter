@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
+# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -35,9 +35,10 @@ from pathlib  import Path
 from re       import compile as re_compile, Pattern
 from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type
 
-from pyTooling.Decorators  import export
+from pyTooling.Decorators import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
 from pyTooling.Common      import firstValue
+from pyTooling.Stopwatch import Stopwatch
 from pyTooling.Versioning  import YearReleaseVersion
 
 from pyEDAA.OutputFilter.Xilinx import VivadoMessage, VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
@@ -56,7 +57,7 @@ class ProcessingState(Flag):
 	Last =          1024
 
 
-TIME_MEMORY_PATTERN = re_compile(r"""Time (s): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory (MB): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
+TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
 
 @export
 class Parser(metaclass=ExtendedType, slots=True):
@@ -64,6 +65,10 @@ class Parser(metaclass=ExtendedType, slots=True):
 
 	def __init__(self, processor: "Processor"):
 		self._processor = processor
+
+	@readonly
+	def Processor(self) -> "Processor":
+		return self._processor
 
 	@abstractmethod
 	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
@@ -83,6 +88,14 @@ class Preamble(Parser):
 
 		self._toolVersion = None
 		self._startTime =   None
+
+	@readonly
+	def ToolVersion(self) -> YearReleaseVersion:
+		return self._toolVersion
+
+	@readonly
+	def StartDate(self) -> datetime:
+		return self._startTime
 
 	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
 		if self._toolVersion is not None and line.startswith("#----"):
@@ -118,6 +131,10 @@ class Section(Parser):
 
 		self._duration = 0.0
 
+	@readonly
+	def Duration(self) -> float:
+		return self._duration
+
 	@mustoverride
 	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
 		if len(line) == 0:
@@ -127,12 +144,13 @@ class Section(Parser):
 		elif line.startswith(self._START):
 			return ProcessingState.Skipped
 		elif line.startswith(self._FINISH):
-			if (match := TIME_MEMORY_PATTERN.match(line[len(self._START):])) is not None:
+			l = line[len(self._START):]
+			if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
 				# cpuParts = match[1].split(":")
 				elapsedParts = match[2].split(":")
 				# peakMemory = float(match[3])
 				# gainMemory = float(match[4])
-				self._duration = int(elapsedParts[0]) * 3600 +int(elapsedParts[1]) * 60 + int(elapsedParts[2])
+				self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])
 
 			return ProcessingState.Skipped | ProcessingState.Last
 		elif line.startswith("Start") or line.startswith("Starting"):
@@ -320,6 +338,14 @@ class WritingSynthesisReport(Section):
 		self._blackboxes = {}
 		self._cells =      {}
 
+	@readonly
+	def Cells(self) -> Dict[str, int]:
+		return self._cells
+
+	@readonly
+	def Blackboxes(self) -> Dict[str, int]:
+		return self._blackboxes
+
 	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
 		if self._state == 0:
 			if line.startswith("Report BlackBoxes:"):
@@ -384,9 +410,10 @@ PARSERS = (
 
 @export
 class Processor(metaclass=ExtendedType, slots=True):
-	_logfile: Path
-	_parsers: Dict[Type[Parser], Parser]
-	_state:   Callable[[int, str], bool]
+	_logfile:  Path
+	_parsers:  Dict[Type[Parser], Parser]
+	_state:    Callable[[int, str], bool]
+	_duration: float
 
 	_infoMessages:            List[VivadoInfoMessage]
 	_warningMessages:         List[VivadoWarningMessage]
@@ -397,9 +424,10 @@ class Processor(metaclass=ExtendedType, slots=True):
 	_messagesByID:            Dict[int, Dict[int, List[VivadoMessage]]]
 
 	def __init__(self, synthesisLogfile: Path):
-		self._logfile = synthesisLogfile
-		self._parsers = {p: p(self) for p in PARSERS}
-		self._state =   firstValue(self._parsers).ParseLine
+		self._logfile =  synthesisLogfile
+		self._parsers =  {p: p(self) for p in PARSERS}
+		self._state =    firstValue(self._parsers).ParseLine
+		self._duration = 0.0
 
 		self._infoMessages =            []
 		self._warningMessages =         []
@@ -409,71 +437,131 @@ class Processor(metaclass=ExtendedType, slots=True):
 		self._toolNames =               {}
 		self._messagesByID =            {}
 
+	@readonly
+	def Duration(self) -> float:
+		return self._duration
+
+	@readonly
+	def InfoMessages(self) -> List[VivadoInfoMessage]:
+		return self._infoMessages
+
+	@readonly
+	def WarningMessages(self) -> List[VivadoWarningMessage]:
+		return self._warningMessages
+
+	@readonly
+	def CriticalWarningMessages(self) -> List[VivadoCriticalWarningMessage]:
+		return self._criticalWarningMessages
+
+	@readonly
+	def ErrorMessages(self) -> List[VivadoErrorMessage]:
+		return self._errorMessages
+
+	def __getitem__(self, item: Type[Parser]) -> Parser:
+		return self._parsers[item]
+
 	def Parse(self):
-		with self._logfile.open("r", encoding="utf-8") as f:
-			content = f.read()
+		with Stopwatch() as sw:
+			with self._logfile.open("r", encoding="utf-8") as f:
+				content = f.read()
 
-		activeParsers = list(self._parsers.values())
+			activeParsers = list(self._parsers.values())
 
-		lines = content.splitlines()
-		for lineNumber, line in enumerate(l.rstrip() for l in lines):
-			prefix = line[:4]
-			if prefix == "INFO":
-				if (message := VivadoInfoMessage.Parse(line, lineNumber)) is None:
-					print(f"pattern not detected\n{line}")
-					continue
+			lines = content.splitlines()
+			for lineNumber, line in enumerate(l.rstrip() for l in lines):
+				prefix = line[:4]
+				if prefix == "INFO":
+					if (message := VivadoInfoMessage.Parse(line, lineNumber)) is None:
+						print(f"pattern not detected\n{line}")
+						continue
 
-				self._infoMessages.append(message)
-			elif prefix == "WARN":
-				if (message := VivadoWarningMessage.Parse(line, lineNumber)) is None:
-					print(f"pattern not detected\n{line}")
-					continue
+					self._infoMessages.append(message)
+				elif prefix == "WARN":
+					if (message := VivadoWarningMessage.Parse(line, lineNumber)) is None:
+						print(f"pattern not detected\n{line}")
+						continue
 
-				self._warningMessages.append(message)
-			elif prefix == "CRIT":
-				if (message := VivadoCriticalWarningMessage.Parse(line, lineNumber)) is None:
-					print(f"pattern not detected\n{line}")
-					continue
+					self._warningMessages.append(message)
+				elif prefix == "CRIT":
+					if (message := VivadoCriticalWarningMessage.Parse(line, lineNumber)) is None:
+						print(f"pattern not detected\n{line}")
+						continue
 
-				self._criticalWarningMessages.append(message)
-			elif prefix == "ERRO":
-				if (message := VivadoErrorMessage.Parse(line, lineNumber)) is None:
-					print(f"pattern not detected\n{line}")
-					continue
+					self._criticalWarningMessages.append(message)
+				elif prefix == "ERRO":
+					if (message := VivadoErrorMessage.Parse(line, lineNumber)) is None:
+						print(f"pattern not detected\n{line}")
+						continue
 
-				self._errorMessages.append(message)
-			else:
-				if self._state is not None:
-					result = self._state(lineNumber, line)
-					if ProcessingState.Last in result:
-						obj: Section = self._state.__self__
-						activeParsers.remove(obj)
-						self._state = None
-
-						print(f" DONE: {obj.__class__.__name__}")
+					self._errorMessages.append(message)
 				else:
-					if line.startswith("Start") or line.startswith("Starting"):
-						for parser in activeParsers:   # type: Section
-							if line.startswith(parser._START):
-								print(f"BEGIN: {parser.__class__.__name__}")
-								self._state = parser.ParseLine
-								_ = self._state(lineNumber, line)
-								break
-						else:
-							print(f"Unknown section\n  {line}")
+					if self._state is not None:
+						result = self._state(lineNumber, line)
+						if ProcessingState.Last in result:
+							obj: Section = self._state.__self__
+							activeParsers.remove(obj)
+							self._state = None
 
-				continue
+							print(f" DONE: {obj.__class__.__name__}")
+					else:
+						if line.startswith("Start") or line.startswith("Starting"):
+							for parser in activeParsers:   # type: Section
+								if line.startswith(parser._START):
+									print(f"BEGIN: {parser.__class__.__name__}")
+									self._state = parser.ParseLine
+									_ = self._state(lineNumber, line)
+									break
+							else:
+								print(f"Unknown section\n  {line}")
 
-			if message._toolID in self._messagesByID:
-				sub = self._messagesByID[message._toolID]
-				if message._messageKindID in sub:
-					sub[message._messageKindID].append(message)
+					continue
+
+				if message._toolID in self._messagesByID:
+					sub = self._messagesByID[message._toolID]
+					if message._messageKindID in sub:
+						sub[message._messageKindID].append(message)
+					else:
+						sub[message._messageKindID] = [message]
 				else:
-					sub[message._messageKindID] = [message]
-			else:
-				self._toolIDs[message._toolID] = message._toolName
-				self._toolNames[message._toolName] = message._toolID
-				self._messagesByID[message._toolID] = {message._messageKindID: [message]}
+					self._toolIDs[message._toolID] = message._toolName
+					self._toolNames[message._toolName] = message._toolID
+					self._messagesByID[message._toolID] = {message._messageKindID: [message]}
+
+		self._duration = sw.Duration
+
+
+def main():
+	logfile = Path("tests/data/Stopwatch/toplevel.vds")
+	logfile = Path("tests/data/ADL-1000/toplevel.vds")
+	processor = Processor(logfile)
+	processor.Parse()
+
+	print()
+	print(f"Vivado version: {processor._parsers[Preamble]._toolVersion}")
+
+
+	#
+	# print("%" * 80)
+	# for toolID, messageGroups in processor._messagesByID.items():
+	# 	print(f"{toolID} ({len(messageGroups)}):")
+	# 	for messageID, messages in messageGroups.items():
+	# 		print(f"  {messageID} ({len(messages)}):")
+	# 		for message in messages:
+	# 			print(f"    {message}")
+	#
+	# print("%" * 80)
+	# for tool, toolID in processor._toolNames.items():
+	# 	messages = list(chain(*processor._messagesByID[toolID].values()))
+	# 	print(f"{tool} ({len(messages)}):")
+	# 	for message in messages:
+	# 		print(f"  {message}")
+
+	# print(f"Cells Statistics")
+	# for cellName, cellCount in processor._parsers[WritingSynthesisReport]._cells.items():
+	# 	print(f"  {cellName:16}: {cellCount}")
+
+if __name__ == '__main__':
+	main()
 
 
 # latches

@@ -11,7 +11,8 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2017-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
+# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2017-2024 Patrick Lehmann - Boetzingen, Germany                                                            #
 # Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
@@ -29,7 +30,7 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Package installer for 'Post-processing of EDA Tool outputs'."""
+"""Package installer for 'Post-processing of EDA Tool outputs (log files)'."""
 from pathlib             import Path
 from setuptools          import setup
 from pyTooling.Packaging import DescribePythonPackageHostedOnGitHub, DEFAULT_CLASSIFIERS
@@ -42,7 +43,7 @@ packageInformationFile = Path(f"{packageDirectory}/__init__.py")
 setup(
 	**DescribePythonPackageHostedOnGitHub(
 		packageName=packageName,
-		description="Post-processing of EDA Tool outputs.",
+		description="Post-processing of EDA Tool outputs (log files).",
 		gitHubNamespace=gitHubNamespace,
 		keywords="Python3 CLI Output Filter PostProcessing",
 		sourceFileWithVersion=packageInformationFile,
@@ -55,6 +56,9 @@ setup(
 	dataFiles={
 		packageName: ["py.typed"]
 	},
+		consoleScripts={
+			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
+		},
 	debug=True
 	)
 )
