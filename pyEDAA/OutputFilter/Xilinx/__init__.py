@@ -11,8 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2017-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
-# Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
+# Copyright 2025-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -29,32 +28,85 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Package installer for 'Post-processing of EDA Tool outputs'."""
-from pathlib             import Path
-from setuptools          import setup
-from pyTooling.Packaging import DescribePythonPackageHostedOnGitHub, DEFAULT_CLASSIFIERS
+"""Basic classes for outputs from AMD/Xilinx Vivado."""
+from re     import compile as re_compile, Pattern
+from typing import ClassVar, Self, Optional as Nullable
 
-gitHubNamespace =        "edaa-org"
-packageName =            "pyEDAA.OutputFilter"
-packageDirectory =       packageName.replace(".", "/")
-packageInformationFile = Path(f"{packageDirectory}/__init__.py")
+from pyTooling.Decorators  import export
+from pyTooling.MetaClasses import ExtendedType
 
-setup(
-	**DescribePythonPackageHostedOnGitHub(
-		packageName=packageName,
-		description="Post-processing of EDA Tool outputs.",
-		gitHubNamespace=gitHubNamespace,
-		keywords="Python3 CLI Output Filter PostProcessing",
-		sourceFileWithVersion=packageInformationFile,
-		developmentStatus="alpha",
-		classifiers=list(DEFAULT_CLASSIFIERS) + [
-			"Intended Audience :: Developers",
-			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
-			"Topic :: Utilities"
-	],
-	dataFiles={
-		packageName: ["py.typed"]
-	},
-	debug=True
-	)
-)
+
+@export
+class VivadoMessage(metaclass=ExtendedType, slots=True):
+	# _MESSAGE_KIND:  ClassVar[str]
+	# _REGEXP:        ClassVar[Pattern]
+
+	_lineNumber:    int
+	_toolID:        int
+	_toolName:      str
+	_messageKindID: int
+	_message:       str
+
+	def __init__(self, lineNumber: int, tool: str, toolID: int, messageID: int, message: str) -> None:
+		self._lineNumber = lineNumber
+		self._toolID = toolID
+		self._toolName = tool
+		self._messageKindID = messageID
+		self._message = message
+
+	@classmethod
+	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(line)) is not None:
+			return cls(lineNumber, match[1], match[2], match[3], match[4])
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: [{self._toolName} {self._toolID}-{self._messageKindID}] {self._message}"
+
+
+@export
+class VivadoInfoMessage(VivadoMessage):
+	_MESSAGE_KIND: ClassVar[str] =     "INFO"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+) (\d+)-(\d+)\] (.*)""")
+	_REGEXP2:      ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
+
+	@classmethod
+	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
+		result = super().Parse(line, lineNumber)
+		if result is not None:
+			return result
+
+		if (match := cls._REGEXP2.match(line)) is not None:
+			return cls(lineNumber, match[1], None, match[2], match[3])
+
+		return None
+
+
+@export
+class VivadoWarningMessage(VivadoMessage):
+	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
+
+	@classmethod
+	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
+		result = super().Parse(line, lineNumber)
+		if result is not None:
+			return result
+
+		if line.startswith("WARNING: "):
+			return cls(lineNumber, None, None, None, line[9:])
+
+		return None
+
+
+@export
+class VivadoCriticalWarningMessage(VivadoMessage):
+	_MESSAGE_KIND: ClassVar[str] =     "CRITICAL WARNING"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""CRITICAL WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
+
+
+@export
+class VivadoErrorMessage(VivadoMessage):
+	_MESSAGE_KIND: ClassVar[str] =     "ERROR"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""ERROR: \[(\w+) (\d+)-(\d+)\] (.*)""")

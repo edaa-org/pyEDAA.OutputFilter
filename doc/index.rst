@@ -72,6 +72,7 @@ Contributors
    Python Class Reference <pyEDAA.OutputFilter/pyEDAA.outputFilter>
    unittests/index
    coverage/index
+   CodeCoverage
    Doc. Coverage Report <DocCoverage>
    Static Type Check Report ➚ <typing/index>
 
