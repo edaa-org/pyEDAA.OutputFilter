@@ -39,9 +39,23 @@ Proposal to define an abstract model for outputs from EDA tools and logging libr
    :align: center
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
 
-.. raw:: html
+Examples
+********
 
-    <br>
+List all warnings
+=================
+
+.. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+   logfile = Path("tests/data/Stopwatch/toplevel.vds")
+   processor = Processor(logfile)
+   processor.Parse()
+
+   print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages}):")
+   for message in processor.CriticalWarningMessages:
+     print(f"  {message}")
 
 
 .. _CONTRIBUTORS:

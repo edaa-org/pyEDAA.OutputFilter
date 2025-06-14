@@ -30,14 +30,62 @@ Messages
 INFO Messages
 -------------
 
+.. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+   logfile = Path("tests/data/Stopwatch/toplevel.vds")
+   processor = Processor(logfile)
+   processor.Parse()
+
+   print(f"INFO Messages ({len(processor.InfoMessages)}):")
+   for message in processor.InfoMessages:
+     print(f"  {message}")
+
 WARNING Messages
 ----------------
+
+.. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+   logfile = Path("tests/data/Stopwatch/toplevel.vds")
+   processor = Processor(logfile)
+   processor.Parse()
+
+   print(f"WARNING Messages ({len(processor.WarningMessages)}):")
+   for message in processor.WarningMessages:
+     print(f"  {message}")
 
 CRITICAl WARNING Messages
 -------------------------
 
+.. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+   logfile = Path("tests/data/Stopwatch/toplevel.vds")
+   processor = Processor(logfile)
+   processor.Parse()
+
+   print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages)}):")
+   for message in processor.CriticalWarningMessages:
+     print(f"  {message}")
+
 ERROR Messages
 --------------
+
+.. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+   logfile = Path("tests/data/Stopwatch/toplevel.vds")
+   processor = Processor(logfile)
+   processor.Parse()
+
+   print(f"ERROR Messages ({len(processor.ErrorMessages)}):")
+   for message in processor.ErrorMessages:
+     print(f"  {message}")
 
 Tool Version
 ============

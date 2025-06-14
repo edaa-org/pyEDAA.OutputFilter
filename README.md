@@ -38,7 +38,16 @@
 # Examples
 
 ```python
-print(some.python.code.here())
+from pathlib import Path
+from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+logfile = Path("tests/data/Stopwatch/toplevel.vds")
+processor = Processor(logfile)
+processor.Parse()
+
+print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages)}):")
+for message in processor.CriticalWarningMessages:
+  print(f"  {message}")
 ```
 
 # Contributors
