@@ -38,6 +38,37 @@ from pyTooling.MetaClasses import ExtendedType
 
 @export
 class VivadoMessage(metaclass=ExtendedType, slots=True):
+	"""
+	This class represents an AMD/Xilinx Vivado message.
+
+	The usual message format is:
+
+	.. code-block:: text
+
+	   INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+	   WARNING: [Synth 8-3332] Sequential element (gen[0].Sync/FF2) is unused and will be removed from module sync_Bits_Xilinx.
+
+	The following message severities are defined:
+
+	* ``INFO``
+	* ``WARNING``
+	* ``CRITICAL WARNING``
+	* ``ERROR``
+
+	.. seealso::
+
+	   :class:`VivadoInfoMessage`
+	     Representing a Vivado info message.
+
+	   :class:`VivadoWarningMessage`
+	     Representing a Vivado warning message.
+
+	   :class:`VivadoCriticalWarningMessage`
+	     Representing a Vivado critical warning message.
+
+	   :class:`VivadoErrorMessage`
+	     Representing a Vivado error message.
+	"""
 	# _MESSAGE_KIND:  ClassVar[str]
 	# _REGEXP:        ClassVar[Pattern]
 
@@ -87,6 +118,10 @@ class VivadoMessage(metaclass=ExtendedType, slots=True):
 
 @export
 class VivadoInfoMessage(VivadoMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado info message.
+	"""
+
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+) (\d+)-(\d+)\] (.*)""")
 	_REGEXP2:      ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
@@ -105,6 +140,10 @@ class VivadoInfoMessage(VivadoMessage):
 
 @export
 class VivadoWarningMessage(VivadoMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado warning message.
+	"""
+
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
 
@@ -122,11 +161,19 @@ class VivadoWarningMessage(VivadoMessage):
 
 @export
 class VivadoCriticalWarningMessage(VivadoMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado critical warning message.
+	"""
+
 	_MESSAGE_KIND: ClassVar[str] =     "CRITICAL WARNING"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""CRITICAL WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
 
 
 @export
 class VivadoErrorMessage(VivadoMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado error message.
+	"""
+
 	_MESSAGE_KIND: ClassVar[str] =     "ERROR"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""ERROR: \[(\w+) (\d+)-(\d+)\] (.*)""")

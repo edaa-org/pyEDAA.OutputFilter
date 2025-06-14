@@ -77,8 +77,8 @@ class Parser(metaclass=ExtendedType, slots=True):
 
 @export
 class Preamble(Parser):
-	_toolVersion: Nullable[YearReleaseVersion]
-	_startTime:   Nullable[datetime]
+	_toolVersion:   Nullable[YearReleaseVersion]
+	_startDatetime: Nullable[datetime]
 
 	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: Thu (\w+) (\d+) (\d+):(\d+):(\d+) (\d+)""")
@@ -86,16 +86,16 @@ class Preamble(Parser):
 	def __init__(self, processor: "Processor"):
 		super().__init__(processor)
 
-		self._toolVersion = None
-		self._startTime =   None
+		self._toolVersion =   None
+		self._startDatetime = None
 
 	@readonly
 	def ToolVersion(self) -> YearReleaseVersion:
 		return self._toolVersion
 
 	@readonly
-	def StartDate(self) -> datetime:
-		return self._startTime
+	def StartDatetime(self) -> datetime:
+		return self._startDatetime
 
 	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
 		if self._toolVersion is not None and line.startswith("#----"):
@@ -104,7 +104,7 @@ class Preamble(Parser):
 			self._toolVersion = YearReleaseVersion.Parse(match[1])
 			return ProcessingState.Processed
 		elif (match := self._VERSION.match(line)) is not None:
-			self._startTime = datetime(int(match[6]), int(match[1]), int(match[2]), int(match[3]), int(match[4]), int(match[5]))
+			self._startDatetime = datetime(int(match[6]), int(match[1]), int(match[2]), int(match[3]), int(match[4]), int(match[5]))
 			return ProcessingState.Processed
 
 		return ProcessingState.Skipped

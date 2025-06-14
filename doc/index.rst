@@ -48,7 +48,6 @@ Contributors
 ************
 
 * :gh:`Patrick Lehmann <Paebbels>` (Maintainer)
-* :gh:`Unai Martinez-Corral <umarcor>`
 * `and more... <https://GitHub.com/edaa-org/pyEDAA.OutputFilter/graphs/contributors>`__
 
 
@@ -61,6 +60,25 @@ Contributors
 
    Used as a layer of EDA² ➚ <https://edaa-org.github.io/>
 
+
+.. toctree::
+   :caption: Introduction
+   :hidden:
+
+   Installation
+   Dependency
+
+
+.. raw:: latex
+
+   \part{Main Documentation}
+
+.. toctree::
+   :caption: Main Documentation
+   :hidden:
+
+   Xilinx/Vivado
+
 .. raw:: latex
 
    \part{References and Reports}
@@ -69,7 +87,7 @@ Contributors
    :caption: References and Reports
    :hidden:
 
-   Python Class Reference <pyEDAA.OutputFilter/pyEDAA.outputFilter>
+   Python Class Reference <pyEDAA.OutputFilter/pyEDAA.OutputFilter>
    unittests/index
    coverage/index
    CodeCoverage
