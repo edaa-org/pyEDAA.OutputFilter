@@ -32,7 +32,7 @@
 from re     import compile as re_compile, Pattern
 from typing import ClassVar, Self, Optional as Nullable
 
-from pyTooling.Decorators  import export
+from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 
 
@@ -47,17 +47,37 @@ class VivadoMessage(metaclass=ExtendedType, slots=True):
 	_messageKindID: int
 	_message:       str
 
-	def __init__(self, lineNumber: int, tool: str, toolID: int, messageID: int, message: str) -> None:
+	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, message: str) -> None:
 		self._lineNumber = lineNumber
 		self._toolID = toolID
 		self._toolName = tool
-		self._messageKindID = messageID
+		self._messageKindID = messageKindID
 		self._message = message
+
+	@readonly
+	def LineNumber(self) -> int:
+		return self._lineNumber
+
+	@readonly
+	def ToolName(self) -> int:
+		return self._toolName
+
+	@readonly
+	def ToolID(self) -> int:
+		return self._toolID
+
+	@readonly
+	def MessageKindID(self) -> int:
+		return self._messageKindID
+
+	@readonly
+	def Message(self) -> int:
+		return self._message
 
 	@classmethod
 	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(line)) is not None:
-			return cls(lineNumber, match[1], match[2], match[3], match[4])
+			return cls(lineNumber, match[1], int(match[2]), int(match[3]), match[4])
 
 		return None
 
@@ -78,7 +98,7 @@ class VivadoInfoMessage(VivadoMessage):
 			return result
 
 		if (match := cls._REGEXP2.match(line)) is not None:
-			return cls(lineNumber, match[1], None, match[2], match[3])
+			return cls(lineNumber, match[1], None, int(match[2]), match[3])
 
 		return None
 

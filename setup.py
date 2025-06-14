@@ -48,6 +48,7 @@ setup(
 		keywords="Python3 CLI Output Filter PostProcessing",
 		sourceFileWithVersion=packageInformationFile,
 		developmentStatus="alpha",
+		pythonVersions=("3.11", "3.12", "3.13"),
 		classifiers=list(DEFAULT_CLASSIFIERS) + [
 			"Intended Audience :: Developers",
 			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",

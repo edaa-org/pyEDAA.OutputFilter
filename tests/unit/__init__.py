@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2017-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
+# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -28,7 +28,7 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Unit tests for ``ghdl`` output filters."""
+"""Package containing unit tests."""
 from unittest             import TestCase
 
 from pyEDAA.OutputFilter  import Filter

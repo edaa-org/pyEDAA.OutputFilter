@@ -144,7 +144,7 @@ class Section(Parser):
 		elif line.startswith(self._START):
 			return ProcessingState.Skipped
 		elif line.startswith(self._FINISH):
-			l = line[len(self._START):]
+			l = line[len(self._FINISH):]
 			if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
 				# cpuParts = match[1].split(":")
 				elapsedParts = match[2].split(":")

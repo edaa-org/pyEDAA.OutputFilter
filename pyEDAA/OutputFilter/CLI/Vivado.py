@@ -131,14 +131,22 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 			influxString  =  "vivado_synthesis_overview"
 			influxString += f",version={processor[Preamble].ToolVersion}"
 			influxString += f",branch=main"
+			influxString += f",design=Stopwatch"
 			influxString += " "
 			influxString += f"processing_duration={processor.Duration:.3f}"
-			influxString += f",synthesis_duration={processor[WritingSynthesisReport].Duration :.3f}u"
+			influxString += f",synthesis_duration={processor[WritingSynthesisReport].Duration:.1f}"
 			influxString += f",info_count={len(processor.InfoMessages)}u"
 			influxString += f",warning_count={len(processor.WarningMessages)}u"
 			influxString += f",critical_count={len(processor.CriticalWarningMessages)}u"
 			influxString += f",error_count={len(processor.ErrorMessages)}u"
 			influxString += f",blackbox_count={len(processor[WritingSynthesisReport].Blackboxes)}u"
+			influxString +=  "\n"
+			influxString +=  "vivado_synthesis_cells"
+			influxString += f",version={processor[Preamble].ToolVersion}"
+			influxString += f",branch=main"
+			influxString += f",design=Stopwatch"
+			influxString += " "
+			influxString += ",".join(f"{cellName}={cellCount}" for cellName, cellCount in processor[WritingSynthesisReport].Cells.items() if not cellName.endswith("_bbox"))
 
 			self.WriteNormal(influxString)
 
