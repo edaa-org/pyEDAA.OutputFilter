@@ -11,8 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2017-2025 Patrick Lehmann - Boetzingen, Germany                                                            #
-# Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
+# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -29,24 +28,34 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""An abstraction layer of EDA tool output filters."""
-__author__ =    "Patrick Lehmann"
-__email__ =     "Paebbels@gmail.com"
-__copyright__ = "2014-2025, Patrick Lehmann"
-__license__ =   "Apache License, Version 2.0"
-__version__ =   "0.1.0"
-__keywords__ =  ["cli", "abstraction layer", "eda", "filter", "classification"]
+"""Unit tests for Vivado synthesis log files."""
+from pathlib  import Path
+from unittest import TestCase as TestCase
+
+from pyTooling.Versioning import YearReleaseVersion
+
+from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor, Preamble, WritingSynthesisReport
+
+if __name__ == "__main__": # pragma: no cover
+	print("ERROR: you called a testcase declaration file as an executable module.")
+	print("Use: 'python -m unitest <testcase module>'")
+	exit(1)
 
 
-from pyTooling.Decorators  import export
-from pyTooling.Exceptions  import ExceptionBase
+class Stopwatch(TestCase):
+	def test_SynthesisLogfile(self) -> None:
+		logfile = Path("tests/data/Stopwatch/toplevel.vds")
+		processor = Processor(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		self.assertEqual(69, len(processor.InfoMessages))
+		self.assertEqual(3, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 1), processor[Preamble].ToolVersion)
 
 
-@export
-class OutputFilterException(ExceptionBase):
-	"""Base-class for all pyEDAA.OutputFilter specific exceptions."""
-
-
-@export
-class Filter:
-	pass
+		self.assertEqual(0, len(processor[WritingSynthesisReport].Blackboxes))

@@ -4,11 +4,11 @@
    # percent encoding so that the URL is properly parsed.
 
 .. # Sourcecode link to GitHub
-.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
-.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
@@ -17,7 +17,7 @@
 .. |SHIELD:svg:OutputFilter-src-license| image:: https://img.shields.io/pypi/l/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Apache&label=code
    :alt: Code license
    :height: 22
-   :target: License.html
+   :target: Code-License.html
 .. |SHIELD:png:OutputFilter-src-license| image:: https://img.shields.io/pypi/l/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=Apache&label=code
    :alt: Code license
    :height: 22
@@ -33,22 +33,12 @@
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/tags
 
-.. # GitHub release
-.. |SHIELD:svg:OutputFilter-release| image:: https://img.shields.io/github/v/release/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub&include_prereleases
-   :alt: GitHub release (latest SemVer incl. including pre-releases
-   :height: 22
-   :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/releases/latest
-.. |SHIELD:png:OutputFilter-release| image:: https://raster.shields.io/github/v/release/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub&include_prereleases
-   :alt: GitHub release (latest SemVer incl. including pre-releases
-   :height: 22
-   :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/releases/latest
-
 .. # GitHub release date
 .. |SHIELD:svg:OutputFilter-date| image:: https://img.shields.io/github/release-date/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub
    :alt: GitHub release date
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/releases
-.. |SHIELD:png:OutputFilter-date| image:: https://raster.shields.io/github/release-date/edaa-org/pyEDAA.OutputFilter?logo=GitHub
+.. |SHIELD:png:OutputFilter-date| image:: https://raster.shields.io/github/release-date/edaa-org/pyEDAA.OutputFilter?longCache=true&style=flat-square&logo=GitHub
    :alt: GitHub release date
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/releases
@@ -64,11 +54,11 @@
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/network/dependents
 
 .. # GHA test and coverage
-.. |SHIELD:svg:OutputFilter-gha-test| image:: https://img.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline/main?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF
+.. |SHIELD:svg:OutputFilter-gha-test| image:: https://img.shields.io/github/actions/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline.yml?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF
    :alt: GitHub Workflow - Build and Test Status
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml
-.. |SHIELD:png:OutputFilter-gha-test| image:: https://raster.shields.io/github/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline/main?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF
+.. |SHIELD:png:OutputFilter-gha-test| image:: https://raster.shields.io/github/actions/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline.yml?longCache=true&style=flat-square&label=Build%20and%20Test&logo=GitHub%20Actions&logoColor=FFFFFF
    :alt: GitHub Workflow - Build and Test Status
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml
@@ -84,11 +74,11 @@
    :target: https://www.codacy.com/gh/edaa-org/pyEDAA.OutputFilter
 
 .. # Codacy - coverage
-.. |SHIELD:svg:OutputFilter-codacy-coverage| image:: https://img.shields.io/codacy/coverage/4918480c41594ffbb62f8ff98433b800?longCache=true&style=flat-square&logo=codacy
+.. |SHIELD:svg:OutputFilter-codacy-coverage| image:: https://img.shields.io/codacy/coverage/c2635df20fa840bc85639ca2fa1d9cb4?longCache=true&style=flat-square&logo=codacy
    :alt: Codacy - Line Coverage
    :height: 22
    :target: https://www.codacy.com/gh/edaa-org/pyEDAA.OutputFilter
-.. |SHIELD:png:OutputFilter-codacy-coverage| image:: https://raster.shields.io/codacy/coverage/4918480c41594ffbb62f8ff98433b800?longCache=true&style=flat-square&logo=codacy
+.. |SHIELD:png:OutputFilter-codacy-coverage| image:: https://raster.shields.io/codacy/coverage/c2635df20fa840bc85639ca2fa1d9cb4?longCache=true&style=flat-square&logo=codacy
    :alt: Codacy - Line Coverage
    :height: 22
    :target: https://www.codacy.com/gh/edaa-org/pyEDAA.OutputFilter
@@ -163,7 +153,7 @@
 .. |SHIELD:svg:OutputFilter-doc-license| image:: https://img.shields.io/badge/doc-CC--BY%204.0-green?longCache=true&style=flat-square&logo=CreativeCommons&logoColor=fff
    :alt: Documentation License
    :height: 22
-   :target: Doc-License.html
+   :target: License.html
 .. |SHIELD:png:OutputFilter-doc-license| image:: https://raster.shields.io/badge/doc-CC--BY%204.0-green?longCache=true&style=flat-square&logo=CreativeCommons&logoColor=fff
    :alt: Documentation License
    :height: 22

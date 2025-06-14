@@ -11,6 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
+# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
 # Copyright 2017-2024 Patrick Lehmann - Boetzingen, Germany                                                            #
 # Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
 #                                                                                                                      #
@@ -29,7 +30,7 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Package installer for 'Post-processing of EDA Tool outputs'."""
+"""Package installer for 'Post-processing of EDA Tool outputs (log files)'."""
 from pathlib             import Path
 from setuptools          import setup
 from pyTooling.Packaging import DescribePythonPackageHostedOnGitHub, DEFAULT_CLASSIFIERS
@@ -39,13 +40,15 @@ packageName =            "pyEDAA.OutputFilter"
 packageDirectory =       packageName.replace(".", "/")
 packageInformationFile = Path(f"{packageDirectory}/__init__.py")
 
-setup(**DescribePythonPackageHostedOnGitHub(
+setup(
+	**DescribePythonPackageHostedOnGitHub(
 		packageName=packageName,
-		description="Post-processing of EDA Tool outputs.",
+		description="Post-processing of EDA Tool outputs (log files).",
 		gitHubNamespace=gitHubNamespace,
 		keywords="Python3 CLI Output Filter PostProcessing",
 		sourceFileWithVersion=packageInformationFile,
 		developmentStatus="alpha",
+		pythonVersions=("3.11", "3.12", "3.13"),
 		classifiers=list(DEFAULT_CLASSIFIERS) + [
 			"Intended Audience :: Developers",
 			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
@@ -53,5 +56,10 @@ setup(**DescribePythonPackageHostedOnGitHub(
 	],
 	dataFiles={
 		packageName: ["py.typed"]
-	}
-))
+	},
+		consoleScripts={
+			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
+		},
+	debug=True
+	)
+)
