@@ -89,6 +89,7 @@ Contributors
    :caption: References and Reports
    :hidden:
 
+   CommandLineInterface
    Python Class Reference <pyEDAA.OutputFilter/pyEDAA.OutputFilter>
    unittests/index
    coverage/index

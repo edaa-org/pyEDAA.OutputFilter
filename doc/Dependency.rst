@@ -94,9 +94,9 @@ the mandatory dependencies too.
 +=====================================================================+=============+========================================================================================+======================+
 | `pytest <https://GitHub.com/pytest-dev/pytest>`__                   | ≥8.4        | `MIT <https://GitHub.com/pytest-dev/pytest/blob/master/LICENSE>`__                     | *Not yet evaluated.* |
 +---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `pytest-cov <https://GitHub.com/pytest-dev/pytest-cov>`__           | ≥6.1        | `MIT <https://GitHub.com/pytest-dev/pytest-cov/blob/master/LICENSE>`__                 | *Not yet evaluated.* |
+| `pytest-cov <https://GitHub.com/pytest-dev/pytest-cov>`__           | ≥6.2        | `MIT <https://GitHub.com/pytest-dev/pytest-cov/blob/master/LICENSE>`__                 | *Not yet evaluated.* |
 +---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `Coverage <https://GitHub.com/nedbat/coveragepy>`__                 | ≥7.8        | `Apache License, 2.0 <https://GitHub.com/nedbat/coveragepy/blob/master/LICENSE.txt>`__ | *Not yet evaluated.* |
+| `Coverage <https://GitHub.com/nedbat/coveragepy>`__                 | ≥7.9        | `Apache License, 2.0 <https://GitHub.com/nedbat/coveragepy/blob/master/LICENSE.txt>`__ | *Not yet evaluated.* |
 +---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
 | `mypy <https://GitHub.com/python/mypy>`__                           | ≥1.16       | `MIT <https://GitHub.com/python/mypy/blob/master/LICENSE>`__                           | *Not yet evaluated.* |
 +---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
