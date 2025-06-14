@@ -10,6 +10,8 @@ Processing the ``*.vds`` File
 
 .. code-block:: Python
 
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
    processor = Processor(logfile)
    processor.Parse()
@@ -40,9 +42,11 @@ ERROR Messages
 Tool Version
 ============
 
-The tool version is extratced by the Preamble parser.
+The tool version is extracted by the Preamble parser.
 
 .. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
    processor = Processor(logfile)
@@ -53,9 +57,11 @@ The tool version is extratced by the Preamble parser.
 Synthesis start time and date
 =============================
 
-The start timestamp (:class:`datetime`) is extratced by the Preamble parser.
+The start timestamp (:class:`datetime`) is extracted by the Preamble parser.
 
 .. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
    processor = Processor(logfile)
@@ -66,9 +72,11 @@ The start timestamp (:class:`datetime`) is extratced by the Preamble parser.
 Synthesis duration
 ==================
 
-The synthesis runtime is extratced by the WritingSynthesisReport parser.
+The synthesis runtime is extracted by the WritingSynthesisReport parser.
 
 .. code-block:: Python
+
+   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
    processor = Processor(logfile)
