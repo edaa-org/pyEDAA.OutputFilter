@@ -33,7 +33,7 @@ from datetime import datetime
 from enum     import Flag
 from pathlib  import Path
 from re       import compile as re_compile, Pattern
-from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type
+from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type, Generator, Iterator
 
 from pyTooling.Decorators import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
@@ -442,6 +442,18 @@ class Processor(metaclass=ExtendedType, slots=True):
 		return self._duration
 
 	@readonly
+	def ToolIDs(self) -> Dict[int, str]:
+		return self._toolIDs
+
+	@readonly
+	def ToolNames(self) -> Dict[str, int]:
+		return self._toolNames
+
+	@readonly
+	def MessagesByID(self) -> Dict[int, Dict[int, List[VivadoMessage]]]:
+		return self._messagesByID
+
+	@readonly
 	def InfoMessages(self) -> List[VivadoInfoMessage]:
 		return self._infoMessages
 
@@ -457,8 +469,34 @@ class Processor(metaclass=ExtendedType, slots=True):
 	def ErrorMessages(self) -> List[VivadoErrorMessage]:
 		return self._errorMessages
 
+	@readonly
+	def HasLatches(self) -> bool:
+		try:
+			synth = self._messagesByID[8]
+			if 327 in synth:
+				return True
+		except KeyError:
+			pass
+
+		return "LD" in self._parsers[WritingSynthesisReport]._cells
+
+	@readonly
+	def Latches(self) -> Iterator[VivadoMessage]:
+		try:
+			yield from iter(self._messagesByID[8][327])
+		except KeyError:
+			yield from ()
+
 	def __getitem__(self, item: Type[Parser]) -> Parser:
 		return self._parsers[item]
+
+	@readonly
+	def HasBlackboxes(self) -> bool:
+		return len(self._parsers[WritingSynthesisReport]._blackboxes) > 0
+
+	@readonly
+	def Cells(self) -> Dict[str, int]:
+		return self._parsers[WritingSynthesisReport]._cells
 
 	def Parse(self):
 		with Stopwatch() as sw:
