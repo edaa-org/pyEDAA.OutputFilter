@@ -30,18 +30,17 @@
 #
 from argparse import Namespace
 from pathlib  import Path
-from sys      import stdin
 from typing   import NoReturn
 
 from pyTooling.Decorators                     import readonly
 from pyTooling.MetaClasses                    import ExtendedType
-from pyTooling.Common                         import count
 from pyTooling.Attributes.ArgParse            import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag       import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag import LongValuedFlag
-from pyTooling.Stopwatch                      import Stopwatch
 
-from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor, Preamble, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx                import Preamble
+from pyEDAA.OutputFilter.Xilinx.Synthesis      import Processor as SynthProc, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.Implementation import Processor as ImplProc
 
 
 class Proto(metaclass=ExtendedType, mixin=True):
@@ -107,7 +106,7 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 		if returnCode != 0:
 			self.Exit(returnCode)
 
-		processor = Processor(logfile)
+		processor = SynthProc(logfile)
 		processor.Parse()
 
 		if args.info:
@@ -173,6 +172,51 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 	@LongFlag("--warning", dest="warning", help="Print warning messages.")
 	@LongFlag("--critical", dest="critical", help="Print critical warning messages.")
 	@LongFlag("--error", dest="error", help="Print error messages.")
+	@LongFlag("--influxdb", dest="influxdb", help="Write statistics as InfluxDB line protocol file (*.line).")
 	def HandleVivadoImplementation(self, args: Namespace) -> None:
-		"""Handle program calls with command ``vivado-impl``."""
+		"""Handle program calls with command ``vivado-synth``."""
 		self._PrintHeadline()
+
+		returnCode = 0
+		if args.logfile is None:
+			self.WriteError(f"Option '--file=<VDI file>' is missing.")
+			returnCode = 3
+
+		logfile = Path(args.logfile)
+		if not logfile.exists():
+			self.WriteError(f"Vivado implementation log file '{logfile}' doesn't exist.")
+			returnCode = 4
+
+		if returnCode != 0:
+			self.Exit(returnCode)
+
+		processor = ImplProc(logfile)
+		processor.Parse()
+
+		if args.info:
+			self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
+			for message in processor.InfoMessages:
+				self.WriteNormal(f"  {message}")
+		if args.warning:
+			self.WriteNormal(f"WARNING messages: {len(processor.WarningMessages)}")
+			for message in processor.WarningMessages:
+				self.WriteNormal(f"  {message}")
+		if args.critical:
+			self.WriteNormal(f"CRITICAL WARNING: messages {len(processor.CriticalWarningMessages)}")
+			for message in processor.CriticalWarningMessages:
+				self.WriteNormal(f"  {message}")
+		if args.error:
+			self.WriteNormal(f"ERROR messages: {len(processor.ErrorMessages)}")
+			for message in processor.ErrorMessages:
+				self.WriteNormal(f"  {message}")
+
+		if args.influxdb:
+			influxString = "vivado_implementation_overview"
+
+			self.WriteNormal(influxString)
+
+		self.WriteNormal("Summary:")
+		self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
+		self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
+
+		self.WriteNormal("Policies:")
