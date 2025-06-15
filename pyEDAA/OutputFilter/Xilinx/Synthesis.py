@@ -33,7 +33,7 @@ from datetime import datetime
 from enum     import Flag
 from pathlib  import Path
 from re       import compile as re_compile, Pattern
-from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type, Generator, Iterator
+from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type, Generator, Iterator, TypedDict, Union
 
 from pyTooling.Decorators import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
@@ -408,10 +408,12 @@ PARSERS = (
 	WritingSynthesisReport,
 )
 
+Parsers = Union[*PARSERS]
+
 @export
 class Processor(metaclass=ExtendedType, slots=True):
 	_logfile:  Path
-	_parsers:  Dict[Type[Parser], Parser]
+	_parsers:  Dict[Type[Parser], Parsers]
 	_state:    Callable[[int, str], bool]
 	_duration: float
 
@@ -487,7 +489,7 @@ class Processor(metaclass=ExtendedType, slots=True):
 		except KeyError:
 			yield from ()
 
-	def __getitem__(self, item: Type[Parser]) -> Parser:
+	def __getitem__(self, item: Type[Parser]) -> Parsers:
 		return self._parsers[item]
 
 	@readonly
