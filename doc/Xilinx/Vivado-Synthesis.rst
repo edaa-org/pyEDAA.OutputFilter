@@ -3,6 +3,11 @@
 Synthesis
 #########
 
+A Vivado synthesis log output (:file:`*.vds` log file) is comprised of mostly one-liner human-readable text outputs. The
+document starts with a preamble, has circa :ref:`20 sections <XIL/Vivado/Synth/Steps>` and ends with a epilog. Each
+sections is framed by ``Start xxx`` and ``Finished xxx`` lines. In between, :ref:`messages <XIL/Vivado/Synth/Messages>`
+of categories: ``INFO``, ``WARNING``, ``CRITICAL WARNING`` or ``ERROR`` are interweaved.
+
 .. _XIL/Vivado/Synth/Processing:
 
 Processing the ``*.vds`` File
@@ -13,7 +18,18 @@ Processing the ``*.vds`` File
    .. grid-item::
       :columns: 6
 
-      TBD
+      A logfile can be processed by :class:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor`. First, it reads a logfile
+      into a list of lines, which get pre-classified as normal output lines or :ref:`messages <XIL/Vivado/Synth/Messages>`.
+      At next, lines are passed to a parser for :ref:`extracting information <XIL/Vivado/Synth/ExtractedInformation>` of
+      the synthesis log's sections. Each section might have different output formatting styles like trees or tables.
+
+      Besides low-level information extraction, also complex results can be derived from the collected data. This allows
+      higher software layers to implement :ref:`policies <XIL/Vivado/Synth/Policies>`. A common use case is the
+      detection of :ref:`unused code <XIL/Vivado/Synth/UnusedSignals>` or the detection of
+      :ref:`latches <XIL/Vivado/Synth/Latches>`.
+
+      The whole processing duration is measured and accessible via
+      :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.Duration`.
 
    .. grid-item::
       :columns: 6
@@ -44,12 +60,26 @@ Messages
    .. grid-item::
       :columns: 6
 
-      Vivado classifies messages into 4 categories:
+      All messages (besides some irregular formats) have the following format:
 
-      * ``INFO``
-      * ``WARNING``
-      * ``CRITICAL WARNING``
-      * ``ERROR``
+      .. code-block:: text
+
+         INFO: [Synth 8-7075] Helper process launched with PID 24240
+
+      Messages are classified into 4 categories: ``INFO``, ``WARNING``, ``CRITICAL WARNING`` or ``ERROR``. Each message
+      mentions the generating tool (e.g. ``Synth``), the tool's ID (e.g. ``8``) and a message kind ID (e.g. ``7075``)
+      followed by the message string.
+
+      All messages of the same category can be accessed in order of appearance in the tool's output via read-only
+      properties:
+
+      * :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.InfoMessages`
+      * :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.WarningMessages`
+      * :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.CriticalWarningMessages`
+      * :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.ErrorMessages`
+
+      In addition, messages are grouped in two stages by tool ID and message kind ID. These can be accessed via
+      data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.MessagesByID`.
 
    .. grid-item::
       :columns: 6
@@ -140,6 +170,7 @@ Messages
                for message in processor.ErrorMessages:
                  print(f"  {message}")
 
+
 .. _XIL/Vivado/Synth/ToolVersion:
 
 Tool Version
@@ -150,7 +181,8 @@ Tool Version
    .. grid-item::
       :columns: 6
 
-      The tool version is extracted by the Preamble parser.
+      The used Vivado version is extracted by the :class:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Preamble` parser and can
+      be accessed via :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.ToolVersion` as :class:`~pyTooling.Versioning.YearReleaseVersion`.
 
    .. grid-item::
       :columns: 6
@@ -166,6 +198,7 @@ Tool Version
 
          print(f"Vivado version: v{processor[Preamble].ToolVersion}")
 
+
 .. _XIL/Vivado/Synth/SynthStart:
 
 Synthesis start time and date
@@ -176,7 +209,12 @@ Synthesis start time and date
    .. grid-item::
       :columns: 6
 
-      The start timestamp (:class:`datetime`) is extracted by the Preamble parser.
+      The start timestamp (as :class:`~datetime.datetime`) is extracted by the :class:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Preamble`
+      parser and can be accessed via :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.StartDateTime`.
+
+      .. seealso::
+
+         :ref:`XIL/Vivado/Synth/SynthDuration`
 
    .. grid-item::
       :columns: 6
@@ -191,6 +229,7 @@ Synthesis start time and date
          processor.Parse()
 
          print(f"Synthesis started: v{processor[Preamble].StartDatetime}")
+
 
 .. _XIL/Vivado/Synth/SynthDuration:
 
