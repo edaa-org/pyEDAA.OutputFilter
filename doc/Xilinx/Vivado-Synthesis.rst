@@ -8,15 +8,25 @@ Synthesis
 Processing the ``*.vds`` File
 *****************************
 
-.. code-block:: Python
+.. grid:: 2
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+   .. grid-item::
+      :columns: 6
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+      TBD
 
-   print(f"Processing duration: {processor.Duration:.3f} seconds")
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+         print(f"Processing duration: {processor.Duration:.3f} seconds")
 
 
 .. _XIL/Vivado/Synth/ExtractedInformation:
@@ -24,118 +34,330 @@ Processing the ``*.vds`` File
 Extracted Information
 *********************
 
+.. _XIL/Vivado/Synth/Messages:
+
 Messages
 ========
 
-INFO Messages
--------------
+.. grid:: 2
 
-.. code-block:: Python
+   .. grid-item::
+      :columns: 6
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+      Vivado classifies messages into 4 categories:
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+      * ``INFO``
+      * ``WARNING``
+      * ``CRITICAL WARNING``
+      * ``ERROR``
 
-   print(f"INFO Messages ({len(processor.InfoMessages)}):")
-   for message in processor.InfoMessages:
-     print(f"  {message}")
+   .. grid-item::
+      :columns: 6
 
-WARNING Messages
-----------------
+      .. tab-set::
 
-.. code-block:: Python
+         .. tab-item:: Message by ID
+            :sync: ByID
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+            .. code-block:: Python
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+               from pathlib import Path
+               from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
-   print(f"WARNING Messages ({len(processor.WarningMessages)}):")
-   for message in processor.WarningMessages:
-     print(f"  {message}")
+               logfile = Path("tests/data/Stopwatch/toplevel.vds")
+               processor = Processor(logfile)
+               processor.Parse()
 
-CRITICAl WARNING Messages
--------------------------
+               print(f"Messages by ID:")
+               for toolID, messageGroup in processor.MessagesByID.items():
+                 print(f"{processor.ToolNames[toolID]} {toolID}:")
+                 for messageID, messages in messageGroup.items():
+                   print(f"  {messageID} ({len(messages)}):")
+                   for message in messages:
+                     print(f"    {message}")
 
-.. code-block:: Python
+         .. tab-item:: INFO
+            :sync: INFO
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+            .. code-block:: Python
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+               from pathlib import Path
+               from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
-   print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages)}):")
-   for message in processor.CriticalWarningMessages:
-     print(f"  {message}")
+               logfile = Path("tests/data/Stopwatch/toplevel.vds")
+               processor = Processor(logfile)
+               processor.Parse()
 
-ERROR Messages
---------------
+               print(f"INFO Messages ({len(processor.InfoMessages)}):")
+               for message in processor.InfoMessages:
+                 print(f"  {message}")
 
-.. code-block:: Python
+         .. tab-item:: WARNING
+            :sync: WARNING
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+            .. code-block:: Python
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+               from pathlib import Path
+               from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
 
-   print(f"ERROR Messages ({len(processor.ErrorMessages)}):")
-   for message in processor.ErrorMessages:
-     print(f"  {message}")
+               logfile = Path("tests/data/Stopwatch/toplevel.vds")
+               processor = Processor(logfile)
+               processor.Parse()
+
+               print(f"WARNING Messages ({len(processor.WarningMessages)}):")
+               for message in processor.WarningMessages:
+                 print(f"  {message}")
+
+         .. tab-item:: CRITICAL WARNING
+            :sync: CRITICAL
+
+            .. code-block:: Python
+
+               from pathlib import Path
+               from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+               logfile = Path("tests/data/Stopwatch/toplevel.vds")
+               processor = Processor(logfile)
+               processor.Parse()
+
+               print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages)}):")
+               for message in processor.CriticalWarningMessages:
+                 print(f"  {message}")
+
+         .. tab-item:: ERROR
+            :sync: ERROR
+
+            .. code-block:: Python
+
+               from pathlib import Path
+               from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+               logfile = Path("tests/data/Stopwatch/toplevel.vds")
+               processor = Processor(logfile)
+               processor.Parse()
+
+               print(f"ERROR Messages ({len(processor.ErrorMessages)}):")
+               for message in processor.ErrorMessages:
+                 print(f"  {message}")
+
+.. _XIL/Vivado/Synth/ToolVersion:
 
 Tool Version
 ============
 
-The tool version is extracted by the Preamble parser.
+.. grid:: 2
 
-.. code-block:: Python
+   .. grid-item::
+      :columns: 6
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+      The tool version is extracted by the Preamble parser.
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   .. grid-item::
+      :columns: 6
 
-   print(f"Vivado version: v{processor[Preamble].ToolVersion}")
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+         print(f"Vivado version: v{processor[Preamble].ToolVersion}")
+
+.. _XIL/Vivado/Synth/SynthStart:
 
 Synthesis start time and date
 =============================
 
-The start timestamp (:class:`datetime`) is extracted by the Preamble parser.
+.. grid:: 2
 
-.. code-block:: Python
+   .. grid-item::
+      :columns: 6
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+      The start timestamp (:class:`datetime`) is extracted by the Preamble parser.
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   .. grid-item::
+      :columns: 6
 
-   print(f"Synthesis started: v{processor[Preamble].StartDatetime}")
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+         print(f"Synthesis started: v{processor[Preamble].StartDatetime}")
+
+.. _XIL/Vivado/Synth/SynthDuration:
 
 Synthesis duration
 ==================
 
-The synthesis runtime is extracted by the WritingSynthesisReport parser.
+.. grid:: 2
 
-.. code-block:: Python
+   .. grid-item::
+      :columns: 6
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+      The synthesis runtime is extracted by the WritingSynthesisReport parser.
 
-   logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   .. grid-item::
+      :columns: 6
 
-   print(f"Synthesis duration: v{processor[WritingSynthesisReport].Duration:.1f} seconds")
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+         print(f"Synthesis duration: v{processor[WritingSynthesisReport].Duration:.1f} seconds")
+
+.. _XIL/Vivado/Synth/Blackboxes:
+
+Blackboxes
+==========
+
+.. grid:: 2
+
+   .. grid-item::
+      :columns: 6
+
+      tbd
+
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+.. _XIL/Vivado/Synth/Cells:
+
+FPGA Low-Level Cells
+====================
+
+.. grid:: 2
+
+   .. grid-item::
+      :columns: 6
+
+      tbd
+
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+
+.. _XIL/Vivado/Synth/Policies:
+
+Policies
+********
+
+.. _XIL/Vivado/Synth/Latches:
+
+Latches
+=======
+
+.. grid:: 2
+
+   .. grid-item::
+      :columns: 6
+
+      Latches are present in the design, if warning ``Synth 8-327`` was found or when the low-level cell report contains
+      cell ``LD``.
+
+
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+         print(f"Synthesis duration: v{processor[WritingSynthesisReport].Duration:.1f} seconds")
+
+
+.. _XIL/Vivado/Synth/SensitivityList:
+
+Sensitivity List
+================
+
+.. grid:: 2
+
+   .. grid-item::
+      :columns: 6
+
+      Synth 8-614
+
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+
+.. _XIL/Vivado/Synth/UnusedSignals:
+
+Unused Signals
+==============
+
+.. grid:: 2
+
+   .. grid-item::
+      :columns: 6
+
+      Synth 8-3332
+
+   .. grid-item::
+      :columns: 6
+
+      .. code-block:: Python
+
+         from pathlib import Path
+         from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+
+         logfile = Path("tests/data/Stopwatch/toplevel.vds")
+         processor = Processor(logfile)
+         processor.Parse()
+
+
 
 .. _XIL/Vivado/Synth/Steps:
 
 Processing Steps
 ****************
+
+.. _XIL/Vivado/Synth/Preamble:
 
 Preamble
 ========
@@ -150,6 +372,8 @@ RTLElaboration
 
 HandlingCustomAttributes1
 =========================
+
+.. _XIL/Vivado/Synth/LoadingPart:
 
 LoadingPart
 ===========
@@ -203,6 +427,8 @@ HandlingCustomAttributes2
 RenamingGeneratedNets
 =====================
 
+.. _XIL/Vivado/Synth/SynthesisReport:
+
 WritingSynthesisReport
 ======================
 
@@ -210,3 +436,7 @@ Extracted information:
 
  * List of blackboxes
  * Low-level resource usage (cells)
+
+Derived information:
+
+ * Are latches (``LD``) present?

@@ -35,97 +35,97 @@ Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memor
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-638] synthesizing module 'toplevel' [C:/Git/PLC2/Training/StopWatch/src/toplevel.WithTiming.vhdl:26]
 INFO: [Synth 8-638] synthesizing module 'ClockNetwork' [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:33]
-	Parameter CLOCK_IN_FREQ bound to: 100000000.000000 - type: double 
+	Parameter CLOCK_IN_FREQ bound to: 100000000.000000 - type: double
 INFO: [Synth 8-638] synthesizing module 'sync_Bits_Xilinx' [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:101]
 INFO: [Synth 8-638] synthesizing module 'sync_Bit_Xilinx' [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:119]
-	Parameter INIT bound to: 1'b0 
-	Parameter SYNC_DEPTH bound to: 2 - type: integer 
-	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0
+	Parameter SYNC_DEPTH bound to: 2 - type: integer
+	Parameter INIT bound to: 1'b0
 INFO: [Synth 8-113] binding component instance 'FF1_METASTABILITY_FFS' to cell 'FD' [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:144]
-	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0
 INFO: [Synth 8-113] binding component instance 'FF2' to cell 'FD' [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:154]
 INFO: [Synth 8-256] done synthesizing module 'sync_Bit_Xilinx' (0#1) [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:119]
 INFO: [Synth 8-256] done synthesizing module 'sync_Bits_Xilinx' (0#1) [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:101]
 INFO: [Synth 8-113] binding component instance 'BUFR_Control_Clock' to cell 'BUFG' [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:67]
 INFO: [Synth 8-113] binding component instance 'BUFG_MMCM_Clock_100MHz' to cell 'BUFG' [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:76]
 INFO: [Synth 8-113] binding component instance 'BUFG_MMCM_Clock_200MHz' to cell 'BUFG' [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:83]
-	Parameter BANDWIDTH bound to: LOW - type: string 
-	Parameter CLKFBOUT_MULT_F bound to: 10.000000 - type: double 
-	Parameter CLKFBOUT_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKFBOUT_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter CLKIN1_PERIOD bound to: 10.000000 - type: double 
-	Parameter CLKIN2_PERIOD bound to: 10.000000 - type: double 
-	Parameter CLKOUT0_DIVIDE_F bound to: 10.000000 - type: double 
-	Parameter CLKOUT0_DUTY_CYCLE bound to: 0.500000 - type: double 
-	Parameter CLKOUT0_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKOUT0_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter CLKOUT1_DIVIDE bound to: 5 - type: integer 
-	Parameter CLKOUT1_DUTY_CYCLE bound to: 0.500000 - type: double 
-	Parameter CLKOUT1_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKOUT1_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter CLKOUT2_DIVIDE bound to: 8 - type: integer 
-	Parameter CLKOUT2_DUTY_CYCLE bound to: 0.500000 - type: double 
-	Parameter CLKOUT2_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKOUT2_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter CLKOUT3_DIVIDE bound to: 4 - type: integer 
-	Parameter CLKOUT3_DUTY_CYCLE bound to: 0.500000 - type: double 
-	Parameter CLKOUT3_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKOUT3_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter CLKOUT4_CASCADE bound to: 0 - type: bool 
-	Parameter CLKOUT4_DIVIDE bound to: 100 - type: integer 
-	Parameter CLKOUT4_DUTY_CYCLE bound to: 0.500000 - type: double 
-	Parameter CLKOUT4_PHASE bound to: 0.000000 - type: double 
-	Parameter CLKOUT4_USE_FINE_PS bound to: 0 - type: bool 
-	Parameter COMPENSATION bound to: BUF_IN - type: string 
-	Parameter DIVCLK_DIVIDE bound to: 1 - type: integer 
-	Parameter REF_JITTER1 bound to: 0.000480 - type: double 
-	Parameter REF_JITTER2 bound to: 0.000480 - type: double 
-	Parameter STARTUP_WAIT bound to: 0 - type: bool 
+	Parameter BANDWIDTH bound to: LOW - type: string
+	Parameter CLKFBOUT_MULT_F bound to: 10.000000 - type: double
+	Parameter CLKFBOUT_PHASE bound to: 0.000000 - type: double
+	Parameter CLKFBOUT_USE_FINE_PS bound to: 0 - type: bool
+	Parameter CLKIN1_PERIOD bound to: 10.000000 - type: double
+	Parameter CLKIN2_PERIOD bound to: 10.000000 - type: double
+	Parameter CLKOUT0_DIVIDE_F bound to: 10.000000 - type: double
+	Parameter CLKOUT0_DUTY_CYCLE bound to: 0.500000 - type: double
+	Parameter CLKOUT0_PHASE bound to: 0.000000 - type: double
+	Parameter CLKOUT0_USE_FINE_PS bound to: 0 - type: bool
+	Parameter CLKOUT1_DIVIDE bound to: 5 - type: integer
+	Parameter CLKOUT1_DUTY_CYCLE bound to: 0.500000 - type: double
+	Parameter CLKOUT1_PHASE bound to: 0.000000 - type: double
+	Parameter CLKOUT1_USE_FINE_PS bound to: 0 - type: bool
+	Parameter CLKOUT2_DIVIDE bound to: 8 - type: integer
+	Parameter CLKOUT2_DUTY_CYCLE bound to: 0.500000 - type: double
+	Parameter CLKOUT2_PHASE bound to: 0.000000 - type: double
+	Parameter CLKOUT2_USE_FINE_PS bound to: 0 - type: bool
+	Parameter CLKOUT3_DIVIDE bound to: 4 - type: integer
+	Parameter CLKOUT3_DUTY_CYCLE bound to: 0.500000 - type: double
+	Parameter CLKOUT3_PHASE bound to: 0.000000 - type: double
+	Parameter CLKOUT3_USE_FINE_PS bound to: 0 - type: bool
+	Parameter CLKOUT4_CASCADE bound to: 0 - type: bool
+	Parameter CLKOUT4_DIVIDE bound to: 100 - type: integer
+	Parameter CLKOUT4_DUTY_CYCLE bound to: 0.500000 - type: double
+	Parameter CLKOUT4_PHASE bound to: 0.000000 - type: double
+	Parameter CLKOUT4_USE_FINE_PS bound to: 0 - type: bool
+	Parameter COMPENSATION bound to: BUF_IN - type: string
+	Parameter DIVCLK_DIVIDE bound to: 1 - type: integer
+	Parameter REF_JITTER1 bound to: 0.000480 - type: double
+	Parameter REF_JITTER2 bound to: 0.000480 - type: double
+	Parameter STARTUP_WAIT bound to: 0 - type: bool
 INFO: [Synth 8-113] binding component instance 'System_MMCM' to cell 'MMCME2_ADV' [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:92]
 INFO: [Synth 8-256] done synthesizing module 'ClockNetwork' (0#1) [C:/Git/PLC2/Training/StopWatch/src/ClockNetwork.vhdl:33]
 INFO: [Synth 8-638] synthesizing module 'sync_Bits_Xilinx__parameterized0' [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:101]
-	Parameter BITS bound to: 2 - type: integer 
+	Parameter BITS bound to: 2 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'sync_Bits_Xilinx__parameterized0' (0#1) [C:/Git/PLC2/Training/StopWatch/src/sync_Bits_Xilinx.vhdl:101]
 INFO: [Synth 8-638] synthesizing module 'Debouncer' [C:/Git/PLC2/Training/StopWatch/src/Debouncer.vhdl:23]
-	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000 
-	Parameter BITS bound to: 2 - type: integer 
+	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000
+	Parameter BITS bound to: 2 - type: integer
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:118]
 INFO: [Synth 8-63] RTL assertion: "CLOCK_FREQ:           100.000000 ns" [C:/Git/PLC2/Training/StopWatch/src/Debouncer.vhdl:28]
 INFO: [Synth 8-63] RTL assertion: "DEBOUNCE_TIME:        3.000000 ms" [C:/Git/PLC2/Training/StopWatch/src/Debouncer.vhdl:29]
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:118]
 INFO: [Synth 8-256] done synthesizing module 'Debouncer' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Debouncer.vhdl:23]
 INFO: [Synth 8-638] synthesizing module 'Stopwatch' [C:/Git/PLC2/Training/StopWatch/src/StopWatch.vhdl:28]
-	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000 
-	Parameter TIMEBASE bound to: 10000000000000 - type: long integer 
-	Parameter CONFIG bound to: 128'b00000000000000000000000000010100000000000000000000000000000011000000000000000000000000000001010000000000000000000000000000001100 
+	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000
+	Parameter TIMEBASE bound to: 10000000000000 - type: long integer
+	Parameter CONFIG bound to: 128'b00000000000000000000000000010100000000000000000000000000000011000000000000000000000000000001010000000000000000000000000000001100
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(freq, freq): delay=100.000000 ms" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:109]
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:118]
 INFO: [Synth 8-638] synthesizing module 'Counter' [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
-	Parameter MODULO bound to: 10000000 - type: integer 
-	Parameter BITS bound to: 1 - type: integer 
+	Parameter MODULO bound to: 10000000 - type: integer
+	Parameter BITS bound to: 1 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'Counter' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
 INFO: [Synth 8-638] synthesizing module 'Counter__parameterized0' [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
-	Parameter MODULO bound to: 10 - type: integer 
-	Parameter BITS bound to: 4 - type: integer 
+	Parameter MODULO bound to: 10 - type: integer
+	Parameter BITS bound to: 4 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'Counter__parameterized0' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
 INFO: [Synth 8-638] synthesizing module 'Counter__parameterized1' [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
-	Parameter MODULO bound to: 6 - type: integer 
-	Parameter BITS bound to: 4 - type: integer 
+	Parameter MODULO bound to: 6 - type: integer
+	Parameter BITS bound to: 4 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'Counter__parameterized1' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(freq, freq): delay=100.000000 ms" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:109]
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:118]
 INFO: [Synth 8-256] done synthesizing module 'Stopwatch' (0#1) [C:/Git/PLC2/Training/StopWatch/src/StopWatch.vhdl:28]
 INFO: [Synth 8-638] synthesizing module 'seg7_Display' [C:/Git/PLC2/Training/StopWatch/src/seg7_Display.vhdl:27]
-	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000 
-	Parameter DIGITS bound to: 4 - type: integer 
+	Parameter CLOCK_FREQ bound to: 64'b0000000000000000000000000000000000000101111101011110000100000000
+	Parameter DIGITS bound to: 4 - type: integer
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(freq, freq): delay=1.000000 ms" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:109]
 INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/Git/PLC2/Training/StopWatch/src/Utilities.pkg.vhdl:118]
 INFO: [Synth 8-638] synthesizing module 'Counter__parameterized2' [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
-	Parameter MODULO bound to: 100000 - type: integer 
+	Parameter MODULO bound to: 100000 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'Counter__parameterized2' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
 INFO: [Synth 8-638] synthesizing module 'Counter__parameterized3' [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
-	Parameter MODULO bound to: 4 - type: integer 
-	Parameter BITS bound to: 2 - type: integer 
+	Parameter MODULO bound to: 4 - type: integer
+	Parameter BITS bound to: 2 - type: integer
 INFO: [Synth 8-256] done synthesizing module 'Counter__parameterized3' (0#1) [C:/Git/PLC2/Training/StopWatch/src/Counter.vhdl:24]
 INFO: [Synth 8-638] synthesizing module 'seg7_Encoder' [C:/Git/PLC2/Training/StopWatch/src/seg7_Encoder.vhdl:17]
 INFO: [Synth 8-226] default block is never used [C:/Git/PLC2/Training/StopWatch/src/seg7_Encoder.vhdl:23]
@@ -182,7 +182,7 @@ Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; el
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'State_reg' in module 'Stopwatch'
 ---------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
+                   State |                     New Encoding |                Previous Encoding
 ---------------------------------------------------------------------------------------------------
                 st_reset |                             0001 |                               00
                  st_idle |                             0010 |                               01
@@ -194,28 +194,28 @@ INFO: [Synth 8-3354] encoded FSM with state register 'State_reg' using encoding 
 Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1389.562 ; gain = 679.117
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Start RTL Component Statistics 
+Start RTL Component Statistics
 ---------------------------------------------------------------------------------
-Detailed RTL Component Info : 
-+---Adders : 
-	   2 Input    9 Bit       Adders := 2     
-	   2 Input    4 Bit       Adders := 2     
-	   2 Input    3 Bit       Adders := 2     
-	   2 Input    2 Bit       Adders := 1     
-+---Registers : 
-	                9 Bit    Registers := 2     
-	                8 Bit    Registers := 2     
-	                4 Bit    Registers := 2     
-	                3 Bit    Registers := 2     
-	                2 Bit    Registers := 1     
-	                1 Bit    Registers := 3     
-+---Muxes : 
-	   4 Input    4 Bit        Muxes := 2     
-	   2 Input    4 Bit        Muxes := 1     
-	   2 Input    1 Bit        Muxes := 5     
-	   4 Input    1 Bit        Muxes := 1     
+Detailed RTL Component Info :
++---Adders :
+	   2 Input    9 Bit       Adders := 2
+	   2 Input    4 Bit       Adders := 2
+	   2 Input    3 Bit       Adders := 2
+	   2 Input    2 Bit       Adders := 1
++---Registers :
+	                9 Bit    Registers := 2
+	                8 Bit    Registers := 2
+	                4 Bit    Registers := 2
+	                3 Bit    Registers := 2
+	                2 Bit    Registers := 1
+	                1 Bit    Registers := 3
++---Muxes :
+	   4 Input    4 Bit        Muxes := 2
+	   2 Input    4 Bit        Muxes := 1
+	   2 Input    1 Bit        Muxes := 5
+	   4 Input    1 Bit        Muxes := 1
 ---------------------------------------------------------------------------------
-Finished RTL Component Statistics 
+Finished RTL Component Statistics
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Part Resource Summary
@@ -305,13 +305,13 @@ Finished Renaming Generated Nets : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23
 Start Writing Synthesis Report
 ---------------------------------------------------------------------------------
 
-Report BlackBoxes: 
+Report BlackBoxes:
 +-+--------------+----------+
 | |BlackBox name |Instances |
 +-+--------------+----------+
 +-+--------------+----------+
 
-Report Cell Usage: 
+Report Cell Usage:
 +------+-----------+------+
 |      |Cell       |Count |
 +------+-----------+------+

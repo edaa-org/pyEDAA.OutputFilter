@@ -154,6 +154,17 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 		self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
 		self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
 
+		self.WriteNormal("Policies:")
+		self.WriteNormal(f"  Latches: {'found' if processor.HasLatches else '----'}")
+		if processor.HasLatches:
+			for cellName in ("LD", ):
+				try:
+					print(f"    {cellName}: {processor.Cells[cellName]}")
+				except KeyError:
+					pass
+			for latch in processor.Latches:
+				print(f"    {latch}")
+
 		self.ExitOnPreviousErrors()
 
 	@CommandHandler("vivado-impl", help="Parse AMD/Xilinx Vivado Implementation log files.", description="Parse AMD/Xilinx Vivado Implementation log files.")
