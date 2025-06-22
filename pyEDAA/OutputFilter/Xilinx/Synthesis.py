@@ -38,7 +38,7 @@ from pyTooling.MetaClasses import mustoverride
 from pyTooling.Common      import firstValue
 
 from pyEDAA.OutputFilter.Xilinx import VivadoMessage, ProcessingState, Parser, Preamble, BaseProcessor, BaseDocument, \
-	Line, ProcessorException, LineKind
+	Line, ProcessorException, LineKind, VivadoInfoMessage, VHDLAssertionMessage, VHDLReportMessage
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
 
@@ -68,8 +68,7 @@ class Section(Parser):
 	def Duration(self) -> float:
 		return self._duration
 
-	def _SectionStart(self) -> Generator[Line, Line, Line]:
-		line = yield
+	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
 		print(f"SectionStart1: {line}")
 		line._kind = LineKind.SectionStart
 
@@ -103,27 +102,6 @@ class Section(Parser):
 		if check is not None:
 			raise Exception()
 
-	def Generator(self) -> Generator[Line, Line, None]:
-		line = yield from self._SectionStart()
-		print(f"Generator1: {line}")
-
-		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("----"):
-				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
-				break
-			else:
-				line._kind = LineKind.Verbose
-
-			line = yield line
-
-		line = yield line
-		print(f"GeneratorN: {line}")
-
-		yield from self._SectionFinish(line)
-
-
 	# @mustoverride
 	# def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
 	# 	if len(line) == 0:
@@ -148,23 +126,9 @@ class Section(Parser):
 	#
 	# 	return ProcessingState.Skipped
 
-
-@export
-class RTLElaboration(Section):
-	_START:  ClassVar[str] = "Starting RTL Elaboration : "
-	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
-
-	def Generator(self) -> Generator[Line, Line, None]:
-		line = yield
-		line._kind = LineKind.SectionStart
-
-		line = yield line
-		if line._message.startswith("----"):
-			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError
-
-		line = yield line
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+		print(f"Generator1: {line}")
 
 		while line is not None:
 			rawMessage = line._message
@@ -178,52 +142,77 @@ class RTLElaboration(Section):
 			line = yield line
 
 		line = yield line
-		if line._message.startswith(self._FINISH):
-			line._kind = LineKind.SectionEnd
-		else:
-			line._kind |= LineKind.ProcessorError
+		print(f"GeneratorN: {line}")
+
+		lastLine = yield from self._SectionFinish(line)
+
+
+@export
+class RTLElaboration(Section):
+	_START:  ClassVar[str] = "Starting RTL Elaboration : "
+	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+		print(f"RTLElab1: {line}")
+
+		while line is not None:
+			rawMessage = line._message
+
+			if isinstance(line, VivadoInfoMessage):
+				if line._toolID == 8:
+					if line._messageKindID == 63:    # VHDL assert statement
+						newLine = VHDLAssertionMessage.Convert(line)
+						if newLine is None:
+							print(f"Convert error at: {line}")
+						else:
+							line = newLine
+					elif line._messageKindID == 6031:  # VHDL report statement
+						newLine = VHDLReportMessage.Convert(line)
+						if newLine is None:
+							print(f"Convert error at: {line}")
+						else:
+							line = newLine
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			elif not isinstance(line, VivadoMessage):
+				line._kind = LineKind.Verbose
+
+			line = yield line
 
 		line = yield line
-		if line._message.startswith("----"):
-			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
-		else:
-			line._kind |= LineKind.ProcessorError
+		print(f"RTLElabN: {line}")
 
-		check = yield line
-		if check is not None:
-			raise Exception()
+		yield from self._SectionFinish(line)
 
 
 @export
 class HandlingCustomAttributes1(Section):
-	_START: ClassVar[str] =  "Start Handling Custom Attributes"
+	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
-
 
 
 @export
 class LoadingPart(Section):
-	_START: ClassVar[str] =  "Start Loading Part and Timing Information"
+	_START:  ClassVar[str] = "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
-
-
 
 
 @export
 class ApplySetProperty(Section):
-	_START: ClassVar[str] =  "Start Applying 'set_property' XDC Constraints"
+	_START:  ClassVar[str] = "Start Applying 'set_property' XDC Constraints"
 	_FINISH: ClassVar[str] = "Finished applying 'set_property' XDC Constraints : "
-
-
 
 
 @export
 class RTLComponentStatistics(Section):
-	_START: ClassVar[str] =  "Start RTL Component Statistics"
+	_START:  ClassVar[str] = "Start RTL Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Component Statistics"
 
-	def Generator(self) -> Generator[Line, Line, None]:
-		line = yield from self._SectionStart()
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
 		print(f"RTLCompStat1: {line}")
 
 		while line is not None:
@@ -245,105 +234,115 @@ class RTLComponentStatistics(Section):
 
 @export
 class PartResourceSummary(Section):
-	_START: ClassVar[str] =  "Start Part Resource Summary"
+	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
-
-
 
 
 @export
 class CrossBoundaryAndAreaOptimization(Section):
-	_START: ClassVar[str] =  "Start Cross Boundary and Area Optimization"
+	_START:  ClassVar[str] = "Start Cross Boundary and Area Optimization"
 	_FINISH: ClassVar[str] = "Finished Cross Boundary and Area Optimization : "
-
-
 
 
 @export
 class ApplyingXDCTimingConstraints(Section):
-	_START: ClassVar[str] =  "Start Applying XDC Timing Constraints"
+	_START:  ClassVar[str] = "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
-
-
 
 
 @export
 class TimingOptimization(Section):
-	_START: ClassVar[str] =  "Start Timing Optimization"
+	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
-
-
 
 
 @export
 class TechnologyMapping(Section):
-	_START: ClassVar[str] =  "Start Technology Mapping"
+	_START:  ClassVar[str] = "Start Technology Mapping"
 	_FINISH: ClassVar[str] = "Finished Technology Mapping : "
-
-
-
-
-@export
-class IOInsertion(Section):
-	_START: ClassVar[str] =  "Start IO Insertion"
-	_FINISH: ClassVar[str] = "Finished IO Insertion : "
-
-
 
 
 @export
 class FlatteningBeforeIOInsertion(Section):
-	_START: ClassVar[str] =  "Start Flattening Before IO Insertion"
+	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
-
-
 
 
 @export
 class FinalNetlistCleanup(Section):
-	_START: ClassVar[str] =  "Start Final Netlist Cleanup"
+	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
 
+@export
+class IOInsertion(Section):
+	_START:  ClassVar[str] = "Start IO Insertion"
+	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		flattening = FlatteningBeforeIOInsertion(None)
+		netlist = FinalNetlistCleanup(None)
+
+		line = yield from self._SectionStart(line)
+		print(f"IOInsert1: {line}")
+
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		print(f"IOInsert2: {line}")
+
+		if line._message.startswith("Start "):
+			line = yield from flattening.Generator(line)
+
+
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		print(f"IOInsertN: {line}")
+
+		yield from self._SectionFinish(line)
 
 @export
 class RenamingGeneratedInstances(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Instances"
+	_START:  ClassVar[str] = "Start Renaming Generated Instances"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Instances : "
-
-
 
 
 @export
 class RebuildingUserHierarchy(Section):
-	_START: ClassVar[str] =  "Start Rebuilding User Hierarchy"
+	_START:  ClassVar[str] = "Start Rebuilding User Hierarchy"
 	_FINISH: ClassVar[str] = "Finished Rebuilding User Hierarchy : "
-
-
 
 
 @export
 class RenamingGeneratedPorts(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Ports"
+	_START:  ClassVar[str] = "Start Renaming Generated Ports"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Ports : "
-
-
 
 
 @export
 class HandlingCustomAttributes2(Section):
-	_START: ClassVar[str] =  "Start Handling Custom Attributes"
+	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
-
-
 
 
 @export
 class RenamingGeneratedNets(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Nets"
+	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
-
 
 
 @export
@@ -479,10 +478,12 @@ class Processor(BaseDocument):
 		parser:        Section       = firstValue(self._parsers)
 		activeParsers: List[Parsers] = list(self._parsers.values())
 
-		next(filter := parser.Generator())
-
-		# wait for first pre-processed line
+		# get first line and send to preamble filter
 		line = yield
+		line = next(filter := parser.Generator(line))
+
+		# return first line and get the second line
+		line = yield line
 
 		while line is not None:
 			if filter is not None:
@@ -501,8 +502,7 @@ class Processor(BaseDocument):
 					for parser in activeParsers:  # type: Section
 						if line._message.startswith(parser._START):
 							print(f"BEGIN: {parser.__class__.__name__}")
-							next(filter := parser.Generator())
-							line = filter.send(line)
+							next(filter := parser.Generator(line))
 							break
 
 			# if state is not None:

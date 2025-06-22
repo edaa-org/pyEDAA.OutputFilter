@@ -323,6 +323,34 @@ class VivadoErrorMessage(VivadoMessage, ErrorMessage):
 
 
 @export
+class VHDLReportMessage(VivadoInfoMessage):
+	_REGEXP: ClassVar[Pattern ] = re_compile(r"""RTL report: "(.*)" \[(.*):(\d+)\]""")
+
+	_reportMessage:    str
+	_sourceFile:       Path
+	_sourceLineNumber: int
+
+	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int):
+		super().__init__(lineNumber, LineKind.InfoMessage, tool, toolID, messageKindID, rawMessage)
+
+		self._reportMessage = reportMessage
+		self._sourceFile = sourceFile
+		self._sourceLineNumber = sourceLineNumber
+
+	@classmethod
+	def Convert(cls, line: VivadoInfoMessage) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(line._message)) is not None:
+			return cls(line._lineNumber, line._toolName, line._toolID, line._messageKindID, line._message, match[1], Path(match[2]), int(match[3]))
+
+		return None
+
+
+@export
+class VHDLAssertionMessage(VHDLReportMessage):
+	_REGEXP: ClassVar[Pattern ] = re_compile(r"""RTL assertion: "(.*)" \[(.*):(\d+)\]""")
+
+
+@export
 class VivadoTclCommand(Line):
 	_PREFIX: ClassVar[str] = "Command:"
 
@@ -466,6 +494,8 @@ class BaseProcessor(metaclass=ExtendedType, slots=True):
 				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
+			elif len(rawMessageLine) == 0:
+				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
 			elif rawMessageLine.startswith("Command: "):
 				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine)
 			else:
@@ -528,9 +558,7 @@ class Preamble(Parser):
 	def StartDatetime(self) -> datetime:
 		return self._startDatetime
 
-	def Generator(self) -> Generator[Line, Line, None]:
-		line = yield
-
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		rawMessage = line._message
 		if rawMessage.startswith("#----"):
 			line._kind = LineKind.SectionDelimiter
@@ -550,10 +578,13 @@ class Preamble(Parser):
 				line._kind = LineKind.Normal
 			elif rawMessage.startswith("#----"):
 				line._kind = LineKind.SectionDelimiter | LineKind.Last
+				break
 			else:
 				line._kind = LineKind.Verbose
 
 			line = yield line
+
+		check = yield line
 
 
 @export
@@ -594,10 +625,14 @@ class BaseDocument(BaseProcessor):
 					print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
 			elif LineKind.Command in line.Kind:
 				print(f"{{CYAN}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
+				print(f"{{DARK_CYAN}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
 			elif LineKind.Delimiter in line.Kind:
 				print(f"{{GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
 			elif LineKind.Verbose in line.Kind:
 				print(f"{{DARK_GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif line.Kind is LineKind.Empty:
+				print()
 			elif line.Kind is LineKind.ProcessorError:
 				print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
 			elif line.Kind is LineKind.Unprocessed:
@@ -607,10 +642,7 @@ class BaseDocument(BaseProcessor):
 				print(line)
 				raise Exception()
 
-	def DocumentSlicer(self) -> Generator[Union[Line, ProcessorException], Line, None]:
-		# wait for first pre-processed line
-		line = yield
-
+	def DocumentSlicer(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		while line is not None:
 			if line._kind is LineKind.Unprocessed:
 				line._kind = LineKind.Normal
