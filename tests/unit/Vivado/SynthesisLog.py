@@ -36,7 +36,6 @@ from pyTooling.Versioning       import YearReleaseVersion
 
 from pyEDAA.OutputFilter.Xilinx                import Preamble
 from pyEDAA.OutputFilter.Xilinx.Synthesis      import Processor as SynthProc, WritingSynthesisReport
-from pyEDAA.OutputFilter.Xilinx.Implementation import Processor as ImplProc
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -61,17 +60,3 @@ class Stopwatch(TestCase):
 
 
 		self.assertEqual(0, len(processor[WritingSynthesisReport].Blackboxes))
-
-	def test_ImplementationLogfile(self) -> None:
-		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
-		processor = ImplProc(logfile)
-		processor.Parse()
-
-		self.assertLess(processor.Duration, 0.1)
-
-		self.assertEqual(152, len(processor.InfoMessages))
-		self.assertEqual(2, len(processor.WarningMessages))
-		self.assertEqual(2, len(processor.CriticalWarningMessages))
-		self.assertEqual(0, len(processor.ErrorMessages))
-
-		self.assertEqual(YearReleaseVersion(2025, 1), processor[Preamble].ToolVersion)

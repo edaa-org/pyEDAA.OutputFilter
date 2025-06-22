@@ -30,57 +30,19 @@
 #
 from argparse import Namespace
 from pathlib  import Path
-from typing   import NoReturn
+from typing   import NoReturn, Iterable
 
-from pyTooling.Decorators                     import readonly
-from pyTooling.MetaClasses                    import ExtendedType
-from pyTooling.Attributes.ArgParse            import CommandHandler
-from pyTooling.Attributes.ArgParse.Flag       import LongFlag
-from pyTooling.Attributes.ArgParse.ValuedFlag import LongValuedFlag
+from pyTooling.Decorators                      import readonly
+from pyTooling.MetaClasses                     import ExtendedType
+from pyTooling.Attributes.ArgParse             import CommandHandler
+from pyTooling.Attributes.ArgParse.Flag        import LongFlag
+from pyTooling.Attributes.ArgParse.ValuedFlag  import LongValuedFlag
 
-from pyEDAA.OutputFilter.Xilinx                import Preamble, BaseDocument
-from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor as SynthProc, WritingSynthesisReport, Processor, LoadingPart
-from pyEDAA.OutputFilter.Xilinx.Implementation import Processor as ImplProc
-
-
-class Proto(metaclass=ExtendedType, mixin=True):
-	@readonly
-	def Verbose(self) -> bool:
-		...
-
-	@readonly
-	def Width(self) -> int:
-		...
-
-	def _PrintHeadline(self):
-		...
-
-	def WriteDebug(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteVerbose(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteNormal(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteWarning(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteCritical(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteError(self, a: str, appendLinebreak: bool = True):
-		...
-
-	def WriteFatal(self, a: str, appendLinebreak: bool = True, immediateExit: bool = True):
-		...
-
-	def Exit(self, i: int = 0) -> NoReturn:
-		...
+from pyEDAA.OutputFilter.Xilinx                import Preamble, LineKind, Line
+from pyEDAA.OutputFilter.Xilinx.Synthesis      import WritingSynthesisReport, Processor, LoadingPart
 
 
-class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
+class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	@CommandHandler("vivado-synth", help="Parse AMD/Xilinx Vivado Synthesis log files.", description="Parse AMD/Xilinx Vivado Synthesis log files.")
 	@LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
 	@LongFlag("--colored", dest="colored", help="Render logfile with colored lines.")
@@ -112,24 +74,7 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 		processor.Parse()
 
 		if args.colored:
-			processor.ColoredOutput()
-
-			print(processor[Preamble].ToolVersion)
-			print(processor[Preamble].StartDatetime)
-			print(processor[LoadingPart].Part)
-			for message in processor.VHDLReportMessages:
-				print(message)
-			for message in processor.VHDLAssertMessages:
-				print(message)
-			print(f"Latches: {processor.HasLatches}")
-			for latch in processor.Latches:
-				print(latch)
-			print(f"Blackboxes: {processor.HasBlackboxes}")
-			for bbox in processor[WritingSynthesisReport].Blackboxes.items():
-				print(f"  {bbox}")
-			print(f"Cells: {len(processor.Cells)}")
-			for cell, count in processor.Cells.items():
-				print(f"  {cell}: {count}")
+			self.ColoredOutput(processor._lines)
 
 		if args.info:
 			self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
@@ -173,73 +118,75 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 
 		if args.summary:
 			self.WriteNormal("Summary:")
+			self.WriteNormal(f"  Tool version:        {processor[Preamble].ToolVersion}")
+			self.WriteNormal(f"  Started at:          {processor[Preamble].StartDatetime}")
 			self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
-			self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
+			self.WriteNormal(f"  Info:                {len(processor.InfoMessages)}")
+			self.WriteNormal(f"  Warning:             {len(processor.WarningMessages)}")
+			self.WriteNormal(f"  Critical Warning:    {len(processor.CriticalWarningMessages)}")
+			self.WriteNormal(f"  Error:               {len(processor.ErrorMessages)}")
+			self.WriteNormal(f"  Part:                {processor[LoadingPart].Part}")
 
 			self.WriteNormal("Policies:")
-			self.WriteNormal(f"  Latches: {'found' if processor.HasLatches else '----'}")
+			self.WriteNormal(f"  Latches:             {'found' if processor.HasLatches else '----'}")
 			if processor.HasLatches:
 				for cellName in ("LD", ):
 					try:
-						print(f"    {cellName}: {processor.Cells[cellName]}")
+						self.WriteNormal(f"    {cellName}: {processor.Cells[cellName]}")
 					except KeyError:
 						pass
 				for latch in processor.Latches:
-					print(f"    {latch}")
+					self.WriteNormal(f"    {latch}")
+			self.WriteNormal(f"  Blackboxes:          {'found' if processor.HasBlackboxes else '----'}")
+			if processor.HasBlackboxes:
+				for bbox in processor[WritingSynthesisReport].Blackboxes:
+					self.WriteNormal(f"    {bbox}")
+
+			self.WriteNormal(f"VHDL report statements ({len(processor.VHDLReportMessages)}):")
+			for message in processor.VHDLReportMessages:
+				self.WriteNormal(f"  {message}")
+			self.WriteNormal(f"VHDL assert statements ({len(processor.VHDLAssertMessages)}):")
+			for message in processor.VHDLAssertMessages:
+				self.WriteNormal(f"  {message}")
+
+			self.WriteNormal(f"Cells: {len(processor.Cells)}")
+			for cell, count in processor.Cells.items():
+				self.WriteNormal(f"  {cell}: {count}")
 
 		self.ExitOnPreviousErrors()
 
-	@CommandHandler("vivado-impl", help="Parse AMD/Xilinx Vivado Implementation log files.", description="Parse AMD/Xilinx Vivado Implementation log files.")
-	@LongValuedFlag("--file", dest="logfile", metaName='Implementation Log', help="Implementation log file (*.vdi).")
-	@LongFlag("--info", dest="info", help="Print info messages.")
-	@LongFlag("--warning", dest="warning", help="Print warning messages.")
-	@LongFlag("--critical", dest="critical", help="Print critical warning messages.")
-	@LongFlag("--error", dest="error", help="Print error messages.")
-	@LongFlag("--influxdb", dest="influxdb", help="Write statistics as InfluxDB line protocol file (*.line).")
-	def HandleVivadoImplementation(self, args: Namespace) -> None:
-		"""Handle program calls with command ``vivado-synth``."""
-		self._PrintHeadline()
-
-		returnCode = 0
-		if args.logfile is None:
-			self.WriteError(f"Option '--file=<VDI file>' is missing.")
-			returnCode = 3
-
-		logfile = Path(args.logfile)
-		if not logfile.exists():
-			self.WriteError(f"Vivado implementation log file '{logfile}' doesn't exist.")
-			returnCode = 4
-
-		if returnCode != 0:
-			self.Exit(returnCode)
-
-		processor = ImplProc(logfile)
-		processor.Parse()
-
-		if args.info:
-			self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
-			for message in processor.InfoMessages:
-				self.WriteNormal(f"  {message}")
-		if args.warning:
-			self.WriteNormal(f"WARNING messages: {len(processor.WarningMessages)}")
-			for message in processor.WarningMessages:
-				self.WriteNormal(f"  {message}")
-		if args.critical:
-			self.WriteNormal(f"CRITICAL WARNING: messages {len(processor.CriticalWarningMessages)}")
-			for message in processor.CriticalWarningMessages:
-				self.WriteNormal(f"  {message}")
-		if args.error:
-			self.WriteNormal(f"ERROR messages: {len(processor.ErrorMessages)}")
-			for message in processor.ErrorMessages:
-				self.WriteNormal(f"  {message}")
-
-		if args.influxdb:
-			influxString = "vivado_implementation_overview"
-
-			self.WriteNormal(influxString)
-
-		self.WriteNormal("Summary:")
-		self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
-		self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
-
-		self.WriteNormal("Policies:")
+	def ColoredOutput(self, lines: Iterable[Line]) -> None:
+		for i, line in enumerate(lines, start=1):
+			if line.Kind is LineKind.Normal:
+				print(f"{i:4}: {line.Message}")
+			elif LineKind.Message in line.Kind:
+				if line.Kind is LineKind.InfoMessage:
+					print(f"{i:4}: {{BLUE}}{line}{{NOCOLOR}}".format(**self.Foreground))
+				elif line.Kind is LineKind.WarningMessage:
+					print(f"{i:4}: {{YELLOW}}{line}{{NOCOLOR}}".format(**self.Foreground))
+				elif line.Kind is LineKind.CriticalWarningMessage:
+					print(f"{i:4}: {{MAGENTA}}{line}{{NOCOLOR}}".format(**self.Foreground))
+				elif line.Kind is LineKind.ErrorMessage:
+					print(f"{i:4}: {{RED}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif LineKind.Command in line.Kind:
+				print(f"{i:4}: {{CYAN}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
+				print(f"{i:4}: {{DARK_CYAN}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif line.Kind is LineKind.ParagraphHeadline:
+				print(f"{i:4}: {{DARK_YELLOW}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif LineKind.Table in line.Kind:
+				print(f"{i:4}: {{WHITE}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif LineKind.Delimiter in line.Kind:
+				print(f"{i:4}: {{GRAY}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif LineKind.Verbose in line.Kind:
+				print(f"{i:4}: {{DARK_GRAY}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif line.Kind is LineKind.Empty:
+				print(f"{i:4}:")
+			elif line.Kind is LineKind.ProcessorError:
+				print(f"{i:4}: {{RED}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif line.Kind is LineKind.Unprocessed:
+				print(f"{i:4}: {{DARK_RED}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			else:
+				print(f"{i:4}: Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
+				print(line)
+				raise Exception()

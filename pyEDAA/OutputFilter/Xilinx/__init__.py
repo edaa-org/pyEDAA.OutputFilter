@@ -114,7 +114,7 @@ class LineKind(Flag):
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	Command =                2**34
+	Command =                2**35
 
 
 @export
@@ -635,38 +635,6 @@ class BaseDocument(BaseProcessor):
 			self._lines = [generator.send(rawLine) for rawLine in lines]
 
 		self._duration = sw.Duration
-
-	def ColoredOutput(self) -> None:
-		for line in self._lines:
-			if line.Kind is LineKind.Normal:
-				print(line.Message)
-			elif LineKind.Message in line.Kind:
-				if line.Kind is LineKind.InfoMessage:
-					print(f"{{BLUE}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-				elif line.Kind is LineKind.WarningMessage:
-					print(f"{{YELLOW}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-				elif line.Kind is LineKind.CriticalWarningMessage:
-					print(f"{{MAGENTA}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-				elif line.Kind is LineKind.ErrorMessage:
-					print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif LineKind.Command in line.Kind:
-				print(f"{{CYAN}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
-				print(f"{{DARK_CYAN}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif LineKind.Delimiter in line.Kind:
-				print(f"{{GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif LineKind.Verbose in line.Kind:
-				print(f"{{DARK_GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif line.Kind is LineKind.Empty:
-				print()
-			elif line.Kind is LineKind.ProcessorError:
-				print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			elif line.Kind is LineKind.Unprocessed:
-				print(f"{{DARK_RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
-			else:
-				print(f"Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
-				print(line)
-				raise Exception()
 
 	def DocumentSlicer(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		while line is not None:

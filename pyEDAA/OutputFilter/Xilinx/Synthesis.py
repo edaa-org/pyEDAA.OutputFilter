@@ -262,13 +262,12 @@ class LoadingPart(Section):
 			rawMessage = line._message
 
 			if line._message.startswith("Loading part: "):
+				line._kind = LineKind.Normal
 				self._part = line._message[14:].strip()
 
 			if rawMessage.startswith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			elif not isinstance(line, VivadoMessage):
-				line._kind = LineKind.Verbose
 
 			line = yield line
 
