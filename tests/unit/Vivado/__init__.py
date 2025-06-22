@@ -33,8 +33,8 @@ from unittest  import TestCase as TestCase
 
 from pytest    import mark
 
-from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
-
+from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, \
+	VivadoErrorMessage, LineKind
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -44,7 +44,7 @@ if __name__ == "__main__": # pragma: no cover
 
 class Instantiation(TestCase):
 	def test_Info(self) -> None:
-		message = VivadoInfoMessage(1, "synth", 8, 25, "some message")
+		message = VivadoInfoMessage(1, LineKind.InfoMessage, "synth", 8, 25, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -55,7 +55,7 @@ class Instantiation(TestCase):
 		self.assertEqual("INFO: [synth 8-25] some message", str(message))
 
 	def test_Warning(self) -> None:
-		message = VivadoWarningMessage(1, "synth", 8, 25, "some message")
+		message = VivadoWarningMessage(1, LineKind.WarningMessage, "synth", 8, 25, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -66,7 +66,7 @@ class Instantiation(TestCase):
 		self.assertEqual("WARNING: [synth 8-25] some message", str(message))
 
 	def test_CriticalWarning(self) -> None:
-		message = VivadoCriticalWarningMessage(1, "synth", 8, 25, "some message")
+		message = VivadoCriticalWarningMessage(1, LineKind.CriticalWarningMessage, "synth", 8, 25, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -77,7 +77,7 @@ class Instantiation(TestCase):
 		self.assertEqual("CRITICAL WARNING: [synth 8-25] some message", str(message))
 
 	def test_Error(self) -> None:
-		message = VivadoErrorMessage(1, "synth", 8, 25, "some message")
+		message = VivadoErrorMessage(1, LineKind.ErrorMessage, "synth", 8, 25, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -91,7 +91,7 @@ class Instantiation(TestCase):
 class Parsing(TestCase):
 	def test_Info(self) -> None:
 		messageText = "INFO: [synth 8-25] some message"
-		message = VivadoInfoMessage.Parse(messageText, 1)
+		message = VivadoInfoMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -104,7 +104,7 @@ class Parsing(TestCase):
 	@mark.xfail
 	def test_Info_AbnormalFormat(self) -> None:
 		messageText = "INFO: [runctrl-25] some message"
-		message = VivadoInfoMessage.Parse(messageText, 1)
+		message = VivadoInfoMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("runctrl", message.ToolName)
@@ -116,13 +116,13 @@ class Parsing(TestCase):
 
 	def test_Info_WrongFormat(self) -> None:
 		messageText = "FOOBAR: [synth 8-25] some message"
-		message = VivadoInfoMessage.Parse(messageText, 1)
+		message = VivadoInfoMessage.Parse(1, messageText)
 
 		self.assertIsNone(message)
 
 	def test_Warning(self) -> None:
 		messageText = "WARNING: [synth 8-25] some message"
-		message = VivadoWarningMessage.Parse(messageText, 1)
+		message = VivadoWarningMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -135,7 +135,7 @@ class Parsing(TestCase):
 	@mark.xfail
 	def test_Warning_AbnormalFormat(self) -> None:
 		messageText = "WARNING: some message"
-		message = VivadoInfoMessage.Parse(messageText, 1)
+		message = VivadoInfoMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertIsNone(message.ToolName)
@@ -147,13 +147,13 @@ class Parsing(TestCase):
 
 	def test_Warning_WrongFormat(self) -> None:
 		messageText = "FOOBAR: [synth 8-25] some message"
-		message = VivadoWarningMessage.Parse(messageText, 1)
+		message = VivadoWarningMessage.Parse(1, messageText)
 
 		self.assertIsNone(message)
 
 	def test_CriticalWarning(self) -> None:
 		messageText = "CRITICAL WARNING: [synth 8-25] some message"
-		message = VivadoCriticalWarningMessage.Parse(messageText, 1)
+		message = VivadoCriticalWarningMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -165,13 +165,13 @@ class Parsing(TestCase):
 
 	def test_CriticalWarning_WrongFormat(self) -> None:
 		messageText = "FOOBAR: [synth 8-25] some message"
-		message = VivadoCriticalWarningMessage.Parse(messageText, 1)
+		message = VivadoCriticalWarningMessage.Parse(1, messageText)
 
 		self.assertIsNone(message)
 
 	def test_Error(self) -> None:
 		messageText = "ERROR: [synth 8-25] some message"
-		message = VivadoErrorMessage.Parse(messageText, 1)
+		message = VivadoErrorMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
@@ -183,6 +183,6 @@ class Parsing(TestCase):
 
 	def test_Error_WrongFormat(self) -> None:
 		messageText = "FOOBAR: [synth 8-25] some message"
-		message = VivadoErrorMessage.Parse(messageText, 1)
+		message = VivadoErrorMessage.Parse(1, messageText)
 
 		self.assertIsNone(message)

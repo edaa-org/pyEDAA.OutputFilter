@@ -32,9 +32,10 @@
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
-from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Versioning       import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor, Preamble, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx                import Preamble
+from pyEDAA.OutputFilter.Xilinx.Synthesis      import Processor as SynthProc, WritingSynthesisReport
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -45,7 +46,7 @@ if __name__ == "__main__": # pragma: no cover
 class Stopwatch(TestCase):
 	def test_SynthesisLogfile(self) -> None:
 		logfile = Path("tests/data/Stopwatch/toplevel.vds")
-		processor = Processor(logfile)
+		processor = SynthProc(logfile)
 		processor.Parse()
 
 		self.assertLess(processor.Duration, 0.1)

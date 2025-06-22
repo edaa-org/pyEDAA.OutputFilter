@@ -27,13 +27,18 @@
 
 # Main Goals
 
-* Analyze text outputs from CLI of EDA tools.
-* Filter and categorize by severity (*info*, *warning*, *error*, *fatal*, ...).
-* Extract information from e.g. OSVVM logs, VUnit logs, ...
+* Live and offline parsing and classification of message lines from tool outputs.
+* Provide a data model for tool specific log files.
+* Extract values, lists and tables of embedded reports or summaries.
+* Implement checks and policies.
 
 # Use Cases
 
-* *tbd*
+* Write colorized logs to CI server logs or to shells based on classification.
+* Increase or decrease the severity level of message.
+* List messages of a certain kind (e.g. unused sequential elements).
+* Check for existence / non-existence of messages or outputs (e.g. latches).
+* Collect statistics and convert to datasets for a time series database (TSDB).
 
 # Examples
 

@@ -29,85 +29,18 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from datetime import datetime
-from enum     import Flag
 from pathlib  import Path
-from re       import compile as re_compile, Pattern
-from typing   import ClassVar, List, Optional as Nullable, Callable, Dict, Type
+from re       import compile as re_compile
+from typing   import ClassVar, List, Callable, Dict, Type, Iterator, Union, Generator
 
-from pyTooling.Decorators import export, readonly
-from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
+from pyTooling.Decorators  import export, readonly
+from pyTooling.MetaClasses import mustoverride
 from pyTooling.Common      import firstValue
-from pyTooling.Stopwatch import Stopwatch
-from pyTooling.Versioning  import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx import VivadoMessage, VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
-
-
-@export
-class ProcessingState(Flag):
-	Processed =        1
-	Skipped =          2
-	EmptyLine =        4
-	CommentLine =      8
-	DelimiterLine =   16
-	TableLine =       32
-	TableHeader =     64
-	Reprocess =      512
-	Last =          1024
-
+from pyEDAA.OutputFilter.Xilinx import VivadoMessage, ProcessingState, Parser, Preamble, BaseProcessor, BaseDocument, \
+	Line, ProcessorException, LineKind, VivadoInfoMessage, VHDLAssertionMessage, VHDLReportMessage
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
-
-@export
-class Parser(metaclass=ExtendedType, slots=True):
-	_processor: "Processor"
-
-	def __init__(self, processor: "Processor"):
-		self._processor = processor
-
-	@readonly
-	def Processor(self) -> "Processor":
-		return self._processor
-
-	@abstractmethod
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		pass
-
-
-@export
-class Preamble(Parser):
-	_toolVersion:   Nullable[YearReleaseVersion]
-	_startDatetime: Nullable[datetime]
-
-	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: Thu (\w+) (\d+) (\d+):(\d+):(\d+) (\d+)""")
-
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
-
-		self._toolVersion =   None
-		self._startDatetime = None
-
-	@readonly
-	def ToolVersion(self) -> YearReleaseVersion:
-		return self._toolVersion
-
-	@readonly
-	def StartDatetime(self) -> datetime:
-		return self._startDatetime
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		if self._toolVersion is not None and line.startswith("#----"):
-			return ProcessingState.DelimiterLine | ProcessingState.Last
-		elif (match := self._VERSION.match(line)) is not None:
-			self._toolVersion = YearReleaseVersion.Parse(match[1])
-			return ProcessingState.Processed
-		elif (match := self._VERSION.match(line)) is not None:
-			self._startDatetime = datetime(int(match[6]), int(match[1]), int(match[2]), int(match[3]), int(match[4]), int(match[5]))
-			return ProcessingState.Processed
-
-		return ProcessingState.Skipped
 
 
 @export
@@ -135,29 +68,124 @@ class Section(Parser):
 	def Duration(self) -> float:
 		return self._duration
 
-	@mustoverride
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		if len(line) == 0:
-			return ProcessingState.EmptyLine
-		elif line.startswith("----"):
-			return ProcessingState.DelimiterLine
-		elif line.startswith(self._START):
-			return ProcessingState.Skipped
-		elif line.startswith(self._FINISH):
-			l = line[len(self._FINISH):]
-			if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
-				# cpuParts = match[1].split(":")
-				elapsedParts = match[2].split(":")
-				# peakMemory = float(match[3])
-				# gainMemory = float(match[4])
-				self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])
+	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
+		line._kind = LineKind.SectionStart
 
-			return ProcessingState.Skipped | ProcessingState.Last
-		elif line.startswith("Start") or line.startswith("Starting"):
-			print(f"ERROR: didn't find finish\n  {line}")
-			return ProcessingState.Reprocess
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
-		return ProcessingState.Skipped
+		nextLine = yield line
+		return nextLine
+
+	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if line._message.startswith(self._FINISH):
+			line._kind = LineKind.SectionEnd
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		check = yield line
+		if check is not None:
+			raise Exception()
+
+	# @mustoverride
+	# def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
+	# 	if len(line) == 0:
+	# 		return ProcessingState.EmptyLine
+	# 	elif line.startswith("----"):
+	# 		return ProcessingState.DelimiterLine
+	# 	elif line.startswith(self._START):
+	# 		return ProcessingState.Skipped
+	# 	elif line.startswith(self._FINISH):
+	# 		l = line[len(self._FINISH):]
+	# 		if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
+	# 			# cpuParts = match[1].split(":")
+	# 			elapsedParts = match[2].split(":")
+	# 			# peakMemory = float(match[3])
+	# 			# gainMemory = float(match[4])
+	# 			self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])
+	#
+	# 		return ProcessingState.Skipped | ProcessingState.Last
+	# 	elif line.startswith("Start") or line.startswith("Starting"):
+	# 		print(f"ERROR: didn't find finish\n  {line}")
+	# 		return ProcessingState.Reprocess
+	#
+	# 	return ProcessingState.Skipped
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
+
+
+@export
+class SubSection(Section):
+	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
+		line._kind = LineKind.SubSectionStart
+
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionStart | LineKind.SubSectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		nextLine = yield line
+		return nextLine
+
+	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if line._message.startswith(self._FINISH):
+			line._kind = LineKind.SubSectionEnd
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter | LineKind.Last
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		nextLine = yield line
+		return nextLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+
+		return nextLine
 
 
 @export
@@ -165,161 +193,225 @@ class RTLElaboration(Section):
 	_START:  ClassVar[str] = "Starting RTL Elaboration : "
 	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if isinstance(line, VivadoInfoMessage):
+				if line._toolID == 8:
+					if line._messageKindID == 63:    # VHDL assert statement
+						newLine = VHDLAssertionMessage.Convert(line)
+						if newLine is None:
+							print(f"Convert error at: {line}")
+						else:
+							line = newLine
+					elif line._messageKindID == 6031:  # VHDL report statement
+						newLine = VHDLReportMessage.Convert(line)
+						if newLine is None:
+							print(f"Convert error at: {line}")
+						else:
+							line = newLine
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			elif not isinstance(line, VivadoMessage):
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
 
 
 @export
 class HandlingCustomAttributes1(Section):
-	_START: ClassVar[str] =  "Start Handling Custom Attributes"
+	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
+@export
+class ConstraintValidation(Section):
+	_START:  ClassVar[str] = "Finished RTL Optimization Phase 1"
+	_FINISH: ClassVar[str] = "Finished Constraint Validation : "
 
 
 @export
 class LoadingPart(Section):
-	_START: ClassVar[str] =  "Start Loading Part and Timing Information"
+	_START:  ClassVar[str] = "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	_part: str
 
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._part = None
+
+	@readonly
+	def Part(self) -> str:
+		return self._part
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if line._message.startswith("Loading part: "):
+				line._kind = LineKind.Normal
+				self._part = line._message[14:].strip()
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+
+			line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
 
 @export
 class ApplySetProperty(Section):
-	_START: ClassVar[str] =  "Start Applying 'set_property' XDC Constraints"
+	_START:  ClassVar[str] = "Start Applying 'set_property' XDC Constraints"
 	_FINISH: ClassVar[str] = "Finished applying 'set_property' XDC Constraints : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class RTLComponentStatistics(Section):
-	_START: ClassVar[str] =  "Start RTL Component Statistics"
+	_START:  ClassVar[str] = "Start RTL Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Component Statistics"
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
 
 
 @export
 class PartResourceSummary(Section):
-	_START: ClassVar[str] =  "Start Part Resource Summary"
+	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class CrossBoundaryAndAreaOptimization(Section):
-	_START: ClassVar[str] =  "Start Cross Boundary and Area Optimization"
+	_START:  ClassVar[str] = "Start Cross Boundary and Area Optimization"
 	_FINISH: ClassVar[str] = "Finished Cross Boundary and Area Optimization : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class ApplyingXDCTimingConstraints(Section):
-	_START: ClassVar[str] =  "Start Applying XDC Timing Constraints"
+	_START:  ClassVar[str] = "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class TimingOptimization(Section):
-	_START: ClassVar[str] =  "Start Timing Optimization"
+	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class TechnologyMapping(Section):
-	_START: ClassVar[str] =  "Start Technology Mapping"
+	_START:  ClassVar[str] = "Start Technology Mapping"
 	_FINISH: ClassVar[str] = "Finished Technology Mapping : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
+@export
+class FlatteningBeforeIOInsertion(SubSection):
+	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
+	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
+
+
+@export
+class FinalNetlistCleanup(SubSection):
+	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
+	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
 
 @export
 class IOInsertion(Section):
-	_START: ClassVar[str] =  "Start IO Insertion"
+	_START:  ClassVar[str] = "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		flattening = FlatteningBeforeIOInsertion(None)
+		netlist = FinalNetlistCleanup(None)
 
+		line = yield from self._SectionStart(line)
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
-@export
-class FlatteningBeforeIOInsertion(Section):
-	_START: ClassVar[str] =  "Start Flattening Before IO Insertion"
-	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
+		line = yield line
+		if line._message.startswith("Start "):
+			line = yield from flattening.Generator(line)
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
+		line = yield line
+		if line._message.startswith("Start "):
+			line = yield from netlist.Generator(line)
 
-@export
-class FinalNetlistCleanup(Section):
-	_START: ClassVar[str] =  "Start Final Netlist Cleanup"
-	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionEnd | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
-
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
 
 @export
 class RenamingGeneratedInstances(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Instances"
+	_START:  ClassVar[str] = "Start Renaming Generated Instances"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Instances : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class RebuildingUserHierarchy(Section):
-	_START: ClassVar[str] =  "Start Rebuilding User Hierarchy"
+	_START:  ClassVar[str] = "Start Rebuilding User Hierarchy"
 	_FINISH: ClassVar[str] = "Finished Rebuilding User Hierarchy : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class RenamingGeneratedPorts(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Ports"
+	_START:  ClassVar[str] = "Start Renaming Generated Ports"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Ports : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class HandlingCustomAttributes2(Section):
-	_START: ClassVar[str] =  "Start Handling Custom Attributes"
+	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
 class RenamingGeneratedNets(Section):
-	_START: ClassVar[str] =  "Start Renaming Generated Nets"
+	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
-
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
@@ -327,14 +419,12 @@ class WritingSynthesisReport(Section):
 	_START:  ClassVar[str] = "Start Writing Synthesis Report"
 	_FINISH: ClassVar[str] = "Finished Writing Synthesis Report : "
 
-	_state:      int
 	_blackboxes: Dict[str, int]
 	_cells:      Dict[str, int]
 
 	def __init__(self, processor: "Processor"):
 		super().__init__(processor)
 
-		self._state =      0
 		self._blackboxes = {}
 		self._cells =      {}
 
@@ -346,49 +436,111 @@ class WritingSynthesisReport(Section):
 	def Blackboxes(self) -> Dict[str, int]:
 		return self._blackboxes
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		if self._state == 0:
-			if line.startswith("Report BlackBoxes:"):
-				self._state = 10
-				return ProcessingState.Processed
-			elif line.startswith("Report Cell Usage:"):
-				self._state = 20
-				return ProcessingState.Processed
-		elif 10 <= self._state < 20:
-			if self._state == 10 or self._state == 12 and line.startswith("+-"):
-				self._state += 1
-				return ProcessingState.TableLine
-			elif self._state == 11 and line.startswith("| "):
-				self._state += 1
-				return ProcessingState.TableHeader
-			elif self._state == 13:
-				if line.startswith("+-"):
-					self._state = 0
-					return ProcessingState.TableLine
-				else:
-					columns = line.strip("|").split("|")
-					self._blackboxes[columns[1].strip()] = int(columns[2].strip())
-		elif 20 <= self._state < 30:
-			if self._state == 20 or self._state == 22 and line.startswith("+-"):
-				self._state += 1
-				return ProcessingState.TableLine
-			elif self._state == 21 and line.startswith("| "):
-				self._state += 1
-				return ProcessingState.TableHeader
-			elif self._state == 23:
-				if line.startswith("+-"):
-					self._state = 0
-					return ProcessingState.TableLine
-				else:
-					columns = line.strip("|").split("|")
-					self._cells[columns[1].strip()] = int(columns[2].strip())
+	def _BlackboxesGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		if line._message.startswith("+-"):
+			line._kind = LineKind.TableFrame
+		else:
+			line._kind = LineKind.ProcessorError
 
-		return super().ParseLine(lineNumber, line)
+		line = yield line
+		if line._message.startswith("| "):
+			line._kind = LineKind.TableHeader
+		else:
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("+-"):
+			line._kind = LineKind.TableFrame
+		else:
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		while line is not None:
+			if line._message.startswith("| "):
+				line._kind = LineKind.TableRow
+
+				columns = line._message.strip("|").split("|")
+				self._blackboxes[columns[1].strip()] = int(columns[2].strip())
+			elif line._message.startswith("+-"):
+				line._kind = LineKind.TableFrame
+				break
+			else:
+				line._kind = LineKind.ProcessorError
+
+			line = yield line
+
+		nextLine = yield line
+		return nextLine
+
+	def _CellGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		if line._message.startswith("+-"):
+			line._kind = LineKind.TableFrame
+		else:
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("| "):
+			line._kind = LineKind.TableHeader
+		else:
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("+-"):
+			line._kind = LineKind.TableFrame
+		else:
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		while line is not None:
+			if line._message.startswith("|"):
+				line._kind = LineKind.TableRow
+
+				columns = line._message.strip("|").split("|")
+				self._cells[columns[1].strip()] = int(columns[2].strip())
+			elif line._message.startswith("+-"):
+				line._kind = LineKind.TableFrame
+				break
+			else:
+				line._kind = LineKind.ProcessorError
+
+			line = yield line
+
+		nextLine = yield line
+		return nextLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("Report BlackBoxes:"):
+				line._kind = LineKind.ParagraphHeadline
+				line = yield line
+				line = yield from self._BlackboxesGenerator(line)
+			elif rawMessage.startswith("Report Cell Usage:"):
+				line._kind = LineKind.ParagraphHeadline
+				line = yield line
+				line = yield from self._CellGenerator(line)
+			elif rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			elif not isinstance(line, VivadoMessage):
+				line._kind = LineKind.Verbose
+				line = yield line
+			elif line._kind is LineKind.Empty:
+				line = yield line
+
+		line = yield line
+		nextLine = yield from self._SectionFinish(line)
+		return nextLine
+
 
 PARSERS = (
 	Preamble,
 	RTLElaboration,
 	HandlingCustomAttributes1,
+	ConstraintValidation,
 	LoadingPart,
 	ApplySetProperty,
 	RTLComponentStatistics,
@@ -408,166 +560,97 @@ PARSERS = (
 	WritingSynthesisReport,
 )
 
-@export
-class Processor(metaclass=ExtendedType, slots=True):
-	_logfile:  Path
-	_parsers:  Dict[Type[Parser], Parser]
-	_state:    Callable[[int, str], bool]
-	_duration: float
 
-	_infoMessages:            List[VivadoInfoMessage]
-	_warningMessages:         List[VivadoWarningMessage]
-	_criticalWarningMessages: List[VivadoCriticalWarningMessage]
-	_errorMessages:           List[VivadoErrorMessage]
-	_toolIDs:                 Dict[int, str]
-	_toolNames:               Dict[str, int]
-	_messagesByID:            Dict[int, Dict[int, List[VivadoMessage]]]
+Parsers = Union[*PARSERS]
+
+
+@export
+class Processor(BaseDocument):
+	_parsers:  Dict[Type[Parser], Parsers]
 
 	def __init__(self, synthesisLogfile: Path):
-		self._logfile =  synthesisLogfile
+		super().__init__(synthesisLogfile)
+
 		self._parsers =  {p: p(self) for p in PARSERS}
-		self._state =    firstValue(self._parsers).ParseLine
-		self._duration = 0.0
-
-		self._infoMessages =            []
-		self._warningMessages =         []
-		self._criticalWarningMessages = []
-		self._errorMessages =           []
-		self._toolIDs =                 {}
-		self._toolNames =               {}
-		self._messagesByID =            {}
 
 	@readonly
-	def Duration(self) -> float:
-		return self._duration
+	def HasLatches(self) -> bool:
+		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
+			return True
+
+		return "LD" in self._parsers[WritingSynthesisReport]._cells
 
 	@readonly
-	def InfoMessages(self) -> List[VivadoInfoMessage]:
-		return self._infoMessages
+	def Latches(self) -> Iterator[VivadoMessage]:
+		try:
+			yield from iter(self._messagesByID[8][327])
+		except KeyError:
+			yield from ()
 
 	@readonly
-	def WarningMessages(self) -> List[VivadoWarningMessage]:
-		return self._warningMessages
+	def HasBlackboxes(self) -> bool:
+		return len(self._parsers[WritingSynthesisReport]._blackboxes) > 0
 
 	@readonly
-	def CriticalWarningMessages(self) -> List[VivadoCriticalWarningMessage]:
-		return self._criticalWarningMessages
+	def Cells(self) -> Dict[str, int]:
+		return self._parsers[WritingSynthesisReport]._cells
 
-	@readonly
-	def ErrorMessages(self) -> List[VivadoErrorMessage]:
-		return self._errorMessages
-
-	def __getitem__(self, item: Type[Parser]) -> Parser:
+	def __getitem__(self, item: Type[Parser]) -> Parsers:
 		return self._parsers[item]
 
-	def Parse(self):
-		with Stopwatch() as sw:
-			with self._logfile.open("r", encoding="utf-8") as f:
-				content = f.read()
+	def DocumentSlicer(self) -> Generator[Union[Line, ProcessorException], Line, None]:
+		parser:        Section       = firstValue(self._parsers)
+		activeParsers: List[Parsers] = list(self._parsers.values())
 
-			activeParsers = list(self._parsers.values())
+		rtlElaboration = self._parsers[RTLElaboration]
+		constraintValidation = self._parsers[ConstraintValidation]
 
-			lines = content.splitlines()
-			for lineNumber, line in enumerate(l.rstrip() for l in lines):
-				prefix = line[:4]
-				if prefix == "INFO":
-					if (message := VivadoInfoMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+		# get first line and send to preamble filter
+		line = yield
+		line = next(filter := parser.Generator(line))
 
-					self._infoMessages.append(message)
-				elif prefix == "WARN":
-					if (message := VivadoWarningMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+		# return first line and get the second line
+		line = yield line
 
-					self._warningMessages.append(message)
-				elif prefix == "CRIT":
-					if (message := VivadoCriticalWarningMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+		while line is not None:
+			if filter is not None:
+				line = filter.send(line)
 
-					self._criticalWarningMessages.append(message)
-				elif prefix == "ERRO":
-					if (message := VivadoErrorMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
-
-					self._errorMessages.append(message)
-				else:
-					if self._state is not None:
-						result = self._state(lineNumber, line)
-						if ProcessingState.Last in result:
-							obj: Section = self._state.__self__
-							activeParsers.remove(obj)
-							self._state = None
-
-							print(f" DONE: {obj.__class__.__name__}")
+				if (LineKind.Last in line._kind) and (LineKind.SectionDelimiter in line._kind):
+					activeParsers.remove(parser)
+					filter = None
+			else:
+				if line._message.startswith("Start "):
+					for parser in activeParsers:  # type: Section
+						if line._message.startswith(parser._START):
+							line = next(filter := parser.Generator(line))
+							break
 					else:
-						if line.startswith("Start") or line.startswith("Starting"):
-							for parser in activeParsers:   # type: Section
-								if line.startswith(parser._START):
-									print(f"BEGIN: {parser.__class__.__name__}")
-									self._state = parser.ParseLine
-									_ = self._state(lineNumber, line)
-									break
-							else:
-								print(f"Unknown section\n  {line}")
+						raise Exception(f"Unknown section: {line}")
+				elif line._message.startswith("Starting "):
+					if line._message[9:].startswith("synth_design"):
+						line._kind = LineKind.Verbose
+					elif line._message.startswith(rtlElaboration._START):
+						parser = rtlElaboration
+						line = next(filter := parser.Generator(line))
+				elif line._message.startswith("Finished "):
+					if line._message.startswith(constraintValidation._START):
+						parser = constraintValidation
+						line = next(filter := parser.Generator(line))
 
-					continue
+			if line._kind is LineKind.Unprocessed:
+				line._kind = LineKind.Normal
 
-				if message._toolID in self._messagesByID:
-					sub = self._messagesByID[message._toolID]
-					if message._messageKindID in sub:
-						sub[message._messageKindID].append(message)
-					else:
-						sub[message._messageKindID] = [message]
-				else:
-					self._toolIDs[message._toolID] = message._toolName
-					self._toolNames[message._toolName] = message._toolID
-					self._messagesByID[message._toolID] = {message._messageKindID: [message]}
+			line = yield line
 
-		self._duration = sw.Duration
+		pass
 
-
-def main():
-	logfile = Path("tests/data/Stopwatch/toplevel.vds")
-	logfile = Path("tests/data/ADL-1000/toplevel.vds")
-	processor = Processor(logfile)
-	processor.Parse()
-
-	print()
-	print(f"Vivado version: {processor._parsers[Preamble]._toolVersion}")
-
-
-	#
-	# print("%" * 80)
-	# for toolID, messageGroups in processor._messagesByID.items():
-	# 	print(f"{toolID} ({len(messageGroups)}):")
-	# 	for messageID, messages in messageGroups.items():
-	# 		print(f"  {messageID} ({len(messages)}):")
-	# 		for message in messages:
-	# 			print(f"    {message}")
-	#
-	# print("%" * 80)
-	# for tool, toolID in processor._toolNames.items():
-	# 	messages = list(chain(*processor._messagesByID[toolID].values()))
-	# 	print(f"{tool} ({len(messages)}):")
-	# 	for message in messages:
-	# 		print(f"  {message}")
-
-	# print(f"Cells Statistics")
-	# for cellName, cellCount in processor._parsers[WritingSynthesisReport]._cells.items():
-	# 	print(f"  {cellName:16}: {cellCount}")
-
-if __name__ == '__main__':
-	main()
-
-
-# latches
 # unused
 # used but not set
 # statemachine encodings
 # resources
 #  * RTL
 #	 * Mapped
+
+# Design hierarchy + generics per hierarchy
+# read XDC files

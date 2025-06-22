@@ -73,6 +73,17 @@ Implementation duration
 =======================
 
 
+.. _XIL/Vivado/Impl/Policies:
+
+Policies
+********
+
+Timing Closure
+==============
+
+Timing 38-282
+
+
 .. _XIL/Vivado/Impl/Steps:
 
 Processing Steps

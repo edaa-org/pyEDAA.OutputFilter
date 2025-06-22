@@ -35,9 +35,27 @@ The pyEDAA.OutputFilter Documentation
 Proposal to define an abstract model for outputs from EDA tools and logging libraries.
 
 .. image:: _static/work-in-progress.png
-   :height: 275 px
+   :height: 150 px
    :align: center
-   :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
+
+.. #   :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
+
+Main Goals
+**********
+
+* Live and offline parsing and classification of message lines from tool outputs.
+* Provide a data model for tool specific log files.
+* Extract values, lists and tables of embedded reports or summaries.
+* Implement checks and policies.
+
+Use Cases
+*********
+
+* Write colorized logs to CI server logs or to shells based on classification.
+* Increase or decrease the severity level of message.
+* List messages of a certain kind (e.g. unused sequential elements).
+* Check for existence / non-existence of messages or outputs (e.g. latches).
+* Collect statistics and convert to datasets for a time series database (TSDB).
 
 Examples
 ********
