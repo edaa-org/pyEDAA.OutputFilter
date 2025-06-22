@@ -31,22 +31,94 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from datetime import datetime
 from enum     import Flag
+from pathlib  import Path
 from re       import compile as re_compile, Pattern
-from typing import ClassVar, Self, Optional as Nullable, Dict, Type, Callable, List
+from typing import ClassVar, Self, Optional as Nullable, Dict, Type, Callable, List, Generator, Union, Tuple
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
-from pyTooling.Stopwatch import Stopwatch
+from pyTooling.Stopwatch   import Stopwatch
+from pyTooling.TerminalUI  import TerminalApplication
 from pyTooling.Versioning  import YearReleaseVersion
+
+from pyEDAA.OutputFilter   import OutputFilterException
+
+
+@export
+class ProcessorException(OutputFilterException):
+	pass
+
+
+@export
+class ClassificationException(ProcessorException):
+	pass
+
+
+@export
+class ParserStateException(ProcessorException):
+	pass
+
+
+@export
+class LineKind(Flag):
+	Unprocessed =                0
+	ProcessorError =         2** 0
+	Empty =                  2** 1
+	Delimiter =              2** 2
+
+	Verbose =                2**10
+	Normal =                 2**11
+	Info =                   2**12
+	Warning =                2**13
+	CriticalWarning =        2**14
+	Error =                  2**15
+	Fatal =                  2**16
+
+	Start =                  2**20
+	End =                    2**21
+	Header =                 2**22
+	Content =                2**23
+	Footer =                 2**24
+
+	Last =                   2**29
+
+	Message =                2**30
+	InfoMessage =            Message | Info
+	WarningMessage =         Message | Warning
+	CriticalWarningMessage = Message | CriticalWarning
+	ErrorMessage =           Message | Error
+
+	Section =                2**31
+	SectionDelimiter =       Section | Delimiter
+	SectionStart =           Section | Start
+	SectionEnd =             Section | End
+
+	SubSection =             2**32
+	SubSectionDelimiter =    SubSection | Delimiter
+	SubSectionStart =        SubSection | Start
+	SubSectionEnd =          SubSection | End
+
+	Table =                  2**33
+	TableFrame =             Table | Delimiter
+	TableHeader =            Table | Header
+	TableRow =               Table | Content
+	TableFooter =            Table | Footer
+
+	Command =                2**34
 
 
 @export
 class Line(metaclass=ExtendedType, slots=True):
+	"""
+	This class represents any line in a log file.
+	"""
 	_lineNumber:    int
+	_kind:          LineKind
 	_message:       str
 
-	def __init__(self, lineNumber: int, message: str) -> None:
+	def __init__(self, lineNumber: int, kind: LineKind, message: str) -> None:
 		self._lineNumber = lineNumber
+		self._kind = kind
 		self._message = message
 
 	@readonly
@@ -54,11 +126,35 @@ class Line(metaclass=ExtendedType, slots=True):
 		return self._lineNumber
 
 	@readonly
+	def Kind(self) -> LineKind:
+		return self._kind
+
+	@readonly
 	def Message(self) -> str:
 		return self._message
 
 	def __str__(self) -> str:
 		return self._message
+
+
+@export
+class InfoMessage(metaclass=ExtendedType, mixin=True):
+	pass
+
+
+@export
+class WarningMessage(metaclass=ExtendedType, mixin=True):
+	pass
+
+
+@export
+class CriticalWarningMessage(metaclass=ExtendedType, mixin=True):
+	pass
+
+
+@export
+class ErrorMessage(metaclass=ExtendedType, mixin=True):
+	pass
 
 
 @export
@@ -101,8 +197,8 @@ class VivadoMessage(Line):
 	_toolName:      str
 	_messageKindID: int
 
-	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, message: str) -> None:
-		super().__init__(lineNumber, message)
+	def __init__(self, lineNumber: int, kind: LineKind, tool: str, toolID: int, messageKindID: int, message: str) -> None:
+		super().__init__(lineNumber, kind, message)
 		self._toolID = toolID
 		self._toolName = tool
 		self._messageKindID = messageKindID
@@ -120,9 +216,9 @@ class VivadoMessage(Line):
 		return self._messageKindID
 
 	@classmethod
-	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
-		if (match := cls._REGEXP.match(line)) is not None:
-			return cls(lineNumber, match[1], int(match[2]), int(match[3]), match[4])
+	def Parse(cls, lineNumber: int, kind: LineKind, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, kind, match[1], int(match[2]), int(match[3]), match[4])
 
 		return None
 
@@ -131,29 +227,41 @@ class VivadoMessage(Line):
 
 
 @export
-class VivadoInfoMessage(VivadoMessage):
+class VivadoInfoMessage(VivadoMessage, InfoMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado info message.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+) (\d+)-(\d+)\] (.*)""")
-	_REGEXP2:      ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
 
 	@classmethod
-	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
-		result = super().Parse(line, lineNumber)
-		if result is not None:
-			return result
-
-		if (match := cls._REGEXP2.match(line)) is not None:
-			return cls(lineNumber, match[1], None, int(match[2]), match[3])
-
-		return None
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		return super().Parse(lineNumber, LineKind.InfoMessage, rawMessage)
 
 
 @export
-class VivadoWarningMessage(VivadoMessage):
+class VivadoIrregularInfoMessage(VivadoMessage, InfoMessage):
+	"""
+	This class represents an irregular AMD/Xilinx Vivado info message.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] =     "INFO"
+	_REGEXP:      ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.InfoMessage, match[1], None, int(match[2]), match[3])
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: [{self._toolName}-{self._messageKindID}] {self._message}"
+
+
+@export
+class VivadoWarningMessage(VivadoMessage, WarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado warning message.
 	"""
@@ -162,19 +270,32 @@ class VivadoWarningMessage(VivadoMessage):
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
 
 	@classmethod
-	def Parse(cls, line: str, lineNumber: int) -> Nullable[Self]:
-		result = super().Parse(line, lineNumber)
-		if result is not None:
-			return result
-
-		if line.startswith("WARNING: "):
-			return cls(lineNumber, None, None, None, line[9:])
-
-		return None
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		return super().Parse(lineNumber, LineKind.WarningMessage, rawMessage)
 
 
 @export
-class VivadoCriticalWarningMessage(VivadoMessage):
+class VivadoIrregularWarningMessage(VivadoMessage, WarningMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado warning message.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: (.*)""")
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.WarningMessage, None, None, None, match[1])
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: {self._message}"
+
+
+@export
+class VivadoCriticalWarningMessage(VivadoMessage, CriticalWarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado critical warning message.
 	"""
@@ -182,15 +303,47 @@ class VivadoCriticalWarningMessage(VivadoMessage):
 	_MESSAGE_KIND: ClassVar[str] =     "CRITICAL WARNING"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""CRITICAL WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
 
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		return super().Parse(lineNumber, LineKind.CriticalWarningMessage, rawMessage)
+
 
 @export
-class VivadoErrorMessage(VivadoMessage):
+class VivadoErrorMessage(VivadoMessage, ErrorMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado error message.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "ERROR"
 	_REGEXP:       ClassVar[Pattern] = re_compile(r"""ERROR: \[(\w+) (\d+)-(\d+)\] (.*)""")
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		return super().Parse(lineNumber, LineKind.ErrorMessage, rawMessage)
+
+
+@export
+class VivadoTclCommand(Line):
+	_PREFIX: ClassVar[str] = "Command:"
+
+	_command: str
+	_args:    Tuple[str, ...]
+
+	def __init__(self, lineNumber: int, command: str, arguments: Tuple[str, ...], tclCommand: str) -> None:
+		super().__init__(lineNumber, LineKind.Command, tclCommand)
+
+		self._command = command
+		self._args = arguments
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		command = rawMessage[len(cls._PREFIX) + 1:]
+		args = command.split()
+
+		return cls(lineNumber, args[0], tuple(args[1:]), command)
+
+	def __str__(self) -> str:
+		return f"{self._PREFIX} {self._command} {' '.join(self._args)}"
 
 
 @export
@@ -268,54 +421,78 @@ class BaseProcessor(metaclass=ExtendedType, slots=True):
 	# def __getitem__(self, item: Type["Parser"]) -> "Parsers":
 	# 	return self._parsers[item]
 
-	def Parse(self):
-		with Stopwatch() as sw:
-			with self._logfile.open("r", encoding="utf-8") as f:
-				content = f.read()
+	def _AddMessageByID(self, message: VivadoMessage) -> None:
+		if message._toolID in self._messagesByID:
+			sub = self._messagesByID[message._toolID]
+			if message._messageKindID in sub:
+				sub[message._messageKindID].append(message)
+			else:
+				sub[message._messageKindID] = [message]
+		else:
+			self._toolIDs[message._toolID] = message._toolName
+			self._toolNames[message._toolName] = message._toolID
+			self._messagesByID[message._toolID] = {message._messageKindID: [message]}
 
-			lines = content.splitlines()
-			for lineNumber, line in enumerate(l.rstrip() for l in lines):
-				prefix = line[:4]
-				if prefix == "INFO":
-					if (message := VivadoInfoMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+	def LineClassification(self, documentSlicer: Generator[Union[Line, ProcessorException], Line, None]) -> Generator[Union[Line, ProcessorException], str, None]:
+		# Initialize generator
+		next(documentSlicer)
 
-					self._infoMessages.append(message)
-				elif prefix == "WARN":
-					if (message := VivadoWarningMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+		# wait for first line
+		rawMessageLine = yield
+		lineNumber = 0
+		_errorMessage = "Unknown processing error."
+		errorMessage = _errorMessage
 
-					self._warningMessages.append(message)
-				elif prefix == "CRIT":
-					if (message := VivadoCriticalWarningMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+		while rawMessageLine is not None:
+			lineNumber += 1
+			rawMessageLine = rawMessageLine.rstrip()
+			errorMessage = _errorMessage
 
-					self._criticalWarningMessages.append(message)
-				elif prefix == "ERRO":
-					if (message := VivadoErrorMessage.Parse(line, lineNumber)) is None:
-						print(f"pattern not detected\n{line}")
-						continue
+			if rawMessageLine.startswith(VivadoInfoMessage._MESSAGE_KIND):
+				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
+					line = VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)
 
-					self._errorMessages.append(message)
-				else:
-					self._Parse(lineNumber, line)
-					continue
+				errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
+			elif rawMessageLine.startswith(VivadoWarningMessage._MESSAGE_KIND):
+				if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine)) is None:
+					line = VivadoIrregularWarningMessage.Parse(lineNumber, rawMessageLine)
 
-				if message._toolID in self._messagesByID:
-					sub = self._messagesByID[message._toolID]
-					if message._messageKindID in sub:
-						sub[message._messageKindID].append(message)
-					else:
-						sub[message._messageKindID] = [message]
-				else:
-					self._toolIDs[message._toolID] = message._toolName
-					self._toolNames[message._toolName] = message._toolID
-					self._messagesByID[message._toolID] = {message._messageKindID: [message]}
+				errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
+			elif rawMessageLine.startswith(VivadoCriticalWarningMessage._MESSAGE_KIND):
+				line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine)
 
-		self._duration = sw.Duration
+				errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+			elif rawMessageLine.startswith(VivadoErrorMessage._MESSAGE_KIND):
+				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine)
+
+				errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
+			elif rawMessageLine.startswith("Command: "):
+				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine)
+			else:
+				line = Line(lineNumber, LineKind.Unprocessed, rawMessageLine)
+				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+
+			if line is None:
+				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
+
+			line = documentSlicer.send(line)
+
+			if isinstance(line, VivadoMessage):
+				self._AddMessageByID(line)
+				if isinstance(line, InfoMessage):
+					self._infoMessages.append(line)
+				elif isinstance(line, WarningMessage):
+					self._warningMessages.append(line)
+				elif isinstance(line, CriticalWarningMessage):
+					self._criticalWarningMessages.append(line)
+				elif isinstance(line, ErrorMessage):
+					self._errorMessages.append(line)
+
+			if line._kind is LineKind.ProcessorError:
+				line = ClassificationException(errorMessage, rawMessageLine, line)
+
+			rawMessageLine = yield line
+
 
 @export
 class Parser(metaclass=ExtendedType, slots=True):
@@ -328,10 +505,6 @@ class Parser(metaclass=ExtendedType, slots=True):
 	def Processor(self) -> "BaseProcessor":
 		return self._processor
 
-	@abstractmethod
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		pass
-
 
 @export
 class Preamble(Parser):
@@ -339,7 +512,7 @@ class Preamble(Parser):
 	_startDatetime: Nullable[datetime]
 
 	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: Thu (\w+) (\d+) (\d+):(\d+):(\d+) (\d+)""")
+	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+ \w+ \d+ \d+:\d+:\d+ \d+)""")
 
 	def __init__(self, processor: "BaseProcessor"):
 		super().__init__(processor)
@@ -355,14 +528,91 @@ class Preamble(Parser):
 	def StartDatetime(self) -> datetime:
 		return self._startDatetime
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		if self._toolVersion is not None and line.startswith("#----"):
-			return ProcessingState.DelimiterLine | ProcessingState.Last
-		elif (match := self._VERSION.match(line)) is not None:
-			self._toolVersion = YearReleaseVersion.Parse(match[1])
-			return ProcessingState.Processed
-		elif (match := self._VERSION.match(line)) is not None:
-			self._startDatetime = datetime(int(match[6]), int(match[1]), int(match[2]), int(match[3]), int(match[4]), int(match[5]))
-			return ProcessingState.Processed
+	def Generator(self) -> Generator[Line, Line, None]:
+		line = yield
 
-		return ProcessingState.Skipped
+		rawMessage = line._message
+		if rawMessage.startswith("#----"):
+			line._kind = LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+
+		while line is not None:
+			rawMessage = line._message
+
+			if (match := self._VERSION.match(rawMessage)) is not None:
+				self._toolVersion = YearReleaseVersion.Parse(match[1])
+				line._kind = LineKind.Normal
+			elif (match := self._STARTTIME.match(rawMessage)) is not None:
+				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+				line._kind = LineKind.Normal
+			elif rawMessage.startswith("#----"):
+				line._kind = LineKind.SectionDelimiter | LineKind.Last
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+
+@export
+class BaseDocument(BaseProcessor):
+	_logfile: Path
+	_lines:   List[Line]
+	# _duration: float
+
+	def __init__(self, logfile: Path) -> None:
+		super().__init__()
+
+		self._logfile = logfile
+		self._lines =   []
+
+	def Parse(self) -> None:
+		with Stopwatch() as sw:
+			with self._logfile.open("r", encoding="utf-8") as f:
+				content = f.read()
+
+			lines = content.splitlines()
+			next(generator := self.LineClassification(self.DocumentSlicer()))
+			self._lines = [generator.send(rawLine) for rawLine in lines]
+
+		self._duration = sw.Duration
+
+	def ColoredOutput(self) -> None:
+		for line in self._lines:
+			if line.Kind is LineKind.Normal:
+				print(line.Message)
+			elif LineKind.Message in line.Kind:
+				if line.Kind is LineKind.InfoMessage:
+					print(f"{{BLUE}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+				elif line.Kind is LineKind.WarningMessage:
+					print(f"{{YELLOW}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+				elif line.Kind is LineKind.CriticalWarningMessage:
+					print(f"{{MAGENTA}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+				elif line.Kind is LineKind.ErrorMessage:
+					print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif LineKind.Command in line.Kind:
+				print(f"{{CYAN}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif LineKind.Delimiter in line.Kind:
+				print(f"{{GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif LineKind.Verbose in line.Kind:
+				print(f"{{DARK_GRAY}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif line.Kind is LineKind.ProcessorError:
+				print(f"{{RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			elif line.Kind is LineKind.Unprocessed:
+				print(f"{{DARK_RED}}{line}{{NOCOLOR}}".format(**TerminalApplication.Foreground))
+			else:
+				print(f"Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
+				print(line)
+				raise Exception()
+
+	def DocumentSlicer(self) -> Generator[Union[Line, ProcessorException], Line, None]:
+		# wait for first pre-processed line
+		line = yield
+
+		while line is not None:
+			if line._kind is LineKind.Unprocessed:
+				line._kind = LineKind.Normal
+
+			line = yield line

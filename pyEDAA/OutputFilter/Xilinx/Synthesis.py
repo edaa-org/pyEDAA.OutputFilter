@@ -31,13 +31,14 @@
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from pathlib  import Path
 from re       import compile as re_compile
-from typing   import ClassVar, List, Callable, Dict, Type, Iterator, Union
+from typing   import ClassVar, List, Callable, Dict, Type, Iterator, Union, Generator
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import mustoverride
 from pyTooling.Common      import firstValue
 
-from pyEDAA.OutputFilter.Xilinx import VivadoMessage, ProcessingState, Parser, Preamble, BaseProcessor
+from pyEDAA.OutputFilter.Xilinx import VivadoMessage, ProcessingState, Parser, Preamble, BaseProcessor, BaseDocument, \
+	Line, ProcessorException, LineKind
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
 
@@ -67,29 +68,85 @@ class Section(Parser):
 	def Duration(self) -> float:
 		return self._duration
 
-	@mustoverride
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		if len(line) == 0:
-			return ProcessingState.EmptyLine
-		elif line.startswith("----"):
-			return ProcessingState.DelimiterLine
-		elif line.startswith(self._START):
-			return ProcessingState.Skipped
-		elif line.startswith(self._FINISH):
-			l = line[len(self._FINISH):]
-			if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
-				# cpuParts = match[1].split(":")
-				elapsedParts = match[2].split(":")
-				# peakMemory = float(match[3])
-				# gainMemory = float(match[4])
-				self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])
+	def _SectionStart(self) -> Generator[Line, Line, Line]:
+		line = yield
+		print(f"SectionStart1: {line}")
+		line._kind = LineKind.SectionStart
 
-			return ProcessingState.Skipped | ProcessingState.Last
-		elif line.startswith("Start") or line.startswith("Starting"):
-			print(f"ERROR: didn't find finish\n  {line}")
-			return ProcessingState.Reprocess
+		line = yield line
+		print(f"SectionStart2: {line}")
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
-		return ProcessingState.Skipped
+		lastLine = yield line
+
+		return lastLine
+
+	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		print(f"SectionFinish1: {line}")
+		if line._message.startswith(self._FINISH):
+			line._kind = LineKind.SectionEnd
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		print(f"SectionFinish2: {line}")
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		check = yield line
+		print(f"SectionFinish3: {line}")
+		if check is not None:
+			raise Exception()
+
+	def Generator(self) -> Generator[Line, Line, None]:
+		line = yield from self._SectionStart()
+		print(f"Generator1: {line}")
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		print(f"GeneratorN: {line}")
+
+		yield from self._SectionFinish(line)
+
+
+	# @mustoverride
+	# def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
+	# 	if len(line) == 0:
+	# 		return ProcessingState.EmptyLine
+	# 	elif line.startswith("----"):
+	# 		return ProcessingState.DelimiterLine
+	# 	elif line.startswith(self._START):
+	# 		return ProcessingState.Skipped
+	# 	elif line.startswith(self._FINISH):
+	# 		l = line[len(self._FINISH):]
+	# 		if (match := TIME_MEMORY_PATTERN.match(l)) is not None:
+	# 			# cpuParts = match[1].split(":")
+	# 			elapsedParts = match[2].split(":")
+	# 			# peakMemory = float(match[3])
+	# 			# gainMemory = float(match[4])
+	# 			self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])
+	#
+	# 		return ProcessingState.Skipped | ProcessingState.Last
+	# 	elif line.startswith("Start") or line.startswith("Starting"):
+	# 		print(f"ERROR: didn't find finish\n  {line}")
+	# 		return ProcessingState.Reprocess
+	#
+	# 	return ProcessingState.Skipped
 
 
 @export
@@ -97,8 +154,44 @@ class RTLElaboration(Section):
 	_START:  ClassVar[str] = "Starting RTL Elaboration : "
 	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	def Generator(self) -> Generator[Line, Line, None]:
+		line = yield
+		line._kind = LineKind.SectionStart
+
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		if line._message.startswith(self._FINISH):
+			line._kind = LineKind.SectionEnd
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		check = yield line
+		if check is not None:
+			raise Exception()
 
 
 @export
@@ -106,8 +199,6 @@ class HandlingCustomAttributes1(Section):
 	_START: ClassVar[str] =  "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
@@ -115,8 +206,7 @@ class LoadingPart(Section):
 	_START: ClassVar[str] =  "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -124,8 +214,7 @@ class ApplySetProperty(Section):
 	_START: ClassVar[str] =  "Start Applying 'set_property' XDC Constraints"
 	_FINISH: ClassVar[str] = "Finished applying 'set_property' XDC Constraints : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -133,8 +222,25 @@ class RTLComponentStatistics(Section):
 	_START: ClassVar[str] =  "Start RTL Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Component Statistics"
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+	def Generator(self) -> Generator[Line, Line, None]:
+		line = yield from self._SectionStart()
+		print(f"RTLCompStat1: {line}")
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		print(f"RTLCompStatN: {line}")
+
+		yield from self._SectionFinish(line)
 
 
 @export
@@ -142,8 +248,7 @@ class PartResourceSummary(Section):
 	_START: ClassVar[str] =  "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -151,8 +256,7 @@ class CrossBoundaryAndAreaOptimization(Section):
 	_START: ClassVar[str] =  "Start Cross Boundary and Area Optimization"
 	_FINISH: ClassVar[str] = "Finished Cross Boundary and Area Optimization : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -160,8 +264,7 @@ class ApplyingXDCTimingConstraints(Section):
 	_START: ClassVar[str] =  "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -169,8 +272,7 @@ class TimingOptimization(Section):
 	_START: ClassVar[str] =  "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -178,8 +280,7 @@ class TechnologyMapping(Section):
 	_START: ClassVar[str] =  "Start Technology Mapping"
 	_FINISH: ClassVar[str] = "Finished Technology Mapping : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -187,8 +288,7 @@ class IOInsertion(Section):
 	_START: ClassVar[str] =  "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -196,8 +296,7 @@ class FlatteningBeforeIOInsertion(Section):
 	_START: ClassVar[str] =  "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -205,8 +304,7 @@ class FinalNetlistCleanup(Section):
 	_START: ClassVar[str] =  "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -214,8 +312,7 @@ class RenamingGeneratedInstances(Section):
 	_START: ClassVar[str] =  "Start Renaming Generated Instances"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Instances : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -223,8 +320,7 @@ class RebuildingUserHierarchy(Section):
 	_START: ClassVar[str] =  "Start Rebuilding User Hierarchy"
 	_FINISH: ClassVar[str] = "Finished Rebuilding User Hierarchy : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -232,8 +328,7 @@ class RenamingGeneratedPorts(Section):
 	_START: ClassVar[str] =  "Start Renaming Generated Ports"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Ports : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -241,8 +336,7 @@ class HandlingCustomAttributes2(Section):
 	_START: ClassVar[str] =  "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
+
 
 
 @export
@@ -250,8 +344,6 @@ class RenamingGeneratedNets(Section):
 	_START: ClassVar[str] =  "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
 
-	def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
-		return super().ParseLine(lineNumber, line)
 
 
 @export
@@ -346,21 +438,13 @@ Parsers = Union[*PARSERS]
 
 
 @export
-class Processor(BaseProcessor):
-	_logfile:  Path
+class Processor(BaseDocument):
 	_parsers:  Dict[Type[Parser], Parsers]
-	_state:    Callable[[int, str], bool]
-
-	_activeParsers: List[Parsers]
 
 	def __init__(self, synthesisLogfile: Path):
-		super().__init__()
+		super().__init__(synthesisLogfile)
 
-		self._logfile =  synthesisLogfile
 		self._parsers =  {p: p(self) for p in PARSERS}
-		self._state =    firstValue(self._parsers).ParseLine
-
-		self._activeParsers = list(self._parsers.values())
 
 	@readonly
 	def HasLatches(self) -> bool:
@@ -391,6 +475,61 @@ class Processor(BaseProcessor):
 	def __getitem__(self, item: Type[Parser]) -> Parsers:
 		return self._parsers[item]
 
+	def DocumentSlicer(self) -> Generator[Union[Line, ProcessorException], Line, None]:
+		parser:        Section       = firstValue(self._parsers)
+		activeParsers: List[Parsers] = list(self._parsers.values())
+
+		next(filter := parser.Generator())
+
+		# wait for first pre-processed line
+		line = yield
+
+		while line is not None:
+			if filter is not None:
+				line = filter.send(line)
+
+				# if LineKind.ProcessorError in line._kind:
+				# 	print(f"Error:  {line}")
+				# else:
+				# 	print(f"Slicer: {line}")
+				if LineKind.Last in line._kind:
+					print(f" DONE: {parser.__class__.__name__}")
+					activeParsers.remove(parser)
+					filter = None
+			else:
+				if line._message.startswith("Start") or line._message.startswith("Starting"):
+					for parser in activeParsers:  # type: Section
+						if line._message.startswith(parser._START):
+							print(f"BEGIN: {parser.__class__.__name__}")
+							next(filter := parser.Generator())
+							line = filter.send(line)
+							break
+
+			# if state is not None:
+			# 	line = state(line)
+			# 	if LineKind.Last in line._kind:
+			# 		obj: Section = self._state.__self__
+			# 		self._activeParsers.remove(obj)
+			# 		self._state = None
+			#
+			# 		print(f" DONE: {obj.__class__.__name__}")
+			# else:
+			# 	if line.startswith("Start") or line.startswith("Starting"):
+			# 		for parser in self._activeParsers:  # type: Section
+			# 			if line.startswith(parser._START):
+			# 				print(f"BEGIN: {parser.__class__.__name__}")
+			# 				self._state = parser.ParseLine
+			# 				_ = self._state(lineNumber, line)
+			# 				break
+			# 		else:
+			# 			print(f"Unknown section\n  {line}")
+
+			if line._kind is LineKind.Unprocessed:
+				line._kind = LineKind.Normal
+
+			line = yield line
+
+
 	def _Parse(self, lineNumber: int, line: str):
 		if self._state is not None:
 			result = self._state(lineNumber, line)
@@ -410,6 +549,19 @@ class Processor(BaseProcessor):
 						break
 				else:
 					print(f"Unknown section\n  {line}")
+
+
+	#
+	# messages by tool
+	# for tool, toolID in processor._toolNames.items():
+	# 	messages = list(chain(*processor._messagesByID[toolID].values()))
+	# 	print(f"{tool} ({len(messages)}):")
+	# 	for message in messages:
+	# 		print(f"  {message}")
+
+	# print(f"Cells Statistics")
+	# for cellName, cellCount in processor._parsers[WritingSynthesisReport]._cells.items():
+	# 	print(f"  {cellName:16}: {cellCount}")
 
 # unused
 # used but not set

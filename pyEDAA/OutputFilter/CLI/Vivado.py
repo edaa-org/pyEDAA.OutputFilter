@@ -38,8 +38,8 @@ from pyTooling.Attributes.ArgParse            import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag       import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag import LongValuedFlag
 
-from pyEDAA.OutputFilter.Xilinx                import Preamble
-from pyEDAA.OutputFilter.Xilinx.Synthesis      import Processor as SynthProc, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx                import Preamble, BaseDocument
+from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor as SynthProc, WritingSynthesisReport, Processor
 from pyEDAA.OutputFilter.Xilinx.Implementation import Processor as ImplProc
 
 
@@ -83,6 +83,8 @@ class Proto(metaclass=ExtendedType, mixin=True):
 class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 	@CommandHandler("vivado-synth", help="Parse AMD/Xilinx Vivado Synthesis log files.", description="Parse AMD/Xilinx Vivado Synthesis log files.")
 	@LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
+	@LongFlag("--colored", dest="colored", help="Render logfile with colored lines.")
+	@LongFlag("--summary", dest="summary", help="Print a summary.")
 	@LongFlag("--info", dest="info", help="Print info messages.")
 	@LongFlag("--warning", dest="warning", help="Print warning messages.")
 	@LongFlag("--critical", dest="critical", help="Print critical warning messages.")
@@ -106,8 +108,14 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 		if returnCode != 0:
 			self.Exit(returnCode)
 
-		processor = SynthProc(logfile)
+		processor = Processor(logfile)
 		processor.Parse()
+
+		if args.colored:
+			processor.ColoredOutput()
+
+			print(processor[Preamble].ToolVersion)
+			print(processor[Preamble].StartDatetime)
 
 		if args.info:
 			self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
@@ -149,20 +157,21 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 
 			self.WriteNormal(influxString)
 
-		self.WriteNormal("Summary:")
-		self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
-		self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
+		if args.summary:
+			self.WriteNormal("Summary:")
+			self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
+			self.WriteNormal(f"  Info: {len(processor.InfoMessages)}  Warning: {len(processor.WarningMessages)}  Critical Warning: {len(processor.CriticalWarningMessages)}  Error: {len(processor.ErrorMessages)}")
 
-		self.WriteNormal("Policies:")
-		self.WriteNormal(f"  Latches: {'found' if processor.HasLatches else '----'}")
-		if processor.HasLatches:
-			for cellName in ("LD", ):
-				try:
-					print(f"    {cellName}: {processor.Cells[cellName]}")
-				except KeyError:
-					pass
-			for latch in processor.Latches:
-				print(f"    {latch}")
+			self.WriteNormal("Policies:")
+			self.WriteNormal(f"  Latches: {'found' if processor.HasLatches else '----'}")
+			if processor.HasLatches:
+				for cellName in ("LD", ):
+					try:
+						print(f"    {cellName}: {processor.Cells[cellName]}")
+					except KeyError:
+						pass
+				for latch in processor.Latches:
+					print(f"    {latch}")
 
 		self.ExitOnPreviousErrors()
 
