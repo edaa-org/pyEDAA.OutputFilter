@@ -39,7 +39,7 @@ from pyTooling.Attributes.ArgParse.Flag       import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag import LongValuedFlag
 
 from pyEDAA.OutputFilter.Xilinx                import Preamble, BaseDocument
-from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor as SynthProc, WritingSynthesisReport, Processor
+from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor as SynthProc, WritingSynthesisReport, Processor, LoadingPart
 from pyEDAA.OutputFilter.Xilinx.Implementation import Processor as ImplProc
 
 
@@ -116,6 +116,20 @@ class VivadoHandlers(Proto, metaclass=ExtendedType, mixin=True):
 
 			print(processor[Preamble].ToolVersion)
 			print(processor[Preamble].StartDatetime)
+			print(processor[LoadingPart].Part)
+			for message in processor.VHDLReportMessages:
+				print(message)
+			for message in processor.VHDLAssertMessages:
+				print(message)
+			print(f"Latches: {processor.HasLatches}")
+			for latch in processor.Latches:
+				print(latch)
+			print(f"Blackboxes: {processor.HasBlackboxes}")
+			for bbox in processor[WritingSynthesisReport].Blackboxes.items():
+				print(f"  {bbox}")
+			print(f"Cells: {len(processor.Cells)}")
+			for cell, count in processor.Cells.items():
+				print(f"  {cell}: {count}")
 
 		if args.info:
 			self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")

@@ -51,7 +51,14 @@ class ProcessorException(OutputFilterException):
 
 @export
 class ClassificationException(ProcessorException):
-	pass
+	_lineNumber: int
+	_rawMessage: str
+
+	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str):
+		super().__init__(errorMessage)
+
+		self._lineNumber = lineNumber
+		self._rawMessage = rawMessageLine
 
 
 @export
@@ -98,7 +105,10 @@ class LineKind(Flag):
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Table =                  2**33
+	Paragraph =              2**33
+	ParagraphHeadline =      Paragraph | Header
+
+	Table =                  2**34
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
@@ -445,6 +455,22 @@ class BaseProcessor(metaclass=ExtendedType, slots=True):
 	@readonly
 	def ErrorMessages(self) -> List[VivadoErrorMessage]:
 		return self._errorMessages
+
+	@readonly
+	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
+		if 8 in self._messagesByID:
+			if 6031 in (synthMessages := self._messagesByID[8]):
+				return [message for message in synthMessages[6031]]
+
+		return []
+
+	@readonly
+	def VHDLAssertMessages(self) -> List[VHDLReportMessage]:
+		if 8 in self._messagesByID:
+			if 63 in (synthMessages := self._messagesByID[8]):
+				return [message for message in synthMessages[63]]
+
+		return []
 
 	# def __getitem__(self, item: Type["Parser"]) -> "Parsers":
 	# 	return self._parsers[item]
