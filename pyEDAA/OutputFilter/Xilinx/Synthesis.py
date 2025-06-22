@@ -148,6 +148,64 @@ class Section(Parser):
 
 
 @export
+class SubSection(Section):
+	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
+		print(f"SubSectionStart1: {line}")
+		line._kind = LineKind.SubSectionStart
+
+		line = yield line
+		print(f"SubSectionStart2: {line}")
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionStart | LineKind.SubSectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		lastLine = yield line
+
+		return lastLine
+
+	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		print(f"SubSectionFinish1: {line}")
+		if line._message.startswith(self._FINISH):
+			line._kind = LineKind.SubSectionEnd
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		print(f"SubSectionFinish2: {line}")
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter | LineKind.Last
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		lastLine = yield line
+		print(f"SubSectionFinishL: {line}")
+		return lastLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SectionStart(line)
+		print(f"SubGenerator1: {line}")
+
+		while line is not None:
+			rawMessage = line._message
+
+			if rawMessage.startswith("----"):
+				line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+
+		line = yield line
+		print(f"SubGeneratorN: {line}")
+
+		lastLine = yield from self._SectionFinish(line)
+		print(f"SubGeneratorL: {lastLine}")
+		return lastLine
+
+
+@export
 class RTLElaboration(Section):
 	_START:  ClassVar[str] = "Starting RTL Elaboration : "
 	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
@@ -192,6 +250,12 @@ class RTLElaboration(Section):
 class HandlingCustomAttributes1(Section):
 	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
+
+
+@export
+class ConstraintValidation(Section):
+	_START:  ClassVar[str] = "Finished RTL Optimization Phase 1"
+	_FINISH: ClassVar[str] = "Finished Constraint Validation : "
 
 
 @export
@@ -263,13 +327,13 @@ class TechnologyMapping(Section):
 
 
 @export
-class FlatteningBeforeIOInsertion(Section):
+class FlatteningBeforeIOInsertion(SubSection):
 	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
 
 
 @export
-class FinalNetlistCleanup(Section):
+class FinalNetlistCleanup(SubSection):
 	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
@@ -296,22 +360,25 @@ class IOInsertion(Section):
 
 		if line._message.startswith("Start "):
 			line = yield from flattening.Generator(line)
+			print(f"IOInsert3: {line}")
 
-
-
-		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("----"):
-				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
-				break
-			else:
-				line._kind = LineKind.Verbose
-
-			line = yield line
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionStart | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
 
 		line = yield line
-		print(f"IOInsertN: {line}")
+
+		if line._message.startswith("Start "):
+			line = yield from netlist.Generator(line)
+			print(f"IOInsert4: {line}")
+
+		if line._message.startswith("----"):
+			line._kind = LineKind.SubSectionEnd | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
 
 		yield from self._SectionFinish(line)
 
@@ -413,6 +480,7 @@ PARSERS = (
 	Preamble,
 	RTLElaboration,
 	HandlingCustomAttributes1,
+	ConstraintValidation,
 	LoadingPart,
 	ApplySetProperty,
 	RTLComponentStatistics,
@@ -478,12 +546,17 @@ class Processor(BaseDocument):
 		parser:        Section       = firstValue(self._parsers)
 		activeParsers: List[Parsers] = list(self._parsers.values())
 
+		rtlElaboration = self._parsers[RTLElaboration]
+		constraintValidation = self._parsers[ConstraintValidation]
+
 		# get first line and send to preamble filter
 		line = yield
+		print(f"DocSlicer1: {line}")
 		line = next(filter := parser.Generator(line))
 
 		# return first line and get the second line
 		line = yield line
+		print(f"DocSlicer2: {line}")
 
 		while line is not None:
 			if filter is not None:
@@ -493,75 +566,38 @@ class Processor(BaseDocument):
 				# 	print(f"Error:  {line}")
 				# else:
 				# 	print(f"Slicer: {line}")
-				if LineKind.Last in line._kind:
+				if (LineKind.Last in line._kind) and (LineKind.SectionDelimiter in line._kind):
 					print(f" DONE: {parser.__class__.__name__}")
 					activeParsers.remove(parser)
 					filter = None
 			else:
-				if line._message.startswith("Start") or line._message.startswith("Starting"):
+				if line._message.startswith("Start "):
 					for parser in activeParsers:  # type: Section
 						if line._message.startswith(parser._START):
 							print(f"BEGIN: {parser.__class__.__name__}")
-							next(filter := parser.Generator(line))
-							break
+							line = next(filter := parser.Generator(line))
 
-			# if state is not None:
-			# 	line = state(line)
-			# 	if LineKind.Last in line._kind:
-			# 		obj: Section = self._state.__self__
-			# 		self._activeParsers.remove(obj)
-			# 		self._state = None
-			#
-			# 		print(f" DONE: {obj.__class__.__name__}")
-			# else:
-			# 	if line.startswith("Start") or line.startswith("Starting"):
-			# 		for parser in self._activeParsers:  # type: Section
-			# 			if line.startswith(parser._START):
-			# 				print(f"BEGIN: {parser.__class__.__name__}")
-			# 				self._state = parser.ParseLine
-			# 				_ = self._state(lineNumber, line)
-			# 				break
-			# 		else:
-			# 			print(f"Unknown section\n  {line}")
+							break
+					else:
+						raise Exception(f"Unknown section: {line}")
+				elif line._message.startswith("Starting "):
+					if line._message[9:].startswith("synth_design"):
+						line._kind = LineKind.Verbose
+					elif line._message.startswith(rtlElaboration._START):
+						parser = rtlElaboration
+						line = next(filter := parser.Generator(line))
+				elif line._message.startswith("Finished "):
+					if line._message.startswith(constraintValidation._START):
+						parser = constraintValidation
+						line = next(filter := parser.Generator(line))
 
 			if line._kind is LineKind.Unprocessed:
 				line._kind = LineKind.Normal
 
 			line = yield line
+			print(f"DocSlicerN: {line}")
 
-
-	def _Parse(self, lineNumber: int, line: str):
-		if self._state is not None:
-			result = self._state(lineNumber, line)
-			if ProcessingState.Last in result:
-				obj: Section = self._state.__self__
-				self._activeParsers.remove(obj)
-				self._state = None
-
-				print(f" DONE: {obj.__class__.__name__}")
-		else:
-			if line.startswith("Start") or line.startswith("Starting"):
-				for parser in self._activeParsers:   # type: Section
-					if line.startswith(parser._START):
-						print(f"BEGIN: {parser.__class__.__name__}")
-						self._state = parser.ParseLine
-						_ = self._state(lineNumber, line)
-						break
-				else:
-					print(f"Unknown section\n  {line}")
-
-
-	#
-	# messages by tool
-	# for tool, toolID in processor._toolNames.items():
-	# 	messages = list(chain(*processor._messagesByID[toolID].values()))
-	# 	print(f"{tool} ({len(messages)}):")
-	# 	for message in messages:
-	# 		print(f"  {message}")
-
-	# print(f"Cells Statistics")
-	# for cellName, cellCount in processor._parsers[WritingSynthesisReport]._cells.items():
-	# 	print(f"  {cellName:16}: {cellCount}")
+		pass
 
 # unused
 # used but not set
@@ -569,3 +605,6 @@ class Processor(BaseDocument):
 # resources
 #  * RTL
 #	 * Mapped
+
+# Design hierarchy + generics per hierarchy
+# read XDC files
