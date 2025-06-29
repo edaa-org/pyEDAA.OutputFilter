@@ -32,10 +32,11 @@
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
-from pyTooling.Versioning       import YearReleaseVersion
+from pyTooling.Versioning                        import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx                import Preamble
-from pyEDAA.OutputFilter.Xilinx.Synthesis      import Processor as SynthProc, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx                  import Document
+from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -46,7 +47,7 @@ if __name__ == "__main__": # pragma: no cover
 class Stopwatch(TestCase):
 	def test_SynthesisLogfile(self) -> None:
 		logfile = Path("tests/data/Stopwatch/toplevel.vds")
-		processor = SynthProc(logfile)
+		processor = Document(logfile)
 		processor.Parse()
 
 		self.assertLess(processor.Duration, 0.1)
@@ -56,7 +57,15 @@ class Stopwatch(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2025, 1), processor[Preamble].ToolVersion)
+		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
 
+		synthesis = processor[SynthesizeDesign]
 
-		self.assertEqual(0, len(processor[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile(self) -> None:
+		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
