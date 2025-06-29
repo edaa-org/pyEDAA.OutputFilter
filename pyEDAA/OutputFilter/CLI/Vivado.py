@@ -38,8 +38,11 @@ from pyTooling.Attributes.ArgParse             import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag        import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag  import LongValuedFlag
 
-from pyEDAA.OutputFilter.Xilinx                import Preamble, LineKind, Line
-from pyEDAA.OutputFilter.Xilinx.Synthesis      import WritingSynthesisReport, Processor, LoadingPart
+from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Common           import LineKind, Line
+from pyEDAA.OutputFilter.Xilinx.Common2          import Preamble
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, LoadingPart
+
 
 
 class VivadoHandlers(metaclass=ExtendedType, mixin=True):
@@ -70,7 +73,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		if returnCode != 0:
 			self.Exit(returnCode)
 
-		processor = Processor(logfile)
+		processor = Document(logfile)
 		processor.Parse()
 
 		if args.colored:
@@ -139,7 +142,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 					self.WriteNormal(f"    {latch}")
 			self.WriteNormal(f"  Blackboxes:          {'found' if processor.HasBlackboxes else '----'}")
 			if processor.HasBlackboxes:
-				for bbox in processor[WritingSynthesisReport].Blackboxes:
+				for bbox in processor.Blackboxes:
 					self.WriteNormal(f"    {bbox}")
 
 			self.WriteNormal(f"VHDL report statements ({len(processor.VHDLReportMessages)}):")
@@ -157,7 +160,9 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 	def ColoredOutput(self, lines: Iterable[Line]) -> None:
 		for i, line in enumerate(lines, start=1):
-			if line.Kind is LineKind.Normal:
+			if isinstance(line, ProcessorException):
+				print(f"{i:4}: {{RED}}EXCEPTION:{{NOCOLOR}} {line}".format(**self.Foreground))
+			elif line.Kind is LineKind.Normal:
 				print(f"{i:4}: {line.Message}")
 			elif LineKind.Message in line.Kind:
 				if line.Kind is LineKind.InfoMessage:
@@ -168,7 +173,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 					print(f"{i:4}: {{MAGENTA}}{line}{{NOCOLOR}}".format(**self.Foreground))
 				elif line.Kind is LineKind.ErrorMessage:
 					print(f"{i:4}: {{RED}}{line}{{NOCOLOR}}".format(**self.Foreground))
-			elif LineKind.Command in line.Kind:
+			elif LineKind.TclCommand in line.Kind:
 				print(f"{i:4}: {{CYAN}}{line}{{NOCOLOR}}".format(**self.Foreground))
 			elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
 				print(f"{i:4}: {{DARK_CYAN}}{line}{{NOCOLOR}}".format(**self.Foreground))
@@ -180,6 +185,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				print(f"{i:4}: {{GRAY}}{line}{{NOCOLOR}}".format(**self.Foreground))
 			elif LineKind.Verbose in line.Kind:
 				print(f"{i:4}: {{DARK_GRAY}}{line}{{NOCOLOR}}".format(**self.Foreground))
+			elif LineKind.Success in line.Kind:
+				print(f"{i:4}: {{GREEN}}{line}{{NOCOLOR}}".format(**self.Foreground))
 			elif line.Kind is LineKind.Empty:
 				print(f"{i:4}:")
 			elif line.Kind is LineKind.ProcessorError:

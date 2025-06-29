@@ -44,7 +44,7 @@
 
 ```python
 from pathlib import Path
-from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Processor
 
 logfile = Path("tests/data/Stopwatch/toplevel.vds")
 processor = Processor(logfile)

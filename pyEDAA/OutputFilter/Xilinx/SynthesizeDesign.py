@@ -29,39 +29,45 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from pathlib  import Path
 from re       import compile as re_compile
-from typing   import ClassVar, List, Callable, Dict, Type, Iterator, Union, Generator
+from typing   import ClassVar, Dict, Generator
 
 from pyTooling.Decorators  import export, readonly
-from pyTooling.MetaClasses import mustoverride
-from pyTooling.Common      import firstValue
+from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx import VivadoMessage, ProcessingState, Parser, Preamble, BaseProcessor, BaseDocument, \
-	Line, ProcessorException, LineKind, VivadoInfoMessage, VHDLAssertionMessage, VHDLReportMessage
+from pyEDAA.OutputFilter.Xilinx.Common import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
 
 
 @export
-class Initialize(Parser):
-	_command: str
-	_license: VivadoMessage
+class BaseSection(metaclass=ExtendedType, mixin=True):
+	@abstractmethod
+	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
+		pass
 
-	def ParseLine(self, lineNumber: int, line: str) -> bool:
+	@abstractmethod
+	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		pass
+
+	@abstractmethod
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		pass
 
 
 @export
-class Section(Parser):
+class Section(BaseParser, BaseSection):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
+	_command:  "Command"
 	_duration: float
 
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
+	def __init__(self, command: "Command"):
+		super().__init__()  #command._processor)
 
+		self._command = command
 		self._duration = 0.0
 
 	@readonly
@@ -72,7 +78,7 @@ class Section(Parser):
 		line._kind = LineKind.SectionStart
 
 		line = yield line
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
@@ -81,20 +87,25 @@ class Section(Parser):
 		return nextLine
 
 	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if line._message.startswith(self._FINISH):
+		if line.StartsWith("----"):
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
+		if line.StartsWith(self._FINISH):
 			line._kind = LineKind.SectionEnd
 		else:
 			line._kind |= LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
 		else:
 			line._kind |= LineKind.ProcessorError
 
-		check = yield line
-		if check is not None:
-			raise Exception()
+		nextLine = yield line
+		return nextLine
 
 	# @mustoverride
 	# def ParseLine(self, lineNumber: int, line: str) -> ProcessingState:
@@ -134,18 +145,23 @@ class Section(Parser):
 
 			line = yield line
 
-		line = yield line
+		# line = yield line
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
 
 @export
-class SubSection(Section):
+class SubSection(BaseParser, BaseSection):
+	_section: Section
+
+	def __init__(self, section: Section) -> None:
+		self._section = section
+
 	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
 		line._kind = LineKind.SubSectionStart
 
 		line = yield line
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SubSectionStart | LineKind.SubSectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
@@ -154,13 +170,13 @@ class SubSection(Section):
 		return nextLine
 
 	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if line._message.startswith(self._FINISH):
+		if line.StartsWith(self._FINISH):
 			line._kind = LineKind.SubSectionEnd
 		else:
 			line._kind |= LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter | LineKind.Last
 		else:
 			line._kind |= LineKind.ProcessorError
@@ -204,13 +220,13 @@ class RTLElaboration(Section):
 					if line._messageKindID == 63:    # VHDL assert statement
 						newLine = VHDLAssertionMessage.Convert(line)
 						if newLine is None:
-							print(f"Convert error at: {line}")
+							pass
 						else:
 							line = newLine
 					elif line._messageKindID == 6031:  # VHDL report statement
 						newLine = VHDLReportMessage.Convert(line)
 						if newLine is None:
-							print(f"Convert error at: {line}")
+							pass
 						else:
 							line = newLine
 
@@ -222,7 +238,7 @@ class RTLElaboration(Section):
 
 			line = yield line
 
-		line = yield line
+		# line = yield line
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
@@ -261,17 +277,18 @@ class LoadingPart(Section):
 		while line is not None:
 			rawMessage = line._message
 
-			if line._message.startswith("Loading part: "):
+			if line.StartsWith("Loading part: "):
 				line._kind = LineKind.Normal
 				self._part = line._message[14:].strip()
 
 			if rawMessage.startswith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
+			elif not isinstance(line, VivadoMessage):
+				line._kind = LineKind.Verbose
 
 			line = yield line
 
-		line = yield line
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
@@ -295,12 +312,11 @@ class RTLComponentStatistics(Section):
 			if rawMessage.startswith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			else:
+			elif not isinstance(line, VivadoMessage):
 				line._kind = LineKind.Verbose
 
 			line = yield line
 
-		line = yield line
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
@@ -357,25 +373,25 @@ class IOInsertion(Section):
 		netlist = FinalNetlistCleanup(None)
 
 		line = yield from self._SectionStart(line)
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("Start "):
+		if line.StartsWith("Start "):
 			line = yield from flattening.Generator(line)
 
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SubSectionStart | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("Start "):
+		if line.StartsWith("Start "):
 			line = yield from netlist.Generator(line)
 
-		if line._message.startswith("----"):
+		if line.StartsWith("----"):
 			line._kind = LineKind.SubSectionEnd | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
@@ -437,31 +453,31 @@ class WritingSynthesisReport(Section):
 		return self._blackboxes
 
 	def _BlackboxesGenerator(self, line: Line) -> Generator[Line, Line, Line]:
-		if line._message.startswith("+-"):
+		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("| "):
+		if line.StartsWith("| "):
 			line._kind = LineKind.TableHeader
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("+-"):
+		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
 		while line is not None:
-			if line._message.startswith("| "):
+			if line.StartsWith("| "):
 				line._kind = LineKind.TableRow
 
 				columns = line._message.strip("|").split("|")
 				self._blackboxes[columns[1].strip()] = int(columns[2].strip())
-			elif line._message.startswith("+-"):
+			elif line.StartsWith("+-"):
 				line._kind = LineKind.TableFrame
 				break
 			else:
@@ -473,31 +489,31 @@ class WritingSynthesisReport(Section):
 		return nextLine
 
 	def _CellGenerator(self, line: Line) -> Generator[Line, Line, Line]:
-		if line._message.startswith("+-"):
+		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("| "):
+		if line.StartsWith("| "):
 			line._kind = LineKind.TableHeader
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		if line._message.startswith("+-"):
+		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
 		while line is not None:
-			if line._message.startswith("|"):
+			if line.StartsWith("|"):
 				line._kind = LineKind.TableRow
 
 				columns = line._message.strip("|").split("|")
 				self._cells[columns[1].strip()] = int(columns[2].strip())
-			elif line._message.startswith("+-"):
+			elif line.StartsWith("+-"):
 				line._kind = LineKind.TableFrame
 				break
 			else:
@@ -531,126 +547,5 @@ class WritingSynthesisReport(Section):
 			elif line._kind is LineKind.Empty:
 				line = yield line
 
-		line = yield line
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
-
-
-PARSERS = (
-	Preamble,
-	RTLElaboration,
-	HandlingCustomAttributes1,
-	ConstraintValidation,
-	LoadingPart,
-	ApplySetProperty,
-	RTLComponentStatistics,
-	PartResourceSummary,
-	CrossBoundaryAndAreaOptimization,
-	ApplyingXDCTimingConstraints,
-	TimingOptimization,
-	TechnologyMapping,
-	IOInsertion,
-	FlatteningBeforeIOInsertion,
-	FinalNetlistCleanup,
-	RenamingGeneratedInstances,
-	RebuildingUserHierarchy,
-	RenamingGeneratedPorts,
-	HandlingCustomAttributes2,
-	RenamingGeneratedNets,
-	WritingSynthesisReport,
-)
-
-
-Parsers = Union[*PARSERS]
-
-
-@export
-class Processor(BaseDocument):
-	_parsers:  Dict[Type[Parser], Parsers]
-
-	def __init__(self, synthesisLogfile: Path):
-		super().__init__(synthesisLogfile)
-
-		self._parsers =  {p: p(self) for p in PARSERS}
-
-	@readonly
-	def HasLatches(self) -> bool:
-		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
-			return True
-
-		return "LD" in self._parsers[WritingSynthesisReport]._cells
-
-	@readonly
-	def Latches(self) -> Iterator[VivadoMessage]:
-		try:
-			yield from iter(self._messagesByID[8][327])
-		except KeyError:
-			yield from ()
-
-	@readonly
-	def HasBlackboxes(self) -> bool:
-		return len(self._parsers[WritingSynthesisReport]._blackboxes) > 0
-
-	@readonly
-	def Cells(self) -> Dict[str, int]:
-		return self._parsers[WritingSynthesisReport]._cells
-
-	def __getitem__(self, item: Type[Parser]) -> Parsers:
-		return self._parsers[item]
-
-	def DocumentSlicer(self) -> Generator[Union[Line, ProcessorException], Line, None]:
-		parser:        Section       = firstValue(self._parsers)
-		activeParsers: List[Parsers] = list(self._parsers.values())
-
-		rtlElaboration = self._parsers[RTLElaboration]
-		constraintValidation = self._parsers[ConstraintValidation]
-
-		# get first line and send to preamble filter
-		line = yield
-		line = next(filter := parser.Generator(line))
-
-		# return first line and get the second line
-		line = yield line
-
-		while line is not None:
-			if filter is not None:
-				line = filter.send(line)
-
-				if (LineKind.Last in line._kind) and (LineKind.SectionDelimiter in line._kind):
-					activeParsers.remove(parser)
-					filter = None
-			else:
-				if line._message.startswith("Start "):
-					for parser in activeParsers:  # type: Section
-						if line._message.startswith(parser._START):
-							line = next(filter := parser.Generator(line))
-							break
-					else:
-						raise Exception(f"Unknown section: {line}")
-				elif line._message.startswith("Starting "):
-					if line._message[9:].startswith("synth_design"):
-						line._kind = LineKind.Verbose
-					elif line._message.startswith(rtlElaboration._START):
-						parser = rtlElaboration
-						line = next(filter := parser.Generator(line))
-				elif line._message.startswith("Finished "):
-					if line._message.startswith(constraintValidation._START):
-						parser = constraintValidation
-						line = next(filter := parser.Generator(line))
-
-			if line._kind is LineKind.Unprocessed:
-				line._kind = LineKind.Normal
-
-			line = yield line
-
-		pass
-
-# unused
-# used but not set
-# statemachine encodings
-# resources
-#  * RTL
-#	 * Mapped
-
-# Design hierarchy + generics per hierarchy
-# read XDC files
