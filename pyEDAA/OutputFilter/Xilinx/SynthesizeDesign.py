@@ -334,6 +334,12 @@ class CrossBoundaryAndAreaOptimization(Section):
 
 
 @export
+class ROM_RAM_DSP_SR_Retiming1(Section):
+	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
+	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
+
+
+@export
 class ApplyingXDCTimingConstraints(Section):
 	_START:  ClassVar[str] = "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
@@ -343,6 +349,12 @@ class ApplyingXDCTimingConstraints(Section):
 class TimingOptimization(Section):
 	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
+
+
+@export
+class ROM_RAM_DSP_SR_Retiming2(Section):
+	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
+	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
 
 
 @export
@@ -400,6 +412,7 @@ class IOInsertion(Section):
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
+
 @export
 class RenamingGeneratedInstances(Section):
 	_START:  ClassVar[str] = "Start Renaming Generated Instances"
@@ -428,6 +441,12 @@ class HandlingCustomAttributes2(Section):
 class RenamingGeneratedNets(Section):
 	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
+
+
+@export
+class ROM_RAM_DSP_SR_Retiming3(Section):
+	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
+	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
 
 
 @export

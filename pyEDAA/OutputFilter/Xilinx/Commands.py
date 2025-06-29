@@ -38,10 +38,10 @@ from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage
 from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes1, \
-	WritingSynthesisReport, ConstraintValidation, LoadingPart, ApplySetProperty, RTLComponentStatistics, \
-	PartResourceSummary, CrossBoundaryAndAreaOptimization, ApplyingXDCTimingConstraints, TimingOptimization, \
-	TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion, FinalNetlistCleanup, RenamingGeneratedInstances, \
-	RebuildingUserHierarchy, RenamingGeneratedPorts, HandlingCustomAttributes2, RenamingGeneratedNets
+	ConstraintValidation, LoadingPart, ApplySetProperty, RTLComponentStatistics, \
+	PartResourceSummary, CrossBoundaryAndAreaOptimization, ROM_RAM_DSP_SR_Retiming1, ApplyingXDCTimingConstraints, TimingOptimization, \
+	ROM_RAM_DSP_SR_Retiming2, TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion, FinalNetlistCleanup, RenamingGeneratedInstances, \
+	RebuildingUserHierarchy, RenamingGeneratedPorts, HandlingCustomAttributes2, RenamingGeneratedNets, ROM_RAM_DSP_SR_Retiming3, WritingSynthesisReport
 
 
 @export
@@ -78,8 +78,10 @@ class SynthesizeDesign(Command):
 		RTLComponentStatistics,
 		PartResourceSummary,
 		CrossBoundaryAndAreaOptimization,
+		ROM_RAM_DSP_SR_Retiming1,
 		ApplyingXDCTimingConstraints,
 		TimingOptimization,
+		ROM_RAM_DSP_SR_Retiming2,
 		TechnologyMapping,
 		IOInsertion,
 		FlatteningBeforeIOInsertion,
@@ -89,6 +91,7 @@ class SynthesizeDesign(Command):
 		RenamingGeneratedPorts,
 		HandlingCustomAttributes2,
 		RenamingGeneratedNets,
+		ROM_RAM_DSP_SR_Retiming3,
 		WritingSynthesisReport,
 	)
 
