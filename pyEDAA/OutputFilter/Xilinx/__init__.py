@@ -78,6 +78,14 @@ class Processor(metaclass=ExtendedType, slots=True):
 		self._messagesByID =            {}
 
 	@readonly
+	def Preamble(self) -> Preamble:
+		return self._preamble
+
+	@readonly
+	def Commands(self) -> Dict[Type[Command], Command]:
+		return self._commands
+
+	@readonly
 	def Duration(self) -> float:
 		return self._duration
 

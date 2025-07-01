@@ -38,7 +38,7 @@ from pyTooling.Attributes.ArgParse             import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag        import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag  import LongValuedFlag
 
-from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException
+from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException, SynthesizeDesign
 from pyEDAA.OutputFilter.Xilinx.Common           import LineKind, Line
 from pyEDAA.OutputFilter.Xilinx.Common2          import Preamble
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, LoadingPart
@@ -46,8 +46,8 @@ from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, 
 
 
 class VivadoHandlers(metaclass=ExtendedType, mixin=True):
-	@CommandHandler("vivado-synth", help="Parse AMD/Xilinx Vivado Synthesis log files.", description="Parse AMD/Xilinx Vivado Synthesis log files.")
-	@LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
+	@CommandHandler("vivado", help="Parse AMD/Xilinx Vivado log files.", description="Parse AMD/Xilinx Vivado log files.")
+	@LongValuedFlag("--file", dest="logfile", metaName='Log file', help="Log file (*.vds|*.vdi).")
 	@LongFlag("--colored", dest="colored", help="Render logfile with colored lines.")
 	@LongFlag("--summary", dest="summary", help="Print a summary.")
 	@LongFlag("--info", dest="info", help="Print info messages.")
@@ -56,8 +56,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	@LongFlag("--error", dest="error", help="Print error messages.")
 	@LongFlag("--influxdb", dest="influxdb", help="Write statistics as InfluxDB line protocol file (*.line).")
 	# @LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
-	def HandleVivadoSynthesis(self, args: Namespace) -> None:
-		"""Handle program calls with command ``vivado-synth``."""
+	def HandleVivado(self, args: Namespace) -> None:
+		"""Handle program calls with command ``vivado``."""
 		self._PrintHeadline()
 
 		returnCode = 0
@@ -67,7 +67,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 		logfile = Path(args.logfile)
 		if not logfile.exists():
-			self.WriteError(f"Vivado synthesis log file '{logfile}' doesn't exist.")
+			self.WriteError(f"Vivado log file '{logfile}' doesn't exist.")
 			returnCode = 4
 
 		if returnCode != 0:
@@ -97,52 +97,54 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				self.WriteNormal(f"  {message}")
 
 		if args.influxdb:
+			synthesizeDesign = processor[SynthesizeDesign]
 			influxString  =  "vivado_synthesis_overview"
-			influxString += f",version={processor[Preamble].ToolVersion}"
+			influxString += f",version={processor.Preamble.ToolVersion}"
 			influxString += f",branch=main"
 			influxString += f",design=Stopwatch"
 			influxString += " "
 			influxString += f"processing_duration={processor.Duration:.3f}"
-			influxString += f",synthesis_duration={processor[WritingSynthesisReport].Duration:.1f}"
+			influxString += f",synthesis_duration={synthesizeDesign[WritingSynthesisReport].Duration:.1f}"
 			influxString += f",info_count={len(processor.InfoMessages)}u"
 			influxString += f",warning_count={len(processor.WarningMessages)}u"
 			influxString += f",critical_count={len(processor.CriticalWarningMessages)}u"
 			influxString += f",error_count={len(processor.ErrorMessages)}u"
-			influxString += f",blackbox_count={len(processor[WritingSynthesisReport].Blackboxes)}u"
+			influxString += f",blackbox_count={len(synthesizeDesign[WritingSynthesisReport].Blackboxes)}u"
 			influxString +=  "\n"
 			influxString +=  "vivado_synthesis_cells"
-			influxString += f",version={processor[Preamble].ToolVersion}"
+			influxString += f",version={processor.Preamble.ToolVersion}"
 			influxString += f",branch=main"
 			influxString += f",design=Stopwatch"
 			influxString += " "
-			influxString += ",".join(f"{cellName}={cellCount}" for cellName, cellCount in processor[WritingSynthesisReport].Cells.items() if not cellName.endswith("_bbox"))
+			influxString += ",".join(f"{cellName}={cellCount}" for cellName, cellCount in synthesizeDesign[WritingSynthesisReport].Cells.items() if not cellName.endswith("_bbox"))
 
 			self.WriteNormal(influxString)
 
 		if args.summary:
+			synthesizeDesign = processor[SynthesizeDesign]
 			self.WriteNormal("Summary:")
-			self.WriteNormal(f"  Tool version:        {processor[Preamble].ToolVersion}")
-			self.WriteNormal(f"  Started at:          {processor[Preamble].StartDatetime}")
+			self.WriteNormal(f"  Tool version:        {processor.Preamble.ToolVersion}")
+			self.WriteNormal(f"  Started at:          {processor.Preamble.StartDatetime}")
 			self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
 			self.WriteNormal(f"  Info:                {len(processor.InfoMessages)}")
 			self.WriteNormal(f"  Warning:             {len(processor.WarningMessages)}")
 			self.WriteNormal(f"  Critical Warning:    {len(processor.CriticalWarningMessages)}")
 			self.WriteNormal(f"  Error:               {len(processor.ErrorMessages)}")
-			self.WriteNormal(f"  Part:                {processor[LoadingPart].Part}")
+			self.WriteNormal(f"  Part:                {synthesizeDesign[LoadingPart].Part}")
 
 			self.WriteNormal("Policies:")
-			self.WriteNormal(f"  Latches:             {'found' if processor.HasLatches else '----'}")
-			if processor.HasLatches:
+			self.WriteNormal(f"  Latches:             {'found' if synthesizeDesign.HasLatches else '----'}")
+			if synthesizeDesign.HasLatches:
 				for cellName in ("LD", ):
 					try:
 						self.WriteNormal(f"    {cellName}: {processor.Cells[cellName]}")
 					except KeyError:
 						pass
-				for latch in processor.Latches:
+				for latch in synthesizeDesign.Latches:
 					self.WriteNormal(f"    {latch}")
-			self.WriteNormal(f"  Blackboxes:          {'found' if processor.HasBlackboxes else '----'}")
-			if processor.HasBlackboxes:
-				for bbox in processor.Blackboxes:
+			self.WriteNormal(f"  Blackboxes:          {'found' if synthesizeDesign.HasBlackboxes else '----'}")
+			if synthesizeDesign.HasBlackboxes:
+				for bbox in synthesizeDesign.Blackboxes:
 					self.WriteNormal(f"    {bbox}")
 
 			self.WriteNormal(f"VHDL report statements ({len(processor.VHDLReportMessages)}):")
@@ -153,7 +155,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				self.WriteNormal(f"  {message}")
 
 			self.WriteNormal(f"Cells: {len(processor.Cells)}")
-			for cell, count in processor.Cells.items():
+			for cell, count in synthesizeDesign.Cells.items():
 				self.WriteNormal(f"  {cell}: {count}")
 
 		self.ExitOnPreviousErrors()
