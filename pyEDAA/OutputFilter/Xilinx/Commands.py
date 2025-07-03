@@ -33,15 +33,19 @@ from typing               import ClassVar, Generator, Union, List, Type, Dict, I
 
 from pyTooling.Decorators import export, readonly
 
-from pyEDAA.OutputFilter.Xilinx import VivadoTclCommand
+from pyEDAA.OutputFilter.Xilinx           import VivadoTclCommand
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
-from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage, VHDLReportMessage
 from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes1, \
-	ConstraintValidation, LoadingPart, ApplySetProperty, RTLComponentStatistics, \
-	PartResourceSummary, CrossBoundaryAndAreaOptimization, ROM_RAM_DSP_SR_Retiming1, ApplyingXDCTimingConstraints, TimingOptimization, \
-	ROM_RAM_DSP_SR_Retiming2, TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion, FinalNetlistCleanup, RenamingGeneratedInstances, \
-	RebuildingUserHierarchy, RenamingGeneratedPorts, HandlingCustomAttributes2, RenamingGeneratedNets, ROM_RAM_DSP_SR_Retiming3, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, PartResourceSummary
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import CrossBoundaryAndAreaOptimization, ROM_RAM_DSP_SR_Retiming
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ApplyingXDCTimingConstraints, TimingOptimization
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FinalNetlistCleanup, RenamingGeneratedInstances
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RebuildingUserHierarchy, RenamingGeneratedPorts
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedNets, WritingSynthesisReport
 
 
 @export
@@ -55,15 +59,34 @@ class SectionNotPresentException(NotPresentException):
 
 
 @export
-class Command(Parser):
-	# _TCL_COMMAND: ClassVar[str]
+class HandlingCustomAttributes1(HandlingCustomAttributes):
 	pass
 
 
+@export
+class HandlingCustomAttributes2(HandlingCustomAttributes):
+	pass
 
 
-# Parsers = Union[*PARSERS]
+@export
+class ROM_RAM_DSP_SR_Retiming1(ROM_RAM_DSP_SR_Retiming):
+	pass
 
+
+@export
+class ROM_RAM_DSP_SR_Retiming2(ROM_RAM_DSP_SR_Retiming):
+	pass
+
+
+@export
+class ROM_RAM_DSP_SR_Retiming3(ROM_RAM_DSP_SR_Retiming):
+	pass
+
+
+@export
+class Command(Parser):
+	# _TCL_COMMAND: ClassVar[str]
+	pass
 
 
 @export
@@ -127,6 +150,22 @@ class SynthesizeDesign(Command):
 	@readonly
 	def Cells(self) -> Dict[str, int]:
 		return self._sections[WritingSynthesisReport]._cells
+
+	@readonly
+	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
+		if 8 in self._messagesByID:
+			if 6031 in (synthMessages := self._messagesByID[8]):
+				return [message for message in synthMessages[6031]]
+
+		return []
+
+	@readonly
+	def VHDLAssertMessages(self) -> List[VHDLReportMessage]:
+		if 8 in self._messagesByID:
+			if 63 in (synthMessages := self._messagesByID[8]):
+				return [message for message in synthMessages[63]]
+
+		return []
 
 	def __getitem__(self, item: Type[Parser]) -> Union[_PARSERS]:
 		try:

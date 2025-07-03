@@ -31,24 +31,89 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from datetime import datetime
 from re       import Pattern, compile as re_compile
-from typing   import ClassVar, Optional as Nullable, Generator
+from typing   import ClassVar, Optional as Nullable, Generator, List, Dict
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx import Line, LineKind
+from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoInfoMessage, VivadoWarningMessage, \
+	VivadoCriticalWarningMessage, VivadoErrorMessage, VivadoMessage
 
 
 @export
-class BaseParser(metaclass=ExtendedType, slots=True):
-	pass
+class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
+	_infoMessages: List[VivadoInfoMessage]
+	_warningMessages: List[VivadoWarningMessage]
+	_criticalWarningMessages: List[VivadoCriticalWarningMessage]
+	_errorMessages: List[VivadoErrorMessage]
+	_toolIDs: Dict[int, str]
+	_toolNames: Dict[str, int]
+	_messagesByID: Dict[int, Dict[int, List[VivadoMessage]]]
+
+	def __init__(self) -> None:
+		self._infoMessages = []
+		self._warningMessages = []
+		self._criticalWarningMessages = []
+		self._errorMessages = []
+		self._toolIDs = {}
+		self._toolNames = {}
+		self._messagesByID = {}
+
+	@readonly
+	def ToolIDs(self) -> Dict[int, str]:
+		return self._toolIDs
+
+	@readonly
+	def ToolNames(self) -> Dict[str, int]:
+		return self._toolNames
+
+	@readonly
+	def MessagesByID(self) -> Dict[int, Dict[int, List[VivadoMessage]]]:
+		return self._messagesByID
+
+	@readonly
+	def InfoMessages(self) -> List[VivadoInfoMessage]:
+		return self._infoMessages
+
+	@readonly
+	def WarningMessages(self) -> List[VivadoWarningMessage]:
+		return self._warningMessages
+
+	@readonly
+	def CriticalWarningMessages(self) -> List[VivadoCriticalWarningMessage]:
+		return self._criticalWarningMessages
+
+	@readonly
+	def ErrorMessages(self) -> List[VivadoErrorMessage]:
+		return self._errorMessages
+
+	def _AddMessageByID(self, message: VivadoMessage) -> None:
+		if message._toolID in self._messagesByID:
+			sub = self._messagesByID[message._toolID]
+			if message._messageKindID in sub:
+				sub[message._messageKindID].append(message)
+			else:
+				sub[message._messageKindID] = [message]
+		else:
+			self._toolIDs[message._toolID] = message._toolName
+			self._toolNames[message._toolName] = message._toolID
+			self._messagesByID[message._toolID] = {message._messageKindID: [message]}
+
+
+@export
+class BaseParser(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	def __init__(self) -> None:
+		super().__init__()
+
 
 @export
 class Parser(BaseParser):
 	_processor: "Processor"
 
 	def __init__(self, processor: "Processor"):
+		super().__init__()
+
 		self._processor = processor
 
 	@readonly

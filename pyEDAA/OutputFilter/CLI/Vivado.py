@@ -121,7 +121,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			self.WriteNormal(influxString)
 
 		if args.summary:
-			synthesizeDesign = processor[SynthesizeDesign]
+			synthesizeDesign : SynthesizeDesign = processor[SynthesizeDesign]
 			self.WriteNormal("Summary:")
 			self.WriteNormal(f"  Tool version:        {processor.Preamble.ToolVersion}")
 			self.WriteNormal(f"  Started at:          {processor.Preamble.StartDatetime}")
@@ -137,7 +137,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			if synthesizeDesign.HasLatches:
 				for cellName in ("LD", ):
 					try:
-						self.WriteNormal(f"    {cellName}: {processor.Cells[cellName]}")
+						self.WriteNormal(f"    {cellName}: {synthesizeDesign.Cells[cellName]}")
 					except KeyError:
 						pass
 				for latch in synthesizeDesign.Latches:
@@ -147,14 +147,14 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				for bbox in synthesizeDesign.Blackboxes:
 					self.WriteNormal(f"    {bbox}")
 
-			self.WriteNormal(f"VHDL report statements ({len(processor.VHDLReportMessages)}):")
-			for message in processor.VHDLReportMessages:
+			self.WriteNormal(f"VHDL report statements ({len(synthesizeDesign.VHDLReportMessages)}):")
+			for message in synthesizeDesign.VHDLReportMessages:
 				self.WriteNormal(f"  {message}")
-			self.WriteNormal(f"VHDL assert statements ({len(processor.VHDLAssertMessages)}):")
-			for message in processor.VHDLAssertMessages:
+			self.WriteNormal(f"VHDL assert statements ({len(synthesizeDesign.VHDLAssertMessages)}):")
+			for message in synthesizeDesign.VHDLAssertMessages:
 				self.WriteNormal(f"  {message}")
 
-			self.WriteNormal(f"Cells: {len(processor.Cells)}")
+			self.WriteNormal(f"Cells: {len(synthesizeDesign.Cells)}")
 			for cell, count in synthesizeDesign.Cells.items():
 				self.WriteNormal(f"  {cell}: {count}")
 

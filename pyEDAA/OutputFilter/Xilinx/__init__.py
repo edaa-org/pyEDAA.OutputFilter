@@ -30,18 +30,21 @@
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib  import Path
-from typing import Optional as Nullable, Dict, List, Generator, Union, Type
+from typing   import Optional as Nullable, Dict, List, Generator, Union, Type
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Stopwatch   import Stopwatch
 
-from pyEDAA.OutputFilter.Xilinx.Common import LineKind, Line, InfoMessage, WarningMessage, CriticalWarningMessage, \
-	ErrorMessage, VivadoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoWarningMessage, \
-	VivadoIrregularWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage, VHDLReportMessage, VivadoTclCommand, \
-	TclCommand
-from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign
-from pyEDAA.OutputFilter.Xilinx.Common2 import Preamble
+from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line
+from pyEDAA.OutputFilter.Xilinx.Common    import VivadoMessage, TclCommand, VivadoTclCommand
+from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoIrregularWarningMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
+from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign
+from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
 
@@ -49,33 +52,19 @@ ProcessedLine = Union[Line, ProcessorException]
 
 
 @export
-class Processor(metaclass=ExtendedType, slots=True):
+class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_duration:                float
 
 	_preamble:                Preamble
 	_commands:                Dict[Type[Command], Command]
 
-	_infoMessages:            List[VivadoInfoMessage]
-	_warningMessages:         List[VivadoWarningMessage]
-	_criticalWarningMessages: List[VivadoCriticalWarningMessage]
-	_errorMessages:           List[VivadoErrorMessage]
-	_toolIDs:                 Dict[int, str]
-	_toolNames:               Dict[str, int]
-	_messagesByID:            Dict[int, Dict[int, List[VivadoMessage]]]
-
 	def __init__(self):
+		super().__init__()
+
 		self._duration =                0.0
 
 		self._preamble =                None
 		self._commands =                {}
-
-		self._infoMessages =            []
-		self._warningMessages =         []
-		self._criticalWarningMessages = []
-		self._errorMessages =           []
-		self._toolIDs =                 {}
-		self._toolNames =               {}
-		self._messagesByID =            {}
 
 	@readonly
 	def Preamble(self) -> Preamble:
@@ -89,65 +78,8 @@ class Processor(metaclass=ExtendedType, slots=True):
 	def Duration(self) -> float:
 		return self._duration
 
-	@readonly
-	def ToolIDs(self) -> Dict[int, str]:
-		return self._toolIDs
-
-	@readonly
-	def ToolNames(self) -> Dict[str, int]:
-		return self._toolNames
-
-	@readonly
-	def MessagesByID(self) -> Dict[int, Dict[int, List[VivadoMessage]]]:
-		return self._messagesByID
-
-	@readonly
-	def InfoMessages(self) -> List[VivadoInfoMessage]:
-		return self._infoMessages
-
-	@readonly
-	def WarningMessages(self) -> List[VivadoWarningMessage]:
-		return self._warningMessages
-
-	@readonly
-	def CriticalWarningMessages(self) -> List[VivadoCriticalWarningMessage]:
-		return self._criticalWarningMessages
-
-	@readonly
-	def ErrorMessages(self) -> List[VivadoErrorMessage]:
-		return self._errorMessages
-
-	# TODO: Synthesis specific !!
-	@readonly
-	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
-		if 8 in self._messagesByID:
-			if 6031 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[6031]]
-
-		return []
-
-	@readonly
-	def VHDLAssertMessages(self) -> List[VHDLReportMessage]:
-		if 8 in self._messagesByID:
-			if 63 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[63]]
-
-		return []
-
 	def __getitem__(self, item: Type[Command]) -> Command:
 		return self._commands[item]
-
-	def _AddMessageByID(self, message: VivadoMessage) -> None:
-		if message._toolID in self._messagesByID:
-			sub = self._messagesByID[message._toolID]
-			if message._messageKindID in sub:
-				sub[message._messageKindID].append(message)
-			else:
-				sub[message._messageKindID] = [message]
-		else:
-			self._toolIDs[message._toolID] = message._toolName
-			self._toolNames[message._toolName] = message._toolID
-			self._messagesByID[message._toolID] = {message._messageKindID: [message]}
 
 	def LineClassification(self) -> Generator[ProcessedLine, str, None]:
 		# Instantiate and initialize CommandFinder

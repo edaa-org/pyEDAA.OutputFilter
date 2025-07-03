@@ -30,12 +30,13 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re       import compile as re_compile
-from typing   import ClassVar, Dict, Generator
+from typing   import ClassVar, Dict, Generator, List
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx.Common import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx.Common import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, \
+	VHDLReportMessage, VivadoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
@@ -244,7 +245,7 @@ class RTLElaboration(Section):
 
 
 @export
-class HandlingCustomAttributes1(Section):
+class HandlingCustomAttributes(Section):
 	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
@@ -334,7 +335,7 @@ class CrossBoundaryAndAreaOptimization(Section):
 
 
 @export
-class ROM_RAM_DSP_SR_Retiming1(Section):
+class ROM_RAM_DSP_SR_Retiming(Section):
 	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
 	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
 
@@ -349,12 +350,6 @@ class ApplyingXDCTimingConstraints(Section):
 class TimingOptimization(Section):
 	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
-
-
-@export
-class ROM_RAM_DSP_SR_Retiming2(Section):
-	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
-	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
 
 
 @export
@@ -432,21 +427,9 @@ class RenamingGeneratedPorts(Section):
 
 
 @export
-class HandlingCustomAttributes2(Section):
-	_START:  ClassVar[str] = "Start Handling Custom Attributes"
-	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
-
-
-@export
 class RenamingGeneratedNets(Section):
 	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
-
-
-@export
-class ROM_RAM_DSP_SR_Retiming3(Section):
-	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
-	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
 
 
 @export
