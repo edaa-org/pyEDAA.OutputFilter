@@ -102,11 +102,15 @@ class Line(metaclass=ExtendedType, slots=True):
 	_lineNumber:    int
 	_kind:          LineKind
 	_message:       str
+	_previousLine:  "Line"
+	_nextLine:      "Line"
 
 	def __init__(self, lineNumber: int, kind: LineKind, message: str) -> None:
-		self._lineNumber = lineNumber
-		self._kind = kind
-		self._message = message
+		self._lineNumber =   lineNumber
+		self._kind =         kind
+		self._message =      message
+		self._previousLine = None
+		self._nextLine =     None
 
 	@readonly
 	def LineNumber(self) -> int:
@@ -119,6 +123,20 @@ class Line(metaclass=ExtendedType, slots=True):
 	@readonly
 	def Message(self) -> str:
 		return self._message
+
+	@property
+	def PreviousLine(self) -> "Line":
+		return self._previousLine
+
+	@PreviousLine.setter
+	def PreviousLine(self, line: "Line") -> None:
+		self._previousLine = line
+		if line is not None:
+			line._nextLine = self
+
+	@readonly
+	def NextLine(self) -> "Line":
+		return self._nextLine
 
 	def Partition(self, separator: str) -> Tuple[str, str, str]:
 		return self._message.partition(separator)

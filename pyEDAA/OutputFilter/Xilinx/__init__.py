@@ -86,6 +86,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		next(cmdFinder := self.CommandFinder())
 
 		# wait for first line
+		lastLine = None
 		rawMessageLine = yield
 		lineNumber = 0
 		_errorMessage = "Unknown processing error."
@@ -124,6 +125,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			if line is None:
 				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
 
+			line.PreviousLine = lastLine
+			lastLine = line
 			line = cmdFinder.send(line)
 
 			if isinstance(line, VivadoMessage):
