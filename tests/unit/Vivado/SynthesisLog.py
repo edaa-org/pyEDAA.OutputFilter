@@ -36,7 +36,8 @@ from pyTooling.Versioning                        import YearReleaseVersion
 
 from pyEDAA.OutputFilter.Xilinx                  import Document
 from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, \
+	RTLElaboration
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -60,6 +61,22 @@ class Stopwatch(TestCase):
 		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
+		self.assertEqual(69 - (5 + 5 + 2 + 10), len(synthesis.InfoMessages))
+		self.assertEqual(3, len(synthesis.WarningMessages))
+		self.assertEqual(0, len(synthesis.CriticalWarningMessages))
+		self.assertEqual(0, len(synthesis.ErrorMessages))
+
+		rtlElaboration = synthesis[RTLElaboration]
+		self.assertEqual(47, len(rtlElaboration.InfoMessages))
+		self.assertEqual(0, len(rtlElaboration.WarningMessages))
+		self.assertEqual(0, len(rtlElaboration.CriticalWarningMessages))
+		self.assertEqual(0, len(rtlElaboration.ErrorMessages))
+
+		crossBoundaryAndAreaOptimization = synthesis[CrossBoundaryAndAreaOptimization]
+		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.InfoMessages))
+		self.assertEqual(3, len(crossBoundaryAndAreaOptimization.WarningMessages))
+		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.CriticalWarningMessages))
+		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.ErrorMessages))
 
 		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
 

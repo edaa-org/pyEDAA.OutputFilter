@@ -239,7 +239,9 @@ class RTLElaboration(Section):
 			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			elif not isinstance(line, VivadoMessage):
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			else:
 				line._kind = LineKind.Verbose
 
 			line = yield line
@@ -288,7 +290,9 @@ class LoadingPart(Section):
 			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			elif not isinstance(line, VivadoMessage):
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			else:
 				line._kind = LineKind.Verbose
 
 			line = yield line
@@ -314,7 +318,9 @@ class RTLComponentStatistics(Section):
 			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			elif not isinstance(line, VivadoMessage):
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			else:
 				line._kind = LineKind.Verbose
 
 			line = yield line

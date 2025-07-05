@@ -241,6 +241,9 @@ class SynthesizeDesign(Command):
 						line = yield section.send(line)
 						break
 
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
 				line = yield section.send(line)
 
 			line = yield section.send(line)
