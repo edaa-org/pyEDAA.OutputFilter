@@ -236,8 +236,10 @@ class SynthesizeDesign(Command):
 
 			while True:
 				if line.StartsWith("Finished"):
-					line = yield section.send(line)
-					break
+					l = line[9:]
+					if not (l.startswith("Flattening") or l.startswith("Final")):
+						line = yield section.send(line)
+						break
 
 				line = yield section.send(line)
 
