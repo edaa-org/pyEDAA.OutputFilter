@@ -81,6 +81,17 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	def __getitem__(self, item: Type[Command]) -> Command:
 		return self._commands[item]
 
+	def IsIncompleteLog(self) -> bool:
+		"""
+
+		:return:
+
+		.. info::
+
+		   ``INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.``
+		"""
+		return 17 in self._messagesByID and 14 in self._messagesByID[17]
+
 	def LineClassification(self) -> Generator[ProcessedLine, str, None]:
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
@@ -130,7 +141,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			line = cmdFinder.send(line)
 
 			if isinstance(line, VivadoMessage):
-				self._AddMessageByID(line)
+				self._AddMessage(line)
 				if isinstance(line, InfoMessage):
 					self._infoMessages.append(line)
 				elif isinstance(line, WarningMessage):

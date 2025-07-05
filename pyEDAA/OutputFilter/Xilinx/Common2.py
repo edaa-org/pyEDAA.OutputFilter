@@ -37,8 +37,8 @@ from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoInfoMessage, VivadoWarningMessage, \
-	VivadoCriticalWarningMessage, VivadoErrorMessage, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
 
 
 @export
@@ -88,7 +88,16 @@ class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
 	def ErrorMessages(self) -> List[VivadoErrorMessage]:
 		return self._errorMessages
 
-	def _AddMessageByID(self, message: VivadoMessage) -> None:
+	def _AddMessage(self, message: VivadoMessage) -> None:
+		if isinstance(message, VivadoInfoMessage):
+			self._infoMessages.append(message)
+		elif isinstance(message, VivadoWarningMessage):
+			self._warningMessages.append(message)
+		elif isinstance(message, VivadoCriticalWarningMessage):
+			self._criticalWarningMessages.append(message)
+		elif isinstance(message, VivadoErrorMessage):
+			self._errorMessages.append(message)
+
 		if message._toolID in self._messagesByID:
 			sub = self._messagesByID[message._toolID]
 			if message._messageKindID in sub:

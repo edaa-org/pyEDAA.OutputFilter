@@ -29,8 +29,8 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from re       import compile as re_compile
-from typing   import ClassVar, Dict, Generator, List
+from re     import compile as re_compile
+from typing import ClassVar, Dict, Generator, List, Type
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -377,35 +377,54 @@ class IOInsertion(Section):
 	_START:  ClassVar[str] = "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
+	_subsections: Dict[Type[SubSection], SubSection]
+
+	def __init__(self, command: "Command"):
+		super().__init__(command)
+
+		self._subsections = {}
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		flattening = FlatteningBeforeIOInsertion(None)
-		netlist = FinalNetlistCleanup(None)
-
 		line = yield from self._SectionStart(line)
-		if line.StartsWith("----"):
-			line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError
 
-		line = yield line
-		if line.StartsWith("Start "):
-			line = yield from flattening.Generator(line)
+		while True:
+			while True:
+				if line.StartsWith("----"):
+					line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+				elif line.StartsWith("Start "):
+					if line == FlatteningBeforeIOInsertion._START:
+						self._subsections[FlatteningBeforeIOInsertion] =(subsection := FlatteningBeforeIOInsertion(self))
+						line = yield next(parser := subsection.Generator(line))
+						break
+					elif line == FinalNetlistCleanup._START:
+						self._subsections[FinalNetlistCleanup] = (subsection := FinalNetlistCleanup(self))
+						line = yield next(parser := subsection.Generator(line))
+						break
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Finished "):
+					break
+				else:
+					line._kind |= LineKind.ProcessorError
 
-		if line.StartsWith("----"):
-			line._kind = LineKind.SubSectionStart | LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError
+				line = yield line
 
-		line = yield line
-		if line.StartsWith("Start "):
-			line = yield from netlist.Generator(line)
+			if line.StartsWith(self._FINISH):
+				break
 
-		if line.StartsWith("----"):
-			line._kind = LineKind.SubSectionEnd | LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError
+			while True:
+				if line.StartsWith(subsection._FINISH):
+					line = yield parser.send(line)
+					line = yield parser.send(line)
 
-		line = yield line
+					break
+
+				line = parser.send(line)
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				line = yield line
+
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
 
