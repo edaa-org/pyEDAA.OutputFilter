@@ -50,6 +50,9 @@ class ClassificationException(ProcessorException):
 		self._lineNumber = lineNumber
 		self._rawMessage = rawMessageLine
 
+	def __str__(self) -> str:
+		return f"{self.message}: {self._rawMessage} (at line {self._lineNumber})"
+
 
 @export
 class ParserStateException(ProcessorException):

@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
-from typing               import ClassVar, Generator, Union, List, Type, Dict, Iterator
+from typing import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any
 
 from pyTooling.Decorators import export, readonly
 

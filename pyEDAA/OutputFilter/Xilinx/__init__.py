@@ -100,7 +100,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		lastLine = None
 		rawMessageLine = yield
 		lineNumber = 0
-		_errorMessage = "Unknown processing error."
+		_errorMessage = "Unknown processing error"
 
 		while rawMessageLine is not None:
 			lineNumber += 1
@@ -142,17 +142,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			if isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-				if isinstance(line, InfoMessage):
-					self._infoMessages.append(line)
-				elif isinstance(line, WarningMessage):
-					self._warningMessages.append(line)
-				elif isinstance(line, CriticalWarningMessage):
-					self._criticalWarningMessages.append(line)
-				elif isinstance(line, ErrorMessage):
-					self._errorMessages.append(line)
 
 			if line._kind is LineKind.ProcessorError:
-				line = ClassificationException(errorMessage, rawMessageLine, line)
+				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
 			rawMessageLine = yield line
 

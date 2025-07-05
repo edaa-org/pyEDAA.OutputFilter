@@ -87,13 +87,15 @@ class Section(BaseParser, BaseSection):
 		nextLine = yield line
 		return nextLine
 
-	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if line.StartsWith("----"):
-			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError
+	def _SectionFinish(self, line: Line, skipDashes: bool = False) -> Generator[Line, Line, None]:
+		if not skipDashes:
+			if line.StartsWith("----"):
+				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
+			else:
+				line._kind |= LineKind.ProcessorError
 
-		line = yield line
+			line = yield line
+
 		if line.StartsWith(self._FINISH):
 			line._kind = LineKind.SectionEnd
 		else:
@@ -135,12 +137,12 @@ class Section(BaseParser, BaseSection):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("----"):
+		while True:
+			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
 			else:
 				line._kind = LineKind.Verbose
 
@@ -156,6 +158,7 @@ class SubSection(BaseParser, BaseSection):
 	_section: Section
 
 	def __init__(self, section: Section) -> None:
+		super().__init__()
 		self._section = section
 
 	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
@@ -194,10 +197,12 @@ class SubSection(BaseParser, BaseSection):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
+		while True:
 			if line.StartsWith("----"):
 				line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
 				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
 			else:
 				line._kind = LineKind.Verbose
 
@@ -215,9 +220,7 @@ class RTLElaboration(Section):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
-			rawMessage = line._message
-
+		while True:
 			if isinstance(line, VivadoInfoMessage):
 				if line._toolID == 8:
 					if line._messageKindID == 63:    # VHDL assert statement
@@ -233,7 +236,7 @@ class RTLElaboration(Section):
 						else:
 							line = newLine
 
-			if rawMessage.startswith("----"):
+			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif not isinstance(line, VivadoMessage):
@@ -277,14 +280,12 @@ class LoadingPart(Section):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
-			rawMessage = line._message
-
+		while True:
 			if line.StartsWith("Loading part: "):
 				line._kind = LineKind.Normal
 				self._part = line._message[14:].strip()
 
-			if rawMessage.startswith("----"):
+			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif not isinstance(line, VivadoMessage):
@@ -309,10 +310,8 @@ class RTLComponentStatistics(Section):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("----"):
+		while True:
+			if line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif not isinstance(line, VivadoMessage):
@@ -339,7 +338,7 @@ class CrossBoundaryAndAreaOptimization(Section):
 @export
 class ROM_RAM_DSP_SR_Retiming(Section):
 	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
-	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting : "
+	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting"
 
 
 @export
@@ -390,10 +389,10 @@ class IOInsertion(Section):
 		while True:
 			while True:
 				if line.StartsWith("----"):
-					line._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+					line._kind = LineKind.SubSectionStart | LineKind.SubSectionDelimiter
 				elif line.StartsWith("Start "):
 					if line == FlatteningBeforeIOInsertion._START:
-						self._subsections[FlatteningBeforeIOInsertion] =(subsection := FlatteningBeforeIOInsertion(self))
+						self._subsections[FlatteningBeforeIOInsertion] = (subsection := FlatteningBeforeIOInsertion(self))
 						line = yield next(parser := subsection.Generator(line))
 						break
 					elif line == FinalNetlistCleanup._START:
@@ -417,6 +416,8 @@ class IOInsertion(Section):
 					line = yield parser.send(line)
 					line = yield parser.send(line)
 
+					subsection = None
+					parser = None
 					break
 
 				line = parser.send(line)
@@ -425,7 +426,7 @@ class IOInsertion(Section):
 
 				line = yield line
 
-		nextLine = yield from self._SectionFinish(line)
+		nextLine = yield from self._SectionFinish(line, True)
 		return nextLine
 
 
@@ -461,8 +462,8 @@ class WritingSynthesisReport(Section):
 	_blackboxes: Dict[str, int]
 	_cells:      Dict[str, int]
 
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
+	def __init__(self, command: "Command"):
+		super().__init__(command)
 
 		self._blackboxes = {}
 		self._cells =      {}
@@ -494,8 +495,8 @@ class WritingSynthesisReport(Section):
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		while line is not None:
-			if line.StartsWith("| "):
+		while True:
+			if line.StartsWith("|"):
 				line._kind = LineKind.TableRow
 
 				columns = line._message.strip("|").split("|")
@@ -530,7 +531,7 @@ class WritingSynthesisReport(Section):
 			line._kind = LineKind.ProcessorError
 
 		line = yield line
-		while line is not None:
+		while True:
 			if line.StartsWith("|"):
 				line._kind = LineKind.TableRow
 
@@ -550,24 +551,24 @@ class WritingSynthesisReport(Section):
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
-		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("Report BlackBoxes:"):
+		while True:
+			if line.StartsWith("Report BlackBoxes:"):
 				line._kind = LineKind.ParagraphHeadline
 				line = yield line
 				line = yield from self._BlackboxesGenerator(line)
-			elif rawMessage.startswith("Report Cell Usage:"):
+			elif line.StartsWith("Report Cell Usage:"):
 				line._kind = LineKind.ParagraphHeadline
 				line = yield line
 				line = yield from self._CellGenerator(line)
-			elif rawMessage.startswith("----"):
+			elif line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
-			elif not isinstance(line, VivadoMessage):
-				line._kind = LineKind.Verbose
-				line = yield line
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
 			elif line._kind is LineKind.Empty:
+				line = yield line
+			else:
+				line._kind = LineKind.Verbose
 				line = yield line
 
 		nextLine = yield from self._SectionFinish(line)

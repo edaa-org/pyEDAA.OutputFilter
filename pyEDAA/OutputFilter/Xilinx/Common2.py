@@ -153,24 +153,21 @@ class Preamble(Parser):
 		return self._startDatetime
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		rawMessage = line._message
-		if rawMessage.startswith("#----"):
+		if line.StartsWith("#----"):
 			line._kind = LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
 		line = yield line
 
-		while line is not None:
-			rawMessage = line._message
-
-			if (match := self._VERSION.match(rawMessage)) is not None:
+		while True:
+			if (match := self._VERSION.match(line._message)) is not None:
 				self._toolVersion = YearReleaseVersion.Parse(match[1])
 				line._kind = LineKind.Normal
-			elif (match := self._STARTTIME.match(rawMessage)) is not None:
+			elif (match := self._STARTTIME.match(line._message)) is not None:
 				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 				line._kind = LineKind.Normal
-			elif rawMessage.startswith("#----"):
+			elif line.StartsWith("#----"):
 				line._kind = LineKind.SectionDelimiter | LineKind.Last
 				break
 			else:
