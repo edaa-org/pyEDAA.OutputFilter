@@ -197,6 +197,7 @@ class SynthesizeDesign(Command):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
 							line = next(section := parser.Generator(line))
+							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 							break
 					else:
 						raise Exception(f"Unknown section: {line}")
@@ -205,6 +206,7 @@ class SynthesizeDesign(Command):
 					if line.StartsWith(rtlElaboration._START):
 						parser = rtlElaboration
 						line = next(section := parser.Generator(line))
+						line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 						break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
