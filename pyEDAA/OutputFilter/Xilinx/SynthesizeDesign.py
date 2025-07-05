@@ -171,6 +171,12 @@ class SubSection(BaseParser, BaseSection):
 		return nextLine
 
 	def _SectionFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if line.StartsWith("----"):
+			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
+		else:
+			line._kind |= LineKind.ProcessorError
+
+		line = yield line
 		if line.StartsWith(self._FINISH):
 			line._kind = LineKind.SubSectionEnd
 		else:
@@ -189,9 +195,7 @@ class SubSection(BaseParser, BaseSection):
 		line = yield from self._SectionStart(line)
 
 		while line is not None:
-			rawMessage = line._message
-
-			if rawMessage.startswith("----"):
+			if line.StartsWith("----"):
 				line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
 				break
 			else:
@@ -199,9 +203,7 @@ class SubSection(BaseParser, BaseSection):
 
 			line = yield line
 
-		line = yield line
 		nextLine = yield from self._SectionFinish(line)
-
 		return nextLine
 
 

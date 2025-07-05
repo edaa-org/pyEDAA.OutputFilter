@@ -118,9 +118,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
 			elif rawMessageLine.startswith("Command: "):
 				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine)
+				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
 			else:
 				line = Line(lineNumber, LineKind.Unprocessed, rawMessageLine)
-				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
 
 			if line is None:
 				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
