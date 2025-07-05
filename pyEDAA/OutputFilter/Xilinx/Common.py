@@ -70,26 +70,31 @@ class LineKind(Flag):
 	CriticalWarningMessage = Message | CriticalWarning
 	ErrorMessage =           Message | Error
 
-	Section =                2**31
+	Phase =                  2**31
+	PhaseDelimiter =         Phase | Delimiter
+	PhaseStart =             Phase | Start
+	PhaseEnd =               Phase | End
+
+	Section =                2**32
 	SectionDelimiter =       Section | Delimiter
 	SectionStart =           Section | Start
 	SectionEnd =             Section | End
 
-	SubSection =             2**32
+	SubSection =             2**33
 	SubSectionDelimiter =    SubSection | Delimiter
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Paragraph =              2**33
+	Paragraph =              2**34
 	ParagraphHeadline =      Paragraph | Header
 
-	Table =                  2**34
+	Table =                  2**35
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	TclCommand =             2 ** 35
+	TclCommand =             2 ** 36
 	GenericTclCommand =      TclCommand | 2**0
 	VivadoTclCommand =       TclCommand | 2**1
 

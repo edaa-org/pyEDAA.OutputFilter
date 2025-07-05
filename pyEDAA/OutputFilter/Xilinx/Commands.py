@@ -220,7 +220,12 @@ class SynthesizeDesign(Command):
 
 						lastLine = yield line
 						return lastLine
-
+				elif line.StartsWith("Finished RTL Optimization Phase"):
+					line._kind = LineKind.PhaseEnd
+					line._previousLine._kind = LineKind.PhaseEnd | LineKind.PhaseDelimiter
+				elif line.StartsWith("----"):
+					if LineKind.Phase in line._previousLine._kind:
+						line._kind = LineKind.PhaseEnd | LineKind.PhaseDelimiter
 				elif not isinstance(line, VivadoMessage):
 					pass
 					# line._kind = LineKind.Unprocessed

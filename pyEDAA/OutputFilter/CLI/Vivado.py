@@ -179,7 +179,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			elif LineKind.TclCommand in line.Kind:
 				print(f"{i:4}: {{CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
 			elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
-				print(f"{i:4}: {{DARK_CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
+				if LineKind.Phase in line.Kind:
+					print(f"{i:4}: {{YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
+				else:
+					print(f"{i:4}: {{DARK_CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
 			elif line.Kind is LineKind.ParagraphHeadline:
 				print(f"{i:4}: {{DARK_YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
 			elif LineKind.Table in line.Kind:
