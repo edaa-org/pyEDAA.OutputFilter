@@ -28,61 +28,32 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Unit tests for Vivado synthesis log files."""
-from pathlib  import Path
-from unittest import TestCase as TestCase
+"""Basic classes for outputs from AMD/Xilinx Vivado."""
+from pyTooling.Decorators import export
 
-from pyTooling.Versioning                        import YearReleaseVersion
-
-from pyEDAA.OutputFilter.Xilinx                  import Document
-from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, \
-	RTLElaboration
-
-if __name__ == "__main__": # pragma: no cover
-	print("ERROR: you called a testcase declaration file as an executable module.")
-	print("Use: 'python -m unitest <testcase module>'")
-	exit(1)
+from pyEDAA.OutputFilter  import OutputFilterException
 
 
-class Stopwatch(TestCase):
-	def test_SynthesisLogfile(self) -> None:
-		logfile = Path("tests/data/Stopwatch/toplevel.vds")
-		processor = Document(logfile)
-		processor.Parse()
+@export
+class ProcessorException(OutputFilterException):
+	pass
 
-		self.assertLess(processor.Duration, 0.1)
 
-		self.assertEqual(69, len(processor.InfoMessages))
-		self.assertEqual(3, len(processor.WarningMessages))
-		self.assertEqual(0, len(processor.CriticalWarningMessages))
-		self.assertEqual(0, len(processor.ErrorMessages))
+@export
+class ClassificationException(ProcessorException):
+	_lineNumber: int
+	_rawMessage: str
 
-		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
+	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str):
+		super().__init__(errorMessage)
 
-		synthesis = processor[SynthesizeDesign]
-		self.assertEqual(69 - (5 + 5 + 2 + 10), len(synthesis.InfoMessages))
-		self.assertEqual(3, len(synthesis.WarningMessages))
-		self.assertEqual(0, len(synthesis.CriticalWarningMessages))
-		self.assertEqual(0, len(synthesis.ErrorMessages))
+		self._lineNumber = lineNumber
+		self._rawMessage = rawMessageLine
 
-		rtlElaboration = synthesis[RTLElaboration]
-		self.assertEqual(47, len(rtlElaboration.InfoMessages))
-		self.assertEqual(0, len(rtlElaboration.WarningMessages))
-		self.assertEqual(0, len(rtlElaboration.CriticalWarningMessages))
-		self.assertEqual(0, len(rtlElaboration.ErrorMessages))
+	def __str__(self) -> str:
+		return f"{self.message}: {self._rawMessage} (at line {self._lineNumber})"
 
-		crossBoundaryAndAreaOptimization = synthesis[CrossBoundaryAndAreaOptimization]
-		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.InfoMessages))
-		self.assertEqual(3, len(crossBoundaryAndAreaOptimization.WarningMessages))
-		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.CriticalWarningMessages))
-		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.ErrorMessages))
 
-		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
-
-	def test_ImplementationLogfile(self) -> None:
-		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
-		processor = Document(logfile)
-		processor.Parse()
-
-		self.assertLess(processor.Duration, 0.1)
+@export
+class ParserStateException(ProcessorException):
+	pass
