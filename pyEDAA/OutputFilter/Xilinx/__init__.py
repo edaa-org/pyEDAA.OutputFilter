@@ -43,7 +43,8 @@ from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMe
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign
+from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
+	PhysicalOptimizeDesign, RouteDesign, WriteBitstream
 from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
@@ -162,8 +163,40 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		while True:
 			while True:
 				if isinstance(line, VivadoTclCommand):
-					if line._command == "synth_design":
+					if line._command == SynthesizeDesign._TCL_COMMAND:
 						self._commands[SynthesizeDesign] = (cmd := SynthesizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == LinkDesign._TCL_COMMAND:
+						self._commands[LinkDesign] = (cmd := LinkDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == OptimizeDesign._TCL_COMMAND:
+						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == OptimizeDesign._TCL_COMMAND:
+						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					# elif line._command == ReportDRC._TCL_COMMAND:
+					# 	self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
+					# 	line = yield next(gen := cmd.SectionDetector(line))
+					# 	break
+					elif line._command == PlaceDesign._TCL_COMMAND:
+						self._commands[PlaceDesign] = (cmd := PlaceDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == PhysicalOptimizeDesign._TCL_COMMAND:
+						self._commands[PhysicalOptimizeDesign] = (cmd := PhysicalOptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == RouteDesign._TCL_COMMAND:
+						self._commands[RouteDesign] = (cmd := RouteDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == WriteBitstream._TCL_COMMAND:
+						self._commands[WriteBitstream] = (cmd := WriteBitstream(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
 
@@ -173,8 +206,11 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				line = yield line
 
+			end = f"{cmd._TCL_COMMAND} completed successfully"
+
 			while True:
-				if line.StartsWith("synth_design:"):
+				if line.StartsWith(end):
+					# line._kind |= LineKind.Success
 					lastLine = gen.send(line)
 					if LineKind.Last in line._kind:
 						line._kind ^= LineKind.Last

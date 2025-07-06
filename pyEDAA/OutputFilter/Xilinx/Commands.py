@@ -86,7 +86,21 @@ class ROM_RAM_DSP_SR_Retiming3(ROM_RAM_DSP_SR_Retiming):
 @export
 class Command(Parser):
 	# _TCL_COMMAND: ClassVar[str]
-	pass
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
+		end = f"{self._TCL_COMMAND} completed successfully"
+
+		while True:
+			if line.StartsWith(end):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+
+			line = yield line
+
+		line._kind |= LineKind.Success
+		nextline = yield line
+		return nextline
 
 
 @export
@@ -267,12 +281,12 @@ class PlaceDesign(Command):
 
 
 @export
-class PhysicalOptimizationDesign(Command):
+class PhysicalOptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
 
 
 @export
-class PhysicalOptimizationDesign(Command):
+class RouteDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "route_design"
 
 
