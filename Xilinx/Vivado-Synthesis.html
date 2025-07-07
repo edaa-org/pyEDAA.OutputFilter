@@ -1,0 +1,621 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthesis &mdash; pyEDAA.OutputFilter 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implementation" href="Vivado-Implementation.html" />
+    <link rel="prev" title="Vivado" href="Vivado.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="Vivado.html">Vivado</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Synthesis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#processing-the-vds-file">Processing the <code class="docutils literal notranslate"><span class="pre">*.vds</span></code> File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extracted-information">Extracted Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#messages">Messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tool-version">Tool Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#synthesis-start-time-and-date">Synthesis start time and date</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#synthesis-duration">Synthesis duration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blackboxes">Blackboxes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fpga-low-level-cells">FPGA Low-Level Cells</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#policies">Policies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#latches">Latches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sensitivity-list">Sensitivity List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unused-signals">Unused Signals</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-steps">Processing Steps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#preamble">Preamble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rtlelaboration">RTLElaboration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#handlingcustomattributes1">HandlingCustomAttributes1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#loadingpart">LoadingPart</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#applysetproperty">ApplySetProperty</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rtlcomponentstatistics">RTLComponentStatistics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#partresourcesummary">PartResourceSummary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#crossboundaryandareaoptimization">CrossBoundaryAndAreaOptimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#applyingxdctimingconstraints">ApplyingXDCTimingConstraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#timingoptimization">TimingOptimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#technologymapping">TechnologyMapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ioinsertion">IOInsertion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flatteningbeforeioinsertion">FlatteningBeforeIOInsertion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finalnetlistcleanup">FinalNetlistCleanup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renaminggeneratedinstances">RenamingGeneratedInstances</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rebuildinguserhierarchy">RebuildingUserHierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renaminggeneratedports">RenamingGeneratedPorts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#handlingcustomattributes2">HandlingCustomAttributes2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renaminggeneratednets">RenamingGeneratedNets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#writingsynthesisreport">WritingSynthesisReport</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Vivado-Implementation.html">Implementation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.html">Python Class Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="Vivado.html">Vivado</a></li>
+      <li class="breadcrumb-item active">Synthesis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Xilinx/Vivado-Synthesis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="synthesis">
+<span id="xil-vivado-synth"></span><h1>Synthesis<a class="headerlink" href="#synthesis" title="Link to this heading"></a></h1>
+<p>A Vivado synthesis log output (<code class="file docutils literal notranslate"><span class="pre">*.vds</span></code> log file) is comprised of mostly one-liner human-readable text outputs. The
+document starts with a preamble, has circa <a class="reference internal" href="#xil-vivado-synth-steps"><span class="std std-ref">20 sections</span></a> and ends with a epilog. Each
+sections is framed by <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">xxx</span></code> and <code class="docutils literal notranslate"><span class="pre">Finished</span> <span class="pre">xxx</span></code> lines. In between, <a class="reference internal" href="#xil-vivado-synth-messages"><span class="std std-ref">messages</span></a>
+of categories: <code class="docutils literal notranslate"><span class="pre">INFO</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">CRITICAL</span> <span class="pre">WARNING</span></code> or <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> are interweaved.</p>
+<section id="processing-the-vds-file">
+<span id="xil-vivado-synth-processing"></span><h2>Processing the <code class="docutils literal notranslate"><span class="pre">*.vds</span></code> File<a class="headerlink" href="#processing-the-vds-file" title="Link to this heading"></a></h2>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>A logfile can be processed by <code class="xref py py-class docutils literal notranslate"><span class="pre">Processor</span></code>. First, it reads a logfile
+into a list of lines, which get pre-classified as normal output lines or <a class="reference internal" href="#xil-vivado-synth-messages"><span class="std std-ref">messages</span></a>.
+At next, lines are passed to a parser for <a class="reference internal" href="#xil-vivado-synth-extractedinformation"><span class="std std-ref">extracting information</span></a> of
+the synthesis log’s sections. Each section might have different output formatting styles like trees or tables.</p>
+<p>Besides low-level information extraction, also complex results can be derived from the collected data. This allows
+higher software layers to implement <a class="reference internal" href="#xil-vivado-synth-policies"><span class="std std-ref">policies</span></a>. A common use case is the
+detection of <a class="reference internal" href="#xil-vivado-synth-unusedsignals"><span class="std std-ref">unused code</span></a> or the detection of
+<a class="reference internal" href="#xil-vivado-synth-latches"><span class="std std-ref">latches</span></a>.</p>
+<p>The whole processing duration is measured and accessible via
+<code class="xref py py-data docutils literal notranslate"><span class="pre">Duration</span></code>.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing duration: </span><span class="si">{</span><span class="n">processor</span><span class="o">.</span><span class="n">Duration</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="extracted-information">
+<span id="xil-vivado-synth-extractedinformation"></span><h2>Extracted Information<a class="headerlink" href="#extracted-information" title="Link to this heading"></a></h2>
+<section id="messages">
+<span id="xil-vivado-synth-messages"></span><h3>Messages<a class="headerlink" href="#messages" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>All messages (besides some irregular formats) have the following format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO: [Synth 8-7075] Helper process launched with PID 24240
+</pre></div>
+</div>
+<p>Messages are classified into 4 categories: <code class="docutils literal notranslate"><span class="pre">INFO</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">CRITICAL</span> <span class="pre">WARNING</span></code> or <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>. Each message
+mentions the generating tool (e.g. <code class="docutils literal notranslate"><span class="pre">Synth</span></code>), the tool’s ID (e.g. <code class="docutils literal notranslate"><span class="pre">8</span></code>) and a message kind ID (e.g. <code class="docutils literal notranslate"><span class="pre">7075</span></code>)
+followed by the message string.</p>
+<p>All messages of the same category can be accessed in order of appearance in the tool’s output via read-only
+properties:</p>
+<ul class="simple">
+<li><p><code class="xref py py-data docutils literal notranslate"><span class="pre">InfoMessages</span></code></p></li>
+<li><p><code class="xref py py-data docutils literal notranslate"><span class="pre">WarningMessages</span></code></p></li>
+<li><p><code class="xref py py-data docutils literal notranslate"><span class="pre">CriticalWarningMessages</span></code></p></li>
+<li><p><code class="xref py py-data docutils literal notranslate"><span class="pre">ErrorMessages</span></code></p></li>
+</ul>
+<p>In addition, messages are grouped in two stages by tool ID and message kind ID. These can be accessed via
+data:<cite>~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.MessagesByID</cite>.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="ByID" for="sd-tab-item-0">
+Message by ID</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Messages by ID:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">toolID</span><span class="p">,</span> <span class="n">messageGroup</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">MessagesByID</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">processor</span><span class="o">.</span><span class="n">ToolNames</span><span class="p">[</span><span class="n">toolID</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">toolID</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">messageID</span><span class="p">,</span> <span class="n">messages</span> <span class="ow">in</span> <span class="n">messageGroup</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">messageID</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="INFO" for="sd-tab-item-1">
+INFO</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INFO Messages (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">InfoMessages</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">InfoMessages</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="WARNING" for="sd-tab-item-2">
+WARNING</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING Messages (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">WarningMessages</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">WarningMessages</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="CRITICAL" for="sd-tab-item-3">
+CRITICAL WARNING</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CRITICAL WARNING Messages (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">CriticalWarningMessages</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">CriticalWarningMessages</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="ERROR" for="sd-tab-item-4">
+ERROR</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR Messages (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">ErrorMessages</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">ErrorMessages</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="tool-version">
+<span id="xil-vivado-synth-toolversion"></span><h3>Tool Version<a class="headerlink" href="#tool-version" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>The used Vivado version is extracted by the <code class="xref py py-class docutils literal notranslate"><span class="pre">Preamble</span></code> parser and can
+be accessed via <code class="xref py py-data docutils literal notranslate"><span class="pre">ToolVersion</span></code> as <a class="reference external" href="https://pytooling.github.io/pyTooling/pyTooling/pyTooling.Versioning.html#pyTooling.Versioning.YearReleaseVersion" title="(in Project name not set v8.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">YearReleaseVersion</span></code></a>.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vivado version: v</span><span class="si">{</span><span class="n">processor</span><span class="p">[</span><span class="n">Preamble</span><span class="p">]</span><span class="o">.</span><span class="n">ToolVersion</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="synthesis-start-time-and-date">
+<span id="xil-vivado-synth-synthstart"></span><h3>Synthesis start time and date<a class="headerlink" href="#synthesis-start-time-and-date" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>The start timestamp (as <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>) is extracted by the <code class="xref py py-class docutils literal notranslate"><span class="pre">Preamble</span></code>
+parser and can be accessed via <code class="xref py py-data docutils literal notranslate"><span class="pre">StartDateTime</span></code>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#xil-vivado-synth-synthduration"><span class="std std-ref">Synthesis duration</span></a></p>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis started: v</span><span class="si">{</span><span class="n">processor</span><span class="p">[</span><span class="n">Preamble</span><span class="p">]</span><span class="o">.</span><span class="n">StartDatetime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="synthesis-duration">
+<span id="xil-vivado-synth-synthduration"></span><h3>Synthesis duration<a class="headerlink" href="#synthesis-duration" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>The synthesis runtime is extracted by the WritingSynthesisReport parser.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis duration: v</span><span class="si">{</span><span class="n">processor</span><span class="p">[</span><span class="n">WritingSynthesisReport</span><span class="p">]</span><span class="o">.</span><span class="n">Duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="blackboxes">
+<span id="xil-vivado-synth-blackboxes"></span><h3>Blackboxes<a class="headerlink" href="#blackboxes" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>tbd</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="fpga-low-level-cells">
+<span id="xil-vivado-synth-cells"></span><h3>FPGA Low-Level Cells<a class="headerlink" href="#fpga-low-level-cells" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>tbd</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="policies">
+<span id="xil-vivado-synth-policies"></span><h2>Policies<a class="headerlink" href="#policies" title="Link to this heading"></a></h2>
+<section id="latches">
+<span id="xil-vivado-synth-latches"></span><h3>Latches<a class="headerlink" href="#latches" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>Latches are present in the design, if warning <code class="docutils literal notranslate"><span class="pre">Synth</span> <span class="pre">8-327</span></code> was found or when the low-level cell report contains
+cell <code class="docutils literal notranslate"><span class="pre">LD</span></code>.</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis duration: v</span><span class="si">{</span><span class="n">processor</span><span class="p">[</span><span class="n">WritingSynthesisReport</span><span class="p">]</span><span class="o">.</span><span class="n">Duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sensitivity-list">
+<span id="xil-vivado-synth-sensitivitylist"></span><h3>Sensitivity List<a class="headerlink" href="#sensitivity-list" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>Synth 8-614</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="unused-signals">
+<span id="xil-vivado-synth-unusedsignals"></span><h3>Unused Signals<a class="headerlink" href="#unused-signals" title="Link to this heading"></a></h3>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<p>Synth 8-3332</p>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-6 sd-col-xs-6 sd-col-sm-6 sd-col-md-6 sd-col-lg-6 docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="processing-steps">
+<span id="xil-vivado-synth-steps"></span><h2>Processing Steps<a class="headerlink" href="#processing-steps" title="Link to this heading"></a></h2>
+<section id="preamble">
+<span id="xil-vivado-synth-preamble"></span><h3>Preamble<a class="headerlink" href="#preamble" title="Link to this heading"></a></h3>
+<p>Extracted information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Tool version</p></li>
+<li><p>Start time and date</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="rtlelaboration">
+<h3>RTLElaboration<a class="headerlink" href="#rtlelaboration" title="Link to this heading"></a></h3>
+</section>
+<section id="handlingcustomattributes1">
+<h3>HandlingCustomAttributes1<a class="headerlink" href="#handlingcustomattributes1" title="Link to this heading"></a></h3>
+</section>
+<section id="loadingpart">
+<span id="xil-vivado-synth-loadingpart"></span><h3>LoadingPart<a class="headerlink" href="#loadingpart" title="Link to this heading"></a></h3>
+<p>Extracted information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>🚧 Part name</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="applysetproperty">
+<h3>ApplySetProperty<a class="headerlink" href="#applysetproperty" title="Link to this heading"></a></h3>
+</section>
+<section id="rtlcomponentstatistics">
+<h3>RTLComponentStatistics<a class="headerlink" href="#rtlcomponentstatistics" title="Link to this heading"></a></h3>
+</section>
+<section id="partresourcesummary">
+<h3>PartResourceSummary<a class="headerlink" href="#partresourcesummary" title="Link to this heading"></a></h3>
+</section>
+<section id="crossboundaryandareaoptimization">
+<h3>CrossBoundaryAndAreaOptimization<a class="headerlink" href="#crossboundaryandareaoptimization" title="Link to this heading"></a></h3>
+</section>
+<section id="applyingxdctimingconstraints">
+<h3>ApplyingXDCTimingConstraints<a class="headerlink" href="#applyingxdctimingconstraints" title="Link to this heading"></a></h3>
+</section>
+<section id="timingoptimization">
+<h3>TimingOptimization<a class="headerlink" href="#timingoptimization" title="Link to this heading"></a></h3>
+</section>
+<section id="technologymapping">
+<h3>TechnologyMapping<a class="headerlink" href="#technologymapping" title="Link to this heading"></a></h3>
+</section>
+<section id="ioinsertion">
+<h3>IOInsertion<a class="headerlink" href="#ioinsertion" title="Link to this heading"></a></h3>
+</section>
+<section id="flatteningbeforeioinsertion">
+<h3>FlatteningBeforeIOInsertion<a class="headerlink" href="#flatteningbeforeioinsertion" title="Link to this heading"></a></h3>
+</section>
+<section id="finalnetlistcleanup">
+<h3>FinalNetlistCleanup<a class="headerlink" href="#finalnetlistcleanup" title="Link to this heading"></a></h3>
+</section>
+<section id="renaminggeneratedinstances">
+<h3>RenamingGeneratedInstances<a class="headerlink" href="#renaminggeneratedinstances" title="Link to this heading"></a></h3>
+</section>
+<section id="rebuildinguserhierarchy">
+<h3>RebuildingUserHierarchy<a class="headerlink" href="#rebuildinguserhierarchy" title="Link to this heading"></a></h3>
+</section>
+<section id="renaminggeneratedports">
+<h3>RenamingGeneratedPorts<a class="headerlink" href="#renaminggeneratedports" title="Link to this heading"></a></h3>
+</section>
+<section id="handlingcustomattributes2">
+<h3>HandlingCustomAttributes2<a class="headerlink" href="#handlingcustomattributes2" title="Link to this heading"></a></h3>
+</section>
+<section id="renaminggeneratednets">
+<h3>RenamingGeneratedNets<a class="headerlink" href="#renaminggeneratednets" title="Link to this heading"></a></h3>
+</section>
+<section id="writingsynthesisreport">
+<span id="xil-vivado-synth-synthesisreport"></span><h3>WritingSynthesisReport<a class="headerlink" href="#writingsynthesisreport" title="Link to this heading"></a></h3>
+<p>Extracted information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>List of blackboxes</p></li>
+<li><p>Low-level resource usage (cells)</p></li>
+</ul>
+</div></blockquote>
+<p>Derived information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Are latches (<code class="docutils literal notranslate"><span class="pre">LD</span></code>) present?</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Vivado.html" class="btn btn-neutral float-left" title="Vivado" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Vivado-Implementation.html" class="btn btn-neutral float-right" title="Implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 07.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

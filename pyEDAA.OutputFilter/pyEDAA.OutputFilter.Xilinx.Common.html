@@ -1,0 +1,1364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.Common &mdash; pyEDAA.OutputFilter 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyEDAA.OutputFilter.Xilinx.Common2" href="pyEDAA.OutputFilter.Xilinx.Common2.html" />
+    <link rel="prev" title="pyEDAA.OutputFilter.Xilinx.Commands" href="pyEDAA.OutputFilter.Xilinx.Commands.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pyEDAA.OutputFilter.html">Python Class Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.CLI.html">pyEDAA.OutputFilter.CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html">pyEDAA.OutputFilter.Xilinx.Commands</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyEDAA.OutputFilter.Xilinx.Common</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind"><code class="docutils literal notranslate"><span class="pre">LineKind</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._generate_next_value_"><code class="docutils literal notranslate"><span class="pre">LineKind._generate_next_value_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._numeric_repr_"><code class="docutils literal notranslate"><span class="pre">LineKind._numeric_repr_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_value_"><code class="docutils literal notranslate"><span class="pre">LineKind._iter_member_by_value_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_"><code class="docutils literal notranslate"><span class="pre">LineKind._iter_member_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_def_"><code class="docutils literal notranslate"><span class="pre">LineKind._iter_member_by_def_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._missing_"><code class="docutils literal notranslate"><span class="pre">LineKind._missing_()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__contains__"><code class="docutils literal notranslate"><span class="pre">LineKind.__contains__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__iter__"><code class="docutils literal notranslate"><span class="pre">LineKind.__iter__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__len__"><code class="docutils literal notranslate"><span class="pre">LineKind.__len__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__repr__"><code class="docutils literal notranslate"><span class="pre">LineKind.__repr__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__str__"><code class="docutils literal notranslate"><span class="pre">LineKind.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__bool__"><code class="docutils literal notranslate"><span class="pre">LineKind.__bool__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__or__"><code class="docutils literal notranslate"><span class="pre">LineKind.__or__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__ror__"><code class="docutils literal notranslate"><span class="pre">LineKind.__ror__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__new__"><code class="docutils literal notranslate"><span class="pre">LineKind.__new__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__getitem__"><code class="docutils literal notranslate"><span class="pre">LineKind.__getitem__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line"><code class="docutils literal notranslate"><span class="pre">Line</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__init__"><code class="docutils literal notranslate"><span class="pre">Line.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__eq__"><code class="docutils literal notranslate"><span class="pre">Line.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__ne__"><code class="docutils literal notranslate"><span class="pre">Line.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__str__"><code class="docutils literal notranslate"><span class="pre">Line.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.InfoMessage"><code class="docutils literal notranslate"><span class="pre">InfoMessage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.WarningMessage"><code class="docutils literal notranslate"><span class="pre">WarningMessage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage"><code class="docutils literal notranslate"><span class="pre">CriticalWarningMessage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.ErrorMessage"><code class="docutils literal notranslate"><span class="pre">ErrorMessage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage"><code class="docutils literal notranslate"><span class="pre">VivadoMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoMessage.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoMessage.__ne__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage"><code class="docutils literal notranslate"><span class="pre">VivadoInfoMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoInfoMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoInfoMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoInfoMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoInfoMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage.__ne__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage"><code class="docutils literal notranslate"><span class="pre">VivadoWarningMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoWarningMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoWarningMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoWarningMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoWarningMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage.__ne__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage"><code class="docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage"><code class="docutils literal notranslate"><span class="pre">VivadoErrorMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoErrorMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoErrorMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoErrorMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoErrorMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage"><code class="docutils literal notranslate"><span class="pre">VHDLReportMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VHDLReportMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VHDLReportMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VHDLReportMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VHDLReportMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage"><code class="docutils literal notranslate"><span class="pre">VHDLAssertionMessage</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__eq__"><code class="docutils literal notranslate"><span class="pre">VHDLAssertionMessage.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__init__"><code class="docutils literal notranslate"><span class="pre">VHDLAssertionMessage.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__ne__"><code class="docutils literal notranslate"><span class="pre">VHDLAssertionMessage.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__str__"><code class="docutils literal notranslate"><span class="pre">VHDLAssertionMessage.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand"><code class="docutils literal notranslate"><span class="pre">TclCommand</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__eq__"><code class="docutils literal notranslate"><span class="pre">TclCommand.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__ne__"><code class="docutils literal notranslate"><span class="pre">TclCommand.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__init__"><code class="docutils literal notranslate"><span class="pre">TclCommand.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__str__"><code class="docutils literal notranslate"><span class="pre">TclCommand.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand"><code class="docutils literal notranslate"><span class="pre">VivadoTclCommand</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__eq__"><code class="docutils literal notranslate"><span class="pre">VivadoTclCommand.__eq__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__init__"><code class="docutils literal notranslate"><span class="pre">VivadoTclCommand.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__ne__"><code class="docutils literal notranslate"><span class="pre">VivadoTclCommand.__ne__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__str__"><code class="docutils literal notranslate"><span class="pre">VivadoTclCommand.__str__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html">pyEDAA.OutputFilter.Xilinx.Common2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Exception.html">pyEDAA.OutputFilter.Xilinx.Exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html">pyEDAA.OutputFilter.Xilinx.PlaceDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html">pyEDAA.OutputFilter.Xilinx.RouteDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor"><code class="docutils literal notranslate"><span class="pre">Processor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.OutputFilterException"><code class="docutils literal notranslate"><span class="pre">OutputFilterException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.Common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="module-pyEDAA.OutputFilter.Xilinx.Common">
+<span id="pyedaa-outputfilter-xilinx-common"></span><h1>pyEDAA.OutputFilter.Xilinx.Common<a class="headerlink" href="#module-pyEDAA.OutputFilter.Xilinx.Common" title="Link to this heading"></a></h1>
+<p>Basic classes for outputs from AMD/Xilinx Vivado.</p>
+<p><strong>Classes</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><code class="xref py py-class docutils literal notranslate"><span class="pre">LineKind</span></code></a>:
+Support for flags</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.Line" title="pyEDAA.OutputFilter.Xilinx.Common.Line"><code class="xref py py-class docutils literal notranslate"><span class="pre">Line</span></code></a>:
+This class represents any line in a log file.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.InfoMessage" title="pyEDAA.OutputFilter.Xilinx.Common.InfoMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">InfoMessage</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.WarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.WarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WarningMessage</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">CriticalWarningMessage</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.ErrorMessage" title="pyEDAA.OutputFilter.Xilinx.Common.ErrorMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorMessage</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoInfoMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado info message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoIrregularInfoMessage</span></code></a>:
+This class represents an irregular AMD/Xilinx Vivado info message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoWarningMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado warning message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoIrregularWarningMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado warning message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado critical warning message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoErrorMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado error message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VHDLReportMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado info message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VHDLAssertionMessage</span></code></a>:
+This class represents an AMD/Xilinx Vivado info message.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand" title="pyEDAA.OutputFilter.Xilinx.Common.TclCommand"><code class="xref py py-class docutils literal notranslate"><span class="pre">TclCommand</span></code></a>:
+This class represents any line in a log file.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoTclCommand</span></code></a>:
+This class represents any line in a log file.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Classes</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">LineKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#LineKind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b192b2259533d3d26cda1f6dff33867d2ba500d7.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of LineKind</p></object></div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._generate_next_value_">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_generate_next_value_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._generate_next_value_" title="Link to this definition"></a></dt>
+<dd><p>Generate the next value when not given.</p>
+<p>name: the name of the member
+start: the initial start value or None
+count: the number of existing members
+last_values: the last value assigned or None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._numeric_repr_">
+<span class="sig-name descname"><span class="pre">_numeric_repr_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._numeric_repr_" title="Link to this definition"></a></dt>
+<dd><p>Return the canonical string representation of the object.</p>
+<p>For many object types, including most builtins, eval(repr(obj)) == obj.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_value_">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_iter_member_by_value_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_value_" title="Link to this definition"></a></dt>
+<dd><p>Extract all members from the value in definition (i.e. increasing value) order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_iter_member_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_" title="Link to this definition"></a></dt>
+<dd><p>Extract all members from the value in definition (i.e. increasing value) order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_def_">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_iter_member_by_def_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._iter_member_by_def_" title="Link to this definition"></a></dt>
+<dd><p>Extract all members from the value in definition order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind._missing_">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_missing_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind._missing_" title="Link to this definition"></a></dt>
+<dd><p>Create a composite member containing all canonical members present in <cite>value</cite>.</p>
+<p>If non-member values are present, result depends on <cite>_boundary_</cite> setting.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__contains__">
+<span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__contains__" title="Link to this definition"></a></dt>
+<dd><p>Returns True if self has at least the same flags set as other.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Returns flags in definition order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__len__" title="Link to this definition"></a></dt>
+<dd><p>Return the number of members (no aliases)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__repr__" title="Link to this definition"></a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__bool__">
+<span class="sig-name descname"><span class="pre">__bool__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__bool__" title="Link to this definition"></a></dt>
+<dd><p>classes/types should always be True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__or__">
+<span class="sig-name descname"><span class="pre">__or__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__or__" title="Link to this definition"></a></dt>
+<dd><p>Return self|value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__ror__">
+<span class="sig-name descname"><span class="pre">__ror__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__ror__" title="Link to this definition"></a></dt>
+<dd><p>Return value|self.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.LineKind.__getitem__">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind.__getitem__" title="Link to this definition"></a></dt>
+<dd><p>Return the member matching <cite>name</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.Line">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">Line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#Line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.Line" title="Link to this definition"></a></dt>
+<dd><p>This class represents any line in a log file.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e6b0c6f7d3de35ab62752db8ac55e4f3bd06031a.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Line</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.Line.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#Line.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.Line.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#Line.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.Line.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#Line.__ne__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.Line.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#Line.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.Line.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.InfoMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">InfoMessage</span></span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#InfoMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.InfoMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-27913bb67d9d158f1204a1d49429ba0d1e449c98.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of InfoMessage</p></object></div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.WarningMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">WarningMessage</span></span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#WarningMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.WarningMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-22862afd3af8776643aacb29438ace79c4a05ba0.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of WarningMessage</p></object></div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">CriticalWarningMessage</span></span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#CriticalWarningMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-50493177bd7b51d57253e2d808b698c0e41b2a61.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of CriticalWarningMessage</p></object></div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.ErrorMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">ErrorMessage</span></span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#ErrorMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.ErrorMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-ca50a2b5a6cb1b43477423a210f78061f3a52797.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ErrorMessage</p></object></div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado message.</p>
+<p>The usual message format is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+WARNING: [Synth 8-3332] Sequential element (gen[0].Sync/FF2) is unused and will be removed from module sync_Bits_Xilinx.
+</pre></div>
+</div>
+<p>The following message severities are defined:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CRITICAL</span> <span class="pre">WARNING</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code></p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoInfoMessage</span></code></a></dt><dd><p>Representing a Vivado info message.</p>
+</dd>
+<dt><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoWarningMessage</span></code></a></dt><dd><p>Representing a Vivado warning message.</p>
+</dd>
+<dt><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoCriticalWarningMessage</span></code></a></dt><dd><p>Representing a Vivado critical warning message.</p>
+</dd>
+<dt><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage" title="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">VivadoErrorMessage</span></code></a></dt><dd><p>Representing a Vivado error message.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-53b62f147e850f741adb0891b4fd6ecd228786ed.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoMessage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoMessage.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoInfoMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoInfoMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado info message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-697863d2dbca65eaa5ba25de3613a5eb57226d31.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoInfoMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoInfoMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoIrregularInfoMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoIrregularInfoMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an irregular AMD/Xilinx Vivado info message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-9c3bbe9ac272f21329a53878b75088b901b1841d.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoIrregularInfoMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoIrregularInfoMessage.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoWarningMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoWarningMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado warning message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-ea0067cb8fd332b0b50fe54b368f15db8ee1c63e.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoWarningMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoWarningMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoIrregularWarningMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoIrregularWarningMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado warning message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-aeadf63e532a552dbd8184e03e7223fad8776353.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoIrregularWarningMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoIrregularWarningMessage.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularWarningMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoCriticalWarningMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoCriticalWarningMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado critical warning message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-7bbf531c9a668b349d9fb7c5de812e19b73c6667.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoCriticalWarningMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoErrorMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoErrorMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage" title="Link to this definition"></a></dt>
+<dd><p>This class represents an AMD/Xilinx Vivado error message.</p>
+<p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a254f112599badf2fd4b34c7270d7d4aa5ebcfba.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoErrorMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>kind</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.Common.LineKind" title="pyEDAA.OutputFilter.Xilinx.Common.LineKind"><em>LineKind</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoErrorMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VHDLReportMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceLineNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VHDLReportMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-03702e927e3adcfbd7b43c00838a7b74ddd81536.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VHDLReportMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>rawMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>reportMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>sourceFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a>)</p></li>
+<li><p><strong>sourceLineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceLineNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VHDLReportMessage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>rawMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>reportMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>sourceFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a>)</p></li>
+<li><p><strong>sourceLineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLReportMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VHDLAssertionMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceLineNumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VHDLAssertionMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-671a976d4603c9102237429c1a70f618c4f16b27.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VHDLAssertionMessage</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>rawMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>reportMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>sourceFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a>)</p></li>
+<li><p><strong>sourceLineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messageKindID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportMessage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceLineNumber</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>toolID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>messageKindID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>rawMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>reportMessage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>sourceFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>Path</em></a>)</p></li>
+<li><p><strong>sourceLineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VHDLAssertionMessage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.TclCommand">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">TclCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tclCommand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#TclCommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-4e2de4666f995d3e5a061cce3850738fc85b23d5.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of TclCommand</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>tclCommand</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tclCommand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#TclCommand.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>tclCommand</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#TclCommand.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.TclCommand.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.Common.</span></span><span class="sig-name descname"><span class="pre">VivadoTclCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tclCommand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoTclCommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-920c54439dbb0b10c265a8223949bc18ffd6d1d4.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of VivadoTclCommand</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>tclCommand</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lineNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tclCommand</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lineNumber</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+<li><p><strong>tclCommand</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__ne__">
+<span class="sig-name descname"><span class="pre">__ne__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__ne__" title="Link to this definition"></a></dt>
+<dd><p>Return self!=value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/Common.html#VivadoTclCommand.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.Common.VivadoTclCommand.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyEDAA.OutputFilter.Xilinx.Commands.html" class="btn btn-neutral float-left" title="pyEDAA.OutputFilter.Xilinx.Commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyEDAA.OutputFilter.Xilinx.Common2.html" class="btn btn-neutral float-right" title="pyEDAA.OutputFilter.Xilinx.Common2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 07.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

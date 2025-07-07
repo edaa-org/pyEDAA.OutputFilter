@@ -1,0 +1,80 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+==================================
+pyEDAA.OutputFilter.Xilinx.Common2
+==================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.Common2
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.Common2
+
+
+**Classes**
+
+- :py:class:`VivadoMessagesMixin`:
+  Undocumented.
+
+- :py:class:`BaseParser`:
+  Undocumented.
+
+- :py:class:`Parser`:
+  Undocumented.
+
+- :py:class:`Preamble`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: VivadoMessagesMixin
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoMessagesMixin
+      :parts: 1
+
+.. autoclass:: BaseParser
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: BaseParser
+      :parts: 1
+
+.. autoclass:: Parser
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Parser
+      :parts: 1
+
+.. autoclass:: Preamble
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Preamble
+      :parts: 1
