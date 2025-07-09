@@ -217,7 +217,10 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 					line = yield lastLine
 					break
 
-				line = yield gen.send(line)
+				try:
+					line = yield gen.send(line)
+				except StopIteration as ex:
+					line = ex.value
 
 
 @export

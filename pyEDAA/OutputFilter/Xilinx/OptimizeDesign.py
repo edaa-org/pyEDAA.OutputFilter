@@ -29,34 +29,262 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing                import Generator
+from typing import Generator, ClassVar
 
 from pyTooling.Decorators  import export
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx         import Line
-from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
+from pyEDAA.OutputFilter.Xilinx import Line, VivadoMessage, LineKind
+from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser, VivadoMessagesMixin
 
 
 @export
-class BasePhase(metaclass=ExtendedType, mixin=True):
-	@abstractmethod
-	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		pass
-
-	@abstractmethod
-	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		pass
-
-	@abstractmethod
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		pass
-
-
-@export
-class Phase(BaseParser, BasePhase):
+class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
+	_FINAL:  ClassVar[str] = "Time (s):"
 
 	_command:  "Command"
 	_duration: float
+
+	def __init__(self, command: "Command"):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._command = command
+
+	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.TaskStart
+		nextLine = yield line
+		return nextLine
+
+	def _TaskFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.TaskEnd
+		line = yield line
+		while self._FINAL is not None:
+			if line.StartsWith(self._FINAL):
+				break
+
+			line = yield line
+
+		line._kind = LineKind.TaskTime
+		line = yield line
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		while True:
+			if line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._FINAL):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._TaskFinish(line)
+		return nextLine
+
+
+@export
+class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+
+	_task:     Task
+	_duration: float
+
+	def __init__(self, task: Task):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._task = task
+
+	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.PhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.TaskEnd
+		line = yield line
+		while self._FINAL is not None:
+			if line.StartsWith(self._FINAL):
+				break
+
+			line = yield line
+
+		line._kind = LineKind.PhaseEnd
+		line = yield line
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		while True:
+			if line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._FINAL):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._TaskFinish(line)
+		return nextLine
+
+
+@export
+class DRCTask(Task):
+	_START:  ClassVar[str] = "Starting DRC Task"
+	_FINISH: ClassVar[str] = "Time (s):"
+
+
+@export
+class CacheTimingInformationTask(Task):
+	_START:  ClassVar[str] = "Starting Cache Timing Information Task"
+	_FINISH: ClassVar[str] = "Ending Cache Timing Information Task"
+
+
+@export
+class LogicOptimizationTask(Task):
+	_START:  ClassVar[str] = "Starting Logic Optimization Task"
+	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		while True:
+			if line.StartsWith("Phase "):
+				break
+			elif line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._FINAL):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._TaskFinish(line)
+		return nextLine
+
+
+@export
+class Phase1_Initialization(Phase):
+	pass
+
+
+@export
+class Phase11_CoreGenerationAndDesignSetup(Phase):
+	pass
+
+
+@export
+class Phase12_SetupConstraintsAndSortNetlist(Phase):
+	pass
+
+
+@export
+class Phase2_TimerUpdateAndTimingDataCollection(Phase):
+	pass
+
+
+@export
+class Phase21_TimerUpdate(Phase):
+	pass
+
+
+@export
+class Phase22_TimingDataCollection(Phase):
+	pass
+
+
+@export
+class Phase3_Retarget(Phase):
+	pass
+
+
+@export
+class Phase4_ConstantPropagation(Phase):
+	pass
+
+
+@export
+class Phase5_Sweep(Phase):
+	pass
+
+
+@export
+class Phase6_BUFGOptimization(Phase):
+	pass
+
+
+@export
+class Phase7_ShiftRegisterOptimization(Phase):
+	pass
+
+
+@export
+class Phase8_PostProcessingNetlist(Phase):
+	pass
+
+
+@export
+class Phase9_Finalization(Phase):
+	pass
+
+
+@export
+class Phase91_FinalizingDesignCoresAndUpdatingShapes(Phase):
+	pass
+
+
+@export
+class Phase92_VerifyingNetlistConnectivity(Phase):
+	pass
+
+
+# @export
+# class ConnectivityCheckTask(Task):
+# 	pass
+
+
+@export
+class PowerOptimizationTask(Task):
+	_START:  ClassVar[str] = "Starting Power Optimization Task"
+	_FINISH: ClassVar[str] = "Ending Power Optimization Task"
+
+
+@export
+class FinalCleanupTask(Task):
+	_START:  ClassVar[str] = "Starting Final Cleanup Task"
+	_FINISH: ClassVar[str] = "Ending Final Cleanup Task"
+
+
+@export
+class NetlistObfuscationTask(Task):
+	_START:  ClassVar[str] = "Starting Netlist Obfuscation Task"
+	_FINISH: ClassVar[str] = "Ending Netlist Obfuscation Task"

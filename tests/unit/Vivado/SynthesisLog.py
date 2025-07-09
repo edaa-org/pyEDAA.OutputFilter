@@ -34,7 +34,8 @@ from unittest import TestCase as TestCase
 
 from pyTooling.Versioning                        import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx                  import Document
+from pyEDAA.OutputFilter.Xilinx import Document, LinkDesign, OptimizeDesign, PlaceDesign, RouteDesign, \
+	PhysicalOptimizeDesign, WriteBitstream
 from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, \
 	RTLElaboration
@@ -86,3 +87,46 @@ class Stopwatch(TestCase):
 		processor.Parse()
 
 		self.assertLess(processor.Duration, 0.1)
+
+		self.assertEqual(152, len(processor.InfoMessages))
+		self.assertEqual(2, len(processor.WarningMessages))
+		self.assertEqual(2, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 1), processor.Preamble.ToolVersion)
+
+		linkDesign = processor[LinkDesign]
+		self.assertEqual(9, len(linkDesign.InfoMessages))
+		self.assertEqual(2, len(linkDesign.WarningMessages))
+		self.assertEqual(2, len(linkDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(linkDesign.ErrorMessages))
+
+		optDesign = processor[OptimizeDesign]
+		self.assertEqual(25, len(optDesign.InfoMessages))
+		self.assertEqual(0, len(optDesign.WarningMessages))
+		self.assertEqual(0, len(optDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(optDesign.ErrorMessages))
+
+		placeDesign = processor[PlaceDesign]
+		self.assertEqual(37, len(placeDesign.InfoMessages))
+		self.assertEqual(0, len(placeDesign.WarningMessages))
+		self.assertEqual(0, len(placeDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(placeDesign.ErrorMessages))
+
+		physOptDesign = processor[PhysicalOptimizeDesign]
+		self.assertEqual(22, len(physOptDesign.InfoMessages))
+		self.assertEqual(0, len(physOptDesign.WarningMessages))
+		self.assertEqual(0, len(physOptDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(physOptDesign.ErrorMessages))
+
+		routeDesign = processor[RouteDesign]
+		self.assertEqual(10, len(routeDesign.InfoMessages))
+		self.assertEqual(0, len(routeDesign.WarningMessages))
+		self.assertEqual(0, len(routeDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(routeDesign.ErrorMessages))
+
+		writeBitstream = processor[WriteBitstream]
+		self.assertEqual(9, len(writeBitstream.InfoMessages))
+		self.assertEqual(0, len(writeBitstream.WarningMessages))
+		self.assertEqual(0, len(writeBitstream.CriticalWarningMessages))
+		self.assertEqual(0, len(writeBitstream.ErrorMessages))

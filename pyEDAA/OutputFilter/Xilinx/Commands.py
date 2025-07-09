@@ -29,7 +29,9 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
-from typing import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any
+from pathlib import Path
+from re      import compile as re_compile
+from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any
 
 from pyTooling.Decorators import export, readonly
 
@@ -46,6 +48,8 @@ from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TechnologyMapping, IOIns
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FinalNetlistCleanup, RenamingGeneratedInstances
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RebuildingUserHierarchy, RenamingGeneratedPorts
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedNets, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import Task, DRCTask, CacheTimingInformationTask, LogicOptimizationTask
+from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import PowerOptimizationTask, FinalCleanupTask, NetlistObfuscationTask
 
 
 @export
@@ -88,13 +92,17 @@ class Command(Parser):
 	# _TCL_COMMAND: ClassVar[str]
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
-		end = f"{self._TCL_COMMAND} completed successfully"
+		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
+			line._kind = LineKind.ProcessorError
 
+		line = yield line
+
+		end = f"{self._TCL_COMMAND} completed successfully"
 		while True:
-			if line.StartsWith(end):
-				break
-			elif isinstance(line, VivadoMessage):
+			if isinstance(line, VivadoMessage):
 				self._AddMessage(line)
+			elif line.StartsWith(end):
+				break
 
 			line = yield line
 
@@ -188,14 +196,13 @@ class SynthesizeDesign(Command):
 			raise SectionNotPresentException(F"Section '{item._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
-		# parser:        Section      = firstValue(self._sections)
+		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
+			raise ProcessorException()
+
 		activeParsers: List[Parser] = list(self._sections.values())
 
 		rtlElaboration = self._sections[RTLElaboration]
 		# constraintValidation = self._sections[ConstraintValidation]
-
-		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
 
 		line = yield line
 		if line == "Starting synth_design":
@@ -204,7 +211,6 @@ class SynthesizeDesign(Command):
 			raise ProcessorException()
 
 		line = yield line
-
 		while True:
 			while True:
 				if line.StartsWith("Start "):
@@ -269,10 +275,161 @@ class SynthesizeDesign(Command):
 class LinkDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "link_design"
 
+	_ParsingXDCFile_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\]$""")
+	_FinishedParsingXDCFile_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
+	_ParsingXDCFileForCell_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\] for cell '(.*)'$""")
+	_FinishedParsingXDCFileForCell_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\] for cell '(.*)'$""")
+
+	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
+	_perCellXDCFiles: Dict[Path, Dict[str, List[VivadoMessage]]]
+
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._commonXDCFiles = {}
+		self._perCellXDCFiles = {}
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
+		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
+			line._kind = LineKind.ProcessorError
+
+		line = yield line
+		end = f"{self._TCL_COMMAND} completed successfully"
+		while True:
+			if isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif (match := self._ParsingXDCFile_Pattern.match(line._message)) is not None:
+				line._kind = LineKind.Normal
+
+				path = Path(match[1])
+				self._commonXDCFiles[path] = (messages := [])
+
+				line = yield line
+				while True:
+					if isinstance(line, VivadoMessage):
+						messages.append(line)
+					elif (match := self._FinishedParsingXDCFile_Pattern.match(line._message)) is not None and path == Path(match[1]):
+						line._kind = LineKind.Normal
+						break
+					elif line.StartsWith("Finished Parsing XDC File"):
+						line._kind = LineKind.ProcessorError
+						break
+					elif line.StartsWith(end):
+						break
+
+					line = yield line
+			elif (match := self._ParsingXDCFileForCell_Pattern.match(line._message)) is not None:
+				line._kind = LineKind.Normal
+
+				path = Path(match[1])
+				cell = match[2]
+				if path in self._perCellXDCFiles:
+					self._perCellXDCFiles[path][cell] = (messages := [])
+				else:
+					self._perCellXDCFiles[path] = {cell: (messages := [])}
+
+				line = yield line
+				while True:
+					if isinstance(line, VivadoMessage):
+						messages.append(line)
+					elif (match := self._FinishedParsingXDCFileForCell_Pattern.match(line._message)) is not None and path == Path(match[1]) and cell == match[2]:
+						line._kind = LineKind.Normal
+						break
+					elif line.StartsWith("Finished Parsing XDC File"):
+						line._kind = LineKind.ProcessorError
+						break
+					elif line.StartsWith(end):
+						break
+
+					line = yield line
+
+			if line.StartsWith(end):
+				line._kind |= LineKind.Success
+				break
+
+			line = yield line
+
+		nextline = yield line
+		return nextline
+
 
 @export
 class OptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
+
+	_PARSERS: ClassVar[List[Type[Task]]] = (
+		DRCTask,
+		CacheTimingInformationTask,
+		LogicOptimizationTask,
+		PowerOptimizationTask,
+		FinalCleanupTask,
+		NetlistObfuscationTask
+	)
+
+	_tasks: Dict[Type[Task], Task]
+
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._tasks = {t: t(self) for t in self._PARSERS}
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
+		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
+			raise ProcessorException()
+
+		activeParsers: List[Task] = list(self._tasks.values())
+
+		line = yield line
+		while True:
+			while True:
+				if line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = next(task := parser.Generator(line))
+							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
+							break
+					else:
+						raise Exception(f"Unknown section: {line}")
+					break
+				elif line.StartsWith(self._TCL_COMMAND):
+					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
+						line._kind |= LineKind.Success
+
+						line = yield line
+						if line.StartsWith(self._TCL_COMMAND + ":"):
+							line._kind |= LineKind.Last
+						else:
+							pass
+
+						lastLine = yield line
+						return lastLine
+				elif not isinstance(line, VivadoMessage):
+					pass
+				# line._kind = LineKind.Unprocessed
+
+				line = yield line
+
+			line = yield line
+
+			while True:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield task.send(line)
+				except StopIteration as ex:
+					task = None
+					line = ex.value
+					break
+
+			if task is not None:
+				line = yield task.send(line)
+
+			activeParsers.remove(parser)
 
 
 @export
