@@ -209,18 +209,19 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			end = f"{cmd._TCL_COMMAND} completed successfully"
 
 			while True:
-				if line.StartsWith(end):
-					# line._kind |= LineKind.Success
-					lastLine = gen.send(line)
-					if LineKind.Last in line._kind:
-						line._kind ^= LineKind.Last
-					line = yield lastLine
-					break
+				# if line.StartsWith(end):
+				# 	# line._kind |= LineKind.Success
+				# 	lastLine = gen.send(line)
+				# 	if LineKind.Last in line._kind:
+				# 		line._kind ^= LineKind.Last
+				# 	line = yield lastLine
+				# 	break
 
 				try:
 					line = yield gen.send(line)
 				except StopIteration as ex:
 					line = ex.value
+					break
 
 
 @export

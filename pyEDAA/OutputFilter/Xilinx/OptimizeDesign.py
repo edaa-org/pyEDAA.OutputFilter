@@ -43,7 +43,7 @@ from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser, VivadoMessagesMixin
 class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
 
 	_command:  "Command"
 	_duration: float
@@ -62,19 +62,19 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		nextLine = yield line
 		return nextLine
 
-	def _TaskFinish(self, line: Line) -> Generator[Line, Line, None]:
+	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._FINISH):
 			raise ProcessorException()
 
 		line._kind = LineKind.TaskEnd
 		line = yield line
-		while self._FINAL is not None:
-			if line.StartsWith(self._FINAL):
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
 				break
 
 			line = yield line
 
-		line._kind = LineKind.TaskTime
 		line = yield line
 		return line
 
@@ -86,7 +86,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-			elif line.StartsWith(self._FINAL):
+			elif line.StartsWith(self._TIME):
 				line._kind = LineKind.TaskTime
 				nextLine = yield line
 				return nextLine
@@ -533,7 +533,7 @@ class LogicOptimizationTask(Task):
 				elif line.StartsWith("Ending"):
 					nextLine = yield from self._TaskFinish(line)
 					return nextLine
-				elif line.StartsWith(self._FINAL):
+				elif line.StartsWith(self._TIME):
 					line._kind = LineKind.TaskTime
 					nextLine = yield line
 					return nextLine

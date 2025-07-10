@@ -91,24 +91,43 @@ class ROM_RAM_DSP_SR_Retiming3(ROM_RAM_DSP_SR_Retiming):
 class Command(Parser):
 	# _TCL_COMMAND: ClassVar[str]
 
-	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
+	def _CommandStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			line._kind = LineKind.ProcessorError
+			raise ProcessorException()
+
+		nextLine = yield line
+		return nextLine
+
+	def _CommandFinish(self, line: Line) -> Generator[Line, Line, Line]:
+		if line.StartsWith(f"{self._TCL_COMMAND} completed successfully"):
+			line._kind |= LineKind.Success
+		else:
+			line._kind |= LineKind.Failed
 
 		line = yield line
-
-		end = f"{self._TCL_COMMAND} completed successfully"
-		while True:
-			if isinstance(line, VivadoMessage):
-				self._AddMessage(line)
-			elif line.StartsWith(end):
+		end = f"{self._TCL_COMMAND}: {self._TIME}"
+		while self._TIME is not None:
+			if line.StartsWith(end):
+				line._kind = LineKind.TaskTime
 				break
 
 			line = yield line
 
-		line._kind |= LineKind.Success
-		nextline = yield line
-		return nextline
+		nextLine = yield line
+		return nextLine
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
+		line = yield from self._CommandStart(line)
+
+		end = f"{self._TCL_COMMAND} "
+		while True:
+			if isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(end):
+				nextLine = yield from self._CommandFinish(line)
+				return nextLine
+
+			line = yield line
 
 
 @export
@@ -274,6 +293,7 @@ class SynthesizeDesign(Command):
 @export
 class LinkDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "link_design"
+	_TIME:        ClassVar[str] = "Time (s):"
 
 	_ParsingXDCFile_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\]$""")
 	_FinishedParsingXDCFile_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
@@ -290,11 +310,9 @@ class LinkDesign(Command):
 		self._perCellXDCFiles = {}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
-		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			line._kind = LineKind.ProcessorError
+		line = yield from self._CommandStart(line)
 
-		line = yield line
-		end = f"{self._TCL_COMMAND} completed successfully"
+		end = f"{self._TCL_COMMAND} "
 		while True:
 			if isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -344,18 +362,16 @@ class LinkDesign(Command):
 					line = yield line
 
 			if line.StartsWith(end):
-				line._kind |= LineKind.Success
-				break
+				nextLine = yield from self._CommandFinish(line)
+				return nextLine
 
 			line = yield line
-
-		nextline = yield line
-		return nextline
 
 
 @export
 class OptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
+	_TIME:        ClassVar[str] = None
 
 	_PARSERS: ClassVar[List[Type[Task]]] = (
 		DRCTask,
@@ -434,21 +450,25 @@ class OptimizeDesign(Command):
 @export
 class PlaceDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "place_design"
+	_TIME:        ClassVar[str] = None
 
 
 @export
 class PhysicalOptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
+	_TIME:        ClassVar[str] = None
 
 
 @export
 class RouteDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "route_design"
+	_TIME:        ClassVar[str] = "Time (s):"
 
 
 @export
 class WriteBitstream(Command):
 	_TCL_COMMAND: ClassVar[str] = "write_bitstream"
+	_TIME:        ClassVar[str] = "Time (s):"
 
 # report_drc
 # report_methodology
