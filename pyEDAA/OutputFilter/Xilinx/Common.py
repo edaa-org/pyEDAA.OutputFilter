@@ -60,7 +60,8 @@ class LineKind(Flag):
 	End =                    2**21
 	Header =                 2**22
 	Content =                2**23
-	Footer =                 2**24
+	Time =                   2**24
+	Footer =                 2**25
 
 	Last =                   2**29
 
@@ -73,12 +74,13 @@ class LineKind(Flag):
 	Task =                   2**31
 	TaskStart =              Task | Start
 	TaskEnd =                Task | End
-	TaskTime =               Task | Footer
+	TaskTime =               Task | Time
 
 	Phase =                  2**32
 	PhaseStart =             Phase | Start
 	PhaseEnd =               Phase | End
-	PhaseTime =              Phase | Footer
+	PhaseTime =              Phase | Time
+	PhaseFinal =             Phase | Footer
 
 	Section =                2**33
 	SectionDelimiter =       Section | Delimiter

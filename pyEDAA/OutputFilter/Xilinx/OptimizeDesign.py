@@ -126,9 +126,17 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		line._kind = LineKind.PhaseEnd
 		line = yield line
 
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.PhaseTime
+				break
+
+			line = yield line
+
+		line = yield line
 		while self._FINAL is not None:
 			if line.StartsWith(self._FINAL):
-				line._kind = LineKind.PhaseTime
+				line._kind = LineKind.PhaseFinal
 				break
 
 			line = yield line
@@ -155,7 +163,8 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 class Phase1_Initialization(Phase):
 	_START:  ClassVar[str] = "Phase 1 Initialization"
 	_FINISH: ClassVar[str] = "Phase 1 Initialization | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = None
 
 
 @export
@@ -172,7 +181,8 @@ class Phase12_SetupConstraintsAndSortNetlist(Phase):
 class Phase2_TimerUpdateAndTimingDataCollection(Phase):
 	_START:  ClassVar[str] = "Phase 2 Timer Update And Timing Data Collection"
 	_FINISH: ClassVar[str] = "Phase 2 Timer Update And Timing Data Collection | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = None
 
 
 @export
@@ -189,49 +199,56 @@ class Phase22_TimingDataCollection(Phase):
 class Phase3_Retarget(Phase):
 	_START:  ClassVar[str] = "Phase 3 Retarget"
 	_FINISH: ClassVar[str] = "Phase 3 Retarget | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
 
 
 @export
 class Phase4_ConstantPropagation(Phase):
 	_START:  ClassVar[str] = "Phase 4 Constant propagation"
 	_FINISH: ClassVar[str] = "Phase 4 Constant propagation | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
 
 
 @export
 class Phase5_Sweep(Phase):
 	_START:  ClassVar[str] = "Phase 5 Sweep"
 	_FINISH: ClassVar[str] = "Phase 5 Sweep | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
 
 
 @export
 class Phase6_BUFGOptimization(Phase):
 	_START:  ClassVar[str] = "Phase 6 BUFG optimization"
 	_FINISH: ClassVar[str] = "Phase 6 BUFG optimization | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
 
 @export
 class Phase7_ShiftRegisterOptimization(Phase):
 	_START:  ClassVar[str] = "Phase 7 Shift Register Optimization"
 	_FINISH: ClassVar[str] = "Phase 7 Shift Register Optimization | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
 
 
 @export
 class Phase8_PostProcessingNetlist(Phase):
 	_START:  ClassVar[str] = "Phase 8 Post Processing Netlist"
 	_FINISH: ClassVar[str] = "Phase 8 Post Processing Netlist | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
 
 @export
 class Phase9_Finalization(Phase):
 	_START:  ClassVar[str] = "Phase 9 Finalization"
 	_FINISH: ClassVar[str] = "Phase 9 Finalization | Checksum:"
-	_FINAL:  ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = None
 
 
 @export
