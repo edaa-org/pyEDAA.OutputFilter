@@ -386,10 +386,9 @@ class OptimizeDesign(Command):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
 							line = next(task := parser.Generator(line))
-							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 							break
 					else:
-						raise Exception(f"Unknown section: {line}")
+						raise Exception(f"Unknown task: {line}")
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):

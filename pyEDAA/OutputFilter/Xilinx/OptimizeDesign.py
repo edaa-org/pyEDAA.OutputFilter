@@ -29,12 +29,12 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar
+from typing import Generator, ClassVar, List, Type, Dict
 
 from pyTooling.Decorators  import export
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx import Line, VivadoMessage, LineKind
+from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser, VivadoMessagesMixin
 
@@ -123,35 +123,125 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		if not line.StartsWith(self._FINISH):
 			raise ProcessorException()
 
-		line._kind = LineKind.TaskEnd
+		line._kind = LineKind.PhaseEnd
 		line = yield line
+
 		while self._FINAL is not None:
 			if line.StartsWith(self._FINAL):
+				line._kind = LineKind.PhaseTime
 				break
 
 			line = yield line
 
-		line._kind = LineKind.PhaseEnd
-		line = yield line
-		return line
+		nextLine = yield line
+		return nextLine
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._TaskStart(line)
+		line = yield from self._PhaseStart(line)
 
 		while True:
-			if line.StartsWith("Ending"):
+			if line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-			elif line.StartsWith(self._FINAL):
-				line._kind = LineKind.TaskTime
-				nextLine = yield line
-				return nextLine
 
 			line = yield line
 
-		nextLine = yield from self._TaskFinish(line)
+		nextLine = yield from self._PhaseFinish(line)
 		return nextLine
+
+
+@export
+class Phase1_Initialization(Phase):
+	_START:  ClassVar[str] = "Phase 1 Initialization"
+	_FINISH: ClassVar[str] = "Phase 1 Initialization | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase11_CoreGenerationAndDesignSetup(Phase):
+	pass
+
+
+@export
+class Phase12_SetupConstraintsAndSortNetlist(Phase):
+	pass
+
+
+@export
+class Phase2_TimerUpdateAndTimingDataCollection(Phase):
+	_START:  ClassVar[str] = "Phase 2 Timer Update And Timing Data Collection"
+	_FINISH: ClassVar[str] = "Phase 2 Timer Update And Timing Data Collection | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase21_TimerUpdate(Phase):
+	pass
+
+
+@export
+class Phase22_TimingDataCollection(Phase):
+	pass
+
+
+@export
+class Phase3_Retarget(Phase):
+	_START:  ClassVar[str] = "Phase 3 Retarget"
+	_FINISH: ClassVar[str] = "Phase 3 Retarget | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase4_ConstantPropagation(Phase):
+	_START:  ClassVar[str] = "Phase 4 Constant propagation"
+	_FINISH: ClassVar[str] = "Phase 4 Constant propagation | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase5_Sweep(Phase):
+	_START:  ClassVar[str] = "Phase 5 Sweep"
+	_FINISH: ClassVar[str] = "Phase 5 Sweep | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase6_BUFGOptimization(Phase):
+	_START:  ClassVar[str] = "Phase 6 BUFG optimization"
+	_FINISH: ClassVar[str] = "Phase 6 BUFG optimization | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase7_ShiftRegisterOptimization(Phase):
+	_START:  ClassVar[str] = "Phase 7 Shift Register Optimization"
+	_FINISH: ClassVar[str] = "Phase 7 Shift Register Optimization | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase8_PostProcessingNetlist(Phase):
+	_START:  ClassVar[str] = "Phase 8 Post Processing Netlist"
+	_FINISH: ClassVar[str] = "Phase 8 Post Processing Netlist | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase9_Finalization(Phase):
+	_START:  ClassVar[str] = "Phase 9 Finalization"
+	_FINISH: ClassVar[str] = "Phase 9 Finalization | Checksum:"
+	_FINAL:  ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase91_FinalizingDesignCoresAndUpdatingShapes(Phase):
+	pass
+
+
+@export
+class Phase92_VerifyingNetlistConnectivity(Phase):
+	pass
 
 
 @export
@@ -171,101 +261,66 @@ class LogicOptimizationTask(Task):
 	_START:  ClassVar[str] = "Starting Logic Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
 
+	_PARSERS: ClassVar[List[Type[Phase]]] = (
+		Phase1_Initialization,
+		Phase2_TimerUpdateAndTimingDataCollection,
+		Phase3_Retarget,
+		Phase4_ConstantPropagation,
+		Phase5_Sweep,
+		Phase6_BUFGOptimization,
+		Phase7_ShiftRegisterOptimization,
+		Phase8_PostProcessingNetlist,
+		Phase9_Finalization
+	)
+
+	_phases: Dict[Type[Phase], Phase]
+
+	def __init__(self, command: "Command"):
+		super().__init__(command)
+
+		self._phases = {t: t(self) for t in self._PARSERS}
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
 
+		activeParsers: List[Phase] = list(self._phases.values())
+
 		while True:
-			if line.StartsWith("Phase "):
-				break
-			elif line.StartsWith("Ending"):
-				break
-			elif isinstance(line, VivadoMessage):
-				self._AddMessage(line)
-			elif line.StartsWith(self._FINAL):
-				line._kind = LineKind.TaskTime
-				nextLine = yield line
-				return nextLine
+			while True:
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase "):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown phase: {line}")
+					break
+				elif line.StartsWith("Ending"):
+					nextLine = yield from self._TaskFinish(line)
+					return nextLine
+				elif line.StartsWith(self._FINAL):
+					line._kind = LineKind.TaskTime
+					nextLine = yield line
+					return nextLine
 
-			line = yield line
+				line = yield line
 
-		nextLine = yield from self._TaskFinish(line)
-		return nextLine
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
 
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 
-@export
-class Phase1_Initialization(Phase):
-	pass
-
-
-@export
-class Phase11_CoreGenerationAndDesignSetup(Phase):
-	pass
-
-
-@export
-class Phase12_SetupConstraintsAndSortNetlist(Phase):
-	pass
-
-
-@export
-class Phase2_TimerUpdateAndTimingDataCollection(Phase):
-	pass
-
-
-@export
-class Phase21_TimerUpdate(Phase):
-	pass
-
-
-@export
-class Phase22_TimingDataCollection(Phase):
-	pass
-
-
-@export
-class Phase3_Retarget(Phase):
-	pass
-
-
-@export
-class Phase4_ConstantPropagation(Phase):
-	pass
-
-
-@export
-class Phase5_Sweep(Phase):
-	pass
-
-
-@export
-class Phase6_BUFGOptimization(Phase):
-	pass
-
-
-@export
-class Phase7_ShiftRegisterOptimization(Phase):
-	pass
-
-
-@export
-class Phase8_PostProcessingNetlist(Phase):
-	pass
-
-
-@export
-class Phase9_Finalization(Phase):
-	pass
-
-
-@export
-class Phase91_FinalizingDesignCoresAndUpdatingShapes(Phase):
-	pass
-
-
-@export
-class Phase92_VerifyingNetlistConnectivity(Phase):
-	pass
-
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
 
 # @export
 # class ConnectivityCheckTask(Task):

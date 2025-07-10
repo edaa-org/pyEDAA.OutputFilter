@@ -183,7 +183,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 					print(f"{i:4}: {{YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
 				else:
 					print(f"{i:4}: {{DARK_CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
-			elif line.Kind is LineKind.TaskTime:
+			elif line.Kind is LineKind.TaskTime or line.Kind is LineKind.PhaseTime:
 				print(f"{i:4}: {{DARK_GREEN}}{message}{{NOCOLOR}}".format(**self.Foreground))
 			elif line.Kind is LineKind.ParagraphHeadline:
 				print(f"{i:4}: {{DARK_YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
