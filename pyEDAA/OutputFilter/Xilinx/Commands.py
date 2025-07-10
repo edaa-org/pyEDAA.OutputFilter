@@ -309,6 +309,14 @@ class LinkDesign(Command):
 		self._commonXDCFiles = {}
 		self._perCellXDCFiles = {}
 
+	@readonly
+	def CommonXDCFiles(self) -> Dict[Path, List[VivadoMessage]]:
+		return self._commonXDCFiles
+
+	@readonly
+	def PerCellXDCFiles(self) -> Dict[Path, Dict[str, List[VivadoMessage]]]:
+		return self._perCellXDCFiles
+
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		line = yield from self._CommandStart(line)
 
@@ -470,6 +478,20 @@ class WriteBitstream(Command):
 	_TCL_COMMAND: ClassVar[str] = "write_bitstream"
 	_TIME:        ClassVar[str] = "Time (s):"
 
-# report_drc
-# report_methodology
-# report_power
+
+@export
+class ReportDRC(Command):
+	_TCL_COMMAND: ClassVar[str] = "report_drc"
+	_TIME:        ClassVar[str] = None
+
+
+@export
+class ReportMethodology(Command):
+	_TCL_COMMAND: ClassVar[str] = "report_methodology"
+	_TIME:        ClassVar[str] = None
+
+
+@export
+class ReportPower(Command):
+	_TCL_COMMAND: ClassVar[str] = "report_power"
+	_TIME:        ClassVar[str] = None

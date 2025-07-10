@@ -44,7 +44,7 @@ from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoC
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
 from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
-	PhysicalOptimizeDesign, RouteDesign, WriteBitstream
+	PhysicalOptimizeDesign, RouteDesign, WriteBitstream, ReportDRC, ReportMethodology, ReportPower
 from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
@@ -179,10 +179,6 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
-					# elif line._command == ReportDRC._TCL_COMMAND:
-					# 	self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
-					# 	line = yield next(gen := cmd.SectionDetector(line))
-					# 	break
 					elif line._command == PlaceDesign._TCL_COMMAND:
 						self._commands[PlaceDesign] = (cmd := PlaceDesign(self))
 						line = yield next(gen := cmd.SectionDetector(line))
@@ -199,6 +195,18 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 						self._commands[WriteBitstream] = (cmd := WriteBitstream(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
+					elif line._command == ReportDRC._TCL_COMMAND:
+						self._commands[ReportDRC] = (cmd := ReportDRC(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == ReportMethodology._TCL_COMMAND:
+						self._commands[ReportMethodology] = (cmd := ReportMethodology(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == ReportPower._TCL_COMMAND:
+						self._commands[ReportPower] = (cmd := ReportPower(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
 
 				firstWord = line.Partition(" ")[0]
 				if firstWord in tclProcedures:
@@ -206,7 +214,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				line = yield line
 
-			end = f"{cmd._TCL_COMMAND} completed successfully"
+			# end = f"{cmd._TCL_COMMAND} completed successfully"
 
 			while True:
 				# if line.StartsWith(end):
