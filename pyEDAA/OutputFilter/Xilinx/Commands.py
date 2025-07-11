@@ -31,7 +31,7 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib import Path
 from re      import compile as re_compile
-from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any
+from typing import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
 
@@ -382,7 +382,7 @@ class OptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
 	_TIME:        ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Task]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Task], ...]] = (
 		DRCTask,
 		CacheTimingInformationTask,
 		LogicOptimizationTask,
@@ -461,7 +461,7 @@ class PlaceDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "place_design"
 	_TIME:        ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Task]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Task], ...]] = (
 		PlacerTask,
 	)
 

@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar, List, Type, Dict
+from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -126,23 +126,27 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		line._kind = LineKind.PhaseEnd
 		line = yield line
 
-		while self._TIME is not None:
-			if line.StartsWith(self._TIME):
-				line._kind = LineKind.PhaseTime
-				break
+		if self._TIME is not None:
+			while self._TIME is not None:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.PhaseTime
+					break
+
+				line = yield line
 
 			line = yield line
 
-		line = yield line
-		while self._FINAL is not None:
-			if line.StartsWith(self._FINAL):
-				line._kind = LineKind.PhaseFinal
-				break
+		if self._FINAL is not None:
+			while self._FINAL is not None:
+				if line.StartsWith(self._FINAL):
+					line._kind = LineKind.PhaseFinal
+					break
+
+				line = yield line
 
 			line = yield line
 
-		nextLine = yield line
-		return nextLine
+		return line
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -185,15 +189,18 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		if not line.StartsWith(self._FINISH):
 			raise ProcessorException()
 
-		line._kind = LineKind.SubPhaseEnd
-		line = yield line
-
-		while self._TIME is not None:
-			if line.StartsWith(self._TIME):
-				line._kind = LineKind.SubPhaseTime
-				break
+		if self._TIME is None:
+			line._kind = LineKind.SubPhaseTime
+		else:
+			line._kind = LineKind.SubPhaseEnd
 
 			line = yield line
+			while self._TIME is not None:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.SubPhaseTime
+					break
+
+				line = yield line
 
 		nextLine = yield line
 		return nextLine
@@ -210,6 +217,60 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 			line = yield line
 
 		nextLine = yield from self._SubPhaseFinish(line)
+		return nextLine
+
+
+@export
+class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+
+	_subphase: SubPhase
+	_duration: float
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._subphase = subphase
+
+	def _SubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.SubSubPhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _SubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.SubSubPhaseEnd
+		line = yield line
+
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.SubSubPhaseTime
+				break
+
+			line = yield line
+
+		nextLine = yield line
+		return nextLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubPhaseStart(line)
+
+		while True:
+			if line.StartsWith(self._FINISH):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+
+			line = yield line
+
+		nextLine = yield from self._SubSubPhaseFinish(line)
 		return nextLine
 
 
@@ -248,7 +309,7 @@ class Phase1_PlacerInitialization(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase11_PlacerInitializationNetlistSorting,
 		Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice,
 		Phase13_BuildPlacerNetlistModel,
@@ -329,14 +390,75 @@ class Phase24_GlobalPlacePhase1(SubPhase):
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
-# 2.5.1 UpdateTiming Before Physical Synthesis
-# 2.5.2 Physical Synthesis In Placer
+@export
+class Phase251_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 2.5.1 UpdateTiming Before Physical Synthesis"
+	_FINISH: ClassVar[str] = "Phase 2.5.1 UpdateTiming Before Physical Synthesis | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase252_PhysicalSynthesisInPlacer(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 2.5.2 Physical Synthesis In Placer"
+	_FINISH: ClassVar[str] = "Phase 2.5.2 Physical Synthesis In Placer | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
 
 @export
 class Phase25_GlobalPlacePhase2(SubPhase):
 	_START:  ClassVar[str] = "Phase 2.5 Global Place Phase2"
 	_FINISH: ClassVar[str] = "Phase 2.5 Global Place Phase2 | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase251_UpdateTimingBeforePhysicalSynthesis,
+		Phase252_PhysicalSynthesisInPlacer
+	)
+
+	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubphases.values())
+
+		while True:
+			while True:
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 2.5."):
+					for parser in activeParsers:  # type: SubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubphase: {line}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
 
 
 @export
@@ -346,7 +468,7 @@ class Phase2_GlobalPlacement(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase21_Floorplanning,
 		Phase22_UpdateTimingBeforeSLRPathOpt,
 		Phase23_PostProcessingInFloorplanning,
@@ -371,7 +493,7 @@ class Phase2_GlobalPlacement(Phase):
 				if isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2."):
-					for parser in activeParsers:  # type: Section
+					for parser in activeParsers:  # type: Phase
 						if line.StartsWith(parser._START):
 							line = yield next(phase := parser.Generator(line))
 							break
@@ -470,7 +592,7 @@ class Phase3_DetailPlacement(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase31_CommitMultiColumnMacros,
 		Phase32_CommitMostMacrosLUTRAMs,
 		Phase33_AreaSwapOptimization,
@@ -543,17 +665,73 @@ class Phase42_PostPlacementCleanup(SubPhase):
 
 
 @export
+class Phase431_PrintEstimatedCongestion(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 4.3.1 Print Estimated Congestion"
+	_FINISH: ClassVar[str] = "Phase 4.3.1 Print Estimated Congestion | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
 class Phase43_PlacerReporting(SubPhase):
 	_START:  ClassVar[str] = "Phase 4.3 Placer Reporting"
 	_FINISH: ClassVar[str] = "Phase 4.3 Placer Reporting | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase431_PrintEstimatedCongestion,
+	)
+
+	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubphases.values())
+
+		while True:
+			while True:
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 4.3."):
+					for parser in activeParsers:  # type: SubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubphase: {line}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
 
 @export
 class Phase44_FinalPlacementCleanup(SubPhase):
 	_START:  ClassVar[str] = "Phase 4.4 Final Placement Cleanup"
-	_FINISH: ClassVar[str] = "Phase 4.4 Final Placement Cleanup | Checksum:"
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str] = "Time (s):"
+	_TIME:   ClassVar[str] = None
 
 
 @export
@@ -563,7 +741,7 @@ class Phase4_PostPlacementOptimizationAndCleanUp(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase41_PostCommitOptimization,
 		Phase42_PostPlacementCleanup,
 		Phase43_PlacerReporting,
@@ -621,7 +799,7 @@ class PlacerTask(Task):
 	_START:  ClassVar[str] = "Starting Placer Task"
 	_FINISH: ClassVar[str] = "Ending Placer Task"
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase1_PlacerInitialization,
 		Phase2_GlobalPlacement,
 		Phase3_DetailPlacement,

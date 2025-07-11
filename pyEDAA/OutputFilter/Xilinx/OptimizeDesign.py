@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar, List, Type, Dict
+from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -234,7 +234,7 @@ class Phase1_Initialization(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase11_CoreGenerationAndDesignSetup,
 		Phase12_SetupConstraintsAndSortNetlist
 	)
@@ -306,7 +306,7 @@ class Phase2_TimerUpdateAndTimingDataCollection(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase21_TimerUpdate,
 		Phase22_TimingDataCollection
 	)
@@ -426,7 +426,7 @@ class Phase9_Finalization(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase91_FinalizingDesignCoresAndUpdatingShapes,
 		Phase92_VerifyingNetlistConnectivity
 	)
@@ -494,7 +494,7 @@ class LogicOptimizationTask(Task):
 	_START:  ClassVar[str] = "Starting Logic Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
 
-	_PARSERS: ClassVar[List[Type[Phase]]] = (
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase1_Initialization,
 		Phase2_TimerUpdateAndTimingDataCollection,
 		Phase3_Retarget,
