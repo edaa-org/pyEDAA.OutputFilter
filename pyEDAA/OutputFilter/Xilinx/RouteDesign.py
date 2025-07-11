@@ -29,3 +29,688 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
+from typing import Generator, ClassVar, List, Type, Dict, Tuple
+
+from pyTooling.Decorators  import export
+from pyTooling.MetaClasses import ExtendedType
+
+from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
+from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser, VivadoMessagesMixin
+
+
+@export
+class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_command:  "Command"
+	_duration: float
+
+	def __init__(self, command: "Command"):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._command = command
+
+	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.TaskStart
+		nextLine = yield line
+		return nextLine
+
+	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.TaskEnd
+		line = yield line
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
+				break
+
+			line = yield line
+
+		line = yield line
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._TaskFinish(line)
+		return nextLine
+
+
+@export
+class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+
+	_task:     Task
+	_duration: float
+
+	def __init__(self, task: Task):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._task = task
+
+	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.PhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.PhaseEnd
+		line = yield line
+
+		if self._TIME is not None:
+			while self._TIME is not None:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.PhaseTime
+					break
+
+				line = yield line
+
+			line = yield line
+
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+
+			line = yield line
+
+		nextLine = yield from self._PhaseFinish(line)
+		return nextLine
+
+
+@export
+class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+
+	_phase:    Phase
+	_duration: float
+
+	def __init__(self, phase: Phase):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._phase = phase
+
+	def _SubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.SubPhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _SubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		if self._TIME is None:
+			line._kind = LineKind.SubPhaseTime
+		else:
+			line._kind = LineKind.SubPhaseEnd
+
+			line = yield line
+			while self._TIME is not None:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.SubPhaseTime
+					break
+
+				line = yield line
+
+		nextLine = yield line
+		return nextLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+
+			line = yield line
+
+		nextLine = yield from self._SubPhaseFinish(line)
+		return nextLine
+
+
+@export
+class Phase1_BuildRTDesign(Phase):
+	_START:  ClassVar[str] = "Phase 1 Build RT Design"
+	_FINISH: ClassVar[str] = "Phase 1 Build RT Design | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase21_FixTopologyConstraints(SubPhase):
+	_START:  ClassVar[str] = "Phase 2.1 Fix Topology Constraints"
+	_FINISH: ClassVar[str] = "Phase 2.1 Fix Topology Constraints | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase22_PreRouteCleanup(SubPhase):
+	_START:  ClassVar[str] = "Phase 2.2 Pre Route Cleanup"
+	_FINISH: ClassVar[str] = "Phase 2.2 Pre Route Cleanup | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase23_UpdateTiming(SubPhase):
+	_START:  ClassVar[str] = "Phase 2.3 Update Timing"
+	_FINISH: ClassVar[str] = "Phase 2.3 Update Timing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase24_SoftConstraintPins_FastBudgeting(SubPhase):
+	_START:  ClassVar[str] = "Phase 2.4 Soft Constraint Pins - Fast Budgeting"
+	_FINISH: ClassVar[str] = "Phase 2.4 Soft Constraint Pins - Fast Budgeting | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase2_RouterInitialization(Phase):
+	_START:  ClassVar[str] = "Phase 2 Router Initialization"
+	_FINISH: ClassVar[str] = "Phase 2 Router Initialization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase21_FixTopologyConstraints,
+		Phase22_PreRouteCleanup,
+		Phase23_UpdateTiming,
+		Phase24_SoftConstraintPins_FastBudgeting
+	)
+
+	_subphases: Dict[Type[SubPhase], SubPhase]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 2."):
+					for parser in activeParsers:  # type: SubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
+class Phase3_GlobalRouting(Phase):
+	_START:  ClassVar[str] = "Phase 3 Global Routing"
+	_FINISH: ClassVar[str] = "Phase 3 Global Routing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase41_InitialNetRoutingPass(SubPhase):
+	_START:  ClassVar[str] = "Phase 4.1 Initial Net Routing Pass"
+	_FINISH: ClassVar[str] = "Phase 4.1 Initial Net Routing Pass | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase4_InitialRouting(Phase):
+	_START:  ClassVar[str] = "Phase 4 Initial Routing"
+	_FINISH: ClassVar[str] = "Phase 4 Initial Routing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase41_InitialNetRoutingPass,
+	)
+
+	_subphases: Dict[Type[SubPhase], SubPhase]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 4."):
+					for parser in activeParsers:  # type: SubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
+class Phase51_GlobalIteration0(SubPhase):
+	_START:  ClassVar[str] = "Phase 5.1 Global Iteration 0"
+	_FINISH: ClassVar[str] = "Phase 5.1 Global Iteration 0 | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase52_GlobalIteration1(SubPhase):
+	_START:  ClassVar[str] = "Phase 5.2 Global Iteration 1"
+	_FINISH: ClassVar[str] = "Phase 5.2 Global Iteration 1 | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase5_RipUpAndReroute(Phase):
+	_START:  ClassVar[str] = "Phase 5 Rip-up And Reroute"
+	_FINISH: ClassVar[str] = "Phase 5 Rip-up And Reroute | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase51_GlobalIteration0,
+		Phase52_GlobalIteration1
+	)
+
+	_subphases: Dict[Type[SubPhase], SubPhase]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 5."):
+					for parser in activeParsers:  # type: SubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
+class Phase61_DelayCleanUp(SubPhase):
+	_START:  ClassVar[str] = "Phase 6.1 Delay CleanUp"
+	_FINISH: ClassVar[str] = "Phase 6.1 Delay CleanUp | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase62_ClockSkewOptimization(SubPhase):
+	_START:  ClassVar[str] = "Phase 6.2 Clock Skew Optimization"
+	_FINISH: ClassVar[str] = "Phase 6.2 Clock Skew Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase6_DelayAndSkewOptimization(Phase):
+	_START:  ClassVar[str] = "Phase 6 Delay and Skew Optimization"
+	_FINISH: ClassVar[str] = "Phase 6 Delay and Skew Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase61_DelayCleanUp,
+		Phase62_ClockSkewOptimization
+	)
+
+	_subphases: Dict[Type[SubPhase], SubPhase]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 6."):
+					for parser in activeParsers:  # type: SubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
+class Phase71_HoldFixIter(SubPhase):
+	_START:  ClassVar[str] = "Phase 7.1 Hold Fix Iter"
+	_FINISH: ClassVar[str] = "Phase 7.1 Hold Fix Iter | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase7_PostHoldFix(Phase):
+	_START:  ClassVar[str] = "Phase 7 Post Hold Fix"
+	_FINISH: ClassVar[str] = "Phase 7 Post Hold Fix | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase71_HoldFixIter,
+	)
+
+	_subphases: Dict[Type[SubPhase], SubPhase]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 7."):
+					for parser in activeParsers:  # type: SubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
+class Phase8_RouteFinalize(Phase):
+	_START:  ClassVar[str] = "Phase 8 Route finalize"
+	_FINISH: ClassVar[str] = "Phase 8 Route finalize | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase9_VerifyingRoutedNets(Phase):
+	_START:  ClassVar[str] = "Phase 9 Verifying routed nets"
+	_FINISH: ClassVar[str] = "Phase 9 Verifying routed nets | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase10_DepositingRoutes(Phase):
+	_START:  ClassVar[str] = "Phase 10 Depositing Routes"
+	_FINISH: ClassVar[str] = "Phase 10 Depositing Routes | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase11_PostProcessRouting(Phase):
+	_START:  ClassVar[str] = "Phase 11 Post Process Routing"
+	_FINISH: ClassVar[str] = "Phase 11 Post Process Routing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase12_PostRouterTiming(Phase):
+	_START:  ClassVar[str] = "Phase 12 Post Router Timing"
+	_FINISH: ClassVar[str] = "Phase 12 Post Router Timing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase13_PostRouteEventProcessing(Phase):
+	_START:  ClassVar[str] = "Phase 13 Post-Route Event Processing"
+	_FINISH: ClassVar[str] = "Phase 13 Post-Route Event Processing | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class RoutingTask(Task):
+	_START:  ClassVar[str] = "Starting Routing Task"
+	_FINISH: ClassVar[str] = "Ending Routing Task"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase1_BuildRTDesign,
+		Phase2_RouterInitialization,
+		Phase3_GlobalRouting,
+		Phase4_InitialRouting,
+		Phase5_RipUpAndReroute,
+		Phase6_DelayAndSkewOptimization,
+		Phase7_PostHoldFix,
+		Phase8_RouteFinalize,
+		Phase9_VerifyingRoutedNets,
+		Phase10_DepositingRoutes,
+		Phase11_PostProcessRouting,
+		Phase12_PostRouterTiming,
+		Phase13_PostRouteEventProcessing
+	)
+
+	_phases: Dict[Type[Phase], Phase]
+
+	def __init__(self, command: "Command"):
+		super().__init__(command)
+
+		self._phases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		activeParsers: List[Phase] = list(self._phases.values())
+
+		while True:
+			while True:
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase "):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown phase: {line!r}")
+					break
+				elif line.StartsWith("Ending"):
+					nextLine = yield from self._TaskFinish(line)
+					return nextLine
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.TaskTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
