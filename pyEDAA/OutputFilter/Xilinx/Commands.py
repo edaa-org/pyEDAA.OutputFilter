@@ -39,6 +39,7 @@ from pyEDAA.OutputFilter.Xilinx           import VivadoTclCommand
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage, VHDLReportMessage
 from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
+from pyEDAA.OutputFilter.Xilinx.PlaceDesign import PlacerTask
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, PartResourceSummary
@@ -460,6 +461,73 @@ class PlaceDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "place_design"
 	_TIME:        ClassVar[str] = None
 
+	_PARSERS: ClassVar[List[Type[Task]]] = (
+		PlacerTask,
+	)
+
+	_tasks: Dict[Type[Task], Task]
+
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._tasks = {t: t(self) for t in self._PARSERS}
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
+		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
+			raise ProcessorException()
+
+		activeParsers: List[Task] = list(self._tasks.values())
+
+		line = yield line
+		while True:
+			while True:
+				if line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = next(task := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown task: {line}")
+					break
+				elif line.StartsWith(self._TCL_COMMAND):
+					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
+						line._kind |= LineKind.Success
+
+						line = yield line
+						if line.StartsWith(self._TCL_COMMAND + ":"):
+							line._kind |= LineKind.Last
+						else:
+							pass
+
+						lastLine = yield line
+						return lastLine
+				elif not isinstance(line, VivadoMessage):
+					pass
+				# line._kind = LineKind.Unprocessed
+
+				line = yield line
+
+			line = yield line
+
+			while True:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield task.send(line)
+				except StopIteration as ex:
+					task = None
+					line = ex.value
+					break
+
+			if task is not None:
+				line = yield task.send(line)
+
+			activeParsers.remove(parser)
 
 @export
 class PhysicalOptimizeDesign(Command):
