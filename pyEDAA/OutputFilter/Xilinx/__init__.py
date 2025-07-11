@@ -162,7 +162,10 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoTclCommand):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoTclCommand):
 					if line._command == SynthesizeDesign._TCL_COMMAND:
 						self._commands[SynthesizeDesign] = (cmd := SynthesizeDesign(self))
 						line = yield next(gen := cmd.SectionDetector(line))

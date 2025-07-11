@@ -32,7 +32,7 @@
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
-from pyTooling.MetaClasses import ExtendedType, abstractmethod
+from pyTooling.MetaClasses import ExtendedType
 
 from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
@@ -82,7 +82,10 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		line = yield from self._TaskStart(line)
 
 		while True:
-			if line.StartsWith("Ending"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("Ending"):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -152,7 +155,10 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		line = yield from self._PhaseStart(line)
 
 		while True:
-			if line.StartsWith(self._FINISH):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -209,7 +215,10 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		line = yield from self._SubPhaseStart(line)
 
 		while True:
-			if line.StartsWith(self._FINISH):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -263,7 +272,10 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 		line = yield from self._SubSubPhaseStart(line)
 
 		while True:
-			if line.StartsWith(self._FINISH):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -330,7 +342,10 @@ class Phase1_PlacerInitialization(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 1."):
 					for parser in activeParsers:  # type: Section
@@ -338,7 +353,7 @@ class Phase1_PlacerInitialization(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -429,7 +444,10 @@ class Phase25_GlobalPlacePhase2(SubPhase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2.5."):
 					for parser in activeParsers:  # type: SubSubPhase
@@ -437,7 +455,7 @@ class Phase25_GlobalPlacePhase2(SubPhase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subsubphase: {line}")
+						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._SubPhaseFinish(line)
@@ -490,7 +508,10 @@ class Phase2_GlobalPlacement(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2."):
 					for parser in activeParsers:  # type: Phase
@@ -498,7 +519,7 @@ class Phase2_GlobalPlacement(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -618,7 +639,10 @@ class Phase3_DetailPlacement(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 3."):
 					for parser in activeParsers:  # type: Section
@@ -626,7 +650,7 @@ class Phase3_DetailPlacement(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -695,7 +719,10 @@ class Phase43_PlacerReporting(SubPhase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 4.3."):
 					for parser in activeParsers:  # type: SubSubPhase
@@ -703,7 +730,7 @@ class Phase43_PlacerReporting(SubPhase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subsubphase: {line}")
+						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._SubPhaseFinish(line)
@@ -770,7 +797,7 @@ class Phase4_PostPlacementOptimizationAndCleanUp(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -828,7 +855,7 @@ class PlacerTask(Task):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown phase: {line}")
+						raise Exception(f"Unknown phase: {line!r}")
 					break
 				elif line.StartsWith("Ending"):
 					nextLine = yield from self._TaskFinish(line)

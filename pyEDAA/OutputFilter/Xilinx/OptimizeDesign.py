@@ -82,7 +82,10 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		line = yield from self._TaskStart(line)
 
 		while True:
-			if line.StartsWith("Ending"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("Ending"):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -148,7 +151,10 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		line = yield from self._PhaseStart(line)
 
 		while True:
-			if line.StartsWith(self._FINISH):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -202,7 +208,10 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		line = yield from self._SubPhaseStart(line)
 
 		while True:
-			if line.StartsWith(self._FINISH):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -253,7 +262,10 @@ class Phase1_Initialization(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 1."):
 					for parser in activeParsers:  # type: Section
@@ -261,7 +273,7 @@ class Phase1_Initialization(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -325,7 +337,10 @@ class Phase2_TimerUpdateAndTimingDataCollection(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2."):
 					for parser in activeParsers:  # type: Section
@@ -333,7 +348,7 @@ class Phase2_TimerUpdateAndTimingDataCollection(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -445,7 +460,10 @@ class Phase9_Finalization(Phase):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 9."):
 					for parser in activeParsers:  # type: Section
@@ -453,7 +471,7 @@ class Phase9_Finalization(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line}")
+						raise Exception(f"Unknown subphase: {line!r}")
 					break
 				elif line.StartsWith(self._FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -520,7 +538,10 @@ class LogicOptimizationTask(Task):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoMessage):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase "):
 					for parser in activeParsers:  # type: Section
@@ -528,7 +549,7 @@ class LogicOptimizationTask(Task):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown phase: {line}")
+						raise Exception(f"Unknown phase: {line!r}")
 					break
 				elif line.StartsWith("Ending"):
 					nextLine = yield from self._TaskFinish(line)

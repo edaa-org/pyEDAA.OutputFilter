@@ -123,7 +123,10 @@ class Command(Parser):
 
 		end = f"{self._TCL_COMMAND} "
 		while True:
-			if isinstance(line, VivadoMessage):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
 			elif line.StartsWith(end):
 				nextLine = yield from self._CommandFinish(line)
