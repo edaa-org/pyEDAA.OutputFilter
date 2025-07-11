@@ -178,6 +178,9 @@ class Line(metaclass=ExtendedType, slots=True):
 	def __str__(self) -> str:
 		return self._message
 
+	def __repr__(self) -> str:
+		return f"{self._lineNumber}: {self._message}"
+
 
 @export
 class InfoMessage(metaclass=ExtendedType, mixin=True):

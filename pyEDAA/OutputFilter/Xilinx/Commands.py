@@ -39,6 +39,7 @@ from pyEDAA.OutputFilter.Xilinx           import VivadoTclCommand
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage, VHDLReportMessage
 from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
+from pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign import PhysicalSynthesisTask, InitialUpdateTimingTask
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign import PlacerTask
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
@@ -233,14 +234,17 @@ class SynthesizeDesign(Command):
 		line = yield line
 		while True:
 			while True:
-				if line.StartsWith("Start "):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif line.StartsWith("Start "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
 							line = next(section := parser.Generator(line))
 							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 							break
 					else:
-						raise Exception(f"Unknown section: {line}")
+						raise Exception(f"Unknown section: {line!r}")
 					break
 				elif line.StartsWith("Starting "):
 					if line.StartsWith(rtlElaboration._START):
@@ -323,7 +327,10 @@ class LinkDesign(Command):
 
 		end = f"{self._TCL_COMMAND} "
 		while True:
-			if isinstance(line, VivadoMessage):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
 			elif (match := self._ParsingXDCFile_Pattern.match(line._message)) is not None:
 				line._kind = LineKind.Normal
@@ -333,7 +340,10 @@ class LinkDesign(Command):
 
 				line = yield line
 				while True:
-					if isinstance(line, VivadoMessage):
+					if line._kind is LineKind.Empty:
+						line = yield line
+						continue
+					elif isinstance(line, VivadoMessage):
 						messages.append(line)
 					elif (match := self._FinishedParsingXDCFile_Pattern.match(line._message)) is not None and path == Path(match[1]):
 						line._kind = LineKind.Normal
@@ -357,7 +367,10 @@ class LinkDesign(Command):
 
 				line = yield line
 				while True:
-					if isinstance(line, VivadoMessage):
+					if line._kind is LineKind.Empty:
+						line = yield line
+						continue
+					elif isinstance(line, VivadoMessage):
 						messages.append(line)
 					elif (match := self._FinishedParsingXDCFileForCell_Pattern.match(line._message)) is not None and path == Path(match[1]) and cell == match[2]:
 						line._kind = LineKind.Normal
@@ -399,21 +412,22 @@ class OptimizeDesign(Command):
 		self._tasks = {t: t(self) for t in self._PARSERS}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
-		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+		line = yield from self._CommandStart(line)
 
 		activeParsers: List[Task] = list(self._tasks.values())
 
-		line = yield line
 		while True:
 			while True:
-				if line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
-							line = next(task := parser.Generator(line))
+							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line}")
+						raise Exception(f"Unknown task: {line!r}")
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -432,8 +446,6 @@ class OptimizeDesign(Command):
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line
-
-			line = yield line
 
 			while True:
 				# if line.StartsWith("Ending"):
@@ -473,21 +485,22 @@ class PlaceDesign(Command):
 		self._tasks = {t: t(self) for t in self._PARSERS}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
-		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+		line = yield from self._CommandStart(line)
 
 		activeParsers: List[Task] = list(self._tasks.values())
 
-		line = yield line
 		while True:
 			while True:
-				if line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif line.StartsWith("Starting "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
-							line = next(task := parser.Generator(line))
+							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line}")
+						raise Exception(f"Unknown task: {line!r}")
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -506,8 +519,6 @@ class PlaceDesign(Command):
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line
-
-			line = yield line
 
 			while True:
 				# if line.StartsWith("Ending"):
@@ -529,10 +540,79 @@ class PlaceDesign(Command):
 
 			activeParsers.remove(parser)
 
+
 @export
 class PhysicalOptimizeDesign(Command):
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
 	_TIME:        ClassVar[str] = None
+
+	_PARSERS: ClassVar[Tuple[Type[Task], ...]] = (
+		InitialUpdateTimingTask,
+		PhysicalSynthesisTask
+	)
+
+	_tasks: Dict[Type[Task], Task]
+
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._tasks = {t: t(self) for t in self._PARSERS}
+
+	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
+		line = yield from self._CommandStart(line)
+
+		activeParsers: List[Task] = list(self._tasks.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif line.StartsWith("Starting "):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = yield next(task := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown task: {line!r}")
+					break
+				elif line.StartsWith(self._TCL_COMMAND):
+					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
+						line._kind |= LineKind.Success
+
+						line = yield line
+						if line.StartsWith(self._TCL_COMMAND + ":"):
+							line._kind |= LineKind.Last
+						else:
+							pass
+
+						lastLine = yield line
+						return lastLine
+				elif not isinstance(line, VivadoMessage):
+					pass
+				# line._kind = LineKind.Unprocessed
+
+				line = yield line
+
+			while True:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield task.send(line)
+				except StopIteration as ex:
+					task = None
+					line = ex.value
+					break
+
+			if task is not None:
+				line = yield task.send(line)
+
+			activeParsers.remove(parser)
 
 
 @export

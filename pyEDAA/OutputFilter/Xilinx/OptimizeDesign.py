@@ -32,7 +32,7 @@
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
-from pyTooling.MetaClasses import ExtendedType, abstractmethod
+from pyTooling.MetaClasses import ExtendedType
 
 from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
