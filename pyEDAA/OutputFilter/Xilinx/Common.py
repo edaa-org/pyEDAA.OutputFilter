@@ -77,6 +77,7 @@ class LineKind(Flag):
 	TaskTime =               Task | Time
 
 	Phase =                  2**32
+	PhaseDelimiter =         Phase | Delimiter
 	PhaseStart =             Phase | Start
 	PhaseEnd =               Phase | End
 	PhaseTime =              Phase | Time
