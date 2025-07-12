@@ -103,7 +103,7 @@ class Section(BaseParser, BaseSection):
 
 		line = yield line
 		if line.StartsWith("----"):
-			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
@@ -190,7 +190,7 @@ class SubSection(BaseParser, BaseSection):
 
 		line = yield line
 		if line.StartsWith("----"):
-			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter | LineKind.Last
+			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 

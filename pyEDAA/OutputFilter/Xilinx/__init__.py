@@ -56,6 +56,7 @@ ProcessedLine = Union[Line, ProcessorException]
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_duration:                float
 
+	_lines:                   List[ProcessedLine]
 	_preamble:                Preamble
 	_commands:                Dict[Type[Command], Command]
 
@@ -64,8 +65,13 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		self._duration =                0.0
 
+		self._lines =                   []
 		self._preamble =                None
 		self._commands =                {}
+
+	@readonly
+	def Lines(self) -> List[ProcessedLine]:
+		return self._lines
 
 	@readonly
 	def Preamble(self) -> Preamble:
@@ -146,6 +152,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			if line._kind is LineKind.ProcessorError:
 				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
+			self._lines.append(line)
 
 			rawMessageLine = yield line
 
@@ -238,23 +246,19 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 @export
 class Document(Processor):
 	_logfile: Path
-	_lines:   List[Line]
 
 	def __init__(self, logfile: Path) -> None:
 		super().__init__()
 
 		self._logfile = logfile
-		self._lines =   []
 
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
 			with self._logfile.open("r", encoding="utf-8") as f:
 				content = f.read()
 
-			self._lines = []
 			next(generator := self.LineClassification())
 			for rawLine in content.splitlines():
-				line = generator.send(rawLine)
-				self._lines.append(line)
+				generator.send(rawLine)
 
 		self._duration = sw.Duration

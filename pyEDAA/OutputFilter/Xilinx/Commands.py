@@ -260,12 +260,8 @@ class SynthesizeDesign(Command):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
 						line._kind |= LineKind.Success
 
+						# FIXME: use similar style like for _TIME
 						line = yield line
-						if line.StartsWith(self._TCL_COMMAND + ":"):
-							line._kind |= LineKind.Last
-						else:
-							pass
-
 						lastLine = yield line
 						return lastLine
 				elif line.StartsWith("Finished RTL Optimization Phase"):
@@ -348,6 +344,7 @@ class LinkDesign(Command):
 						line = yield line
 						continue
 					elif isinstance(line, VivadoMessage):
+						self._AddMessage(line)
 						messages.append(line)
 					elif (match := self._FinishedParsingXDCFile_Pattern.match(line._message)) is not None and path == Path(match[1]):
 						line._kind = LineKind.Normal
@@ -375,6 +372,7 @@ class LinkDesign(Command):
 						line = yield line
 						continue
 					elif isinstance(line, VivadoMessage):
+						self._AddMessage(line)
 						messages.append(line)
 					elif (match := self._FinishedParsingXDCFileForCell_Pattern.match(line._message)) is not None and path == Path(match[1]) and cell == match[2]:
 						line._kind = LineKind.Normal
@@ -425,6 +423,8 @@ class OptimizeDesign(Command):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Starting ") and not line.StartsWith("Starting Connectivity Check Task"):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -437,16 +437,10 @@ class OptimizeDesign(Command):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
 						line._kind |= LineKind.Success
 
+						# FIXME: use similar style like for _TIME
 						line = yield line
-						if line.StartsWith(self._TCL_COMMAND + ":"):
-							line._kind |= LineKind.Last
-						else:
-							pass
-
 						lastLine = yield line
 						return lastLine
-				elif not isinstance(line, VivadoMessage):
-					pass
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line
@@ -498,6 +492,8 @@ class PlaceDesign(Command):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Starting "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -510,16 +506,10 @@ class PlaceDesign(Command):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
 						line._kind |= LineKind.Success
 
+						# FIXME: use similar style like for _TIME
 						line = yield line
-						if line.StartsWith(self._TCL_COMMAND + ":"):
-							line._kind |= LineKind.Last
-						else:
-							pass
-
 						lastLine = yield line
 						return lastLine
-				elif not isinstance(line, VivadoMessage):
-					pass
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line
@@ -572,6 +562,8 @@ class PhysicalOptimizeDesign(Command):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Starting "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -584,16 +576,10 @@ class PhysicalOptimizeDesign(Command):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
 						line._kind |= LineKind.Success
 
+						# FIXME: use similar style like for _TIME
 						line = yield line
-						if line.StartsWith(self._TCL_COMMAND + ":"):
-							line._kind |= LineKind.Last
-						else:
-							pass
-
 						lastLine = yield line
 						return lastLine
-				elif not isinstance(line, VivadoMessage):
-					pass
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line
@@ -645,6 +631,8 @@ class RouteDesign(Command):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Starting "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -657,16 +645,10 @@ class RouteDesign(Command):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
 						line._kind |= LineKind.Success
 
+						# FIXME: use similar style like for _TIME
 						line = yield line
-						if line.StartsWith(self._TCL_COMMAND + ":"):
-							line._kind |= LineKind.Last
-						else:
-							pass
-
 						lastLine = yield line
 						return lastLine
-				elif not isinstance(line, VivadoMessage):
-					pass
 				# line._kind = LineKind.Unprocessed
 
 				line = yield line

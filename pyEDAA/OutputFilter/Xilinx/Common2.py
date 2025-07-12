@@ -168,7 +168,7 @@ class Preamble(Parser):
 				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 				line._kind = LineKind.Normal
 			elif line.StartsWith("#----"):
-				line._kind = LineKind.SectionDelimiter | LineKind.Last
+				line._kind = LineKind.SectionDelimiter
 				break
 			else:
 				line._kind = LineKind.Verbose
