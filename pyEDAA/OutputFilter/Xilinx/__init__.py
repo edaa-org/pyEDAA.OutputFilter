@@ -142,6 +142,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			if line is None:
 				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
+			else:
+				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+					line._kind = LineKind.Verbose
 
 			line.PreviousLine = lastLine
 			lastLine = line

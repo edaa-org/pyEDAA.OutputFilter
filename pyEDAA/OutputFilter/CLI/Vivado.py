@@ -237,32 +237,44 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 	def GetColorOfLine(self, line: Line) -> str:
 		colorDict = {
-			"normal":            "WHITE",
-			"info":              "BLUE",
-			"warning":           "YELLOW",
-			"critical":          "MAGENTA",
-			"error":             "RED",
-			"tcl":               "CYAN",
-			"success":           "GREEN",
-			"failed":            "RED",
-			"verbose":           "GRAY",
-			"unprocessed":       "DARK_RED",  #"DARK_GRAY",
-			"sectionStart":      "DARK_CYAN",
-			"sectionEnd":        "DARK_CYAN",
-			"sectionTime":       "DARK_GREEN",
-			"subsectionStart":   "DARK_CYAN",
-			"subsectionEnd":     "DARK_CYAN",
-			"subsectionTime":    "DARK_GREEN",
-			"taskStart":         "DARK_CYAN",
-			"taskEnd":           "DARK_CYAN",
-			"taskTime":          "DARK_GREEN",
-			"phaseStart":        "YELLOW",
-			"phaseEnd":          "YELLOW",
-			"phaseTime":         "DARK_GREEN",
-			"subphaseStart":     "YELLOW",
-			"subphaseEnd":       "YELLOW",
-			"subphaseTime":      "DARK_GREEN",
-			"paragraphHeadline": "DARK_YELLOW"
+			"normal":               "WHITE",
+			"info":                 "GRAY", # "DARK_BLUE",
+			"warning":              "YELLOW",
+			"critical":             "MAGENTA",
+			"error":                "RED",
+			"tcl":                  "CYAN",
+			"success":              "GREEN",
+			"failed":               "RED",
+			"verbose":              "GRAY",
+			"unprocessed":          "DARK_GRAY",
+			"empty":                "NOCOLOR",
+			"sectionDelimiter":     "DARK_GRAY",
+			"sectionStart":         "DARK_CYAN",
+			"sectionEnd":           "DARK_CYAN",
+			"sectionTime":          "DARK_GREEN",
+			"subsectionStart":      "DARK_CYAN",
+			"subsectionEnd":        "DARK_CYAN",
+			"subsectionTime":       "DARK_GREEN",
+			"taskStart":            "YELLOW",
+			"taskEnd":              "YELLOW",
+			"taskTime":             "DARK_GREEN",
+			"phaseStart":           "BLUE",
+			"phaseEnd":             "BLUE",
+			"phaseTime":            "DARK_GREEN",
+			"subphaseStart":        "DARK_CYAN",
+			"subphaseEnd":          "DARK_CYAN",
+			"subphaseTime":         "DARK_GREEN",
+			"subsubphaseStart":     "DARK_CYAN",
+			"subsubphaseEnd":       "DARK_CYAN",
+			"subsubphaseTime":      "DARK_GREEN",
+			"subsubsubphaseStart":  "DARK_CYAN",
+			"subsubsubphaseEnd":    "DARK_CYAN",
+			"subsubsubphaseTime":   "DARK_GREEN",
+			"paragraphHeadline":    "DARK_YELLOW",
+			"hierarchyStart":       "DARK_CYAN",
+			"hierarchyEnd":         "DARK_GRAY",
+			"xdcStart":             "DARK_CYAN",
+			"xdcEnd":               "DARK_GRAY",
 		}
 
 		if line._kind is LineKind.Normal:
@@ -284,8 +296,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			return colorDict["failed"]
 		elif LineKind.Verbose in line.Kind:
 			return colorDict["verbose"]
-		elif LineKind.Unprocessed in line.Kind:
+		elif line.Kind is LineKind.Unprocessed:
 			return colorDict["unprocessed"]
+		elif line.Kind is LineKind.Empty:
+			return colorDict["empty"]
 		elif LineKind.Start in line.Kind:
 			if LineKind.Task in line.Kind:
 				return colorDict["taskStart"]
@@ -293,6 +307,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["phaseStart"]
 			elif LineKind.SubPhase in line.Kind:
 				return colorDict["subphaseStart"]
+			elif LineKind.SubSubPhase in line.Kind:
+				return colorDict["subsubphaseStart"]
+			elif LineKind.SubSubSubPhase in line.Kind:
+				return colorDict["subsubsubphaseStart"]
 			elif LineKind.Section in line.Kind:
 				return colorDict["sectionStart"]
 			elif LineKind.SubSection in line.Kind:
@@ -306,6 +324,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["phaseEnd"]
 			elif LineKind.SubPhase in line.Kind:
 				return colorDict["subphaseEnd"]
+			elif LineKind.SubSubPhase in line.Kind:
+				return colorDict["subsubphaseEnd"]
+			elif LineKind.SubSubSubPhase in line.Kind:
+				return colorDict["subsubsubphaseEnd"]
 			elif LineKind.Section in line.Kind:
 				return colorDict["sectionEnd"]
 			elif LineKind.SubSection in line.Kind:
@@ -319,12 +341,21 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["phaseTime"]
 			elif LineKind.SubPhase in line.Kind:
 				return colorDict["subphaseTime"]
+			elif LineKind.SubSubPhase in line.Kind:
+				return colorDict["subsubphaseTime"]
+			elif LineKind.SubSubSubPhase in line.Kind:
+				return colorDict["subsubsubphaseTime"]
 			elif LineKind.Section in line.Kind:
 				return colorDict["sectionTime"]
 			elif LineKind.SubSection in line.Kind:
 				return colorDict["subsectionTime"]
 			else:
 				raise Exception(f"Unknown LineKind.****Time '{line._kind}' for line {line._lineNumber}.")
+		elif LineKind.Delimiter in line.Kind:
+			if LineKind.Section in line.Kind:
+				return colorDict["sectionDelimiter"]
+			else:
+				raise Exception(f"Unknown LineKind.****Delimiter '{line._kind}' for line {line._lineNumber}.")
 		elif line.Kind is LineKind.PhaseFinal:
 			return colorDict["verbose"]
 		elif line.Kind is LineKind.ParagraphHeadline:

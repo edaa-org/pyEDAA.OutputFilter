@@ -93,26 +93,39 @@ class LineKind(Flag):
 	SubSubPhaseEnd =         SubSubPhase | End
 	SubSubPhaseTime =        SubSubPhase | Time
 
-	Section =                2**35
+	SubSubSubPhase =         2**35
+	SubSubSubPhaseStart =    SubSubSubPhase | Start
+	SubSubSubPhaseEnd =      SubSubSubPhase | End
+	SubSubSubPhaseTime =     SubSubSubPhase | Time
+
+	Section =                2**36
 	SectionDelimiter =       Section | Delimiter
 	SectionStart =           Section | Start
 	SectionEnd =             Section | End
 
-	SubSection =             2**36
+	SubSection =             2**37
 	SubSectionDelimiter =    SubSection | Delimiter
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Paragraph =              2**37
+	Paragraph =              2**38
 	ParagraphHeadline =      Paragraph | Header
 
-	Table =                  2**38
+	Hierarchy =              2**39
+	HierarchyStart =         Hierarchy | Start
+	HierarchyEnd =           Hierarchy | End
+
+	XDC =                    2**40
+	XDCStart =               XDC | Start
+	XDCEnd =                 XDC | End
+
+	Table =                  2**41
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	TclCommand =             2**39
+	TclCommand =             2**42
 	GenericTclCommand =      TclCommand | 2**0
 	VivadoTclCommand =       TclCommand | 2**1
 

@@ -287,6 +287,63 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 
 
 @export
+class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+
+	_subsubphase: SubSubPhase
+	_duration: float
+
+	def __init__(self, subsubphase: SubSubPhase):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._subsubphase = subsubphase
+
+	def _SubSubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException()
+
+		line._kind = LineKind.SubSubSubPhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _SubSubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException()
+
+		line._kind = LineKind.SubSubSubPhaseEnd
+		line = yield line
+
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.SubSubSubPhaseTime
+				break
+
+			line = yield line
+
+		nextLine = yield line
+		return nextLine
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubSubPhaseStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith(self._FINISH):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+
+			line = yield line
+
+		nextLine = yield from self._SubSubSubPhaseFinish(line)
+		return nextLine
+
+
+@export
 class Phase11_PlacerInitializationNetlistSorting(SubPhase):
 	_START:  ClassVar[str] = "Phase 1.1 Placer Initialization Netlist Sorting"
 	_FINISH: ClassVar[str] = "Phase 1.1 Placer Initialization Netlist Sorting | Checksum:"
@@ -675,10 +732,137 @@ class Phase3_DetailPlacement(Phase):
 
 
 @export
+class Phase4111_BUFGInsertion(SubSubSubPhase):
+	_START:  ClassVar[str] = "Phase 4.1.1.1 BUFG Insertion"
+	_FINISH: ClassVar[str] = "Phase 4.1.1.1 BUFG Insertion | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase4112_PostPlacementTimingOptimization(SubSubSubPhase):
+	_START:  ClassVar[str] = "Phase 4.1.1.2 Post Placement Timing Optimization"
+	_FINISH: ClassVar[str] = "Phase 4.1.1.2 Post Placement Timing Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase411_PostPlacementOptimization(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 4.1.1 Post Placement Optimization"
+	_FINISH: ClassVar[str] = None  # Phase 4.1.1 Post Placement Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase4111_BUFGInsertion,
+		Phase4112_PostPlacementTimingOptimization
+	)
+
+	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
+
+	def __init__(self, subsubphase: SubSubPhase):
+		super().__init__(subsubphase)
+
+		self._subsubsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubsubphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 4.1.1."):
+					for parser in activeParsers:  # type: SubSubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.SubSubPhaseTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
 class Phase41_PostCommitOptimization(SubPhase):
 	_START:  ClassVar[str] = "Phase 4.1 Post Commit Optimization"
 	_FINISH: ClassVar[str] = "Phase 4.1 Post Commit Optimization | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase411_PostPlacementOptimization,
+	)
+
+	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 4.1."):
+					for parser in activeParsers:  # type: SubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
 
 
 @export
