@@ -68,26 +68,48 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				self.WriteError(f"If option '--stdin' is set, then option '--file' can't be set, too.")
 				self.Exit(2)
 
-			self._Streaming(args)
+			self.WriteVerbose("Reading lines from STDIN ...")
+			inputFile = sys_stdin
+		elif args.logfile is None:
+			self.WriteError(f"No input file (<logfile> or '-' for STDIN) specified via option '--file=<logfile>'.")
+			self.Exit(2)
+		elif args.logfile == "-":
+			self.WriteVerbose("Reading lines from STDIN ...")
+			inputFile = sys_stdin
 		else:
-			if args.logfile is None:
-				self.WriteError(f"Either option '--stdin' or '--file=<logfile>' is missing.")
-				self.Exit(3)
-
 			logfile = Path(args.logfile)
 			if not logfile.exists():
 				self.WriteError(f"Vivado log file '{logfile}' doesn't exist.")
+				self.Exit(3)
+
+			try:
+				inputFile = logfile.open("r")
+			except OSError as ex:
+				self.WriteError(f"Vivado log file '{logfile}' cannot be opened.")
+				self.WriteError(f"  {ex}")
 				self.Exit(4)
 
-			processor = Document(logfile)
-			processor.Parse()
+		processor = Processor()
 
-			if args.colored:
-				getColor = self.GetColorOfLine
+		if args.colored:
+			writeOutput = self._WriteColoredOutput
+		else:
+			writeOutput = self._WriteOutput
 
-				for line in processor.Lines:
-					color = getColor(line)
-					self.WriteNormal(f"{{{color}}}{line}{{NOCOLOR}}".format(**self.Foreground))
+		with Stopwatch() as sw:
+			next(generator := processor.LineClassification())
+			for rawLine in inputFile.readlines():
+				line = generator.send(rawLine.rstrip("\r\n"))
+
+				writeOutput(line)
+
+	def _WriteOutput(self, line: Line):
+		self.WriteNormal(f"{line}")
+
+	def _WriteColoredOutput(self, line: Line):
+		color = self.GetColorOfLine(line)
+		self.WriteNormal(f"{{{color}}}{line}{{NOCOLOR}}".format(**self.Foreground))
+
 
 		# if args.info:
 		# 	self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
@@ -170,71 +192,6 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 		self.ExitOnPreviousErrors()
 
-	# def ColoredOutput(self, lines: Iterable[Line]) -> None:
-	# 	for i, line in enumerate(lines, start=1):
-	# 		message = str(line).replace("{", "{{").replace("}", "}}")
-	# 		if isinstance(line, ProcessorException):
-	# 			print(f"{i:4}: {{RED}}EXCEPTION:{{NOCOLOR}} {message}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.Normal:
-	# 			print(f"{i:4}: {line.Message}")
-	# 		elif LineKind.Message in line.Kind:
-	# 			if line.Kind is LineKind.InfoMessage:
-	# 				print(f"{i:4}: {{BLUE}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 			elif line.Kind is LineKind.WarningMessage:
-	# 				print(f"{i:4}: {{YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 			elif line.Kind is LineKind.CriticalWarningMessage:
-	# 				print(f"{i:4}: {{MAGENTA}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 			elif line.Kind is LineKind.ErrorMessage:
-	# 				print(f"{i:4}: {{RED}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif LineKind.TclCommand in line.Kind:
-	# 			print(f"{i:4}: {{CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif (LineKind.Start in line.Kind) or (LineKind.End in line.Kind):
-	# 			if LineKind.Phase in line.Kind:
-	# 				print(f"{i:4}: {{YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 			else:
-	# 				print(f"{i:4}: {{DARK_CYAN}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.TaskTime or line.Kind is LineKind.PhaseTime or line.Kind is LineKind.SubPhaseTime or line.Kind is LineKind.SubSubPhaseTime:
-	# 			print(f"{i:4}: {{DARK_GREEN}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.PhaseFinal:
-	# 			print(f"{i:4}: {{DARK_GRAY}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.ParagraphHeadline:
-	# 			print(f"{i:4}: {{DARK_YELLOW}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif LineKind.Table in line.Kind:
-	# 			print(f"{i:4}: {{WHITE}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif LineKind.Delimiter in line.Kind:
-	# 			print(f"{i:4}: {{GRAY}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif LineKind.Verbose in line.Kind:
-	# 			print(f"{i:4}: {{DARK_GRAY}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif LineKind.Success in line.Kind:
-	# 			print(f"{i:4}: {{GREEN}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.Empty:
-	# 			print(f"{i:4}:")
-	# 		elif line.Kind is LineKind.ProcessorError:
-	# 			print(f"{i:4}: {{RED}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		elif line.Kind is LineKind.Unprocessed:
-	# 			print(f"{i:4}: {{DARK_RED}}{message}{{NOCOLOR}}".format(**self.Foreground))
-	# 		else:
-	# 			print(f"{i:4}: Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
-	# 			print(line)
-	# 			raise Exception(f"Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
-
-	def _Streaming(self, args: Namespace) -> None:
-		processor = Processor()
-
-		if args.colored:
-			getColor = self.GetColorOfLine
-		else:
-			getColor = None
-
-		with Stopwatch() as sw:
-			next(generator := processor.LineClassification())
-			for rawLine in sys_stdin.readlines():
-				line = generator.send(rawLine.rstrip("\r\n"))
-
-				if getColor is not None:
-					color = getColor(line)
-					self.WriteNormal(f"{{{color}}}{line}{{NOCOLOR}}".format(**self.Foreground))
-
 	def GetColorOfLine(self, line: Line) -> str:
 		colorDict = {
 			"normal":               "WHITE",
@@ -275,6 +232,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			"hierarchyEnd":         "DARK_GRAY",
 			"xdcStart":             "DARK_CYAN",
 			"xdcEnd":               "DARK_GRAY",
+			"table":                "GRAY",
 		}
 
 		if line._kind is LineKind.Normal:
@@ -351,6 +309,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["subsectionTime"]
 			else:
 				raise Exception(f"Unknown LineKind.****Time '{line._kind}' for line {line._lineNumber}.")
+		elif LineKind.Table in line.Kind:
+			return colorDict["table"]
 		elif LineKind.Delimiter in line.Kind:
 			if LineKind.Section in line.Kind:
 				return colorDict["sectionDelimiter"]
