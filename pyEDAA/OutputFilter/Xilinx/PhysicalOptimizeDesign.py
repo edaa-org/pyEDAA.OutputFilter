@@ -29,139 +29,17 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar, List, Type, Dict, Tuple
+from typing import Generator, ClassVar, List, Type, Tuple
 
-from pyTooling.Decorators  import export
-from pyTooling.MetaClasses import ExtendedType
+from pyTooling.Decorators import export
 
 from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
-from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser, VivadoMessagesMixin
-
-
-@export
-class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
-	# _START:  ClassVar[str]
-	# _FINISH: ClassVar[str]
-	_TIME:   ClassVar[str] = "Time (s):"
-
-	_command:  "Command"
-	_duration: float
-
-	def __init__(self, command: "Command"):
-		super().__init__()
-		VivadoMessagesMixin.__init__(self)
-
-		self._command = command
-
-	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
-			raise ProcessorException()
-
-		line._kind = LineKind.TaskStart
-		nextLine = yield line
-		return nextLine
-
-	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
-
-		line._kind = LineKind.TaskEnd
-		line = yield line
-		while self._TIME is not None:
-			if line.StartsWith(self._TIME):
-				line._kind = LineKind.TaskTime
-				break
-
-			line = yield line
-
-		line = yield line
-		return line
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._TaskStart(line)
-
-		while True:
-			if line._kind is LineKind.Empty:
-				line = yield line
-				continue
-			elif self._FINISH is not None and line.StartsWith("Ending"):
-				break
-			elif isinstance(line, VivadoMessage):
-				self._AddMessage(line)
-			elif line.StartsWith(self._TIME):
-				line._kind = LineKind.TaskTime
-				nextLine = yield line
-				return nextLine
-
-			line = yield line
-
-		nextLine = yield from self._TaskFinish(line)
-		return nextLine
-
-
-@export
-class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
-	# _START:  ClassVar[str]
-	# _FINISH: ClassVar[str]
-	_TIME:   ClassVar[str] = "Time (s):"
-
-	_task:     Task
-	_duration: float
-
-	def __init__(self, task: Task):
-		super().__init__()
-		VivadoMessagesMixin.__init__(self)
-
-		self._task = task
-
-	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
-			raise ProcessorException()
-
-		line._kind = LineKind.PhaseStart
-		nextLine = yield line
-		return nextLine
-
-	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
-
-		line._kind = LineKind.PhaseEnd
-		line = yield line
-
-		if self._TIME is not None:
-			while self._TIME is not None:
-				if line.StartsWith(self._TIME):
-					line._kind = LineKind.PhaseTime
-					break
-
-				line = yield line
-
-			line = yield line
-
-		return line
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		while True:
-			if line._kind is LineKind.Empty:
-				line = yield line
-				continue
-			elif isinstance(line, VivadoMessage):
-				self._AddMessage(line)
-			elif line.StartsWith(self._FINISH):
-				break
-
-			line = yield line
-
-		nextLine = yield from self._PhaseFinish(line)
-		return nextLine
+from pyEDAA.OutputFilter.Xilinx.Common2   import Task, Phase
 
 
 @export
 class InitialUpdateTimingTask(Task):
+	_NAME:   ClassVar[str] = "Initial Update Timing Task"
 	_START:  ClassVar[str] = "Starting Initial Update Timing Task"
 	_FINISH: ClassVar[str] = None
 
@@ -192,6 +70,7 @@ class Phase4_CriticalPathOptimization(Phase):
 
 @export
 class PhysicalSynthesisTask(Task):
+	_NAME:   ClassVar[str] = "Physical Synthesis Task"
 	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
 
@@ -201,13 +80,6 @@ class PhysicalSynthesisTask(Task):
 		Phase3_CriticalPathOptimization,
 		Phase4_CriticalPathOptimization
 	)
-
-	_phases: Dict[Type[Phase], Phase]
-
-	def __init__(self, command: "Command"):
-		super().__init__(command)
-
-		self._phases = {p: p(self) for p in self._PARSERS}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)

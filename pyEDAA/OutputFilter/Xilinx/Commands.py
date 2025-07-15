@@ -137,7 +137,41 @@ class Command(Parser):
 
 
 @export
-class SynthesizeDesign(Command):
+class CommandWithSections(Command):
+	_sections:  Dict[Type[Section], Section]
+
+	def __init__(self, processor: "Processor") -> None:
+		super().__init__(processor)
+
+		self._sections =  {p: p(self) for p in self._PARSERS}
+
+	@readonly
+	def Sections(self) -> Dict[Type[Section], Section]:
+		return self._sections
+
+	def __getitem__(self, key: Type[Section]) -> Section:
+		return self._sections[key]
+
+
+@export
+class CommandWithTasks(Command):
+	_tasks: Dict[Type[Task], Task]
+
+	def __init__(self, processor: "Processor"):
+		super().__init__(processor)
+
+		self._tasks = {t: t(self) for t in self._PARSERS}
+
+	@readonly
+	def Tasks(self) -> Dict[Type[Task], Task]:
+		return self._tasks
+
+	def __getitem__(self, key: Type[Task]) -> Task:
+		return self._tasks[key]
+
+
+@export
+class SynthesizeDesign(CommandWithSections):
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
 	_PARSERS:     ClassVar[List[Type[Section]]] = (
 		RTLElaboration,
@@ -164,13 +198,6 @@ class SynthesizeDesign(Command):
 		ROM_RAM_DSP_SR_Retiming3,
 		WritingSynthesisReport,
 	)
-
-	_sections:  Dict[Type[Section], Section]
-
-	def __init__(self, processor: "Processor") -> None:
-		super().__init__(processor)
-
-		self._sections =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def HasLatches(self) -> bool:
@@ -393,7 +420,7 @@ class LinkDesign(Command):
 
 
 @export
-class OptimizeDesign(Command):
+class OptimizeDesign(CommandWithTasks):
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -405,13 +432,6 @@ class OptimizeDesign(Command):
 		FinalCleanupTask,
 		NetlistObfuscationTask
 	)
-
-	_tasks: Dict[Type[Task], Task]
-
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
-
-		self._tasks = {t: t(self) for t in self._PARSERS}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		line = yield from self._CommandStart(line)
@@ -467,20 +487,13 @@ class OptimizeDesign(Command):
 
 
 @export
-class PlaceDesign(Command):
+class PlaceDesign(CommandWithTasks):
 	_TCL_COMMAND: ClassVar[str] = "place_design"
 	_TIME:        ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[Task], ...]] = (
 		PlacerTask,
 	)
-
-	_tasks: Dict[Type[Task], Task]
-
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
-
-		self._tasks = {t: t(self) for t in self._PARSERS}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		line = yield from self._CommandStart(line)
@@ -536,7 +549,7 @@ class PlaceDesign(Command):
 
 
 @export
-class PhysicalOptimizeDesign(Command):
+class PhysicalOptimizeDesign(CommandWithTasks):
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -545,13 +558,6 @@ class PhysicalOptimizeDesign(Command):
 		PhysicalSynthesisTask
 	)
 
-	_tasks: Dict[Type[Task], Task]
-
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
-
-		self._tasks = {t: t(self) for t in self._PARSERS}
-
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		line = yield from self._CommandStart(line)
 
@@ -606,20 +612,13 @@ class PhysicalOptimizeDesign(Command):
 
 
 @export
-class RouteDesign(Command):
+class RouteDesign(CommandWithTasks):
 	_TCL_COMMAND: ClassVar[str] = "route_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Task], ...]] = (
 		RoutingTask,
 	)
-
-	_tasks: Dict[Type[Task], Task]
-
-	def __init__(self, processor: "Processor"):
-		super().__init__(processor)
-
-		self._tasks = {t: t(self) for t in self._PARSERS}
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, Line]:
 		line = yield from self._CommandStart(line)
