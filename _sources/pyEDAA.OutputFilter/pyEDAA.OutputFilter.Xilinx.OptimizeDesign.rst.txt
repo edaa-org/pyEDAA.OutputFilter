@@ -1,0 +1,360 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+=========================================
+pyEDAA.OutputFilter.Xilinx.OptimizeDesign
+=========================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.OptimizeDesign
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.OptimizeDesign
+
+
+**Classes**
+
+- :py:class:`Task`:
+  Undocumented.
+
+- :py:class:`Phase`:
+  Undocumented.
+
+- :py:class:`SubPhase`:
+  Undocumented.
+
+- :py:class:`Phase11_CoreGenerationAndDesignSetup`:
+  Undocumented.
+
+- :py:class:`Phase12_SetupConstraintsAndSortNetlist`:
+  Undocumented.
+
+- :py:class:`Phase1_Initialization`:
+  Undocumented.
+
+- :py:class:`Phase21_TimerUpdate`:
+  Undocumented.
+
+- :py:class:`Phase22_TimingDataCollection`:
+  Undocumented.
+
+- :py:class:`Phase2_TimerUpdateAndTimingDataCollection`:
+  Undocumented.
+
+- :py:class:`Phase3_Retarget`:
+  Undocumented.
+
+- :py:class:`Phase4_ConstantPropagation`:
+  Undocumented.
+
+- :py:class:`Phase5_Sweep`:
+  Undocumented.
+
+- :py:class:`Phase6_BUFGOptimization`:
+  Undocumented.
+
+- :py:class:`Phase7_ShiftRegisterOptimization`:
+  Undocumented.
+
+- :py:class:`Phase8_PostProcessingNetlist`:
+  Undocumented.
+
+- :py:class:`Phase91_FinalizingDesignCoresAndUpdatingShapes`:
+  Undocumented.
+
+- :py:class:`Phase92_VerifyingNetlistConnectivity`:
+  Undocumented.
+
+- :py:class:`Phase9_Finalization`:
+  Undocumented.
+
+- :py:class:`DRCTask`:
+  Undocumented.
+
+- :py:class:`CacheTimingInformationTask`:
+  Undocumented.
+
+- :py:class:`LogicOptimizationTask`:
+  Undocumented.
+
+- :py:class:`PowerOptimizationTask`:
+  Undocumented.
+
+- :py:class:`FinalCleanupTask`:
+  Undocumented.
+
+- :py:class:`NetlistObfuscationTask`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: Task
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Task
+      :parts: 1
+
+.. autoclass:: Phase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase
+      :parts: 1
+
+.. autoclass:: SubPhase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SubPhase
+      :parts: 1
+
+.. autoclass:: Phase11_CoreGenerationAndDesignSetup
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase11_CoreGenerationAndDesignSetup
+      :parts: 1
+
+.. autoclass:: Phase12_SetupConstraintsAndSortNetlist
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase12_SetupConstraintsAndSortNetlist
+      :parts: 1
+
+.. autoclass:: Phase1_Initialization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase1_Initialization
+      :parts: 1
+
+.. autoclass:: Phase21_TimerUpdate
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase21_TimerUpdate
+      :parts: 1
+
+.. autoclass:: Phase22_TimingDataCollection
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase22_TimingDataCollection
+      :parts: 1
+
+.. autoclass:: Phase2_TimerUpdateAndTimingDataCollection
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase2_TimerUpdateAndTimingDataCollection
+      :parts: 1
+
+.. autoclass:: Phase3_Retarget
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase3_Retarget
+      :parts: 1
+
+.. autoclass:: Phase4_ConstantPropagation
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4_ConstantPropagation
+      :parts: 1
+
+.. autoclass:: Phase5_Sweep
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase5_Sweep
+      :parts: 1
+
+.. autoclass:: Phase6_BUFGOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase6_BUFGOptimization
+      :parts: 1
+
+.. autoclass:: Phase7_ShiftRegisterOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase7_ShiftRegisterOptimization
+      :parts: 1
+
+.. autoclass:: Phase8_PostProcessingNetlist
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase8_PostProcessingNetlist
+      :parts: 1
+
+.. autoclass:: Phase91_FinalizingDesignCoresAndUpdatingShapes
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase91_FinalizingDesignCoresAndUpdatingShapes
+      :parts: 1
+
+.. autoclass:: Phase92_VerifyingNetlistConnectivity
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase92_VerifyingNetlistConnectivity
+      :parts: 1
+
+.. autoclass:: Phase9_Finalization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase9_Finalization
+      :parts: 1
+
+.. autoclass:: DRCTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: DRCTask
+      :parts: 1
+
+.. autoclass:: CacheTimingInformationTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: CacheTimingInformationTask
+      :parts: 1
+
+.. autoclass:: LogicOptimizationTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: LogicOptimizationTask
+      :parts: 1
+
+.. autoclass:: PowerOptimizationTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PowerOptimizationTask
+      :parts: 1
+
+.. autoclass:: FinalCleanupTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: FinalCleanupTask
+      :parts: 1
+
+.. autoclass:: NetlistObfuscationTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: NetlistObfuscationTask
+      :parts: 1

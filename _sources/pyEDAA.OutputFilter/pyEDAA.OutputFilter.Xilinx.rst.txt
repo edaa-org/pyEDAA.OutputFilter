@@ -1,0 +1,68 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+==========================
+pyEDAA.OutputFilter.Xilinx
+==========================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx
+
+
+
+**Submodules**
+
+.. toctree::
+   :maxdepth: 1
+
+   pyEDAA.OutputFilter.Xilinx.Commands
+   pyEDAA.OutputFilter.Xilinx.Common
+   pyEDAA.OutputFilter.Xilinx.Common2
+   pyEDAA.OutputFilter.Xilinx.Exception
+   pyEDAA.OutputFilter.Xilinx.OptimizeDesign
+   pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign
+   pyEDAA.OutputFilter.Xilinx.PlaceDesign
+   pyEDAA.OutputFilter.Xilinx.RouteDesign
+   pyEDAA.OutputFilter.Xilinx.SynthesizeDesign
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx
+
+
+**Classes**
+
+- :py:class:`Processor`:
+  Undocumented.
+
+- :py:class:`Document`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: Processor
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Processor
+      :parts: 1
+
+.. autoclass:: Document
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Document
+      :parts: 1

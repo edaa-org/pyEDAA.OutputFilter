@@ -1,0 +1,306 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+===================================
+pyEDAA.OutputFilter.Xilinx.Commands
+===================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.Commands
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.Commands
+
+
+**Exceptions**
+
+- :py:exc:`NotPresentException`:
+  Base-class for all pyEDAA.OutputFilter specific exceptions.
+
+- :py:exc:`SectionNotPresentException`:
+  Base-class for all pyEDAA.OutputFilter specific exceptions.
+
+
+
+**Classes**
+
+- :py:class:`HandlingCustomAttributes1`:
+  Undocumented.
+
+- :py:class:`HandlingCustomAttributes2`:
+  Undocumented.
+
+- :py:class:`ROM_RAM_DSP_SR_Retiming1`:
+  Undocumented.
+
+- :py:class:`ROM_RAM_DSP_SR_Retiming2`:
+  Undocumented.
+
+- :py:class:`ROM_RAM_DSP_SR_Retiming3`:
+  Undocumented.
+
+- :py:class:`Command`:
+  Undocumented.
+
+- :py:class:`CommandWithSections`:
+  Undocumented.
+
+- :py:class:`CommandWithTasks`:
+  Undocumented.
+
+- :py:class:`SynthesizeDesign`:
+  Undocumented.
+
+- :py:class:`LinkDesign`:
+  Undocumented.
+
+- :py:class:`OptimizeDesign`:
+  Undocumented.
+
+- :py:class:`PlaceDesign`:
+  Undocumented.
+
+- :py:class:`PhysicalOptimizeDesign`:
+  Undocumented.
+
+- :py:class:`RouteDesign`:
+  Undocumented.
+
+- :py:class:`WriteBitstream`:
+  Undocumented.
+
+- :py:class:`ReportDRC`:
+  Undocumented.
+
+- :py:class:`ReportMethodology`:
+  Undocumented.
+
+- :py:class:`ReportPower`:
+  Undocumented.
+
+
+
+---------------------
+
+**Exceptions**
+
+
+
+
+.. autoexception:: NotPresentException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: NotPresentException
+      :parts: 1
+
+.. autoexception:: SectionNotPresentException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SectionNotPresentException
+      :parts: 1
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: HandlingCustomAttributes1
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: HandlingCustomAttributes1
+      :parts: 1
+
+.. autoclass:: HandlingCustomAttributes2
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: HandlingCustomAttributes2
+      :parts: 1
+
+.. autoclass:: ROM_RAM_DSP_SR_Retiming1
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ROM_RAM_DSP_SR_Retiming1
+      :parts: 1
+
+.. autoclass:: ROM_RAM_DSP_SR_Retiming2
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ROM_RAM_DSP_SR_Retiming2
+      :parts: 1
+
+.. autoclass:: ROM_RAM_DSP_SR_Retiming3
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ROM_RAM_DSP_SR_Retiming3
+      :parts: 1
+
+.. autoclass:: Command
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Command
+      :parts: 1
+
+.. autoclass:: CommandWithSections
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: CommandWithSections
+      :parts: 1
+
+.. autoclass:: CommandWithTasks
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: CommandWithTasks
+      :parts: 1
+
+.. autoclass:: SynthesizeDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SynthesizeDesign
+      :parts: 1
+
+.. autoclass:: LinkDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: LinkDesign
+      :parts: 1
+
+.. autoclass:: OptimizeDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: OptimizeDesign
+      :parts: 1
+
+.. autoclass:: PlaceDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PlaceDesign
+      :parts: 1
+
+.. autoclass:: PhysicalOptimizeDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PhysicalOptimizeDesign
+      :parts: 1
+
+.. autoclass:: RouteDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RouteDesign
+      :parts: 1
+
+.. autoclass:: WriteBitstream
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: WriteBitstream
+      :parts: 1
+
+.. autoclass:: ReportDRC
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ReportDRC
+      :parts: 1
+
+.. autoclass:: ReportMethodology
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ReportMethodology
+      :parts: 1
+
+.. autoclass:: ReportPower
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ReportPower
+      :parts: 1

@@ -1,0 +1,262 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+=================================
+pyEDAA.OutputFilter.Xilinx.Common
+=================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.Common
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.Common
+
+
+**Classes**
+
+- :py:class:`LineKind`:
+  Support for flags
+
+- :py:class:`Line`:
+  This class represents any line in a log file.
+
+- :py:class:`InfoMessage`:
+  Undocumented.
+
+- :py:class:`WarningMessage`:
+  Undocumented.
+
+- :py:class:`CriticalWarningMessage`:
+  Undocumented.
+
+- :py:class:`ErrorMessage`:
+  Undocumented.
+
+- :py:class:`VivadoMessage`:
+  This class represents an AMD/Xilinx Vivado message.
+
+- :py:class:`VivadoInfoMessage`:
+  This class represents an AMD/Xilinx Vivado info message.
+
+- :py:class:`VivadoIrregularInfoMessage`:
+  This class represents an irregular AMD/Xilinx Vivado info message.
+
+- :py:class:`VivadoWarningMessage`:
+  This class represents an AMD/Xilinx Vivado warning message.
+
+- :py:class:`VivadoIrregularWarningMessage`:
+  This class represents an AMD/Xilinx Vivado warning message.
+
+- :py:class:`VivadoCriticalWarningMessage`:
+  This class represents an AMD/Xilinx Vivado critical warning message.
+
+- :py:class:`VivadoErrorMessage`:
+  This class represents an AMD/Xilinx Vivado error message.
+
+- :py:class:`VHDLReportMessage`:
+  This class represents an AMD/Xilinx Vivado info message.
+
+- :py:class:`VHDLAssertionMessage`:
+  This class represents an AMD/Xilinx Vivado info message.
+
+- :py:class:`TclCommand`:
+  This class represents any line in a log file.
+
+- :py:class:`VivadoTclCommand`:
+  This class represents any line in a log file.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: LineKind
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: LineKind
+      :parts: 1
+
+.. autoclass:: Line
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Line
+      :parts: 1
+
+.. autoclass:: InfoMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: InfoMessage
+      :parts: 1
+
+.. autoclass:: WarningMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: WarningMessage
+      :parts: 1
+
+.. autoclass:: CriticalWarningMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: CriticalWarningMessage
+      :parts: 1
+
+.. autoclass:: ErrorMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ErrorMessage
+      :parts: 1
+
+.. autoclass:: VivadoMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoMessage
+      :parts: 1
+
+.. autoclass:: VivadoInfoMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoInfoMessage
+      :parts: 1
+
+.. autoclass:: VivadoIrregularInfoMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoIrregularInfoMessage
+      :parts: 1
+
+.. autoclass:: VivadoWarningMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoWarningMessage
+      :parts: 1
+
+.. autoclass:: VivadoIrregularWarningMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoIrregularWarningMessage
+      :parts: 1
+
+.. autoclass:: VivadoCriticalWarningMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoCriticalWarningMessage
+      :parts: 1
+
+.. autoclass:: VivadoErrorMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoErrorMessage
+      :parts: 1
+
+.. autoclass:: VHDLReportMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VHDLReportMessage
+      :parts: 1
+
+.. autoclass:: VHDLAssertionMessage
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VHDLAssertionMessage
+      :parts: 1
+
+.. autoclass:: TclCommand
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: TclCommand
+      :parts: 1
+
+.. autoclass:: VivadoTclCommand
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoTclCommand
+      :parts: 1

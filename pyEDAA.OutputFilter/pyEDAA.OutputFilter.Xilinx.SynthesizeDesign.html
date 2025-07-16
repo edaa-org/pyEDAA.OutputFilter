@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.SynthesizeDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Unittest Summary Report" href="../unittests/index.html" />
+    <link rel="prev" title="pyEDAA.OutputFilter.Xilinx.RouteDesign" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pyEDAA.OutputFilter.html">Python Class Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.CLI.html">pyEDAA.OutputFilter.CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html">pyEDAA.OutputFilter.Xilinx.Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common.html">pyEDAA.OutputFilter.Xilinx.Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html">pyEDAA.OutputFilter.Xilinx.Common2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Exception.html">pyEDAA.OutputFilter.Xilinx.Exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html">pyEDAA.OutputFilter.Xilinx.PlaceDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html">pyEDAA.OutputFilter.Xilinx.RouteDesign</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection"><code class="docutils literal notranslate"><span class="pre">BaseSection</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection.__new__"><code class="docutils literal notranslate"><span class="pre">BaseSection.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__init__"><code class="docutils literal notranslate"><span class="pre">Section.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__new__"><code class="docutils literal notranslate"><span class="pre">Section.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection"><code class="docutils literal notranslate"><span class="pre">SubSection</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__init__"><code class="docutils literal notranslate"><span class="pre">SubSection.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__new__"><code class="docutils literal notranslate"><span class="pre">SubSection.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration"><code class="docutils literal notranslate"><span class="pre">RTLElaboration</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__init__"><code class="docutils literal notranslate"><span class="pre">RTLElaboration.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__new__"><code class="docutils literal notranslate"><span class="pre">RTLElaboration.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes"><code class="docutils literal notranslate"><span class="pre">HandlingCustomAttributes</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__init__"><code class="docutils literal notranslate"><span class="pre">HandlingCustomAttributes.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__new__"><code class="docutils literal notranslate"><span class="pre">HandlingCustomAttributes.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation"><code class="docutils literal notranslate"><span class="pre">ConstraintValidation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__init__"><code class="docutils literal notranslate"><span class="pre">ConstraintValidation.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__new__"><code class="docutils literal notranslate"><span class="pre">ConstraintValidation.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart"><code class="docutils literal notranslate"><span class="pre">LoadingPart</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__init__"><code class="docutils literal notranslate"><span class="pre">LoadingPart.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__new__"><code class="docutils literal notranslate"><span class="pre">LoadingPart.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty"><code class="docutils literal notranslate"><span class="pre">ApplySetProperty</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__init__"><code class="docutils literal notranslate"><span class="pre">ApplySetProperty.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__new__"><code class="docutils literal notranslate"><span class="pre">ApplySetProperty.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics"><code class="docutils literal notranslate"><span class="pre">RTLComponentStatistics</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__init__"><code class="docutils literal notranslate"><span class="pre">RTLComponentStatistics.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__new__"><code class="docutils literal notranslate"><span class="pre">RTLComponentStatistics.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary"><code class="docutils literal notranslate"><span class="pre">PartResourceSummary</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__init__"><code class="docutils literal notranslate"><span class="pre">PartResourceSummary.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__new__"><code class="docutils literal notranslate"><span class="pre">PartResourceSummary.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization"><code class="docutils literal notranslate"><span class="pre">CrossBoundaryAndAreaOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">CrossBoundaryAndAreaOptimization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__new__"><code class="docutils literal notranslate"><span class="pre">CrossBoundaryAndAreaOptimization.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming"><code class="docutils literal notranslate"><span class="pre">ROM_RAM_DSP_SR_Retiming</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__init__"><code class="docutils literal notranslate"><span class="pre">ROM_RAM_DSP_SR_Retiming.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__new__"><code class="docutils literal notranslate"><span class="pre">ROM_RAM_DSP_SR_Retiming.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints"><code class="docutils literal notranslate"><span class="pre">ApplyingXDCTimingConstraints</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__init__"><code class="docutils literal notranslate"><span class="pre">ApplyingXDCTimingConstraints.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__new__"><code class="docutils literal notranslate"><span class="pre">ApplyingXDCTimingConstraints.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization"><code class="docutils literal notranslate"><span class="pre">TimingOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">TimingOptimization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__new__"><code class="docutils literal notranslate"><span class="pre">TimingOptimization.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping"><code class="docutils literal notranslate"><span class="pre">TechnologyMapping</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__init__"><code class="docutils literal notranslate"><span class="pre">TechnologyMapping.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__new__"><code class="docutils literal notranslate"><span class="pre">TechnologyMapping.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion"><code class="docutils literal notranslate"><span class="pre">FlatteningBeforeIOInsertion</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__init__"><code class="docutils literal notranslate"><span class="pre">FlatteningBeforeIOInsertion.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__new__"><code class="docutils literal notranslate"><span class="pre">FlatteningBeforeIOInsertion.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup"><code class="docutils literal notranslate"><span class="pre">FinalNetlistCleanup</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__init__"><code class="docutils literal notranslate"><span class="pre">FinalNetlistCleanup.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__new__"><code class="docutils literal notranslate"><span class="pre">FinalNetlistCleanup.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion"><code class="docutils literal notranslate"><span class="pre">IOInsertion</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__init__"><code class="docutils literal notranslate"><span class="pre">IOInsertion.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__new__"><code class="docutils literal notranslate"><span class="pre">IOInsertion.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedInstances</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__init__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedInstances.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__new__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedInstances.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy"><code class="docutils literal notranslate"><span class="pre">RebuildingUserHierarchy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__init__"><code class="docutils literal notranslate"><span class="pre">RebuildingUserHierarchy.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__new__"><code class="docutils literal notranslate"><span class="pre">RebuildingUserHierarchy.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedPorts</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__init__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedPorts.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__new__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedPorts.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedNets</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__init__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedNets.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__new__"><code class="docutils literal notranslate"><span class="pre">RenamingGeneratedNets.__new__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport"><code class="docutils literal notranslate"><span class="pre">WritingSynthesisReport</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__init__"><code class="docutils literal notranslate"><span class="pre">WritingSynthesisReport.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__new__"><code class="docutils literal notranslate"><span class="pre">WritingSynthesisReport.__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor"><code class="docutils literal notranslate"><span class="pre">Processor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.OutputFilterException"><code class="docutils literal notranslate"><span class="pre">OutputFilterException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="module-pyEDAA.OutputFilter.Xilinx.SynthesizeDesign">
+<span id="pyedaa-outputfilter-xilinx-synthesizedesign"></span><h1>pyEDAA.OutputFilter.Xilinx.SynthesizeDesign<a class="headerlink" href="#module-pyEDAA.OutputFilter.Xilinx.SynthesizeDesign" title="Link to this heading"></a></h1>
+<p>A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.</p>
+<p><strong>Classes</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSection</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Section</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubSection</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration"><code class="xref py py-class docutils literal notranslate"><span class="pre">RTLElaboration</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes"><code class="xref py py-class docutils literal notranslate"><span class="pre">HandlingCustomAttributes</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstraintValidation</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoadingPart</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApplySetProperty</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics"><code class="xref py py-class docutils literal notranslate"><span class="pre">RTLComponentStatistics</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartResourceSummary</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossBoundaryAndAreaOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming"><code class="xref py py-class docutils literal notranslate"><span class="pre">ROM_RAM_DSP_SR_Retiming</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApplyingXDCTimingConstraints</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimingOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">TechnologyMapping</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlatteningBeforeIOInsertion</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup"><code class="xref py py-class docutils literal notranslate"><span class="pre">FinalNetlistCleanup</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion"><code class="xref py py-class docutils literal notranslate"><span class="pre">IOInsertion</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RenamingGeneratedInstances</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy"><code class="xref py py-class docutils literal notranslate"><span class="pre">RebuildingUserHierarchy</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts"><code class="xref py py-class docutils literal notranslate"><span class="pre">RenamingGeneratedPorts</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets"><code class="xref py py-class docutils literal notranslate"><span class="pre">RenamingGeneratedNets</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">WritingSynthesisReport</span></code></a>:
+Undocumented.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Classes</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">BaseSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#BaseSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-aae60033ca549c627c26e19de8f8692a87a8b477.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of BaseSection</p></object></div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">Section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#Section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-47ef986cce1273b7221a6cc720e6e934f824ba66.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Section</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#Section.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">SubSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#SubSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-db7c3034c12c5df43e312b97d906241b7264cf03.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of SubSection</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#SubSection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RTLElaboration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RTLElaboration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-7ae819b67ef16f20ccb4908ba9e58729242a993b.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RTLElaboration</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">HandlingCustomAttributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#HandlingCustomAttributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-c0cafc6c34f1ff3c6dc0addf0f22cfec3eb30c5e.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of HandlingCustomAttributes</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">ConstraintValidation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#ConstraintValidation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-3f1f5b3daef24d8a5f3f97fd3b3d6b8c0cea81f2.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ConstraintValidation</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">LoadingPart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#LoadingPart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b12e5998f3e498c308188fc613784458dae0c0fd.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of LoadingPart</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>processor</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor" title="pyEDAA.OutputFilter.Xilinx.Processor"><em>Processor</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#LoadingPart.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>processor</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor" title="pyEDAA.OutputFilter.Xilinx.Processor"><em>Processor</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">ApplySetProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#ApplySetProperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b4d1ba243b3e0613235174dec9492745bad1520c.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ApplySetProperty</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RTLComponentStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RTLComponentStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a135024095e7a4ed32d137c9e9eab7b32da5333c.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RTLComponentStatistics</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">PartResourceSummary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#PartResourceSummary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-616269680778a8203a1215e02a61cedb4e7710bb.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of PartResourceSummary</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">CrossBoundaryAndAreaOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#CrossBoundaryAndAreaOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-6ac089ef2fabbafcc592a40be74a7426fa93396a.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of CrossBoundaryAndAreaOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">ROM_RAM_DSP_SR_Retiming</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#ROM_RAM_DSP_SR_Retiming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-25c3e97b7a31ff10cf4c7e66d86560b4fe12c074.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ROM_RAM_DSP_SR_Retiming</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">ApplyingXDCTimingConstraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#ApplyingXDCTimingConstraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-296f352f6dae2939a7510e0bb53b1aba6cfc5a33.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of ApplyingXDCTimingConstraints</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">TimingOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#TimingOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-34920d9a29a51de52d60c6980fce7bf16d636bed.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of TimingOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">TechnologyMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#TechnologyMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-9b73191cad2100b78a7a22a541dcff124f75429d.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of TechnologyMapping</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">FlatteningBeforeIOInsertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#FlatteningBeforeIOInsertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1fc33db2ebf257d0741f90f364572c902fe4a4b7.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of FlatteningBeforeIOInsertion</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">FinalNetlistCleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#FinalNetlistCleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-44b597e36ab3477b36d4273c43c4ad7fc5f69684.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of FinalNetlistCleanup</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section"><em>Section</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">IOInsertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#IOInsertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-ba90a1cc50a651ee7c3085b3a368dd5f2509dfb7.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of IOInsertion</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#IOInsertion.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RenamingGeneratedInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RenamingGeneratedInstances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-6c8bae63d1abe3cb0dcfadf673ce0f2347f8fb52.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RenamingGeneratedInstances</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RebuildingUserHierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RebuildingUserHierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-08bde2fc1f99071240780babe7137b6a95b4cbdd.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RebuildingUserHierarchy</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RenamingGeneratedPorts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RenamingGeneratedPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-3dbd08043cf79b06bab0f3c499efff963a5f2722.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RenamingGeneratedPorts</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">RenamingGeneratedNets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#RenamingGeneratedNets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-946ca9101e2d4855b74c2d2a9d41fb5560b127c2.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RenamingGeneratedNets</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.</span></span><span class="sig-name descname"><span class="pre">WritingSynthesisReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#WritingSynthesisReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-31550daff3ee743e5d8d43733cb002474cc67f70.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of WritingSynthesisReport</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/SynthesizeDesign.html#WritingSynthesisReport.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html" class="btn btn-neutral float-left" title="pyEDAA.OutputFilter.Xilinx.RouteDesign" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../unittests/index.html" class="btn btn-neutral float-right" title="Unittest Summary Report" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 16.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

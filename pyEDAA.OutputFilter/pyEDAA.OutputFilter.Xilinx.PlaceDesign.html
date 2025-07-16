@@ -1,0 +1,1155 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.PlaceDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyEDAA.OutputFilter.Xilinx.RouteDesign" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html" />
+    <link rel="prev" title="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pyEDAA.OutputFilter.html">Python Class Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.CLI.html">pyEDAA.OutputFilter.CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html">pyEDAA.OutputFilter.Xilinx.Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common.html">pyEDAA.OutputFilter.Xilinx.Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html">pyEDAA.OutputFilter.Xilinx.Common2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Exception.html">pyEDAA.OutputFilter.Xilinx.Exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyEDAA.OutputFilter.Xilinx.PlaceDesign</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting"><code class="docutils literal notranslate"><span class="pre">Phase11_PlacerInitializationNetlistSorting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase11_PlacerInitializationNetlistSorting.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice"><code class="docutils literal notranslate"><span class="pre">Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice.__init__"><code class="docutils literal notranslate"><span class="pre">Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel"><code class="docutils literal notranslate"><span class="pre">Phase13_BuildPlacerNetlistModel</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel.__init__"><code class="docutils literal notranslate"><span class="pre">Phase13_BuildPlacerNetlistModel.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros"><code class="docutils literal notranslate"><span class="pre">Phase14_ConstrainClocks_Macros</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros.__init__"><code class="docutils literal notranslate"><span class="pre">Phase14_ConstrainClocks_Macros.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization"><code class="docutils literal notranslate"><span class="pre">Phase1_PlacerInitialization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase1_PlacerInitialization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning"><code class="docutils literal notranslate"><span class="pre">Phase21_Floorplanning</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning.__init__"><code class="docutils literal notranslate"><span class="pre">Phase21_Floorplanning.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt"><code class="docutils literal notranslate"><span class="pre">Phase22_UpdateTimingBeforeSLRPathOpt</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt.__init__"><code class="docutils literal notranslate"><span class="pre">Phase22_UpdateTimingBeforeSLRPathOpt.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning"><code class="docutils literal notranslate"><span class="pre">Phase23_PostProcessingInFloorplanning</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning.__init__"><code class="docutils literal notranslate"><span class="pre">Phase23_PostProcessingInFloorplanning.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1"><code class="docutils literal notranslate"><span class="pre">Phase24_GlobalPlacePhase1</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1.__init__"><code class="docutils literal notranslate"><span class="pre">Phase24_GlobalPlacePhase1.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis"><code class="docutils literal notranslate"><span class="pre">Phase251_UpdateTimingBeforePhysicalSynthesis</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis.__init__"><code class="docutils literal notranslate"><span class="pre">Phase251_UpdateTimingBeforePhysicalSynthesis.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer"><code class="docutils literal notranslate"><span class="pre">Phase252_PhysicalSynthesisInPlacer</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer.__init__"><code class="docutils literal notranslate"><span class="pre">Phase252_PhysicalSynthesisInPlacer.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2"><code class="docutils literal notranslate"><span class="pre">Phase25_GlobalPlacePhase2</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2.__init__"><code class="docutils literal notranslate"><span class="pre">Phase25_GlobalPlacePhase2.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement"><code class="docutils literal notranslate"><span class="pre">Phase2_GlobalPlacement</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement.__init__"><code class="docutils literal notranslate"><span class="pre">Phase2_GlobalPlacement.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros"><code class="docutils literal notranslate"><span class="pre">Phase31_CommitMultiColumnMacros</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros.__init__"><code class="docutils literal notranslate"><span class="pre">Phase31_CommitMultiColumnMacros.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs"><code class="docutils literal notranslate"><span class="pre">Phase32_CommitMostMacrosLUTRAMs</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs.__init__"><code class="docutils literal notranslate"><span class="pre">Phase32_CommitMostMacrosLUTRAMs.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization"><code class="docutils literal notranslate"><span class="pre">Phase33_AreaSwapOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase33_AreaSwapOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization"><code class="docutils literal notranslate"><span class="pre">Phase34_PipelineRegisterOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase34_PipelineRegisterOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization"><code class="docutils literal notranslate"><span class="pre">Phase35_FastOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase35_FastOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement"><code class="docutils literal notranslate"><span class="pre">Phase36_SmallShapeDetailPlacement</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement.__init__"><code class="docutils literal notranslate"><span class="pre">Phase36_SmallShapeDetailPlacement.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins"><code class="docutils literal notranslate"><span class="pre">Phase37_ReassignLUTPins</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins.__init__"><code class="docutils literal notranslate"><span class="pre">Phase37_ReassignLUTPins.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization"><code class="docutils literal notranslate"><span class="pre">Phase38_PipelineRegisterOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase38_PipelineRegisterOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization"><code class="docutils literal notranslate"><span class="pre">Phase39_FastOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase39_FastOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement"><code class="docutils literal notranslate"><span class="pre">Phase3_DetailPlacement</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement.__init__"><code class="docutils literal notranslate"><span class="pre">Phase3_DetailPlacement.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion"><code class="docutils literal notranslate"><span class="pre">Phase4111_BUFGInsertion</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion.__init__"><code class="docutils literal notranslate"><span class="pre">Phase4111_BUFGInsertion.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization"><code class="docutils literal notranslate"><span class="pre">Phase4112_PostPlacementTimingOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase4112_PostPlacementTimingOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization"><code class="docutils literal notranslate"><span class="pre">Phase411_PostPlacementOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase411_PostPlacementOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization"><code class="docutils literal notranslate"><span class="pre">Phase41_PostCommitOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase41_PostCommitOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup"><code class="docutils literal notranslate"><span class="pre">Phase42_PostPlacementCleanup</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup.__init__"><code class="docutils literal notranslate"><span class="pre">Phase42_PostPlacementCleanup.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion"><code class="docutils literal notranslate"><span class="pre">Phase431_PrintEstimatedCongestion</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion.__init__"><code class="docutils literal notranslate"><span class="pre">Phase431_PrintEstimatedCongestion.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting"><code class="docutils literal notranslate"><span class="pre">Phase43_PlacerReporting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase43_PlacerReporting.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup"><code class="docutils literal notranslate"><span class="pre">Phase44_FinalPlacementCleanup</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup.__init__"><code class="docutils literal notranslate"><span class="pre">Phase44_FinalPlacementCleanup.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp"><code class="docutils literal notranslate"><span class="pre">Phase4_PostPlacementOptimizationAndCleanUp</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp.__init__"><code class="docutils literal notranslate"><span class="pre">Phase4_PostPlacementOptimizationAndCleanUp.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask"><code class="docutils literal notranslate"><span class="pre">PlacerTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__init__"><code class="docutils literal notranslate"><span class="pre">PlacerTask.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__str__"><code class="docutils literal notranslate"><span class="pre">PlacerTask.__str__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html">pyEDAA.OutputFilter.Xilinx.RouteDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor"><code class="docutils literal notranslate"><span class="pre">Processor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.OutputFilterException"><code class="docutils literal notranslate"><span class="pre">OutputFilterException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.PlaceDesign</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.PlaceDesign.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="module-pyEDAA.OutputFilter.Xilinx.PlaceDesign">
+<span id="pyedaa-outputfilter-xilinx-placedesign"></span><h1>pyEDAA.OutputFilter.Xilinx.PlaceDesign<a class="headerlink" href="#module-pyEDAA.OutputFilter.Xilinx.PlaceDesign" title="Link to this heading"></a></h1>
+<p>A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.</p>
+<p><strong>Classes</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase11_PlacerInitializationNetlistSorting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase13_BuildPlacerNetlistModel</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase14_ConstrainClocks_Macros</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase1_PlacerInitialization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase21_Floorplanning</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase22_UpdateTimingBeforeSLRPathOpt</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase23_PostProcessingInFloorplanning</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase24_GlobalPlacePhase1</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase251_UpdateTimingBeforePhysicalSynthesis</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase252_PhysicalSynthesisInPlacer</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase25_GlobalPlacePhase2</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase2_GlobalPlacement</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase31_CommitMultiColumnMacros</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase32_CommitMostMacrosLUTRAMs</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase33_AreaSwapOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase34_PipelineRegisterOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase35_FastOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase36_SmallShapeDetailPlacement</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase37_ReassignLUTPins</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase38_PipelineRegisterOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase39_FastOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase3_DetailPlacement</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase4111_BUFGInsertion</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase4112_PostPlacementTimingOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase411_PostPlacementOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase41_PostCommitOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase42_PostPlacementCleanup</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase431_PrintEstimatedCongestion</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase43_PlacerReporting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase44_FinalPlacementCleanup</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase4_PostPlacementOptimizationAndCleanUp</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlacerTask</span></code></a>:
+Undocumented.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Classes</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase11_PlacerInitializationNetlistSorting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase11_PlacerInitializationNetlistSorting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-0b90f27ff44a10edd434d7e4042141ec4f13d1d8.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase11_PlacerInitializationNetlistSorting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase11_PlacerInitializationNetlistSorting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-53b4a04c3ff195b7764c018d6b01204b291251e7.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase13_BuildPlacerNetlistModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase13_BuildPlacerNetlistModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a309d9ad5dfa5c0b37afcbb12f05e58dc9efc707.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase13_BuildPlacerNetlistModel</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase13_BuildPlacerNetlistModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase14_ConstrainClocks_Macros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase14_ConstrainClocks_Macros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-8af8256de7aef4c5902f49d575e7f198df2ac4a1.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase14_ConstrainClocks_Macros</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase14_ConstrainClocks_Macros.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase1_PlacerInitialization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase1_PlacerInitialization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-322ce3a997f56c05a0e69355948d0fdcadd83c09.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase1_PlacerInitialization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase1_PlacerInitialization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase1_PlacerInitialization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase21_Floorplanning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase21_Floorplanning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-fe9c3b428932f67b770d6d55f9924d2a113fc307.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase21_Floorplanning</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase21_Floorplanning.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase22_UpdateTimingBeforeSLRPathOpt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase22_UpdateTimingBeforeSLRPathOpt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b1aa925c27f070437e874404ec84775c6bc5134a.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase22_UpdateTimingBeforeSLRPathOpt</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase22_UpdateTimingBeforeSLRPathOpt.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase23_PostProcessingInFloorplanning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase23_PostProcessingInFloorplanning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1f9f27a9ddb54e19ad52e40cc63f1af56534551c.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase23_PostProcessingInFloorplanning</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase23_PostProcessingInFloorplanning.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase24_GlobalPlacePhase1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase24_GlobalPlacePhase1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-551534f4be19d633bbc7aeaa9d3fb0635b3ef0b4.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase24_GlobalPlacePhase1</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase24_GlobalPlacePhase1.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase251_UpdateTimingBeforePhysicalSynthesis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase251_UpdateTimingBeforePhysicalSynthesis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-828ebdda93bd6448c5371b88f560d7be00d0ecc8.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase251_UpdateTimingBeforePhysicalSynthesis</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase251_UpdateTimingBeforePhysicalSynthesis.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase252_PhysicalSynthesisInPlacer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase252_PhysicalSynthesisInPlacer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-756ff1b037bff62a23fe8fee6cd73c80ccb797cb.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase252_PhysicalSynthesisInPlacer</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase252_PhysicalSynthesisInPlacer.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase25_GlobalPlacePhase2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase25_GlobalPlacePhase2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1249d39efc2b75276f28822773bd9e708f94c2ba.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase25_GlobalPlacePhase2</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase25_GlobalPlacePhase2.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase25_GlobalPlacePhase2.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase2_GlobalPlacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase2_GlobalPlacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-98a80b4c4ec91aa66bceedbb80a4980e54420c05.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase2_GlobalPlacement</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase2_GlobalPlacement.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase2_GlobalPlacement.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase31_CommitMultiColumnMacros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase31_CommitMultiColumnMacros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-d047ef0b630857fe241f1632377aa8f078453298.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase31_CommitMultiColumnMacros</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase31_CommitMultiColumnMacros.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase32_CommitMostMacrosLUTRAMs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase32_CommitMostMacrosLUTRAMs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-30e9d0be40d486a7cc9b852427ca3a6ad370f4aa.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase32_CommitMostMacrosLUTRAMs</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase32_CommitMostMacrosLUTRAMs.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase33_AreaSwapOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase33_AreaSwapOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e72a5e6f7bf5cc278072f0f4d97f6b4005cafb8c.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase33_AreaSwapOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase33_AreaSwapOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase34_PipelineRegisterOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase34_PipelineRegisterOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-c9baf2b71fc0d4cd8a01c034664c90ec04e1386a.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase34_PipelineRegisterOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase34_PipelineRegisterOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase35_FastOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase35_FastOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b8e4ef5d4e37a67110fa13457a56154539b5933e.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase35_FastOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase35_FastOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase36_SmallShapeDetailPlacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase36_SmallShapeDetailPlacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-c5164984bff41720f0d352c008c65e670aa54920.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase36_SmallShapeDetailPlacement</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase36_SmallShapeDetailPlacement.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase37_ReassignLUTPins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase37_ReassignLUTPins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-475293f44ea54eaf4a36a87deae2d88eaca15238.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase37_ReassignLUTPins</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase37_ReassignLUTPins.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase38_PipelineRegisterOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase38_PipelineRegisterOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a00c15623c1766c8015129f094ccece1eedec2d3.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase38_PipelineRegisterOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase38_PipelineRegisterOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase39_FastOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase39_FastOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-8b2d43ba36e0232cc7a5f7a6aee9779ca333b3df.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase39_FastOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase39_FastOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase3_DetailPlacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase3_DetailPlacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-36c1f065bf2f4f3d1d2c1fa815615a7ba43586a3.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase3_DetailPlacement</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase3_DetailPlacement.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase3_DetailPlacement.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase4111_BUFGInsertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase4111_BUFGInsertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b2b565111f8f26b6c3e40ea6ccb2c8f3ca0b1997.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase4111_BUFGInsertion</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4111_BUFGInsertion.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase4112_PostPlacementTimingOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase4112_PostPlacementTimingOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-bd0ef1a3a695f387b5050868e6b3a28edfe91a3f.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase4112_PostPlacementTimingOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4112_PostPlacementTimingOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase411_PostPlacementOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase411_PostPlacementOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-f94ded95650fa25b57a2db70712c0a879a1afb62.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase411_PostPlacementOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsubphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase411_PostPlacementOptimization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase411_PostPlacementOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subsubphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubSubPhase"><em>SubSubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase41_PostCommitOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase41_PostCommitOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-7fee045e2f987cf826796fd45f789499c10d74be.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase41_PostCommitOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase41_PostCommitOptimization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase41_PostCommitOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase42_PostPlacementCleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase42_PostPlacementCleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-6bae5a59d31610d17e2ea760d5ae1a261b5f4329.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase42_PostPlacementCleanup</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase42_PostPlacementCleanup.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase431_PrintEstimatedCongestion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase431_PrintEstimatedCongestion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b9374601bdf23c9df4ec73165604e2f0caeff9f3.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase431_PrintEstimatedCongestion</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase431_PrintEstimatedCongestion.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase43_PlacerReporting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase43_PlacerReporting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e3ddf9c2c3c75c8f1f56501b4a4b14023a472eb5.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase43_PlacerReporting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subphase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase43_PlacerReporting.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase43_PlacerReporting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subphase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.SubPhase" title="pyEDAA.OutputFilter.Xilinx.Common2.SubPhase"><em>SubPhase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase44_FinalPlacementCleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase44_FinalPlacementCleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-d4b9412900e3d7cd96556a494d469dddabe8d1ff.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase44_FinalPlacementCleanup</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase44_FinalPlacementCleanup.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">Phase4_PostPlacementOptimizationAndCleanUp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase4_PostPlacementOptimizationAndCleanUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-484e46a134fc9ca6c2d265d4f73aa20a2ff73267.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase4_PostPlacementOptimizationAndCleanUp</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#Phase4_PostPlacementOptimizationAndCleanUp.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.Phase4_PostPlacementOptimizationAndCleanUp.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.PlaceDesign.</span></span><span class="sig-name descname"><span class="pre">PlacerTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/PlaceDesign.html#PlacerTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-726396c7d2ae01cdbd7af81c6016daf56f09f4da.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of PlacerTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.PlaceDesign.PlacerTask.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html" class="btn btn-neutral float-left" title="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html" class="btn btn-neutral float-right" title="pyEDAA.OutputFilter.Xilinx.RouteDesign" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 16.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

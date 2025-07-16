@@ -1,0 +1,150 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+==================================
+pyEDAA.OutputFilter.Xilinx.Common2
+==================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.Common2
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.Common2
+
+
+**Classes**
+
+- :py:class:`VivadoMessagesMixin`:
+  Undocumented.
+
+- :py:class:`BaseParser`:
+  Undocumented.
+
+- :py:class:`Parser`:
+  Undocumented.
+
+- :py:class:`Preamble`:
+  Undocumented.
+
+- :py:class:`Task`:
+  Undocumented.
+
+- :py:class:`Phase`:
+  Undocumented.
+
+- :py:class:`SubPhase`:
+  Undocumented.
+
+- :py:class:`SubSubPhase`:
+  Undocumented.
+
+- :py:class:`SubSubSubPhase`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: VivadoMessagesMixin
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: VivadoMessagesMixin
+      :parts: 1
+
+.. autoclass:: BaseParser
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: BaseParser
+      :parts: 1
+
+.. autoclass:: Parser
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Parser
+      :parts: 1
+
+.. autoclass:: Preamble
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Preamble
+      :parts: 1
+
+.. autoclass:: Task
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Task
+      :parts: 1
+
+.. autoclass:: Phase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase
+      :parts: 1
+
+.. autoclass:: SubPhase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SubPhase
+      :parts: 1
+
+.. autoclass:: SubSubPhase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SubSubPhase
+      :parts: 1
+
+.. autoclass:: SubSubSubPhase
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SubSubSubPhase
+      :parts: 1
