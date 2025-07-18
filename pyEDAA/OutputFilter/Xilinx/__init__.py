@@ -43,7 +43,8 @@ from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMe
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign
+from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
+	PhysicalOptimizeDesign, RouteDesign, WriteBitstream, ReportDRC, ReportMethodology, ReportPower
 from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
@@ -55,6 +56,7 @@ ProcessedLine = Union[Line, ProcessorException]
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_duration:                float
 
+	_lines:                   List[ProcessedLine]
 	_preamble:                Preamble
 	_commands:                Dict[Type[Command], Command]
 
@@ -63,8 +65,13 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		self._duration =                0.0
 
+		self._lines =                   []
 		self._preamble =                None
 		self._commands =                {}
+
+	@readonly
+	def Lines(self) -> List[ProcessedLine]:
+		return self._lines
 
 	@readonly
 	def Preamble(self) -> Preamble:
@@ -135,6 +142,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			if line is None:
 				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
+			else:
+				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+					line._kind = LineKind.Verbose
 
 			line.PreviousLine = lastLine
 			lastLine = line
@@ -145,6 +155,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			if line._kind is LineKind.ProcessorError:
 				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
+			self._lines.append(line)
 
 			rawMessageLine = yield line
 
@@ -161,9 +173,52 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		while True:
 			while True:
-				if isinstance(line, VivadoTclCommand):
-					if line._command == "synth_design":
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoTclCommand):
+					if line._command == SynthesizeDesign._TCL_COMMAND:
 						self._commands[SynthesizeDesign] = (cmd := SynthesizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == LinkDesign._TCL_COMMAND:
+						self._commands[LinkDesign] = (cmd := LinkDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == OptimizeDesign._TCL_COMMAND:
+						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == OptimizeDesign._TCL_COMMAND:
+						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == PlaceDesign._TCL_COMMAND:
+						self._commands[PlaceDesign] = (cmd := PlaceDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == PhysicalOptimizeDesign._TCL_COMMAND:
+						self._commands[PhysicalOptimizeDesign] = (cmd := PhysicalOptimizeDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == RouteDesign._TCL_COMMAND:
+						self._commands[RouteDesign] = (cmd := RouteDesign(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == WriteBitstream._TCL_COMMAND:
+						self._commands[WriteBitstream] = (cmd := WriteBitstream(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == ReportDRC._TCL_COMMAND:
+						self._commands[ReportDRC] = (cmd := ReportDRC(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == ReportMethodology._TCL_COMMAND:
+						self._commands[ReportMethodology] = (cmd := ReportMethodology(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._command == ReportPower._TCL_COMMAND:
+						self._commands[ReportPower] = (cmd := ReportPower(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
 
@@ -173,37 +228,40 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				line = yield line
 
-			while True:
-				if line.StartsWith("synth_design:"):
-					lastLine = gen.send(line)
-					if LineKind.Last in line._kind:
-						line._kind ^= LineKind.Last
-					line = yield lastLine
-					break
+			# end = f"{cmd._TCL_COMMAND} completed successfully"
 
-				line = yield gen.send(line)
+			while True:
+				# if line.StartsWith(end):
+				# 	# line._kind |= LineKind.Success
+				# 	lastLine = gen.send(line)
+				# 	if LineKind.Last in line._kind:
+				# 		line._kind ^= LineKind.Last
+				# 	line = yield lastLine
+				# 	break
+
+				try:
+					line = yield gen.send(line)
+				except StopIteration as ex:
+					line = ex.value
+					break
 
 
 @export
 class Document(Processor):
 	_logfile: Path
-	_lines:   List[Line]
 
 	def __init__(self, logfile: Path) -> None:
 		super().__init__()
 
 		self._logfile = logfile
-		self._lines =   []
 
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
 			with self._logfile.open("r", encoding="utf-8") as f:
 				content = f.read()
 
-			self._lines = []
 			next(generator := self.LineClassification())
 			for rawLine in content.splitlines():
-				line = generator.send(rawLine)
-				self._lines.append(line)
+				generator.send(rawLine)
 
 		self._duration = sw.Duration

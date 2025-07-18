@@ -103,7 +103,7 @@ class Section(BaseParser, BaseSection):
 
 		line = yield line
 		if line.StartsWith("----"):
-			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter | LineKind.Last
+			line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
@@ -138,7 +138,10 @@ class Section(BaseParser, BaseSection):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if line.StartsWith("----"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif isinstance(line, VivadoMessage):
@@ -187,7 +190,7 @@ class SubSection(BaseParser, BaseSection):
 
 		line = yield line
 		if line.StartsWith("----"):
-			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter | LineKind.Last
+			line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
 		else:
 			line._kind |= LineKind.ProcessorError
 
@@ -198,7 +201,10 @@ class SubSection(BaseParser, BaseSection):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if line.StartsWith("----"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("----"):
 				line._kind = LineKind.SubSectionEnd | LineKind.SubSectionDelimiter
 				break
 			elif isinstance(line, VivadoMessage):
@@ -221,7 +227,10 @@ class RTLElaboration(Section):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if isinstance(line, VivadoInfoMessage):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif isinstance(line, VivadoInfoMessage):
 				if line._toolID == 8:
 					if line._messageKindID == 63:    # VHDL assert statement
 						newLine = VHDLAssertionMessage.Convert(line)
@@ -283,11 +292,13 @@ class LoadingPart(Section):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if line.StartsWith("Loading part: "):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("Loading part: "):
 				line._kind = LineKind.Normal
 				self._part = line._message[14:].strip()
-
-			if line.StartsWith("----"):
+			elif line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif isinstance(line, VivadoMessage):
@@ -315,7 +326,10 @@ class RTLComponentStatistics(Section):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if line.StartsWith("----"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("----"):
 				line._kind = LineKind.SectionEnd | LineKind.SectionDelimiter
 				break
 			elif isinstance(line, VivadoMessage):
@@ -394,7 +408,10 @@ class IOInsertion(Section):
 
 		while True:
 			while True:
-				if line.StartsWith("----"):
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif line.StartsWith("----"):
 					line._kind = LineKind.SubSectionStart | LineKind.SubSectionDelimiter
 				elif line.StartsWith("Start "):
 					if line == FlatteningBeforeIOInsertion._START:
@@ -558,7 +575,10 @@ class WritingSynthesisReport(Section):
 		line = yield from self._SectionStart(line)
 
 		while True:
-			if line.StartsWith("Report BlackBoxes:"):
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif line.StartsWith("Report BlackBoxes:"):
 				line._kind = LineKind.ParagraphHeadline
 				line = yield line
 				line = yield from self._BlackboxesGenerator(line)
@@ -571,8 +591,6 @@ class WritingSynthesisReport(Section):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-			elif line._kind is LineKind.Empty:
-				line = yield line
 			else:
 				line._kind = LineKind.Verbose
 				line = yield line
