@@ -478,6 +478,10 @@ class OptimizeDesign(CommandWithTasks):
 				except StopIteration as ex:
 					task = None
 					line = ex.value
+
+					if isinstance(line, VivadoMessage):
+						line = yield line
+
 					break
 
 			if task is not None:
@@ -540,6 +544,10 @@ class PlaceDesign(CommandWithTasks):
 				except StopIteration as ex:
 					task = None
 					line = ex.value
+
+					if isinstance(line, VivadoMessage):
+						line = yield line
+
 					break
 
 			if task is not None:
@@ -603,6 +611,10 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 				except StopIteration as ex:
 					task = None
 					line = ex.value
+
+					if isinstance(line, VivadoMessage):
+						line = yield line
+
 					break
 
 			if task is not None:
@@ -665,6 +677,10 @@ class RouteDesign(CommandWithTasks):
 				except StopIteration as ex:
 					task = None
 					line = ex.value
+
+					if isinstance(line, VivadoMessage):
+						line = yield line
+
 					break
 
 			if task is not None:

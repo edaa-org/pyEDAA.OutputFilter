@@ -102,7 +102,7 @@ class Stopwatch(TestCase):
 		self.assertEqual(0, len(linkDesign.ErrorMessages))
 
 		optDesign = processor[OptimizeDesign]
-		self.assertEqual(26, len(optDesign.InfoMessages))
+		self.assertEqual(25, len(optDesign.InfoMessages))
 		self.assertEqual(0, len(optDesign.WarningMessages))
 		self.assertEqual(0, len(optDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(optDesign.ErrorMessages))
