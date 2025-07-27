@@ -60,7 +60,8 @@ class LineKind(Flag):
 	End =                    2**21
 	Header =                 2**22
 	Content =                2**23
-	Footer =                 2**24
+	Time =                   2**24
+	Footer =                 2**25
 
 	Last =                   2**29
 
@@ -70,31 +71,61 @@ class LineKind(Flag):
 	CriticalWarningMessage = Message | CriticalWarning
 	ErrorMessage =           Message | Error
 
-	Phase =                  2**31
+	Task =                   2**31
+	TaskStart =              Task | Start
+	TaskEnd =                Task | End
+	TaskTime =               Task | Time
+
+	Phase =                  2**32
 	PhaseDelimiter =         Phase | Delimiter
 	PhaseStart =             Phase | Start
 	PhaseEnd =               Phase | End
+	PhaseTime =              Phase | Time
+	PhaseFinal =             Phase | Footer
 
-	Section =                2**32
+	SubPhase =               2**33
+	SubPhaseStart =          SubPhase | Start
+	SubPhaseEnd =            SubPhase | End
+	SubPhaseTime =           SubPhase | Time
+
+	SubSubPhase =            2**34
+	SubSubPhaseStart =       SubSubPhase | Start
+	SubSubPhaseEnd =         SubSubPhase | End
+	SubSubPhaseTime =        SubSubPhase | Time
+
+	SubSubSubPhase =         2**35
+	SubSubSubPhaseStart =    SubSubSubPhase | Start
+	SubSubSubPhaseEnd =      SubSubSubPhase | End
+	SubSubSubPhaseTime =     SubSubSubPhase | Time
+
+	Section =                2**36
 	SectionDelimiter =       Section | Delimiter
 	SectionStart =           Section | Start
 	SectionEnd =             Section | End
 
-	SubSection =             2**33
+	SubSection =             2**37
 	SubSectionDelimiter =    SubSection | Delimiter
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Paragraph =              2**34
+	Paragraph =              2**38
 	ParagraphHeadline =      Paragraph | Header
 
-	Table =                  2**35
+	Hierarchy =              2**39
+	HierarchyStart =         Hierarchy | Start
+	HierarchyEnd =           Hierarchy | End
+
+	XDC =                    2**40
+	XDCStart =               XDC | Start
+	XDCEnd =                 XDC | End
+
+	Table =                  2**41
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	TclCommand =             2 ** 36
+	TclCommand =             2**42
 	GenericTclCommand =      TclCommand | 2**0
 	VivadoTclCommand =       TclCommand | 2**1
 
@@ -160,6 +191,9 @@ class Line(metaclass=ExtendedType, slots=True):
 
 	def __str__(self) -> str:
 		return self._message
+
+	def __repr__(self) -> str:
+		return f"{self._lineNumber}: {self._message}"
 
 
 @export
