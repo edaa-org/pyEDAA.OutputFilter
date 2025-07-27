@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="567pt" height="64pt" viewBox="0.00 0.00 567.00 64.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 60)">
+<ns0:title>inheritance504ca06655</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.BaseParser" ns1:title="BaseParser" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="236,-19 165,-19 165,0 236,0 236,-19" />
+<ns0:text text-anchor="middle" x="200.5" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>Section</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section" ns1:title="Section" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="329,-37 275,-37 275,-18 329,-18 329,-37" />
+<ns0:text text-anchor="middle" x="302" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Section</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>BaseParser-&gt;Section</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M236.02,-15.75C246.92,-17.72 258.9,-19.88 269.58,-21.82" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="269.47,-23.57 274.7,-22.74 270.09,-20.13 269.47,-23.57" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>VivadoMessagesMixin</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.VivadoMessagesMixin" ns1:title="VivadoMessagesMixin" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="126,-19 0,-19 0,0 126,0 126,-19" />
+<ns0:text text-anchor="middle" x="63" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoMessagesMixin</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VivadoMessagesMixin-&gt;BaseParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M126.2,-9.5C137.56,-9.5 149.13,-9.5 159.62,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="159.67,-11.25 164.67,-9.5 159.67,-7.75 159.67,-11.25" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>BaseSection</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection" ns1:title="BaseSection" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="239,-56 162,-56 162,-37 239,-37 239,-56" />
+<ns0:text text-anchor="middle" x="200.5" y="-44" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>BaseSection-&gt;Section</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M239.12,-39.32C249.24,-37.38 260.08,-35.31 269.81,-33.46" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="270.2,-35.16 274.78,-32.51 269.54,-31.72 270.2,-35.16" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>CrossBoundaryAndAreaOptimization</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization" ns1:title="CrossBoundaryAndAreaOptimization" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="559,-37 365,-37 365,-18 559,-18 559,-37" />
+<ns0:text text-anchor="middle" x="462" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CrossBoundaryAndAreaOptimization</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>Section-&gt;CrossBoundaryAndAreaOptimization</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M329.09,-27.5C337.98,-27.5 348.53,-27.5 359.73,-27.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="359.92,-29.25 364.92,-27.5 359.92,-25.75 359.92,-29.25" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

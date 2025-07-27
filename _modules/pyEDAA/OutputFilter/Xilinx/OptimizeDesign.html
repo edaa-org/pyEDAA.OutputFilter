@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.OptimizeDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.svg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.html">Python Class Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="../Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyEDAA.OutputFilter.Xilinx.OptimizeDesign</h1><div class="highlight"><pre>
+<span></span><span class="c1"># ==================================================================================================================== #</span>
+<span class="c1">#               _____ ____    _        _      ___        _               _   _____ _ _ _                               #</span>
+<span class="c1">#   _ __  _   _| ____|  _ \  / \      / \    / _ \ _   _| |_ _ __  _   _| |_|  ___(_) | |_ ___ _ __                    #</span>
+<span class="c1">#  | &#39;_ \| | | |  _| | | | |/ _ \    / _ \  | | | | | | | __| &#39;_ \| | | | __| |_  | | | __/ _ \ &#39;__|                   #</span>
+<span class="c1">#  | |_) | |_| | |___| |_| / ___ \  / ___ \ | |_| | |_| | |_| |_) | |_| | |_|  _| | | | ||  __/ |                      #</span>
+<span class="c1">#  | .__/ \__, |_____|____/_/   \_\/_/   \_(_)___/ \__,_|\__| .__/ \__,_|\__|_|   |_|_|\__\___|_|                      #</span>
+<span class="c1">#  |_|    |___/                                             |_|                                                        #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1"># Authors:                                                                                                             #</span>
+<span class="c1">#   Patrick Lehmann                                                                                                    #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># License:                                                                                                             #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1"># Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);                                                      #</span>
+<span class="c1"># you may not use this file except in compliance with the License.                                                     #</span>
+<span class="c1"># You may obtain a copy of the License at                                                                              #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0                                                                         #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software                                                  #</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,                                                    #</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                             #</span>
+<span class="c1"># See the License for the specific language governing permissions and                                                  #</span>
+<span class="c1"># limitations under the License.                                                                                       #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0                                                                                  #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTooling.Decorators</span><span class="w">  </span><span class="kn">import</span> <span class="n">export</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTooling.MetaClasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedType</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx</span><span class="w">           </span><span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">,</span> <span class="n">LineKind</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessorException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Common2</span><span class="w">   </span><span class="kn">import</span> <span class="n">BaseParser</span><span class="p">,</span> <span class="n">VivadoMessagesMixin</span>
+
+
+<div class="viewcode-block" id="Task">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Task</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">,</span> <span class="n">VivadoMessagesMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ExtendedType</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="c1"># _START:  ClassVar[str]</span>
+	<span class="c1"># _FINISH: ClassVar[str]</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+
+	<span class="n">_command</span><span class="p">:</span>  <span class="s2">&quot;Command&quot;</span>
+	<span class="n">_duration</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="Task.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="n">VivadoMessagesMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_command</span> <span class="o">=</span> <span class="n">command</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_TaskStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TaskStart</span>
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_TaskFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TaskEnd</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TaskTime</span>
+				<span class="k">break</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">line</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TaskStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Ending&quot;</span><span class="p">):</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TaskTime</span>
+				<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">return</span> <span class="n">nextLine</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TaskFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="Phase">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">,</span> <span class="n">VivadoMessagesMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ExtendedType</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="c1"># _START:  ClassVar[str]</span>
+	<span class="c1"># _FINISH: ClassVar[str]</span>
+
+	<span class="n">_task</span><span class="p">:</span>     <span class="n">Task</span>
+	<span class="n">_duration</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="Phase.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="n">VivadoMessagesMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_task</span> <span class="o">=</span> <span class="n">task</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_PhaseStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">PhaseStart</span>
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_PhaseFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">PhaseEnd</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">PhaseTime</span>
+				<span class="k">break</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FINAL</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINAL</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">PhaseFinal</span>
+				<span class="k">break</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="SubPhase">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubPhase</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">,</span> <span class="n">VivadoMessagesMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ExtendedType</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="c1"># _START:  ClassVar[str]</span>
+	<span class="c1"># _FINISH: ClassVar[str]</span>
+
+	<span class="n">_phase</span><span class="p">:</span>    <span class="n">Phase</span>
+	<span class="n">_duration</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="SubPhase.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Phase</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="n">VivadoMessagesMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">phase</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SubPhaseStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubPhaseStart</span>
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SubPhaseFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ProcessorException</span><span class="p">()</span>
+
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubPhaseEnd</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubPhaseTime</span>
+				<span class="k">break</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SubPhaseStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SubPhaseFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="Phase11_CoreGenerationAndDesignSetup">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase11_CoreGenerationAndDesignSetup</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1.1 Core Generation And Design Setup&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1.1 Core Generation And Design Setup | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase12_SetupConstraintsAndSortNetlist">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase12_SetupConstraintsAndSortNetlist</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1.2 Setup Constraints And Sort Netlist&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1.2 Setup Constraints And Sort Netlist | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase1_Initialization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase1_Initialization</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1 Initialization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 1 Initialization | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="n">_PARSERS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Phase</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+		<span class="n">Phase11_CoreGenerationAndDesignSetup</span><span class="p">,</span>
+		<span class="n">Phase12_SetupConstraintsAndSortNetlist</span>
+	<span class="p">)</span>
+
+	<span class="n">_subphases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SubPhase</span><span class="p">],</span> <span class="n">SubPhase</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Phase1_Initialization.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Phase</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARSERS</span><span class="p">}</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="n">activeParsers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Phase</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">continue</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Phase 1.&quot;</span><span class="p">):</span>
+					<span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">activeParsers</span><span class="p">:</span>  <span class="c1"># type: Section</span>
+						<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">phase</span> <span class="o">:=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+							<span class="k">break</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown subphase: </span><span class="si">{</span><span class="n">line</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+					<span class="k">break</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+					<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+					<span class="k">return</span> <span class="n">nextLine</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+			<span class="k">while</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="c1"># if line.StartsWith(&quot;Ending&quot;):</span>
+				<span class="c1"># 	line = yield task.send(line)</span>
+				<span class="c1"># 	break</span>
+
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+				<span class="k">try</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">phase</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+					<span class="n">activeParsers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">value</span>
+					<span class="k">break</span></div>
+
+
+
+<div class="viewcode-block" id="Phase21_TimerUpdate">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase21_TimerUpdate</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2.1 Timer Update&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2.1 Timer Update | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase22_TimingDataCollection">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase22_TimingDataCollection</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2.2 Timing Data Collection&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2.2 Timing Data Collection | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase2_TimerUpdateAndTimingDataCollection">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase2_TimerUpdateAndTimingDataCollection</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2 Timer Update And Timing Data Collection&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 2 Timer Update And Timing Data Collection | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="n">_PARSERS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Phase</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+		<span class="n">Phase21_TimerUpdate</span><span class="p">,</span>
+		<span class="n">Phase22_TimingDataCollection</span>
+	<span class="p">)</span>
+
+	<span class="n">_subphases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SubPhase</span><span class="p">],</span> <span class="n">SubPhase</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Phase2_TimerUpdateAndTimingDataCollection.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Phase</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARSERS</span><span class="p">}</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="n">activeParsers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Phase</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">continue</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Phase 2.&quot;</span><span class="p">):</span>
+					<span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">activeParsers</span><span class="p">:</span>  <span class="c1"># type: Section</span>
+						<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">phase</span> <span class="o">:=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+							<span class="k">break</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown subphase: </span><span class="si">{</span><span class="n">line</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+					<span class="k">break</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+					<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+					<span class="k">return</span> <span class="n">nextLine</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+			<span class="k">while</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="c1"># if line.StartsWith(&quot;Ending&quot;):</span>
+				<span class="c1"># 	line = yield task.send(line)</span>
+				<span class="c1"># 	break</span>
+
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+				<span class="k">try</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">phase</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+					<span class="n">activeParsers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">value</span>
+					<span class="k">break</span></div>
+
+
+
+<div class="viewcode-block" id="Phase3_Retarget">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase3_Retarget</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 3 Retarget&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 3 Retarget | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Retarget | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase4_ConstantPropagation">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase4_ConstantPropagation</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 4 Constant propagation&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 4 Constant propagation | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Constant propagation | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase5_Sweep">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase5_Sweep</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 5 Sweep&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 5 Sweep | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Sweep | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase6_BUFGOptimization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase6_BUFGOptimization</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 6 BUFG optimization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 6 BUFG optimization | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;BUFG optimization | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase7_ShiftRegisterOptimization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase7_ShiftRegisterOptimization</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 7 Shift Register Optimization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 7 Shift Register Optimization | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Shift Register Optimization | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase8_PostProcessingNetlist">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase8_PostProcessingNetlist</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 8 Post Processing Netlist&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 8 Post Processing Netlist | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Post Processing Netlist | Checksum:&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase91_FinalizingDesignCoresAndUpdatingShapes">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase91_FinalizingDesignCoresAndUpdatingShapes</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9.1 Finalizing Design Cores and Updating Shapes&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase92_VerifyingNetlistConnectivity">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase92_VerifyingNetlistConnectivity</span><span class="p">(</span><span class="n">SubPhase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9.2 Verifying Netlist Connectivity&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9.2 Verifying Netlist Connectivity | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Phase9_Finalization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Phase9_Finalization</span><span class="p">(</span><span class="n">Phase</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9 Finalization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Phase 9 Finalization | Checksum:&quot;</span>
+	<span class="n">_TIME</span><span class="p">:</span>   <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span>
+	<span class="n">_FINAL</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="n">_PARSERS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Phase</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+		<span class="n">Phase91_FinalizingDesignCoresAndUpdatingShapes</span><span class="p">,</span>
+		<span class="n">Phase92_VerifyingNetlistConnectivity</span>
+	<span class="p">)</span>
+
+	<span class="n">_subphases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SubPhase</span><span class="p">],</span> <span class="n">SubPhase</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Phase9_Finalization.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Phase</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARSERS</span><span class="p">}</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="n">activeParsers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Phase</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subphases</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">continue</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Phase 9.&quot;</span><span class="p">):</span>
+					<span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">activeParsers</span><span class="p">:</span>  <span class="c1"># type: Section</span>
+						<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">phase</span> <span class="o">:=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+							<span class="k">break</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown subphase: </span><span class="si">{</span><span class="n">line</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+					<span class="k">break</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+					<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PhaseFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+					<span class="k">return</span> <span class="n">nextLine</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+			<span class="k">while</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="c1"># if line.StartsWith(&quot;Ending&quot;):</span>
+				<span class="c1"># 	line = yield task.send(line)</span>
+				<span class="c1"># 	break</span>
+
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+				<span class="k">try</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">phase</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+					<span class="n">activeParsers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">value</span>
+					<span class="k">break</span></div>
+
+
+
+<div class="viewcode-block" id="DRCTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DRCTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting DRC Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Time (s):&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="CacheTimingInformationTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CacheTimingInformationTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting Cache Timing Information Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ending Cache Timing Information Task&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="LogicOptimizationTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogicOptimizationTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting Logic Optimization Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ending Logic Optimization Task&quot;</span>
+
+	<span class="n">_PARSERS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Phase</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+		<span class="n">Phase1_Initialization</span><span class="p">,</span>
+		<span class="n">Phase2_TimerUpdateAndTimingDataCollection</span><span class="p">,</span>
+		<span class="n">Phase3_Retarget</span><span class="p">,</span>
+		<span class="n">Phase4_ConstantPropagation</span><span class="p">,</span>
+		<span class="n">Phase5_Sweep</span><span class="p">,</span>
+		<span class="n">Phase6_BUFGOptimization</span><span class="p">,</span>
+		<span class="n">Phase7_ShiftRegisterOptimization</span><span class="p">,</span>
+		<span class="n">Phase8_PostProcessingNetlist</span><span class="p">,</span>
+		<span class="n">Phase9_Finalization</span>
+	<span class="p">)</span>
+
+	<span class="n">_phases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Phase</span><span class="p">],</span> <span class="n">Phase</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LogicOptimizationTask.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_phases</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_PARSERS</span><span class="p">}</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TaskStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="n">activeParsers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Phase</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">continue</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Phase &quot;</span><span class="p">):</span>
+					<span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">activeParsers</span><span class="p">:</span>  <span class="c1"># type: Section</span>
+						<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">_START</span><span class="p">):</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">phase</span> <span class="o">:=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+							<span class="k">break</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown phase: </span><span class="si">{</span><span class="n">line</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+					<span class="k">break</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Ending&quot;</span><span class="p">):</span>
+					<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TaskFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+					<span class="k">return</span> <span class="n">nextLine</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_TIME</span><span class="p">):</span>
+					<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TaskTime</span>
+					<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">return</span> <span class="n">nextLine</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+			<span class="k">while</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="c1"># if line.StartsWith(&quot;Ending&quot;):</span>
+				<span class="c1"># 	line = yield task.send(line)</span>
+				<span class="c1"># 	break</span>
+
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+				<span class="k">try</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">phase</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">except</span> <span class="ne">StopIteration</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+					<span class="n">activeParsers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">value</span>
+					<span class="k">break</span></div>
+
+
+<span class="c1"># @export</span>
+<span class="c1"># class ConnectivityCheckTask(Task):</span>
+<span class="c1"># 	pass</span>
+
+
+<div class="viewcode-block" id="PowerOptimizationTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PowerOptimizationTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting Power Optimization Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ending Power Optimization Task&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="FinalCleanupTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FinalCleanupTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting Final Cleanup Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ending Final Cleanup Task&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="NetlistObfuscationTask">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetlistObfuscationTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting Netlist Obfuscation Task&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ending Netlist Obfuscation Task&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 27.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

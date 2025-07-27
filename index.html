@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The pyEDAA.OutputFilter Documentation &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.svg"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6c02275b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation/Updates" href="Installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#">
+            
+              <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyEDAA.OutputFilter/pyEDAA.OutputFilter.html">Python Class Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The pyEDAA.OutputFilter Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><a class="reference external image-reference" href="https://GitHub.com/edaa-org/pyEDAA.OutputFilter"><img alt="_images/logo.svg" class="align-center" src="_images/logo.svg" style="height: 90px;" />
+</a>
+<br><div class="line-block">
+<div class="line"><a class="reference external" href="https://GitHub.com/edaa-org/pyEDAA.OutputFilter"><img alt="Sourcecode on GitHub" src="https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&amp;style=flat-square&amp;logo=github&amp;longCache=true&amp;logo=GitHub&amp;labelColor=ff8f00" style="height: 22px;" /></a> <a class="reference external" href="Code-License.html"><img alt="Code license" src="https://img.shields.io/pypi/l/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=Apache&amp;label=code" style="height: 22px;" /></a> <a class="reference external" href="https://edaa-org.github.io/pyEDAA.OutputFilter/"><img alt="Documentation - Read Now!" src="https://img.shields.io/website?longCache=true&amp;style=flat-square&amp;label=edaa-org.github.io%2FpyEDAA.OutputFilter&amp;logo=GitHub&amp;logoColor=fff&amp;up_color=blueviolet&amp;up_message=Read%20now%20%E2%9E%9A&amp;url=https%3A%2F%2Fedaa-org.github.io%2FpyEDAA.OutputFilter%2Findex.html" style="height: 22px;" /></a> <a class="reference external" href="License.html"><img alt="Documentation License" src="https://img.shields.io/badge/doc-CC--BY%204.0-green?longCache=true&amp;style=flat-square&amp;logo=CreativeCommons&amp;logoColor=fff" style="height: 22px;" /></a></div>
+<div class="line"><a class="reference external" href="https://pypi.org/project/pyEDAA.OutputFilter/"><img alt="PyPI - Tag" src="https://img.shields.io/pypi/v/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=PyPI&amp;logoColor=FBE072" style="height: 22px;" /></a> <a class="reference internal" href="https://img.shields.io/pypi/status/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=PyPI&amp;logoColor=FBE072"><img alt="PyPI - Status" src="https://img.shields.io/pypi/status/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=PyPI&amp;logoColor=FBE072" style="height: 22px;" /></a> <a class="reference internal" href="https://img.shields.io/pypi/pyversions/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=PyPI&amp;logoColor=FBE072"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=PyPI&amp;logoColor=FBE072" style="height: 22px;" /></a></div>
+<div class="line"><a class="reference external" href="https://GitHub.com/edaa-org/pyEDAA.OutputFilter/actions/workflows/Pipeline.yml"><img alt="GitHub Workflow - Build and Test Status" src="https://img.shields.io/github/actions/workflow/status/edaa-org/pyEDAA.OutputFilter/Pipeline.yml?longCache=true&amp;style=flat-square&amp;label=Build%20and%20Test&amp;logo=GitHub%20Actions&amp;logoColor=FFFFFF" style="height: 22px;" /></a> <a class="reference external" href="https://libraries.io/github/edaa-org/pyEDAA.OutputFilter"><img alt="Libraries.io status for latest release" src="https://img.shields.io/librariesio/release/pypi/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=Libraries.io&amp;logoColor=fff" style="height: 22px;" /></a> <a class="reference external" href="https://www.codacy.com/gh/edaa-org/pyEDAA.OutputFilter"><img alt="Codacy - Quality" src="https://img.shields.io/codacy/grade/4918480c41594ffbb62f8ff98433b800?longCache=true&amp;style=flat-square&amp;logo=codacy" style="height: 22px;" /></a> <a class="reference external" href="https://www.codacy.com/gh/edaa-org/pyEDAA.OutputFilter"><img alt="Codacy - Line Coverage" src="https://img.shields.io/codacy/coverage/c2635df20fa840bc85639ca2fa1d9cb4?longCache=true&amp;style=flat-square&amp;logo=codacy" style="height: 22px;" /></a> <a class="reference external" href="https://codecov.io/gh/edaa-org/pyEDAA.OutputFilter"><img alt="Codecov - Branch Coverage" src="https://img.shields.io/codecov/c/github/edaa-org/pyEDAA.OutputFilter?longCache=true&amp;style=flat-square&amp;logo=Codecov" style="height: 22px;" /></a></div>
+</div>
+<section id="the-pyedaa-outputfilter-documentation">
+<h1>The pyEDAA.OutputFilter Documentation<a class="headerlink" href="#the-pyedaa-outputfilter-documentation" title="Link to this heading"></a></h1>
+<p>Proposal to define an abstract model for outputs from EDA tools and logging libraries.</p>
+<a class="reference internal image-reference" href="_images/work-in-progress.png"><img alt="_images/work-in-progress.png" class="align-center" src="_images/work-in-progress.png" style="height: 150px;" />
+</a>
+<section id="main-goals">
+<h2>Main Goals<a class="headerlink" href="#main-goals" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Live and offline parsing and classification of message lines from tool outputs.</p></li>
+<li><p>Provide a data model for tool specific log files.</p></li>
+<li><p>Extract values, lists and tables of embedded reports or summaries.</p></li>
+<li><p>Implement checks and policies.</p></li>
+</ul>
+</section>
+<section id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Write colorized logs to CI server logs or to shells based on classification.</p></li>
+<li><p>Increase or decrease the severity level of message.</p></li>
+<li><p>List messages of a certain kind (e.g. unused sequential elements).</p></li>
+<li><p>Check for existence / non-existence of messages or outputs (e.g. latches).</p></li>
+<li><p>Collect statistics and convert to datasets for a time series database (TSDB).</p></li>
+</ul>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="list-all-warnings">
+<h3>List all warnings<a class="headerlink" href="#list-all-warnings" title="Link to this heading"></a></h3>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Processor</span>
+
+<span class="n">logfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/data/Stopwatch/toplevel.vds&quot;</span><span class="p">)</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">Processor</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">Parse</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CRITICAL WARNING Messages (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">CriticalWarningMessages</span><span class="p">})</span><span class="si">:</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">processor</span><span class="o">.</span><span class="n">CriticalWarningMessages</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="contributors">
+<span id="id1"></span><h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="extlink-gh reference external" href="https://GitHub.com/Paebbels">Patrick Lehmann</a> (Maintainer)</p></li>
+<li><p><a class="reference external" href="https://GitHub.com/edaa-org/pyEDAA.OutputFilter/graphs/contributors">and more…</a></p></li>
+</ul>
+<div class="admonition-todo admonition" id="id2">
+<span id="license"></span><p class="admonition-title">Todo</p>
+<p>add license texts here</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Installation.html" class="btn btn-neutral float-right" title="Installation/Updates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 27.07.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

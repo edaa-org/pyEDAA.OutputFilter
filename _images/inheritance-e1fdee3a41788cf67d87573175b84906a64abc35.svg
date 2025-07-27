@@ -1,0 +1,65 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="526pt" height="46pt" viewBox="0.00 0.00 526.00 46.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)">
+<ns0:title>inheritanceb3f86dca3e</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.BaseParser" ns1:title="BaseParser" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="233,-38 162,-38 162,-19 233,-19 233,-38" />
+<ns0:text text-anchor="middle" x="197.5" y="-26" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>Phase</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" ns1:title="Phase" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="323,-19 269,-19 269,0 323,0 323,-19" />
+<ns0:text text-anchor="middle" x="296" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Phase</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>BaseParser-&gt;Phase</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M233.07,-21.69C243.11,-19.72 254.01,-17.57 263.83,-15.64" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="264.28,-17.33 268.85,-14.65 263.61,-13.9 264.28,-17.33" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>VivadoMessagesMixin</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.VivadoMessagesMixin" ns1:title="VivadoMessagesMixin" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="126,-19 0,-19 0,0 126,0 126,-19" />
+<ns0:text text-anchor="middle" x="63" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoMessagesMixin</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VivadoMessagesMixin-&gt;BaseParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M126.37,-18.44C136.68,-19.92 147.11,-21.42 156.67,-22.79" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="156.68,-24.56 161.88,-23.54 157.18,-21.09 156.68,-24.56" />
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>VivadoMessagesMixin-&gt;Phase</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M126.21,-9.5C170.66,-9.5 228.6,-9.5 263.74,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="263.75,-11.25 268.75,-9.5 263.75,-7.75 263.75,-11.25" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>Phase4_ConstantPropagation</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation" ns1:title="Phase4_ConstantPropagation" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="518,-19 359,-19 359,0 518,0 518,-19" />
+<ns0:text text-anchor="middle" x="438.5" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Phase4_ConstantPropagation</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>Phase-&gt;Phase4_ConstantPropagation</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M323.1,-9.5C332.04,-9.5 342.6,-9.5 353.62,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="353.71,-11.25 358.71,-9.5 353.71,-7.75 353.71,-11.25" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

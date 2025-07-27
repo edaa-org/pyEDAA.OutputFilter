@@ -1,0 +1,108 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+=================================================
+pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign
+=================================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign
+
+
+**Classes**
+
+- :py:class:`InitialUpdateTimingTask`:
+  Undocumented.
+
+- :py:class:`Phase1_PlacerInitialization`:
+  Undocumented.
+
+- :py:class:`Phase2_DSPRegisterOptimization`:
+  Undocumented.
+
+- :py:class:`Phase3_CriticalPathOptimization`:
+  Undocumented.
+
+- :py:class:`Phase4_CriticalPathOptimization`:
+  Undocumented.
+
+- :py:class:`PhysicalSynthesisTask`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: InitialUpdateTimingTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: InitialUpdateTimingTask
+      :parts: 1
+
+.. autoclass:: Phase1_PlacerInitialization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase1_PlacerInitialization
+      :parts: 1
+
+.. autoclass:: Phase2_DSPRegisterOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase2_DSPRegisterOptimization
+      :parts: 1
+
+.. autoclass:: Phase3_CriticalPathOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase3_CriticalPathOptimization
+      :parts: 1
+
+.. autoclass:: Phase4_CriticalPathOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4_CriticalPathOptimization
+      :parts: 1
+
+.. autoclass:: PhysicalSynthesisTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PhysicalSynthesisTask
+      :parts: 1

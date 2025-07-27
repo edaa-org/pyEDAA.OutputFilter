@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="382pt" height="64pt" viewBox="0.00 0.00 382.00 64.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 60)">
+<ns0:title>inheritancec76d3bbf6b</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>InfoMessage</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.InfoMessage" ns1:title="InfoMessage" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="176.5,-56 97.5,-56 97.5,-37 176.5,-37 176.5,-56" />
+<ns0:text text-anchor="middle" x="137" y="-44" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">InfoMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>VivadoIrregularInfoMessage</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.VivadoIrregularInfoMessage" ns1:title="This class represents an irregular AMD/Xilinx Vivado info message." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="374,-37 220,-37 220,-18 374,-18 374,-37" />
+<ns0:text text-anchor="middle" x="297" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoIrregularInfoMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>InfoMessage-&gt;VivadoIrregularInfoMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M176.65,-41.85C188.18,-40.47 201.29,-38.89 214.48,-37.3" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="214.98,-39.01 219.74,-36.67 214.56,-35.53 214.98,-39.01" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Line</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.Line" ns1:title="This class represents any line in a log file." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="54,-19 0,-19 0,0 54,0 54,-19" />
+<ns0:text text-anchor="middle" x="27" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Line</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>VivadoMessage</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage" ns1:title="This class represents an AMD/Xilinx Vivado message." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="184,-19 90,-19 90,0 184,0 184,-19" />
+<ns0:text text-anchor="middle" x="137" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>Line-&gt;VivadoMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M54.14,-9.5C63.37,-9.5 74.09,-9.5 84.68,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="84.86,-11.25 89.86,-9.5 84.86,-7.75 84.86,-11.25" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VivadoMessage-&gt;VivadoIrregularInfoMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M184.12,-14.75C193.75,-15.85 204.17,-17.04 214.65,-18.23" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="214.63,-19.99 219.79,-18.82 215.02,-16.51 214.63,-19.99" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

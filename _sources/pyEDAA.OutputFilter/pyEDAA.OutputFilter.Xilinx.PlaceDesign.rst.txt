@@ -1,0 +1,486 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+======================================
+pyEDAA.OutputFilter.Xilinx.PlaceDesign
+======================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.PlaceDesign
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.PlaceDesign
+
+
+**Classes**
+
+- :py:class:`Phase11_PlacerInitializationNetlistSorting`:
+  Undocumented.
+
+- :py:class:`Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice`:
+  Undocumented.
+
+- :py:class:`Phase13_BuildPlacerNetlistModel`:
+  Undocumented.
+
+- :py:class:`Phase14_ConstrainClocks_Macros`:
+  Undocumented.
+
+- :py:class:`Phase1_PlacerInitialization`:
+  Undocumented.
+
+- :py:class:`Phase21_Floorplanning`:
+  Undocumented.
+
+- :py:class:`Phase22_UpdateTimingBeforeSLRPathOpt`:
+  Undocumented.
+
+- :py:class:`Phase23_PostProcessingInFloorplanning`:
+  Undocumented.
+
+- :py:class:`Phase24_GlobalPlacePhase1`:
+  Undocumented.
+
+- :py:class:`Phase251_UpdateTimingBeforePhysicalSynthesis`:
+  Undocumented.
+
+- :py:class:`Phase252_PhysicalSynthesisInPlacer`:
+  Undocumented.
+
+- :py:class:`Phase25_GlobalPlacePhase2`:
+  Undocumented.
+
+- :py:class:`Phase2_GlobalPlacement`:
+  Undocumented.
+
+- :py:class:`Phase31_CommitMultiColumnMacros`:
+  Undocumented.
+
+- :py:class:`Phase32_CommitMostMacrosLUTRAMs`:
+  Undocumented.
+
+- :py:class:`Phase33_AreaSwapOptimization`:
+  Undocumented.
+
+- :py:class:`Phase34_PipelineRegisterOptimization`:
+  Undocumented.
+
+- :py:class:`Phase35_FastOptimization`:
+  Undocumented.
+
+- :py:class:`Phase36_SmallShapeDetailPlacement`:
+  Undocumented.
+
+- :py:class:`Phase37_ReassignLUTPins`:
+  Undocumented.
+
+- :py:class:`Phase38_PipelineRegisterOptimization`:
+  Undocumented.
+
+- :py:class:`Phase39_FastOptimization`:
+  Undocumented.
+
+- :py:class:`Phase3_DetailPlacement`:
+  Undocumented.
+
+- :py:class:`Phase4111_BUFGInsertion`:
+  Undocumented.
+
+- :py:class:`Phase4112_PostPlacementTimingOptimization`:
+  Undocumented.
+
+- :py:class:`Phase411_PostPlacementOptimization`:
+  Undocumented.
+
+- :py:class:`Phase41_PostCommitOptimization`:
+  Undocumented.
+
+- :py:class:`Phase42_PostPlacementCleanup`:
+  Undocumented.
+
+- :py:class:`Phase431_PrintEstimatedCongestion`:
+  Undocumented.
+
+- :py:class:`Phase43_PlacerReporting`:
+  Undocumented.
+
+- :py:class:`Phase44_FinalPlacementCleanup`:
+  Undocumented.
+
+- :py:class:`Phase4_PostPlacementOptimizationAndCleanUp`:
+  Undocumented.
+
+- :py:class:`PlacerTask`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: Phase11_PlacerInitializationNetlistSorting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase11_PlacerInitializationNetlistSorting
+      :parts: 1
+
+.. autoclass:: Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice
+      :parts: 1
+
+.. autoclass:: Phase13_BuildPlacerNetlistModel
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase13_BuildPlacerNetlistModel
+      :parts: 1
+
+.. autoclass:: Phase14_ConstrainClocks_Macros
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase14_ConstrainClocks_Macros
+      :parts: 1
+
+.. autoclass:: Phase1_PlacerInitialization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase1_PlacerInitialization
+      :parts: 1
+
+.. autoclass:: Phase21_Floorplanning
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase21_Floorplanning
+      :parts: 1
+
+.. autoclass:: Phase22_UpdateTimingBeforeSLRPathOpt
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase22_UpdateTimingBeforeSLRPathOpt
+      :parts: 1
+
+.. autoclass:: Phase23_PostProcessingInFloorplanning
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase23_PostProcessingInFloorplanning
+      :parts: 1
+
+.. autoclass:: Phase24_GlobalPlacePhase1
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase24_GlobalPlacePhase1
+      :parts: 1
+
+.. autoclass:: Phase251_UpdateTimingBeforePhysicalSynthesis
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase251_UpdateTimingBeforePhysicalSynthesis
+      :parts: 1
+
+.. autoclass:: Phase252_PhysicalSynthesisInPlacer
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase252_PhysicalSynthesisInPlacer
+      :parts: 1
+
+.. autoclass:: Phase25_GlobalPlacePhase2
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase25_GlobalPlacePhase2
+      :parts: 1
+
+.. autoclass:: Phase2_GlobalPlacement
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase2_GlobalPlacement
+      :parts: 1
+
+.. autoclass:: Phase31_CommitMultiColumnMacros
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase31_CommitMultiColumnMacros
+      :parts: 1
+
+.. autoclass:: Phase32_CommitMostMacrosLUTRAMs
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase32_CommitMostMacrosLUTRAMs
+      :parts: 1
+
+.. autoclass:: Phase33_AreaSwapOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase33_AreaSwapOptimization
+      :parts: 1
+
+.. autoclass:: Phase34_PipelineRegisterOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase34_PipelineRegisterOptimization
+      :parts: 1
+
+.. autoclass:: Phase35_FastOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase35_FastOptimization
+      :parts: 1
+
+.. autoclass:: Phase36_SmallShapeDetailPlacement
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase36_SmallShapeDetailPlacement
+      :parts: 1
+
+.. autoclass:: Phase37_ReassignLUTPins
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase37_ReassignLUTPins
+      :parts: 1
+
+.. autoclass:: Phase38_PipelineRegisterOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase38_PipelineRegisterOptimization
+      :parts: 1
+
+.. autoclass:: Phase39_FastOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase39_FastOptimization
+      :parts: 1
+
+.. autoclass:: Phase3_DetailPlacement
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase3_DetailPlacement
+      :parts: 1
+
+.. autoclass:: Phase4111_BUFGInsertion
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4111_BUFGInsertion
+      :parts: 1
+
+.. autoclass:: Phase4112_PostPlacementTimingOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4112_PostPlacementTimingOptimization
+      :parts: 1
+
+.. autoclass:: Phase411_PostPlacementOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase411_PostPlacementOptimization
+      :parts: 1
+
+.. autoclass:: Phase41_PostCommitOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase41_PostCommitOptimization
+      :parts: 1
+
+.. autoclass:: Phase42_PostPlacementCleanup
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase42_PostPlacementCleanup
+      :parts: 1
+
+.. autoclass:: Phase431_PrintEstimatedCongestion
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase431_PrintEstimatedCongestion
+      :parts: 1
+
+.. autoclass:: Phase43_PlacerReporting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase43_PlacerReporting
+      :parts: 1
+
+.. autoclass:: Phase44_FinalPlacementCleanup
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase44_FinalPlacementCleanup
+      :parts: 1
+
+.. autoclass:: Phase4_PostPlacementOptimizationAndCleanUp
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4_PostPlacementOptimizationAndCleanUp
+      :parts: 1
+
+.. autoclass:: PlacerTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PlacerTask
+      :parts: 1
