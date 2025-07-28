@@ -32,9 +32,10 @@
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
+from pyTooling.Versioning  import YearReleaseVersion
 
-from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2   import Task, Phase, SubPhase, SubSubPhase, SubSubSubPhase
+from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, SubSubPhase, SubSubSubPhase
 
 
 @export
@@ -150,6 +151,79 @@ class Phase23_PostProcessingInFloorplanning(SubPhase):
 
 
 @export
+class Phase241_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 2.4.1 UpdateTiming Before Physical Synthesis"
+	_FINISH: ClassVar[str] = "Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase242_PhysicalSynthesisInPlacer(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 2.4.2 Physical Synthesis In Placer"
+	_FINISH: ClassVar[str] = "Phase 2.4.2 Physical Synthesis In Placer | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+@export
+class Phase24_GlobalPlacementCore(SubPhase):
+	_START:  ClassVar[str] = "Phase 2.4 Global Placement Core"
+	_FINISH: ClassVar[str] = "Phase 2.4 Global Placement Core | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase241_UpdateTimingBeforePhysicalSynthesis,
+		Phase242_PhysicalSynthesisInPlacer
+	)
+
+	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 2.5."):
+					for parser in activeParsers:  # type: SubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
 class Phase24_GlobalPlacePhase1(SubPhase):
 	_START:  ClassVar[str] = "Phase 2.4 Global Place Phase1"
 	_FINISH: ClassVar[str] = "Phase 2.4 Global Place Phase1 | Checksum:"
@@ -237,20 +311,36 @@ class Phase2_GlobalPlacement(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase21_Floorplanning,
-		Phase22_UpdateTimingBeforeSLRPathOpt,
-		Phase23_PostProcessingInFloorplanning,
-		Phase24_GlobalPlacePhase1,
-		Phase25_GlobalPlacePhase2
-	)
+	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Phase], ...]]] = {
+		YearReleaseVersion(2020, 1): (
+			Phase21_Floorplanning,
+			Phase22_UpdateTimingBeforeSLRPathOpt,
+			Phase23_PostProcessingInFloorplanning,
+			Phase24_GlobalPlacementCore
+		),
+		YearReleaseVersion(2025, 1): (
+			Phase21_Floorplanning,
+			Phase22_UpdateTimingBeforeSLRPathOpt,
+			Phase23_PostProcessingInFloorplanning,
+			Phase24_GlobalPlacePhase1,
+			Phase25_GlobalPlacePhase2
+		)
+	}
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
 
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
+	def __init__(self, task: Task):
+		super().__init__(task)
 
-		self._subphases = {p: p(self) for p in self._PARSERS}
+		processor: "Processor" = task._command._processor
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		if (toolVersion.Major, toolVersion.Minor) in ((2020, 1), (2020, 2), (2021, 1), (2021, 2), (2022, 1), (2022, 2), (2023, 1), (2023, 2), (2024, 1), (2024, 2)):
+			parsers = self._PARSERS[YearReleaseVersion(2020, 1)]
+		else:
+			parsers = self._PARSERS[YearReleaseVersion(2025, 1)]
+
+		self._subphases = {p: p(self) for p in parsers}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -309,9 +399,149 @@ class Phase32_CommitMostMacrosLUTRAMs(SubPhase):
 
 
 @export
+class Phase331_SmallShapeClustering(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 3.3.1 Small Shape Clustering"
+	_FINISH: ClassVar[str] = "Phase 3.3.1 Small Shape Clustering | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase3321_SliceAreaSwapInitial(SubSubSubPhase):
+	_START:  ClassVar[str] = "Phase 3.3.2.1 Slice Area Swap Initial"
+	_FINISH: ClassVar[str] = "Phase 3.3.2.1 Slice Area Swap Initial | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase332_SliceAreaSwap(SubSubPhase):
+	_START:  ClassVar[str] = "Phase 3.3.2 Slice Area Swap"
+	_FINISH: ClassVar[str] = "Phase 3.3.2 Slice Area Swap | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase3321_SliceAreaSwapInitial,
+	)
+
+	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
+
+	def __init__(self, subsubphase: SubSubPhase):
+		super().__init__(subsubphase)
+
+		self._subsubsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubsubphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 3.3.2."):
+					for parser in activeParsers:  # type: SubSubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.SubSubPhaseTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+@export
+class Phase33_SmallShapeDP(SubPhase):
+	_START:  ClassVar[str] = "Phase 3.3 Small Shape DP"
+	_FINISH: ClassVar[str] = "Phase 3.3 Small Shape DP | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase331_SmallShapeClustering,
+		Phase332_SliceAreaSwap
+	)
+
+	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subsubphases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subsubphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase 3.3."):
+					for parser in activeParsers:  # type: SubSubPhase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
 class Phase33_AreaSwapOptimization(SubPhase):
 	_START:  ClassVar[str] = "Phase 3.3 Area Swap Optimization"
 	_FINISH: ClassVar[str] = "Phase 3.3 Area Swap Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase34_ReassignLUTPpins(SubPhase):
+	_START:  ClassVar[str] = "Phase 3.4 Re-assign LUT pins"
+	_FINISH: ClassVar[str] = "Phase 3.4 Re-assign LUT pins | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
@@ -323,9 +553,23 @@ class Phase34_PipelineRegisterOptimization(SubPhase):
 
 
 @export
+class Phase35_PipelineRegisterOptimization(SubPhase):
+	_START:  ClassVar[str] = "Phase 3.5 Pipeline Register Optimization"
+	_FINISH: ClassVar[str] = "Phase 3.5 Pipeline Register Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
 class Phase35_FastOptimization(SubPhase):
 	_START:  ClassVar[str] = "Phase 3.5 Fast Optimization"
 	_FINISH: ClassVar[str] = "Phase 3.5 Fast Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+
+@export
+class Phase36_FastOptimization(SubPhase):
+	_START:  ClassVar[str] = "Phase 3.6 Fast Optimization"
+	_FINISH: ClassVar[str] = "Phase 3.6 Fast Optimization | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
@@ -364,24 +608,42 @@ class Phase3_DetailPlacement(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase31_CommitMultiColumnMacros,
-		Phase32_CommitMostMacrosLUTRAMs,
-		Phase33_AreaSwapOptimization,
-		Phase34_PipelineRegisterOptimization,
-		Phase35_FastOptimization,
-		Phase36_SmallShapeDetailPlacement,
-		Phase37_ReassignLUTPins,
-		Phase38_PipelineRegisterOptimization,
-		Phase39_FastOptimization
-	)
+	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Phase], ...]]] = {
+		YearReleaseVersion(2020, 1): (
+			Phase31_CommitMultiColumnMacros,
+			Phase32_CommitMostMacrosLUTRAMs,
+			Phase33_SmallShapeDP,
+			Phase34_ReassignLUTPpins,
+			Phase35_PipelineRegisterOptimization,
+			Phase36_FastOptimization
+		),
+		YearReleaseVersion(2025, 1): (
+			Phase31_CommitMultiColumnMacros,
+			Phase32_CommitMostMacrosLUTRAMs,
+			Phase33_AreaSwapOptimization,
+			Phase34_PipelineRegisterOptimization,
+			Phase35_FastOptimization,
+			Phase36_SmallShapeDetailPlacement,
+			Phase37_ReassignLUTPins,
+			Phase38_PipelineRegisterOptimization,
+			Phase39_FastOptimization
+		)
+	}
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
 
 	def __init__(self, phase: Phase):
 		super().__init__(phase)
 
-		self._subphases = {p: p(self) for p in self._PARSERS}
+		processor: "Processor" = phase._command._processor
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		if (toolVersion.Major, toolVersion.Minor) in ((2020, 1), (2020, 2), (2021, 1), (2021, 2), (2022, 1), (2022, 2), (2023, 1), (2023, 2), (2024, 1), (2024, 2)):
+			parsers = self._PARSERS[YearReleaseVersion(2020, 1)]
+		else:
+			parsers = self._PARSERS[YearReleaseVersion(2025, 1)]
+
+		self._subphases = {p: p(self) for p in parsers}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
