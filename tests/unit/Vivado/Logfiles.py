@@ -82,6 +82,7 @@ class Stopwatch(TestCase):
 		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile(self) -> None:
+		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
 		processor = Document(logfile)
 		processor.Parse()
@@ -130,3 +131,36 @@ class Stopwatch(TestCase):
 		self.assertEqual(0, len(writeBitstream.WarningMessages))
 		self.assertEqual(0, len(writeBitstream.CriticalWarningMessages))
 		self.assertEqual(0, len(writeBitstream.ErrorMessages))
+
+
+class CERN_DevKit(TestCase):
+	def test_SynthesisLogfile(self) -> None:
+		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		self.assertEqual(70, len(processor.InfoMessages))
+		self.assertEqual(124, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile(self) -> None:
+		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		self.assertEqual(152, len(processor.InfoMessages))
+		self.assertEqual(2, len(processor.WarningMessages))
+		self.assertEqual(2, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)

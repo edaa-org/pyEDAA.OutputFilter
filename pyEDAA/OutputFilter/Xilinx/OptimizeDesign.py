@@ -56,7 +56,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._START):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._TaskStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.TaskStart
 		nextLine = yield line
@@ -64,7 +64,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._TaskFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.TaskEnd
 		line = yield line
