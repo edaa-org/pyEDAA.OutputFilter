@@ -29,12 +29,12 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar, List, Type, Tuple
+from typing import ClassVar, Type, Tuple, Dict
 
 from pyTooling.Decorators import export
+from pyTooling.Versioning import VersionRange, YearReleaseVersion, RangeBoundHandling
 
-from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2   import Task, Phase
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, Phase
 
 
 @export
@@ -69,59 +69,16 @@ class Phase4_CriticalPathOptimization(Phase):
 
 
 @export
-class PhysicalSynthesisTask(Task):
+class PhysicalSynthesisTask(TaskWithPhases):
 	_NAME:   ClassVar[str] = "Physical Synthesis Task"
 	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase1_PlacerInitialization,
-		Phase2_DSPRegisterOptimization,
-		Phase3_CriticalPathOptimization,
-		Phase4_CriticalPathOptimization
-	)
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._TaskStart(line)
-
-		activeParsers: List[Phase] = list(self._phases.values())
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith("Phase "):
-					for parser in activeParsers:  # type: Phase
-						if line.StartsWith(parser._START):
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						raise Exception(f"Unknown phase: {line!r}")
-					break
-				elif line.StartsWith("Ending"):
-					nextLine = yield from self._TaskFinish(line)
-					return nextLine
-				elif line.StartsWith(self._TIME):
-					line._kind = LineKind.TaskTime
-					nextLine = yield line
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
+		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			Phase1_PlacerInitialization,
+			Phase2_DSPRegisterOptimization,
+			Phase3_CriticalPathOptimization,
+			Phase4_CriticalPathOptimization
+		)
+	}

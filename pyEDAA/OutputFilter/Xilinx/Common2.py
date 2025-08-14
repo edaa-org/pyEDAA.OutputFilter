@@ -37,6 +37,7 @@ from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
 
+from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
@@ -179,35 +180,25 @@ class Preamble(Parser):
 		nextLine = yield line
 		return nextLine
 
+
 @export
 class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type["Phase"], ...]] = tuple()
-
 	_command:  "Command"
 	_duration: float
-	_phases:   Dict[Type["Phase"], "Phase"]
 
 	def __init__(self, command: "Command"):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
 		self._command = command
-		self._phases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def Command(self) -> "Command":
 		return self._command
-
-	@readonly
-	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
-		return self._phases
-
-	def __getitem__(self, key: Type["Phase"]) -> "Phase":
-		return self._phases[key]
 
 	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._START):
@@ -259,22 +250,104 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 
 @export
+class TaskWithPhases(Task):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+	# _TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Dict[YearReleaseVersion,Tuple[Type["Phase"], ...]]] = tuple()
+
+	_phases:   Dict[Type["Phase"], "Phase"]
+
+	def __init__(self, command: "Command"):
+		super().__init__(command)
+
+		processor: "Processor" = command._processor
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		for versionRange in self._PARSERS:
+			if toolVersion in versionRange:
+				parsers = self._PARSERS[versionRange]
+				break
+		else:
+			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
+			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
+			raise ex
+
+		self._phases =  {p: p(self) for p in parsers}
+
+	@readonly
+	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
+		return self._phases
+
+	def __getitem__(self, key: Type["Phase"]) -> "Phase":
+		return self._phases[key]
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		activeParsers: List[Phase] = list(self._phases.values())
+
+		while True:
+			while True:
+				#				print(line)
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase "):
+					for parser in activeParsers:  # type: Phase
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown phase: {line!r}")
+					break
+				elif line.StartsWith("Ending"):
+					nextLine = yield from self._TaskFinish(line)
+					return nextLine
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.TaskTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				#				print(line)
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+
+@export
 class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_task:     Task
+	_task:     TaskWithPhases
 	_duration: float
 
-	def __init__(self, task: Task):
+	def __init__(self, task: TaskWithPhases):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
 		self._task = task
 
 	@readonly
-	def Task(self) -> Task:
+	def Task(self) -> TaskWithPhases:
 		return self._task
 
 	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
@@ -320,6 +393,69 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 
 		nextLine = yield from self._PhaseFinish(line)
 		return nextLine
+
+
+@export
+class PhaseWithChildren(Phase):
+	_subphases: Dict[Type["SubPhase"], "SubPhase"]
+
+	def __init__(self, task: TaskWithPhases):
+		super().__init__(task)
+
+		processor: "Processor" = task._command._processor
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		for versionRange in self._PARSERS:
+			if toolVersion in versionRange:
+				parsers = self._PARSERS[versionRange]
+				break
+		else:
+			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
+			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
+			raise ex
+
+		self._subphases = {p: p(self) for p in parsers}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._PhaseStart(line)
+
+		activeParsers: List[Phase] = list(self._subphases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith(self._SUBPHASE_PREFIX):
+					for parser in activeParsers:  # type: Section
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subphase: {line!r}")
+					break
+				elif line.StartsWith(self._FINISH):
+					nextLine = yield from self._PhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
 
 @export
 class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):

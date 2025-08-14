@@ -32,10 +32,11 @@
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators import export
-from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Versioning import YearReleaseVersion, VersionRange, RangeBoundHandling
 
+from pyEDAA.OutputFilter                    import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx             import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2     import Task, Phase, SubPhase
+from pyEDAA.OutputFilter.Xilinx.Common2     import TaskWithPhases, Phase, SubPhase
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 
 
@@ -160,15 +161,15 @@ class Phase2_RouterInitialization(Phase):
 	_FINISH: ClassVar[str] = "Phase 2 Router Initialization | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Phase], ...]]] = {
-		YearReleaseVersion(2020, 1): (
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
+		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase21_FixTopologyConstraints,
 			Phase22_PreRouteCleanup,
 			Phase23_GlobalClockNetRouting,
 			Phase24_UpdateTiming,
 			Phase25_UpdateTimingForBusSkew
 		),
-		YearReleaseVersion(2025, 1): (
+		VersionRange(YearReleaseVersion(2025, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase21_FixTopologyConstraints,
 			Phase22_PreRouteCleanup,
 			Phase23_UpdateTiming,
@@ -178,16 +179,20 @@ class Phase2_RouterInitialization(Phase):
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
 
-	def __init__(self, task: Task):
+	def __init__(self, task: TaskWithPhases):
 		super().__init__(task)
 
 		processor: "Processor" = task._command._processor
 		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
 
-		if (toolVersion.Major, toolVersion.Minor) in ((2020, 1), (2020, 2), (2021, 1), (2021, 2), (2022, 1), (2022, 2), (2023, 1), (2023, 2), (2024, 1), (2024, 2)):
-			parsers = self._PARSERS[YearReleaseVersion(2020, 1)]
+		for versionRange in self._PARSERS:
+			if toolVersion in versionRange:
+				parsers = self._PARSERS[versionRange]
+				break
 		else:
-			parsers = self._PARSERS[YearReleaseVersion(2025, 1)]
+			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
+			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
+			raise ex
 
 		self._subphases = {p: p(self) for p in parsers}
 
@@ -894,12 +899,12 @@ class Phase13_PostRouteEventProcessing(Phase):
 
 
 @export
-class RoutingTask(Task):
+class RoutingTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Routing Task"
 	_FINISH: ClassVar[str] = "Ending Routing Task"
 
-	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Phase], ...]]] = {
-		YearReleaseVersion(2020, 1): (
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
+		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase1_BuildRTDesign,
 			Phase2_RouterInitialization,
 			Phase3_Initial_Routing,
@@ -914,7 +919,7 @@ class RoutingTask(Task):
 			Phase12_PostRouterTiming,
 			Phase13_PostRouteEventProcessing
 		),
-		YearReleaseVersion(2025, 1): (
+		VersionRange(YearReleaseVersion(2025, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase1_BuildRTDesign,
 			Phase2_RouterInitialization,
 			Phase3_GlobalRouting,
@@ -930,45 +935,3 @@ class RoutingTask(Task):
 			Phase13_PostRouteEventProcessing
 		)
 	}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._TaskStart(line)
-
-		activeParsers: List[Phase] = list(self._phases.values())
-
-		while True:
-			while True:
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith("Phase "):
-					for parser in activeParsers:  # type: Section
-						if line.StartsWith(parser._START):
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						raise Exception(f"Unknown phase: {line!r}")
-					break
-				elif line.StartsWith("Ending"):
-					nextLine = yield from self._TaskFinish(line)
-					return nextLine
-				elif line.StartsWith(self._TIME):
-					line._kind = LineKind.TaskTime
-					nextLine = yield line
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
