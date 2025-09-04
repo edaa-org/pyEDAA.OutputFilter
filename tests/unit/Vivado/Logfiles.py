@@ -164,3 +164,408 @@ class CERN_DevKit(TestCase):
 		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
+
+
+class Enclustra_Mercury_ZX5(TestCase):
+	def test_SynthesisLogfile_2019_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2019_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2019_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2019, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2019_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2019, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2020_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2020, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2020_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2020, 1), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2020_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2020, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2020_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2020, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2021_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2021, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2021_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2021, 1), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2021_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2021, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2021_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2021, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2022_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2022, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2022_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2022, 1), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2022_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2022, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2022_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2022, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2023_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2023, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2023_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2023, 1), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2023_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2023, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2023_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2023, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2024_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2024_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 1), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2024_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.2.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2024_2(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.2.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
+
+	def test_SynthesisLogfile_2025_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.1.vds")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(70, len(processor.InfoMessages))
+		# self.assertEqual(124, len(processor.WarningMessages))
+		# self.assertEqual(0, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[SynthesizeDesign]
+		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+	def test_ImplementationLogfile_2025_1(self) -> None:
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.1.vdi")
+		processor = Document(logfile)
+		processor.Parse()
+
+		self.assertLess(processor.Duration, 0.1)
+
+		# self.assertEqual(152, len(processor.InfoMessages))
+		# self.assertEqual(2, len(processor.WarningMessages))
+		# self.assertEqual(2, len(processor.CriticalWarningMessages))
+		# self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 1), processor.Preamble.ToolVersion)

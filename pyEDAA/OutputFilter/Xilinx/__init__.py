@@ -255,6 +255,10 @@ class Document(Processor):
 
 		self._logfile = logfile
 
+	@readonly
+	def Logfile(self) -> Path:
+		return self._logfile
+
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
 			with self._logfile.open("r", encoding="utf-8") as f:

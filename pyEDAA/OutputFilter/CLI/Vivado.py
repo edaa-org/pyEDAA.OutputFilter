@@ -104,12 +104,12 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				writeOutput(line)
 
 	def _WriteOutput(self, line: Line):
-		self.WriteNormal(f"{line}")
+		self.WriteNormal(f"{line.LineNumber:4}: {line}")
 
 	def _WriteColoredOutput(self, line: Line):
 		color = self.GetColorOfLine(line)
 		message = str(line).replace("{", "{{").replace("}", "}}")
-		self.WriteNormal(f"{{{color}}}{message}{{NOCOLOR}}".format(**self.Foreground))
+		self.WriteNormal(f"{line.LineNumber:4}: {{{color}}}{message}{{NOCOLOR}}".format(**self.Foreground))
 
 
 		# if args.info:

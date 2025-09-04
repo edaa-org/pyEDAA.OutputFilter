@@ -202,7 +202,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._START):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._TaskStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.TaskStart
 		nextLine = yield line
@@ -210,7 +210,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._TaskFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.TaskEnd
 		line = yield line
@@ -352,7 +352,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 
 	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._START):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._PhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.PhaseStart
 		nextLine = yield line
@@ -360,7 +360,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 
 	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
 		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._PhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.PhaseEnd
 		line = yield line
@@ -369,6 +369,16 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 			while self._TIME is not None:
 				if line.StartsWith(self._TIME):
 					line._kind = LineKind.PhaseTime
+					break
+
+				line = yield line
+
+			line = yield line
+
+		if self._FINAL is not None:
+			while self._FINAL is not None:
+				if line.StartsWith(self._FINAL):
+					line._kind = LineKind.PhaseFinal
 					break
 
 				line = yield line
@@ -473,7 +483,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 
 	def _SubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if not line.StartsWith(self._START):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.SubPhaseStart
 		nextLine = yield line
@@ -481,7 +491,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 
 	def _SubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
 		if not line.StartsWith(self._FINISH):
-			raise ProcessorException()
+			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		if self._TIME is None:
 			line._kind = LineKind.SubPhaseTime
