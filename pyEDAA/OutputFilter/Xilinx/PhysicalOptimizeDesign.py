@@ -75,7 +75,7 @@ class PhysicalSynthesisTask(TaskWithPhases):
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase1_PlacerInitialization,
 			Phase2_DSPRegisterOptimization,
 			Phase3_CriticalPathOptimization,

@@ -162,7 +162,7 @@ class Phase2_RouterInitialization(Phase):
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase21_FixTopologyConstraints,
 			Phase22_PreRouteCleanup,
 			Phase23_GlobalClockNetRouting,
@@ -904,7 +904,7 @@ class RoutingTask(TaskWithPhases):
 	_FINISH: ClassVar[str] = "Ending Routing Task"
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase1_BuildRTDesign,
 			Phase2_RouterInitialization,
 			Phase3_Initial_Routing,

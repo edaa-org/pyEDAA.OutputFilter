@@ -32,9 +32,18 @@
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
+from pyTooling.Versioning  import VersionRange, YearReleaseVersion, RangeBoundHandling
 
-from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2   import Task, Phase, SubPhase
+from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, TaskWithPhases
+
+
+@export
+class Phase1_Retarget(Phase):
+	_START:  ClassVar[str] = "Phase 1 Retarget"
+	_FINISH: ClassVar[str] = "Phase 1 Retarget | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
 
 
 @export
@@ -113,6 +122,14 @@ class Phase1_Initialization(Phase):
 
 
 @export
+class Phase2_ConstantPropagation(Phase):
+	_START:  ClassVar[str] = "Phase 2 Constant propagation"
+	_FINISH: ClassVar[str] = "Phase 2 Constant propagation | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
+
+
+@export
 class Phase21_TimerUpdate(SubPhase):
 	_START:  ClassVar[str] = "Phase 2.1 Timer Update"
 	_FINISH: ClassVar[str] = "Phase 2.1 Timer Update | Checksum:"
@@ -188,11 +205,27 @@ class Phase2_TimerUpdateAndTimingDataCollection(Phase):
 
 
 @export
+class Phase3_Sweep(Phase):
+	_START:  ClassVar[str] = "Phase 3 Sweep"
+	_FINISH: ClassVar[str] = "Phase 3 Sweep | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
+
+
+@export
 class Phase3_Retarget(Phase):
 	_START:  ClassVar[str] = "Phase 3 Retarget"
 	_FINISH: ClassVar[str] = "Phase 3 Retarget | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
+
+
+@export
+class Phase4_BUFGOptimization(Phase):
+	_START:  ClassVar[str] = "Phase 4 BUFG optimization"
+	_FINISH: ClassVar[str] = "Phase 4 BUFG optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
 
 @export
@@ -204,11 +237,27 @@ class Phase4_ConstantPropagation(Phase):
 
 
 @export
+class Phase5_ShiftRegisterOptimization(Phase):
+	_START:  ClassVar[str] = "Phase 5 Shift Register Optimization"
+	_FINISH: ClassVar[str] = "Phase 5 Shift Register Optimization | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
+
+
+@export
 class Phase5_Sweep(Phase):
 	_START:  ClassVar[str] = "Phase 5 Sweep"
 	_FINISH: ClassVar[str] = "Phase 5 Sweep | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
+
+
+@export
+class Phase6_PostProcessingNetlist(Phase):
+	_START:  ClassVar[str] = "Phase 6 Post Processing Netlist"
+	_FINISH: ClassVar[str] = "Phase 6 Post Processing Netlist | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
 
 @export
@@ -323,28 +372,31 @@ class CacheTimingInformationTask(Task):
 
 
 @export
-class LogicOptimizationTask(Task):
+class LogicOptimizationTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Logic Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase1_Initialization,
-		Phase2_TimerUpdateAndTimingDataCollection,
-		Phase3_Retarget,
-		Phase4_ConstantPropagation,
-		Phase5_Sweep,
-		Phase6_BUFGOptimization,
-		Phase7_ShiftRegisterOptimization,
-		Phase8_PostProcessingNetlist,
-		Phase9_Finalization
-	)
-
-	_phases: Dict[Type[Phase], Phase]
-
-	def __init__(self, command: "Command"):
-		super().__init__(command)
-
-		self._phases = {p: p(self) for p in self._PARSERS}
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
+			Phase1_Retarget,
+			Phase2_ConstantPropagation,
+			Phase3_Sweep,
+			Phase4_BUFGOptimization,
+			Phase5_ShiftRegisterOptimization,
+			Phase6_PostProcessingNetlist
+		),
+		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			Phase1_Initialization,
+			Phase2_TimerUpdateAndTimingDataCollection,
+			Phase3_Retarget,
+			Phase4_ConstantPropagation,
+			Phase5_Sweep,
+			Phase6_BUFGOptimization,
+			Phase7_ShiftRegisterOptimization,
+			Phase8_PostProcessingNetlist,
+			Phase9_Finalization
+		)
+	}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)

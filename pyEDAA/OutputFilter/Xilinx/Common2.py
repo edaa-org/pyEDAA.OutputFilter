@@ -336,6 +336,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[Nullable[str]] = None
 
 	_task:     TaskWithPhases
 	_duration: float

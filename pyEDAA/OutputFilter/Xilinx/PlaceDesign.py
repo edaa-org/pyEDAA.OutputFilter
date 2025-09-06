@@ -76,7 +76,7 @@ class Phase1_PlacerInitialization(PhaseWithChildren):
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase 1."
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase11_PlacerInitializationNetlistSorting,
 			Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice,
 			Phase13_BuildPlacerNetlistModel,
@@ -270,7 +270,7 @@ class Phase2_GlobalPlacement(PhaseWithChildren):
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase 2."
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase21_Floorplanning,
 			Phase22_UpdateTimingBeforeSLRPathOpt,
 			Phase23_PostProcessingInFloorplanning,
@@ -552,7 +552,7 @@ class Phase3_DetailPlacement(PhaseWithChildren):
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase31_CommitMultiColumnMacros,
 			Phase32_CommitMostMacrosLUTRAMs,
 			Phase33_SmallShapeDP,
@@ -837,7 +837,7 @@ class Phase4_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase41_PostCommitOptimization,
 			Phase42_PostPlacementCleanup,
 			Phase43_PlacerReporting,
@@ -890,7 +890,7 @@ class PlacerTask(TaskWithPhases):
 	_FINISH: ClassVar[str] = "Ending Placer Task"
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
 			Phase1_PlacerInitialization,
 			Phase2_GlobalPlacement,
 			Phase3_DetailPlacement,

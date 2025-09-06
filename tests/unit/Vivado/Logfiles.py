@@ -196,7 +196,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(2, len(processor.CriticalWarningMessages))
 		# self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
+		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 
 	def test_SynthesisLogfile_2019_2(self) -> None:
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vds")
