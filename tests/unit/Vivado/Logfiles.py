@@ -179,7 +179,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(0, len(processor.CriticalWarningMessages))
 		# self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
+		self.assertEqual(YearReleaseVersion(2019, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))

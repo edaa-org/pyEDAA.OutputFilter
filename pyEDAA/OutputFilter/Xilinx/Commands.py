@@ -31,23 +31,26 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib import Path
 from re      import compile as re_compile
-from typing import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
+from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
+from pyTooling.Versioning import VersionRange, YearReleaseVersion, RangeBoundHandling
 
-from pyEDAA.OutputFilter.Xilinx           import VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
-from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage, VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
+from pyEDAA.OutputFilter                         import OutputFilterException
+from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
+from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
+from pyEDAA.OutputFilter.Xilinx.Common2          import Parser
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, PartResourceSummary
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import CrossBoundaryAndAreaOptimization, ROM_RAM_DSP_SR_Retiming
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ApplyingXDCTimingConstraints, TimingOptimization
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FinalNetlistCleanup, RenamingGeneratedInstances
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RebuildingUserHierarchy, RenamingGeneratedPorts
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedNets, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, RTLHierarchicalComponentStatistics
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import PartResourceSummary, CrossBoundaryAndAreaOptimization
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ROM_RAM_DSP_SR_Retiming, ApplyingXDCTimingConstraints
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TimingOptimization, TechnologyMapping, IOInsertion
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FlatteningBeforeIOInsertion, FinalNetlistCleanup
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedInstances, RebuildingUserHierarchy
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedPorts, RenamingGeneratedNets
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import Task, DRCTask, CacheTimingInformationTask, LogicOptimizationTask
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import PowerOptimizationTask, FinalCleanupTask, NetlistObfuscationTask
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign      import PlacerTask
@@ -140,10 +143,23 @@ class Command(Parser):
 class CommandWithSections(Command):
 	_sections:  Dict[Type[Section], Section]
 
+	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Section], ...]]] = dict()
+
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
-		self._sections =  {p: p(self) for p in self._PARSERS}
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		for versionRange in self._PARSERS:
+			if toolVersion in versionRange:
+				parsers = self._PARSERS[versionRange]
+				break
+		else:
+			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
+			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
+			raise ex
+
+		self._sections =  {p: p(self) for p in parsers}
 
 	@readonly
 	def Sections(self) -> Dict[Type[Section], Section]:
@@ -173,31 +189,59 @@ class CommandWithTasks(Command):
 @export
 class SynthesizeDesign(CommandWithSections):
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
-	_PARSERS:     ClassVar[List[Type[Section]]] = (
-		RTLElaboration,
-		HandlingCustomAttributes1,
-		ConstraintValidation,
-		LoadingPart,
-		ApplySetProperty,
-		RTLComponentStatistics,
-		PartResourceSummary,
-		CrossBoundaryAndAreaOptimization,
-		ROM_RAM_DSP_SR_Retiming1,
-		ApplyingXDCTimingConstraints,
-		TimingOptimization,
-		ROM_RAM_DSP_SR_Retiming2,
-		TechnologyMapping,
-		IOInsertion,
-		FlatteningBeforeIOInsertion,
-		FinalNetlistCleanup,
-		RenamingGeneratedInstances,
-		RebuildingUserHierarchy,
-		RenamingGeneratedPorts,
-		HandlingCustomAttributes2,
-		RenamingGeneratedNets,
-		ROM_RAM_DSP_SR_Retiming3,
-		WritingSynthesisReport,
-	)
+	_PARSERS:     ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Section], ...]]] = {
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2020, 1), RangeBoundHandling.UpperBoundExclusive): (
+			RTLElaboration,
+			HandlingCustomAttributes1,
+			ConstraintValidation,
+			LoadingPart,
+			ApplySetProperty,
+			RTLComponentStatistics,
+			RTLHierarchicalComponentStatistics,
+			PartResourceSummary,
+			CrossBoundaryAndAreaOptimization,
+			ROM_RAM_DSP_SR_Retiming1,
+			ApplyingXDCTimingConstraints,
+			TimingOptimization,
+			ROM_RAM_DSP_SR_Retiming2,
+			TechnologyMapping,
+			IOInsertion,
+			FlatteningBeforeIOInsertion,
+			FinalNetlistCleanup,
+			RenamingGeneratedInstances,
+			RebuildingUserHierarchy,
+			RenamingGeneratedPorts,
+			HandlingCustomAttributes2,
+			RenamingGeneratedNets,
+			ROM_RAM_DSP_SR_Retiming3,
+			WritingSynthesisReport,
+		),
+		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			RTLElaboration,
+			HandlingCustomAttributes1,
+			ConstraintValidation,
+			LoadingPart,
+			ApplySetProperty,
+			RTLComponentStatistics,
+			PartResourceSummary,
+			CrossBoundaryAndAreaOptimization,
+			ROM_RAM_DSP_SR_Retiming1,
+			ApplyingXDCTimingConstraints,
+			TimingOptimization,
+			ROM_RAM_DSP_SR_Retiming2,
+			TechnologyMapping,
+			IOInsertion,
+			FlatteningBeforeIOInsertion,
+			FinalNetlistCleanup,
+			RenamingGeneratedInstances,
+			RebuildingUserHierarchy,
+			RenamingGeneratedPorts,
+			HandlingCustomAttributes2,
+			RenamingGeneratedNets,
+			ROM_RAM_DSP_SR_Retiming3,
+			WritingSynthesisReport
+		)
+	}
 
 	@readonly
 	def HasLatches(self) -> bool:

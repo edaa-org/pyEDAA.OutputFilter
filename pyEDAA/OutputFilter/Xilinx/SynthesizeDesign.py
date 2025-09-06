@@ -344,6 +344,12 @@ class RTLComponentStatistics(Section):
 
 
 @export
+class RTLHierarchicalComponentStatistics(Section):
+	_START:  ClassVar[str] = "Start RTL Hierarchical Component Statistics"
+	_FINISH: ClassVar[str] = "Finished RTL Hierarchical Component Statistics"
+
+
+@export
 class PartResourceSummary(Section):
 	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
