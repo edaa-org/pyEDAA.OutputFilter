@@ -250,6 +250,155 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 
 @export
+class TaskWithSubTasks(Task):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+	# _TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Dict[YearReleaseVersion,Tuple[Type["SubTask"], ...]]] = dict()
+
+	_subtasks:   Dict[Type["SubTask"], "SubTask"]
+
+	def __init__(self, command: "Command"):
+		super().__init__(command)
+
+		processor: "Processor" = command._processor
+		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
+
+		for versionRange in self._PARSERS:
+			if toolVersion in versionRange:
+				parsers = self._PARSERS[versionRange]
+				break
+		else:
+			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
+			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
+			raise ex
+
+		self._subtasks =  {p: p(self) for p in parsers}
+
+	@readonly
+	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
+		return self._subtasks
+
+	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
+		return self._subtasks[key]
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		activeParsers: List[Phase] = list(self._subtasks.values())
+
+		while True:
+			while True:
+				#				print(line)
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Starting "):
+					for parser in activeParsers:  # type: SubTask
+						if line.StartsWith(parser._START):
+							line = yield next(subtask := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subtask: {line!r}")
+					break
+				elif line.StartsWith("Ending"):
+					nextLine = yield from self._TaskFinish(line)
+					return nextLine
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.TaskTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while subtask is not None:
+				#				print(line)
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield subtask.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+@export
+class SubTask(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_task:     TaskWithSubTasks
+	_duration: float
+
+	def __init__(self, task: TaskWithSubTasks):
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._task = task
+
+	@readonly
+	def Task(self) -> TaskWithSubTasks:
+		return self._task
+
+	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException(f"{self.__class__.__name__}._TaskStart(): Expected '{self._START}' at line {line._lineNumber}.")
+
+		line._kind = LineKind.TaskStart
+		nextLine = yield line
+		return nextLine
+
+	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._TaskFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
+
+		line._kind = LineKind.TaskEnd
+		line = yield line
+		while self._TIME is not None:
+			if line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
+				break
+
+			line = yield line
+
+		line = yield line
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._TaskStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif self._FINISH is not None and line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._TaskFinish(line)
+		return nextLine
+
+	def __str__(self) -> str:
+		return self._NAME
+
+
+@export
 class TaskWithPhases(Task):
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
