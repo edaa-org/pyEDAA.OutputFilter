@@ -30,7 +30,7 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, List, Type
+from typing import ClassVar, Dict, Generator, Type
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod

@@ -89,7 +89,7 @@ if ($build)
   rm -Force .\build\bdist.win-amd64
   rm -Force .\build\lib
   Write-Host -ForegroundColor Yellow        "[live][BUILD]      Building $PackageName package as wheel ..."
-  py -3.13 -m build --wheel --no-isolation
+  py -3.14 -m build --wheel --no-isolation
 
   Write-Host -ForegroundColor Yellow        "[live][BUILD]      Building wheel finished"
 }
@@ -103,9 +103,9 @@ if ($install)
   }
   else
   { Write-Host -ForegroundColor Cyan        "[ADMIN][UNINSTALL] Uninstalling $PackageName ..."
-    py -3.13 -m pip uninstall -y $PackageName
+    py -3.14 -m pip uninstall -y $PackageName
     Write-Host -ForegroundColor Cyan        "[ADMIN][INSTALL]   Installing $PackageName from wheel ..."
-    py -3.13 -m pip install .\dist\$($PackageName.ToLower().Replace(".", "_"))-$PackageVersion-py3-none-any.whl
+    py -3.14 -m pip install .\dist\$($PackageName.ToLower().Replace(".", "_"))-$PackageVersion-py3-none-any.whl
 
     Write-Host -ForegroundColor Cyan        "[ADMIN][INSTALL]   Closing window in 5 seconds ..."
     Start-Sleep -Seconds 5

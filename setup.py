@@ -53,10 +53,10 @@ setup(
 			"Intended Audience :: Developers",
 			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 			"Topic :: Utilities"
-	],
-	dataFiles={
-		packageName: ["py.typed"]
-	},
+		],
+		dataFiles={
+			packageName: ["py.typed"]
+		},
 		consoleScripts={
 			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
 		},
