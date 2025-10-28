@@ -35,7 +35,7 @@ from pyTooling.Decorators  import export
 from pyTooling.Versioning  import VersionRange, YearReleaseVersion, RangeBoundHandling
 
 from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, TaskWithPhases
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, TaskWithPhases, TaskWithSubTasks, SubTask
 
 
 @export
@@ -447,11 +447,22 @@ class LogicOptimizationTask(TaskWithPhases):
 # class ConnectivityCheckTask(Task):
 # 	pass
 
+@export
+class PowerOptPatchEnablesTask(SubTask):
+	_START:  ClassVar[str] = "Starting PowerOpt Patch Enables Task"
+	_FINISH: ClassVar[str] = "Ending PowerOpt Patch Enables Task"
+
 
 @export
-class PowerOptimizationTask(Task):
+class PowerOptimizationTask(TaskWithSubTasks):
 	_START:  ClassVar[str] = "Starting Power Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Power Optimization Task"
+
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubTask], ...]]] = {
+		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			PowerOptPatchEnablesTask,
+		)
+	}
 
 
 @export
