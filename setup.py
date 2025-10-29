@@ -47,19 +47,18 @@ setup(
 		gitHubNamespace=gitHubNamespace,
 		keywords="Python3 CLI Output Filter PostProcessing",
 		sourceFileWithVersion=packageInformationFile,
-		developmentStatus="alpha",
-		pythonVersions=("3.11", "3.12", "3.13"),
 		classifiers=list(DEFAULT_CLASSIFIERS) + [
 			"Intended Audience :: Developers",
 			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 			"Topic :: Utilities"
 		],
-		dataFiles={
-			packageName: ["py.typed"]
-		},
+		developmentStatus="alpha",
+		pythonVersions=("3.11", "3.12", "3.13", "3.14"),
 		consoleScripts={
 			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
 		},
-	debug=True
+		dataFiles={
+			packageName: ["py.typed"]
+		}
 	)
 )
