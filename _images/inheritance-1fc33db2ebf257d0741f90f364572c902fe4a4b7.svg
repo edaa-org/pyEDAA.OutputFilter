@@ -1,0 +1,74 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="542pt" height="64pt" viewBox="0.00 0.00 542.00 64.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 60)">
+<ns0:title>inheritancebb268b50ee</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>BaseParser</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.BaseParser" ns1:title="BaseParser" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="236,-19 165,-19 165,0 236,0 236,-19" />
+<ns0:text text-anchor="middle" x="200.5" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseParser</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node5" class="node">
+<ns0:title>SubSection</ns0:title>
+<ns0:g id="a_node5"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection" ns1:title="SubSection" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="346,-37 275,-37 275,-18 346,-18 346,-37" />
+<ns0:text text-anchor="middle" x="310.5" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">SubSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>BaseParser-&gt;SubSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M236.27,-15.29C246.96,-17.08 258.81,-19.05 269.81,-20.89" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="269.58,-22.62 274.8,-21.72 270.15,-19.17 269.58,-22.62" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>VivadoMessagesMixin</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.VivadoMessagesMixin" ns1:title="VivadoMessagesMixin" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="126,-19 0,-19 0,0 126,0 126,-19" />
+<ns0:text text-anchor="middle" x="63" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoMessagesMixin</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VivadoMessagesMixin-&gt;BaseParser</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M126.2,-9.5C137.56,-9.5 149.13,-9.5 159.62,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="159.67,-11.25 164.67,-9.5 159.67,-7.75 159.67,-11.25" />
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>BaseSection</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection" ns1:title="BaseSection" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="239,-56 162,-56 162,-37 239,-37 239,-56" />
+<ns0:text text-anchor="middle" x="200.5" y="-44" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">BaseSection</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge4" class="edge">
+<ns0:title>BaseSection-&gt;SubSection</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M239.27,-39.85C249.11,-38.12 259.75,-36.25 269.69,-34.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="270.2,-36.19 274.82,-33.6 269.59,-32.74 270.2,-36.19" />
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>FlatteningBeforeIOInsertion</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion" ns1:title="FlatteningBeforeIOInsertion" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="534,-37 382,-37 382,-18 534,-18 534,-37" />
+<ns0:text text-anchor="middle" x="458" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">FlatteningBeforeIOInsertion</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>SubSection-&gt;FlatteningBeforeIOInsertion</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M346.35,-27.5C355.6,-27.5 365.98,-27.5 376.58,-27.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="376.8,-29.25 381.8,-27.5 376.8,-25.75 376.8,-29.25" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

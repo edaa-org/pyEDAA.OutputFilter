@@ -1,0 +1,346 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+===========================================
+pyEDAA.OutputFilter.Xilinx.SynthesizeDesign
+===========================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.SynthesizeDesign
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.SynthesizeDesign
+
+
+**Classes**
+
+- :py:class:`BaseSection`:
+  Undocumented.
+
+- :py:class:`Section`:
+  Undocumented.
+
+- :py:class:`SubSection`:
+  Undocumented.
+
+- :py:class:`RTLElaboration`:
+  Undocumented.
+
+- :py:class:`HandlingCustomAttributes`:
+  Undocumented.
+
+- :py:class:`ConstraintValidation`:
+  Undocumented.
+
+- :py:class:`LoadingPart`:
+  Undocumented.
+
+- :py:class:`ApplySetProperty`:
+  Undocumented.
+
+- :py:class:`RTLComponentStatistics`:
+  Undocumented.
+
+- :py:class:`PartResourceSummary`:
+  Undocumented.
+
+- :py:class:`CrossBoundaryAndAreaOptimization`:
+  Undocumented.
+
+- :py:class:`ROM_RAM_DSP_SR_Retiming`:
+  Undocumented.
+
+- :py:class:`ApplyingXDCTimingConstraints`:
+  Undocumented.
+
+- :py:class:`TimingOptimization`:
+  Undocumented.
+
+- :py:class:`TechnologyMapping`:
+  Undocumented.
+
+- :py:class:`FlatteningBeforeIOInsertion`:
+  Undocumented.
+
+- :py:class:`FinalNetlistCleanup`:
+  Undocumented.
+
+- :py:class:`IOInsertion`:
+  Undocumented.
+
+- :py:class:`RenamingGeneratedInstances`:
+  Undocumented.
+
+- :py:class:`RebuildingUserHierarchy`:
+  Undocumented.
+
+- :py:class:`RenamingGeneratedPorts`:
+  Undocumented.
+
+- :py:class:`RenamingGeneratedNets`:
+  Undocumented.
+
+- :py:class:`WritingSynthesisReport`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: BaseSection
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: BaseSection
+      :parts: 1
+
+.. autoclass:: Section
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Section
+      :parts: 1
+
+.. autoclass:: SubSection
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: SubSection
+      :parts: 1
+
+.. autoclass:: RTLElaboration
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RTLElaboration
+      :parts: 1
+
+.. autoclass:: HandlingCustomAttributes
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: HandlingCustomAttributes
+      :parts: 1
+
+.. autoclass:: ConstraintValidation
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ConstraintValidation
+      :parts: 1
+
+.. autoclass:: LoadingPart
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: LoadingPart
+      :parts: 1
+
+.. autoclass:: ApplySetProperty
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ApplySetProperty
+      :parts: 1
+
+.. autoclass:: RTLComponentStatistics
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RTLComponentStatistics
+      :parts: 1
+
+.. autoclass:: PartResourceSummary
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: PartResourceSummary
+      :parts: 1
+
+.. autoclass:: CrossBoundaryAndAreaOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: CrossBoundaryAndAreaOptimization
+      :parts: 1
+
+.. autoclass:: ROM_RAM_DSP_SR_Retiming
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ROM_RAM_DSP_SR_Retiming
+      :parts: 1
+
+.. autoclass:: ApplyingXDCTimingConstraints
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ApplyingXDCTimingConstraints
+      :parts: 1
+
+.. autoclass:: TimingOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: TimingOptimization
+      :parts: 1
+
+.. autoclass:: TechnologyMapping
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: TechnologyMapping
+      :parts: 1
+
+.. autoclass:: FlatteningBeforeIOInsertion
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: FlatteningBeforeIOInsertion
+      :parts: 1
+
+.. autoclass:: FinalNetlistCleanup
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: FinalNetlistCleanup
+      :parts: 1
+
+.. autoclass:: IOInsertion
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: IOInsertion
+      :parts: 1
+
+.. autoclass:: RenamingGeneratedInstances
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RenamingGeneratedInstances
+      :parts: 1
+
+.. autoclass:: RebuildingUserHierarchy
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RebuildingUserHierarchy
+      :parts: 1
+
+.. autoclass:: RenamingGeneratedPorts
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RenamingGeneratedPorts
+      :parts: 1
+
+.. autoclass:: RenamingGeneratedNets
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RenamingGeneratedNets
+      :parts: 1
+
+.. autoclass:: WritingSynthesisReport
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: WritingSynthesisReport
+      :parts: 1

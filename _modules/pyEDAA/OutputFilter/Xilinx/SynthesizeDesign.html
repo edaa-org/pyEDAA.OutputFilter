@@ -1,0 +1,833 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.SynthesizeDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.svg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.html">Python Class Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="../Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</h1><div class="highlight"><pre>
+<span></span><span class="c1"># ==================================================================================================================== #</span>
+<span class="c1">#               _____ ____    _        _      ___        _               _   _____ _ _ _                               #</span>
+<span class="c1">#   _ __  _   _| ____|  _ \  / \      / \    / _ \ _   _| |_ _ __  _   _| |_|  ___(_) | |_ ___ _ __                    #</span>
+<span class="c1">#  | &#39;_ \| | | |  _| | | | |/ _ \    / _ \  | | | | | | | __| &#39;_ \| | | | __| |_  | | | __/ _ \ &#39;__|                   #</span>
+<span class="c1">#  | |_) | |_| | |___| |_| / ___ \  / ___ \ | |_| | |_| | |_| |_) | |_| | |_|  _| | | | ||  __/ |                      #</span>
+<span class="c1">#  | .__/ \__, |_____|____/_/   \_\/_/   \_(_)___/ \__,_|\__| .__/ \__,_|\__|_|   |_|_|\__\___|_|                      #</span>
+<span class="c1">#  |_|    |___/                                             |_|                                                        #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1"># Authors:                                                                                                             #</span>
+<span class="c1">#   Patrick Lehmann                                                                                                    #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># License:                                                                                                             #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1"># Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);                                                      #</span>
+<span class="c1"># you may not use this file except in compliance with the License.                                                     #</span>
+<span class="c1"># You may obtain a copy of the License at                                                                              #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0                                                                         #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software                                                  #</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,                                                    #</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                             #</span>
+<span class="c1"># See the License for the specific language governing permissions and                                                  #</span>
+<span class="c1"># limitations under the License.                                                                                       #</span>
+<span class="c1">#                                                                                                                      #</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0                                                                                  #</span>
+<span class="c1"># ==================================================================================================================== #</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">re</span><span class="w">     </span><span class="kn">import</span> <span class="nb">compile</span> <span class="k">as</span> <span class="n">re_compile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTooling.Decorators</span><span class="w">  </span><span class="kn">import</span> <span class="n">export</span><span class="p">,</span> <span class="n">readonly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTooling.MetaClasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedType</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Common</span><span class="w"> </span><span class="kn">import</span> <span class="n">VHDLAssertionMessage</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">LineKind</span><span class="p">,</span> <span class="n">VivadoInfoMessage</span><span class="p">,</span> \
+	<span class="n">VHDLReportMessage</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">,</span> <span class="n">VivadoWarningMessage</span><span class="p">,</span> <span class="n">VivadoCriticalWarningMessage</span><span class="p">,</span> <span class="n">VivadoErrorMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyEDAA.OutputFilter.Xilinx.Common2</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseParser</span>
+
+<span class="n">TIME_MEMORY_PATTERN</span> <span class="o">=</span> <span class="n">re_compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;Time \(s\): cpu = (\d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">) ; elapsed = (\d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">:\d</span><span class="si">{2}</span><span class="s2">) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseSection">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.BaseSection">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSection</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ExtendedType</span><span class="p">,</span> <span class="n">mixin</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="nd">@abstractmethod</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">pass</span>
+
+	<span class="nd">@abstractmethod</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+		<span class="k">pass</span>
+
+	<span class="nd">@abstractmethod</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="Section">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Section</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">,</span> <span class="n">BaseSection</span><span class="p">):</span>
+	<span class="c1"># _START:  ClassVar[str]</span>
+	<span class="c1"># _FINISH: ClassVar[str]</span>
+
+	<span class="n">_command</span><span class="p">:</span>  <span class="s2">&quot;Command&quot;</span>
+	<span class="n">_duration</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="Section.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>  <span class="c1">#command._processor)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_command</span> <span class="o">=</span> <span class="n">command</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_duration</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+
+	<span class="nd">@readonly</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">Duration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_duration</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionStart</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionStart</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">,</span> <span class="n">skipDashes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">skipDashes</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="c1"># @mustoverride</span>
+	<span class="c1"># def ParseLine(self, lineNumber: int, line: str) -&gt; ProcessingState:</span>
+	<span class="c1"># 	if len(line) == 0:</span>
+	<span class="c1"># 		return ProcessingState.EmptyLine</span>
+	<span class="c1"># 	elif line.startswith(&quot;----&quot;):</span>
+	<span class="c1"># 		return ProcessingState.DelimiterLine</span>
+	<span class="c1"># 	elif line.startswith(self._START):</span>
+	<span class="c1"># 		return ProcessingState.Skipped</span>
+	<span class="c1"># 	elif line.startswith(self._FINISH):</span>
+	<span class="c1"># 		l = line[len(self._FINISH):]</span>
+	<span class="c1"># 		if (match := TIME_MEMORY_PATTERN.match(l)) is not None:</span>
+	<span class="c1"># 			# cpuParts = match[1].split(&quot;:&quot;)</span>
+	<span class="c1"># 			elapsedParts = match[2].split(&quot;:&quot;)</span>
+	<span class="c1"># 			# peakMemory = float(match[3])</span>
+	<span class="c1"># 			# gainMemory = float(match[4])</span>
+	<span class="c1"># 			self._duration = int(elapsedParts[0]) * 3600 + int(elapsedParts[1]) * 60 + int(elapsedParts[2])</span>
+	<span class="c1">#</span>
+	<span class="c1"># 		return ProcessingState.Skipped | ProcessingState.Last</span>
+	<span class="c1"># 	elif line.startswith(&quot;Start&quot;) or line.startswith(&quot;Starting&quot;):</span>
+	<span class="c1"># 		print(f&quot;ERROR: didn&#39;t find finish\n  {line}&quot;)</span>
+	<span class="c1"># 		return ProcessingState.Reprocess</span>
+	<span class="c1">#</span>
+	<span class="c1"># 	return ProcessingState.Skipped</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="c1"># line = yield line</span>
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="SubSection">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubSection</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">,</span> <span class="n">BaseSection</span><span class="p">):</span>
+	<span class="n">_section</span><span class="p">:</span> <span class="n">Section</span>
+
+<div class="viewcode-block" id="SubSection.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.SubSection.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="n">Section</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_section</span> <span class="o">=</span> <span class="n">section</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionStart</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionStart</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionDelimiter</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_SectionFinish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionDelimiter</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionEnd</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionDelimiter</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="RTLElaboration">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLElaboration">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RTLElaboration</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Starting RTL Elaboration : &quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished RTL Elaboration : &quot;</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoInfoMessage</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_toolID</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_messageKindID</span> <span class="o">==</span> <span class="mi">63</span><span class="p">:</span>    <span class="c1"># VHDL assert statement</span>
+						<span class="n">newLine</span> <span class="o">=</span> <span class="n">VHDLAssertionMessage</span><span class="o">.</span><span class="n">Convert</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+						<span class="k">if</span> <span class="n">newLine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+							<span class="k">pass</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="n">newLine</span>
+					<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">_messageKindID</span> <span class="o">==</span> <span class="mi">6031</span><span class="p">:</span>  <span class="c1"># VHDL report statement</span>
+						<span class="n">newLine</span> <span class="o">=</span> <span class="n">VHDLReportMessage</span><span class="o">.</span><span class="n">Convert</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+						<span class="k">if</span> <span class="n">newLine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+							<span class="k">pass</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">line</span> <span class="o">=</span> <span class="n">newLine</span>
+
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="c1"># line = yield line</span>
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="HandlingCustomAttributes">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.HandlingCustomAttributes">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HandlingCustomAttributes</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Handling Custom Attributes&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Handling Custom Attributes : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ConstraintValidation">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ConstraintValidation">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConstraintValidation</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished RTL Optimization Phase 1&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Constraint Validation : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="LoadingPart">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoadingPart</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Loading Part and Timing Information&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Loading Part and Timing Information : &quot;</span>
+
+	<span class="n">_part</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="LoadingPart.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.LoadingPart.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">:</span> <span class="s2">&quot;Processor&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">processor</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_part</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+	<span class="nd">@readonly</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">Part</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_part</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Loading part: &quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Normal</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">_message</span><span class="p">[</span><span class="mi">14</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+<div class="viewcode-block" id="ApplySetProperty">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplySetProperty">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ApplySetProperty</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Applying &#39;set_property&#39; XDC Constraints&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished applying &#39;set_property&#39; XDC Constraints : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RTLComponentStatistics">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RTLComponentStatistics">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RTLComponentStatistics</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start RTL Component Statistics&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished RTL Component Statistics&quot;</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="PartResourceSummary">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.PartResourceSummary">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PartResourceSummary</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Part Resource Summary&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Part Resource Summary&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="CrossBoundaryAndAreaOptimization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.CrossBoundaryAndAreaOptimization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CrossBoundaryAndAreaOptimization</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Cross Boundary and Area Optimization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Cross Boundary and Area Optimization : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ROM_RAM_DSP_SR_Retiming">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ROM_RAM_DSP_SR_Retiming">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ROM_RAM_DSP_SR_Retiming</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start ROM, RAM, DSP, Shift Register and Retiming Reporting&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished ROM, RAM, DSP, Shift Register and Retiming Reporting&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ApplyingXDCTimingConstraints">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.ApplyingXDCTimingConstraints">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ApplyingXDCTimingConstraints</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Applying XDC Timing Constraints&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Applying XDC Timing Constraints : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="TimingOptimization">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TimingOptimization">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimingOptimization</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Timing Optimization&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Timing Optimization : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="TechnologyMapping">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.TechnologyMapping">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TechnologyMapping</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Technology Mapping&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Technology Mapping : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="FlatteningBeforeIOInsertion">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FlatteningBeforeIOInsertion">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlatteningBeforeIOInsertion</span><span class="p">(</span><span class="n">SubSection</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Flattening Before IO Insertion&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Flattening Before IO Insertion&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="FinalNetlistCleanup">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.FinalNetlistCleanup">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FinalNetlistCleanup</span><span class="p">(</span><span class="n">SubSection</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Final Netlist Cleanup&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Final Netlist Cleanup&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="IOInsertion">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IOInsertion</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start IO Insertion&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished IO Insertion : &quot;</span>
+
+	<span class="n">_subsections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SubSection</span><span class="p">],</span> <span class="n">SubSection</span><span class="p">]</span>
+
+<div class="viewcode-block" id="IOInsertion.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.IOInsertion.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+					<span class="k">continue</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+					<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionStart</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SubSectionDelimiter</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Start &quot;</span><span class="p">):</span>
+					<span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="n">FlatteningBeforeIOInsertion</span><span class="o">.</span><span class="n">_START</span><span class="p">:</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">FlatteningBeforeIOInsertion</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">subsection</span> <span class="o">:=</span> <span class="n">FlatteningBeforeIOInsertion</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+						<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">parser</span> <span class="o">:=</span> <span class="n">subsection</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+						<span class="k">break</span>
+					<span class="k">elif</span> <span class="n">line</span> <span class="o">==</span> <span class="n">FinalNetlistCleanup</span><span class="o">.</span><span class="n">_START</span><span class="p">:</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">_subsections</span><span class="p">[</span><span class="n">FinalNetlistCleanup</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">subsection</span> <span class="o">:=</span> <span class="n">FinalNetlistCleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+						<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="n">parser</span> <span class="o">:=</span> <span class="n">subsection</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+						<span class="k">break</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Finished &quot;</span><span class="p">):</span>
+					<span class="k">break</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">|=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+				<span class="k">break</span>
+
+			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">subsection</span><span class="o">.</span><span class="n">_FINISH</span><span class="p">):</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">parser</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+					<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">parser</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+					<span class="n">subsection</span> <span class="o">=</span> <span class="kc">None</span>
+					<span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
+					<span class="k">break</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+
+
+<div class="viewcode-block" id="RenamingGeneratedInstances">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedInstances">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RenamingGeneratedInstances</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Renaming Generated Instances&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Renaming Generated Instances : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RebuildingUserHierarchy">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RebuildingUserHierarchy">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RebuildingUserHierarchy</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Rebuilding User Hierarchy&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Rebuilding User Hierarchy : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RenamingGeneratedPorts">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedPorts">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RenamingGeneratedPorts</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Renaming Generated Ports&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Renaming Generated Ports : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RenamingGeneratedNets">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.RenamingGeneratedNets">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RenamingGeneratedNets</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Renaming Generated Nets&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Renaming Generated Nets : &quot;</span></div>
+
+
+
+<div class="viewcode-block" id="WritingSynthesisReport">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport">[docs]</a>
+<span class="nd">@export</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WritingSynthesisReport</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+	<span class="n">_START</span><span class="p">:</span>  <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Start Writing Synthesis Report&quot;</span>
+	<span class="n">_FINISH</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Finished Writing Synthesis Report : &quot;</span>
+
+	<span class="n">_blackboxes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+	<span class="n">_cells</span><span class="p">:</span>      <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+
+<div class="viewcode-block" id="WritingSynthesisReport.__init__">
+<a class="viewcode-back" href="../../../../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html#pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.WritingSynthesisReport.__init__">[docs]</a>
+	<span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">_blackboxes</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_cells</span> <span class="o">=</span>      <span class="p">{}</span></div>
+
+
+	<span class="nd">@readonly</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">Cells</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cells</span>
+
+	<span class="nd">@readonly</span>
+	<span class="k">def</span><span class="w"> </span><span class="nf">Blackboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blackboxes</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_BlackboxesGenerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;| &quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableHeader</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableRow</span>
+
+				<span class="n">columns</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">_message</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_blackboxes</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+				<span class="k">break</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">_CellGenerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;| &quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableHeader</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableRow</span>
+
+				<span class="n">columns</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">_message</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_cells</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">TableFrame</span>
+				<span class="k">break</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ProcessorError</span>
+
+			<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+		<span class="k">return</span> <span class="n">nextLine</span>
+
+	<span class="k">def</span><span class="w"> </span><span class="nf">Generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Line</span><span class="p">]:</span>
+		<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionStart</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="ow">is</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Report BlackBoxes:&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ParagraphHeadline</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_BlackboxesGenerator</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;Report Cell Usage:&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">ParagraphHeadline</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CellGenerator</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">):</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionEnd</span> <span class="o">|</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">SectionDelimiter</span>
+				<span class="k">break</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">VivadoMessage</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_AddMessage</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">line</span><span class="o">.</span><span class="n">_kind</span> <span class="o">=</span> <span class="n">LineKind</span><span class="o">.</span><span class="n">Verbose</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">line</span>
+
+		<span class="n">nextLine</span> <span class="o">=</span> <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SectionFinish</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">nextLine</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 31.10.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="436pt" height="64pt" viewBox="0.00 0.00 436.00 64.00">
+<ns0:g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 60)">
+<ns0:title>inheritance2baec98421</ns0:title>
+
+<ns0:g id="node1" class="node">
+<ns0:title>CriticalWarningMessage</ns0:title>
+<ns0:g id="a_node1"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.CriticalWarningMessage" ns1:title="CriticalWarningMessage" target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="224,-56 90,-56 90,-37 224,-37 224,-56" />
+<ns0:text text-anchor="middle" x="157" y="-44" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">CriticalWarningMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node3" class="node">
+<ns0:title>VivadoCriticalWarningMessage</ns0:title>
+<ns0:g id="a_node3"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.VivadoCriticalWarningMessage" ns1:title="This class represents an AMD/Xilinx Vivado critical warning message." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="428,-37 260,-37 260,-18 428,-18 428,-37" />
+<ns0:text text-anchor="middle" x="344" y="-25" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoCriticalWarningMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge2" class="edge">
+<ns0:title>CriticalWarningMessage-&gt;VivadoCriticalWarningMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M224.01,-39.72C233.99,-38.7 244.43,-37.62 254.8,-36.56" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="255.08,-38.29 259.88,-36.04 254.72,-34.81 255.08,-38.29" />
+</ns0:g>
+
+<ns0:g id="node2" class="node">
+<ns0:title>Line</ns0:title>
+<ns0:g id="a_node2"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.Line" ns1:title="This class represents any line in a log file." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="54,-19 0,-19 0,0 54,0 54,-19" />
+<ns0:text text-anchor="middle" x="27" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">Line</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="node4" class="node">
+<ns0:title>VivadoMessage</ns0:title>
+<ns0:g id="a_node4"><ns0:a ns1:href="../pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.Common.html#pyEDAA.OutputFilter.Xilinx.Common.VivadoMessage" ns1:title="This class represents an AMD/Xilinx Vivado message." target="_top">
+<ns0:polygon fill="white" stroke="#1e90ff" points="204,-19 110,-19 110,0 204,0 204,-19" />
+<ns0:text text-anchor="middle" x="157" y="-7" font-family="Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans" font-size="10.00">VivadoMessage</ns0:text>
+</ns0:a>
+</ns0:g>
+</ns0:g>
+
+<ns0:g id="edge3" class="edge">
+<ns0:title>Line-&gt;VivadoMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M54.21,-9.5C68.73,-9.5 87.28,-9.5 104.57,-9.5" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="104.89,-11.25 109.89,-9.5 104.89,-7.75 104.89,-11.25" />
+</ns0:g>
+
+<ns0:g id="edge1" class="edge">
+<ns0:title>VivadoMessage-&gt;VivadoCriticalWarningMessage</ns0:title>
+<ns0:path fill="none" stroke="black" stroke-width="0.5" d="M204.21,-14C219.53,-15.49 237.14,-17.2 254.55,-18.89" />
+<ns0:polygon fill="black" stroke="black" stroke-width="0.5" points="254.81,-20.68 259.95,-19.42 255.14,-17.19 254.81,-20.68" />
+</ns0:g>
+</ns0:g>
+</ns0:svg>

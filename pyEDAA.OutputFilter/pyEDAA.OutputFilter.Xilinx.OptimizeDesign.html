@@ -1,0 +1,1050 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.OptimizeDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html" />
+    <link rel="prev" title="pyEDAA.OutputFilter.Xilinx.Exception" href="pyEDAA.OutputFilter.Xilinx.Exception.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pyEDAA.OutputFilter.html">Python Class Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.CLI.html">pyEDAA.OutputFilter.CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html">pyEDAA.OutputFilter.Xilinx.Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common.html">pyEDAA.OutputFilter.Xilinx.Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html">pyEDAA.OutputFilter.Xilinx.Common2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Exception.html">pyEDAA.OutputFilter.Xilinx.Exception</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><code class="docutils literal notranslate"><span class="pre">Task</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__init__"><code class="docutils literal notranslate"><span class="pre">Task.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Task.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><code class="docutils literal notranslate"><span class="pre">Phase</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__init__"><code class="docutils literal notranslate"><span class="pre">Phase.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase"><code class="docutils literal notranslate"><span class="pre">SubPhase</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__init__"><code class="docutils literal notranslate"><span class="pre">SubPhase.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">SubPhase.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup"><code class="docutils literal notranslate"><span class="pre">Phase11_CoreGenerationAndDesignSetup</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase11_CoreGenerationAndDesignSetup.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__init__"><code class="docutils literal notranslate"><span class="pre">Phase11_CoreGenerationAndDesignSetup.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist"><code class="docutils literal notranslate"><span class="pre">Phase12_SetupConstraintsAndSortNetlist</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase12_SetupConstraintsAndSortNetlist.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__init__"><code class="docutils literal notranslate"><span class="pre">Phase12_SetupConstraintsAndSortNetlist.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization"><code class="docutils literal notranslate"><span class="pre">Phase1_Initialization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase1_Initialization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase1_Initialization.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate"><code class="docutils literal notranslate"><span class="pre">Phase21_TimerUpdate</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase21_TimerUpdate.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__init__"><code class="docutils literal notranslate"><span class="pre">Phase21_TimerUpdate.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection"><code class="docutils literal notranslate"><span class="pre">Phase22_TimingDataCollection</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase22_TimingDataCollection.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__init__"><code class="docutils literal notranslate"><span class="pre">Phase22_TimingDataCollection.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection"><code class="docutils literal notranslate"><span class="pre">Phase2_TimerUpdateAndTimingDataCollection</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__init__"><code class="docutils literal notranslate"><span class="pre">Phase2_TimerUpdateAndTimingDataCollection.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase2_TimerUpdateAndTimingDataCollection.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget"><code class="docutils literal notranslate"><span class="pre">Phase3_Retarget</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase3_Retarget.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__init__"><code class="docutils literal notranslate"><span class="pre">Phase3_Retarget.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation"><code class="docutils literal notranslate"><span class="pre">Phase4_ConstantPropagation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase4_ConstantPropagation.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__init__"><code class="docutils literal notranslate"><span class="pre">Phase4_ConstantPropagation.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep"><code class="docutils literal notranslate"><span class="pre">Phase5_Sweep</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase5_Sweep.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__init__"><code class="docutils literal notranslate"><span class="pre">Phase5_Sweep.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization"><code class="docutils literal notranslate"><span class="pre">Phase6_BUFGOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase6_BUFGOptimization.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase6_BUFGOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization"><code class="docutils literal notranslate"><span class="pre">Phase7_ShiftRegisterOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase7_ShiftRegisterOptimization.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase7_ShiftRegisterOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist"><code class="docutils literal notranslate"><span class="pre">Phase8_PostProcessingNetlist</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase8_PostProcessingNetlist.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__init__"><code class="docutils literal notranslate"><span class="pre">Phase8_PostProcessingNetlist.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes"><code class="docutils literal notranslate"><span class="pre">Phase91_FinalizingDesignCoresAndUpdatingShapes</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase91_FinalizingDesignCoresAndUpdatingShapes.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__init__"><code class="docutils literal notranslate"><span class="pre">Phase91_FinalizingDesignCoresAndUpdatingShapes.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity"><code class="docutils literal notranslate"><span class="pre">Phase92_VerifyingNetlistConnectivity</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase92_VerifyingNetlistConnectivity.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__init__"><code class="docutils literal notranslate"><span class="pre">Phase92_VerifyingNetlistConnectivity.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization"><code class="docutils literal notranslate"><span class="pre">Phase9_Finalization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase9_Finalization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase9_Finalization.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask"><code class="docutils literal notranslate"><span class="pre">DRCTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">DRCTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__init__"><code class="docutils literal notranslate"><span class="pre">DRCTask.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask"><code class="docutils literal notranslate"><span class="pre">CacheTimingInformationTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">CacheTimingInformationTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__init__"><code class="docutils literal notranslate"><span class="pre">CacheTimingInformationTask.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask"><code class="docutils literal notranslate"><span class="pre">LogicOptimizationTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__init__"><code class="docutils literal notranslate"><span class="pre">LogicOptimizationTask.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">LogicOptimizationTask.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask"><code class="docutils literal notranslate"><span class="pre">PowerOptimizationTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">PowerOptimizationTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__init__"><code class="docutils literal notranslate"><span class="pre">PowerOptimizationTask.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask"><code class="docutils literal notranslate"><span class="pre">FinalCleanupTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">FinalCleanupTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__init__"><code class="docutils literal notranslate"><span class="pre">FinalCleanupTask.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask"><code class="docutils literal notranslate"><span class="pre">NetlistObfuscationTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">NetlistObfuscationTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__init__"><code class="docutils literal notranslate"><span class="pre">NetlistObfuscationTask.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html">pyEDAA.OutputFilter.Xilinx.PlaceDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.RouteDesign.html">pyEDAA.OutputFilter.Xilinx.RouteDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor"><code class="docutils literal notranslate"><span class="pre">Processor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.OutputFilterException"><code class="docutils literal notranslate"><span class="pre">OutputFilterException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.OptimizeDesign.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="module-pyEDAA.OutputFilter.Xilinx.OptimizeDesign">
+<span id="pyedaa-outputfilter-xilinx-optimizedesign"></span><h1>pyEDAA.OutputFilter.Xilinx.OptimizeDesign<a class="headerlink" href="#module-pyEDAA.OutputFilter.Xilinx.OptimizeDesign" title="Link to this heading"></a></h1>
+<p>A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.</p>
+<p><strong>Classes</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><code class="xref py py-class docutils literal notranslate"><span class="pre">Task</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubPhase</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase11_CoreGenerationAndDesignSetup</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase12_SetupConstraintsAndSortNetlist</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase1_Initialization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase21_TimerUpdate</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase22_TimingDataCollection</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase2_TimerUpdateAndTimingDataCollection</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase3_Retarget</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase4_ConstantPropagation</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase5_Sweep</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase6_BUFGOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase7_ShiftRegisterOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase8_PostProcessingNetlist</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase91_FinalizingDesignCoresAndUpdatingShapes</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase92_VerifyingNetlistConnectivity</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase9_Finalization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">DRCTask</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheTimingInformationTask</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogicOptimizationTask</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">PowerOptimizationTask</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">FinalCleanupTask</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetlistObfuscationTask</span></code></a>:
+Undocumented.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Classes</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b795576c7d246c263a97f389020993034701dfb2.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Task</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Task.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-d31022d6aeffcd8539f5a088e2fb4f75b6d638db.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">SubPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#SubPhase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-ca0c4fb8e832ef71139d5e466b9f424adb34b5c6.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of SubPhase</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#SubPhase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.SubPhase.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase11_CoreGenerationAndDesignSetup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase11_CoreGenerationAndDesignSetup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-d0239b3010bf9bf261133faabba5378de1dceb07.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase11_CoreGenerationAndDesignSetup</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase11_CoreGenerationAndDesignSetup.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase12_SetupConstraintsAndSortNetlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase12_SetupConstraintsAndSortNetlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-c4ff9f16d387dd117e56e907ce6e30ece0612e4f.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase12_SetupConstraintsAndSortNetlist</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase12_SetupConstraintsAndSortNetlist.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase1_Initialization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase1_Initialization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-808c60c2551908da33f6883c81ab6204c1fa408a.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase1_Initialization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase1_Initialization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase1_Initialization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase21_TimerUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase21_TimerUpdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-27c7ada6fc1105fd9229ee70fb0eff844d8bacb8.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase21_TimerUpdate</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase21_TimerUpdate.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase22_TimingDataCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase22_TimingDataCollection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-0999a873b86f783ca31ba8398ee69a93f266da7e.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase22_TimingDataCollection</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase22_TimingDataCollection.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase2_TimerUpdateAndTimingDataCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase2_TimerUpdateAndTimingDataCollection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-009ec8e0a03c4a05c97a61257f857493f3b4ecbe.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase2_TimerUpdateAndTimingDataCollection</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase2_TimerUpdateAndTimingDataCollection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase2_TimerUpdateAndTimingDataCollection.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase3_Retarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase3_Retarget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-bd3358c556bc43a1bc12a71a2eccb74084094ae7.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase3_Retarget</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase3_Retarget.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase4_ConstantPropagation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase4_ConstantPropagation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e1fdee3a41788cf67d87573175b84906a64abc35.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase4_ConstantPropagation</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase4_ConstantPropagation.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase5_Sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase5_Sweep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-cc04906cce0b78f89706ac85b6ee501fd8e3b582.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase5_Sweep</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase5_Sweep.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase6_BUFGOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase6_BUFGOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-d9dbcce5b83fbc5b323db420a75cec3ba2ea32e4.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase6_BUFGOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase6_BUFGOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase7_ShiftRegisterOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase7_ShiftRegisterOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-637ad828691bfec0c0ee4ddbb0dc605756c2b91f.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase7_ShiftRegisterOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase7_ShiftRegisterOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase8_PostProcessingNetlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase8_PostProcessingNetlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1b8920270be6418717f71cbf6851dba62770dee2.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase8_PostProcessingNetlist</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase8_PostProcessingNetlist.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Task"><em>Task</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase91_FinalizingDesignCoresAndUpdatingShapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase91_FinalizingDesignCoresAndUpdatingShapes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-bd8034a6a543f1c5bcefacf8f8ba0f5034a3b4c5.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase91_FinalizingDesignCoresAndUpdatingShapes</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase91_FinalizingDesignCoresAndUpdatingShapes.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase92_VerifyingNetlistConnectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase92_VerifyingNetlistConnectivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-53731c5b32bfb5059209a86615adcb3aca787d77.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase92_VerifyingNetlistConnectivity</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase92_VerifyingNetlistConnectivity.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">Phase9_Finalization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase9_Finalization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-08c623f71474c4f393d82ef7ea96ea37f196f1d9.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase9_Finalization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#Phase9_Finalization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase" title="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.Phase9_Finalization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">DRCTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#DRCTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-3487ef343b72b5a9009c4f5c7c03e73876816670.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of DRCTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.DRCTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">CacheTimingInformationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#CacheTimingInformationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-de9fea2aaa7dd441d4de6f07f663f3b284729064.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of CacheTimingInformationTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.CacheTimingInformationTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">LogicOptimizationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#LogicOptimizationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-0c580fe6adfb316dd3c604bd78ad5b7d0645ce1d.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of LogicOptimizationTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#LogicOptimizationTask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.LogicOptimizationTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">PowerOptimizationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#PowerOptimizationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a12a076a4f8690ba9e7193cd59684b77d8825d79.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of PowerOptimizationTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.PowerOptimizationTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">FinalCleanupTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#FinalCleanupTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1ff7b2451062b45f34260ac16bf64d9df2ed8412.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of FinalCleanupTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.FinalCleanupTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.OptimizeDesign.</span></span><span class="sig-name descname"><span class="pre">NetlistObfuscationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/OptimizeDesign.html#NetlistObfuscationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e6f91999c79d6599edfab5c8ab2843d0ffac55ff.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of NetlistObfuscationTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.OptimizeDesign.NetlistObfuscationTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyEDAA.OutputFilter.Xilinx.Exception.html" class="btn btn-neutral float-left" title="pyEDAA.OutputFilter.Xilinx.Exception" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html" class="btn btn-neutral float-right" title="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 31.10.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

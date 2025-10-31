@@ -1,0 +1,51 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+====================================
+pyEDAA.OutputFilter.Xilinx.Exception
+====================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.Exception
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.Exception
+
+
+**Exceptions**
+
+- :py:exc:`ProcessorException`:
+  Base-class for all pyEDAA.OutputFilter specific exceptions.
+
+- :py:exc:`ClassificationException`:
+  Base-class for all pyEDAA.OutputFilter specific exceptions.
+
+- :py:exc:`ParserStateException`:
+  Base-class for all pyEDAA.OutputFilter specific exceptions.
+
+
+
+---------------------
+
+**Exceptions**
+
+
+
+
+.. autoexception:: ProcessorException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ProcessorException
+      :parts: 1
+
+.. autoexception:: ClassificationException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ClassificationException
+      :parts: 1
+
+.. autoexception:: ParserStateException
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: ParserStateException
+      :parts: 1

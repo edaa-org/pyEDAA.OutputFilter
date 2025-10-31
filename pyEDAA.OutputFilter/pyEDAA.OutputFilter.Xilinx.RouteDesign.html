@@ -1,0 +1,1062 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyEDAA.OutputFilter.Xilinx.RouteDesign &mdash; pyEDAA.OutputFilter 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=55b73dce" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-reports.089ed2e62f89368aa21ac7591d90c12a.css?v=83177741" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/override.css?v=e6c450a4" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign" href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html" />
+    <link rel="prev" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign" href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://edaa-org.github.io/">Used as a layer of EDA² ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation/Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dependency.html">Dependencies</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Main Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Xilinx/Vivado.html">Vivado</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References and Reports</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../CommandLineInterface.html">Command Line Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pyEDAA.OutputFilter.html">Python Class Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.CLI.html">pyEDAA.OutputFilter.CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html">pyEDAA.OutputFilter.Xilinx.Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common.html">pyEDAA.OutputFilter.Xilinx.Common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html">pyEDAA.OutputFilter.Xilinx.Common2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Exception.html">pyEDAA.OutputFilter.Xilinx.Exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.OptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.OptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign.html">pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html">pyEDAA.OutputFilter.Xilinx.PlaceDesign</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyEDAA.OutputFilter.Xilinx.RouteDesign</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign"><code class="docutils literal notranslate"><span class="pre">Phase1_BuildRTDesign</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase1_BuildRTDesign.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__init__"><code class="docutils literal notranslate"><span class="pre">Phase1_BuildRTDesign.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints"><code class="docutils literal notranslate"><span class="pre">Phase21_FixTopologyConstraints</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase21_FixTopologyConstraints.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__init__"><code class="docutils literal notranslate"><span class="pre">Phase21_FixTopologyConstraints.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup"><code class="docutils literal notranslate"><span class="pre">Phase22_PreRouteCleanup</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase22_PreRouteCleanup.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__init__"><code class="docutils literal notranslate"><span class="pre">Phase22_PreRouteCleanup.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming"><code class="docutils literal notranslate"><span class="pre">Phase23_UpdateTiming</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase23_UpdateTiming.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__init__"><code class="docutils literal notranslate"><span class="pre">Phase23_UpdateTiming.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting"><code class="docutils literal notranslate"><span class="pre">Phase24_SoftConstraintPins_FastBudgeting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase24_SoftConstraintPins_FastBudgeting.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase24_SoftConstraintPins_FastBudgeting.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization"><code class="docutils literal notranslate"><span class="pre">Phase2_RouterInitialization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase2_RouterInitialization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase2_RouterInitialization.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting"><code class="docutils literal notranslate"><span class="pre">Phase3_GlobalRouting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase3_GlobalRouting.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase3_GlobalRouting.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass"><code class="docutils literal notranslate"><span class="pre">Phase41_InitialNetRoutingPass</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase41_InitialNetRoutingPass.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__init__"><code class="docutils literal notranslate"><span class="pre">Phase41_InitialNetRoutingPass.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting"><code class="docutils literal notranslate"><span class="pre">Phase4_InitialRouting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase4_InitialRouting.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase4_InitialRouting.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0"><code class="docutils literal notranslate"><span class="pre">Phase51_GlobalIteration0</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase51_GlobalIteration0.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__init__"><code class="docutils literal notranslate"><span class="pre">Phase51_GlobalIteration0.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1"><code class="docutils literal notranslate"><span class="pre">Phase52_GlobalIteration1</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase52_GlobalIteration1.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__init__"><code class="docutils literal notranslate"><span class="pre">Phase52_GlobalIteration1.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute"><code class="docutils literal notranslate"><span class="pre">Phase5_RipUpAndReroute</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__init__"><code class="docutils literal notranslate"><span class="pre">Phase5_RipUpAndReroute.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase5_RipUpAndReroute.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp"><code class="docutils literal notranslate"><span class="pre">Phase61_DelayCleanUp</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase61_DelayCleanUp.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__init__"><code class="docutils literal notranslate"><span class="pre">Phase61_DelayCleanUp.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization"><code class="docutils literal notranslate"><span class="pre">Phase62_ClockSkewOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase62_ClockSkewOptimization.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase62_ClockSkewOptimization.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization"><code class="docutils literal notranslate"><span class="pre">Phase6_DelayAndSkewOptimization</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__init__"><code class="docutils literal notranslate"><span class="pre">Phase6_DelayAndSkewOptimization.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase6_DelayAndSkewOptimization.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter"><code class="docutils literal notranslate"><span class="pre">Phase71_HoldFixIter</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase71_HoldFixIter.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__init__"><code class="docutils literal notranslate"><span class="pre">Phase71_HoldFixIter.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix"><code class="docutils literal notranslate"><span class="pre">Phase7_PostHoldFix</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__init__"><code class="docutils literal notranslate"><span class="pre">Phase7_PostHoldFix.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase7_PostHoldFix.__annotate_func__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize"><code class="docutils literal notranslate"><span class="pre">Phase8_RouteFinalize</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase8_RouteFinalize.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__init__"><code class="docutils literal notranslate"><span class="pre">Phase8_RouteFinalize.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets"><code class="docutils literal notranslate"><span class="pre">Phase9_VerifyingRoutedNets</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase9_VerifyingRoutedNets.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__init__"><code class="docutils literal notranslate"><span class="pre">Phase9_VerifyingRoutedNets.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes"><code class="docutils literal notranslate"><span class="pre">Phase10_DepositingRoutes</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase10_DepositingRoutes.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__init__"><code class="docutils literal notranslate"><span class="pre">Phase10_DepositingRoutes.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting"><code class="docutils literal notranslate"><span class="pre">Phase11_PostProcessRouting</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase11_PostProcessRouting.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__init__"><code class="docutils literal notranslate"><span class="pre">Phase11_PostProcessRouting.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming"><code class="docutils literal notranslate"><span class="pre">Phase12_PostRouterTiming</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase12_PostRouterTiming.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__init__"><code class="docutils literal notranslate"><span class="pre">Phase12_PostRouterTiming.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing"><code class="docutils literal notranslate"><span class="pre">Phase13_PostRouteEventProcessing</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">Phase13_PostRouteEventProcessing.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__init__"><code class="docutils literal notranslate"><span class="pre">Phase13_PostRouteEventProcessing.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask"><code class="docutils literal notranslate"><span class="pre">RoutingTask</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__annotate_func__"><code class="docutils literal notranslate"><span class="pre">RoutingTask.__annotate_func__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__init__"><code class="docutils literal notranslate"><span class="pre">RoutingTask.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__str__"><code class="docutils literal notranslate"><span class="pre">RoutingTask.__str__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html">pyEDAA.OutputFilter.Xilinx.SynthesizeDesign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Processor"><code class="docutils literal notranslate"><span class="pre">Processor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.html#pyEDAA.OutputFilter.Xilinx.Document"><code class="docutils literal notranslate"><span class="pre">Document</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.OutputFilterException"><code class="docutils literal notranslate"><span class="pre">OutputFilterException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyEDAA.OutputFilter.html#pyEDAA.OutputFilter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests/index.html">Unittest Summary Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coverage/index.html">Code Coverage Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CodeCoverage.html">Code Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DocCoverage.html">Doc. Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../typing/index.html">Static Type Check Report ➚</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../License.html">Apache License 2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Doc-License.html">Creative Commons Attribution 4.0 International</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py-modindex.html">Python Module Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TODO.html">TODOs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyEDAA.OutputFilter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.html">pyEDAA.OutputFilter</a></li>
+          <li class="breadcrumb-item"><a href="pyEDAA.OutputFilter.Xilinx.html">pyEDAA.OutputFilter.Xilinx</a></li>
+      <li class="breadcrumb-item active">pyEDAA.OutputFilter.Xilinx.RouteDesign</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pyEDAA.OutputFilter/pyEDAA.OutputFilter.Xilinx.RouteDesign.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style type="text/css">
+  span.bolditalic {font-weight: bold; font-style: italic; }
+  span.underline {text-decoration: underline; }
+  span.strike {text-decoration: line-through; }
+  span.xlarge {font-size: x-large; }
+  span.colorred {color: #CC0000; }
+  span.colorgreen {color: #009933; }
+  span.colorblue {color: #0066FF; }
+  span.colorpurple {color: #9900CC; }
+</style><section id="module-pyEDAA.OutputFilter.Xilinx.RouteDesign">
+<span id="pyedaa-outputfilter-xilinx-routedesign"></span><h1>pyEDAA.OutputFilter.Xilinx.RouteDesign<a class="headerlink" href="#module-pyEDAA.OutputFilter.Xilinx.RouteDesign" title="Link to this heading"></a></h1>
+<p>A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs.</p>
+<p><strong>Classes</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase1_BuildRTDesign</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase21_FixTopologyConstraints</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase22_PreRouteCleanup</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase23_UpdateTiming</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase24_SoftConstraintPins_FastBudgeting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase2_RouterInitialization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase3_GlobalRouting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase41_InitialNetRoutingPass</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase4_InitialRouting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase51_GlobalIteration0</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase52_GlobalIteration1</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase5_RipUpAndReroute</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase61_DelayCleanUp</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase62_ClockSkewOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase6_DelayAndSkewOptimization</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase71_HoldFixIter</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase7_PostHoldFix</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase8_RouteFinalize</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase9_VerifyingRoutedNets</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase10_DepositingRoutes</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase11_PostProcessRouting</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase12_PostRouterTiming</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing"><code class="xref py py-class docutils literal notranslate"><span class="pre">Phase13_PostRouteEventProcessing</span></code></a>:
+Undocumented.</p></li>
+<li><p><a class="reference internal" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask" title="pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoutingTask</span></code></a>:
+Undocumented.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Classes</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase1_BuildRTDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase1_BuildRTDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-9ab6262069c25d3412067a423b022c7da457efb9.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase1_BuildRTDesign</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase1_BuildRTDesign.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase21_FixTopologyConstraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase21_FixTopologyConstraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-8606c3243a1a4b59367e4bbb9b0af26bcb64af2b.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase21_FixTopologyConstraints</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase21_FixTopologyConstraints.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase22_PreRouteCleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase22_PreRouteCleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-33233afac9d35685f5e8af1bd295e79cd2771ec2.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase22_PreRouteCleanup</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase22_PreRouteCleanup.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase23_UpdateTiming</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase23_UpdateTiming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-443bc742617c763f21e2a7ab10d9c4bfb5635e1f.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase23_UpdateTiming</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase23_UpdateTiming.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase24_SoftConstraintPins_FastBudgeting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase24_SoftConstraintPins_FastBudgeting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-feac97afbcc0bdd2293aee2197b4f1d895eac926.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase24_SoftConstraintPins_FastBudgeting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase24_SoftConstraintPins_FastBudgeting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase2_RouterInitialization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase2_RouterInitialization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-bb800c90468f25c9c3ab3c5e08eeb7cd9a5334d6.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase2_RouterInitialization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase2_RouterInitialization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase2_RouterInitialization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase3_GlobalRouting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase3_GlobalRouting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-6ceaa2238b847a8510d6d5ce80024c49c11795ad.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase3_GlobalRouting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase3_GlobalRouting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase41_InitialNetRoutingPass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase41_InitialNetRoutingPass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-b5ace09535921597a95593acac1a720407cc4017.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase41_InitialNetRoutingPass</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase41_InitialNetRoutingPass.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase4_InitialRouting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase4_InitialRouting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-8890f9c840072d250a7fdfbf797cdfee9a303075.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase4_InitialRouting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase4_InitialRouting.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase4_InitialRouting.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase51_GlobalIteration0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase51_GlobalIteration0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-939b17b00e79276ffa6e5733d4e186d48dc284b6.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase51_GlobalIteration0</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase51_GlobalIteration0.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase52_GlobalIteration1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase52_GlobalIteration1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-700126de0c7ade57220dcaee9f797e80e1d60f85.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase52_GlobalIteration1</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase52_GlobalIteration1.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase5_RipUpAndReroute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase5_RipUpAndReroute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a9298791c313f4c5bf4dc80395e09304295e5317.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase5_RipUpAndReroute</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase5_RipUpAndReroute.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase5_RipUpAndReroute.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase61_DelayCleanUp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase61_DelayCleanUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-cf1723e3056f0aefb53ee970f1be5c2df9666467.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase61_DelayCleanUp</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase61_DelayCleanUp.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase62_ClockSkewOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase62_ClockSkewOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-36c5f84a8282e63c3fdded50896027860d5be1cd.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase62_ClockSkewOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase62_ClockSkewOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase6_DelayAndSkewOptimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase6_DelayAndSkewOptimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-11b9af524362977672c79b901929c8b56d0bfa60.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase6_DelayAndSkewOptimization</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase6_DelayAndSkewOptimization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase6_DelayAndSkewOptimization.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase71_HoldFixIter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase71_HoldFixIter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-1cd90467cf01aae8f0ffcf64ba7e3665cb91aa8c.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase71_HoldFixIter</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase71_HoldFixIter.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase7_PostHoldFix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase7_PostHoldFix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-a60665908ef1aadd32130d8b577c5872c9d334d9.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase7_PostHoldFix</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase7_PostHoldFix.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phase</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Common2.html#pyEDAA.OutputFilter.Xilinx.Common2.Phase" title="pyEDAA.OutputFilter.Xilinx.Common2.Phase"><em>Phase</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase7_PostHoldFix.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase8_RouteFinalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase8_RouteFinalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-5555f3333fa47f78370ac6cade86aa25256f92b3.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase8_RouteFinalize</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase8_RouteFinalize.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase9_VerifyingRoutedNets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase9_VerifyingRoutedNets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-4ff0573836f500a9ef3ff5c357f434a85fee64d5.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase9_VerifyingRoutedNets</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase9_VerifyingRoutedNets.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase10_DepositingRoutes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase10_DepositingRoutes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-f5ddb7b2cd1e1e07907fd6dff50d4a203c6558c4.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase10_DepositingRoutes</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase10_DepositingRoutes.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase11_PostProcessRouting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase11_PostProcessRouting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-f71d34b6cba3275ea582a51556df0d4ac5c326b4.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase11_PostProcessRouting</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase11_PostProcessRouting.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase12_PostRouterTiming</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase12_PostRouterTiming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-c9af81ca1f4f30c739b76ef2e01474fd873917a1.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase12_PostRouterTiming</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase12_PostRouterTiming.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">Phase13_PostRouteEventProcessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#Phase13_PostRouteEventProcessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-2720cfdb466a3451cd628261ecf3999eda9c52ce.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of Phase13_PostRouteEventProcessing</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.Phase13_PostRouteEventProcessing.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>&lt;property object at 0x7f65a5fbccc0&gt;</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyEDAA.OutputFilter.Xilinx.RouteDesign.</span></span><span class="sig-name descname"><span class="pre">RoutingTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyEDAA/OutputFilter/Xilinx/RouteDesign.html#RoutingTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Inheritance</p>
+<div class="graphviz"><object data="../_images/inheritance-e854fd1569c7da7baa5ebe1695b19dd25dc2a750.svg" type="image/svg+xml" class="inheritance graphviz">
+<p class="warning">Inheritance diagram of RoutingTask</p></object></div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__annotate_func__">
+<span class="sig-name descname"><span class="pre">__annotate_func__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__annotate_func__" title="Link to this definition"></a></dt>
+<dd><p>The type of the None singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<a class="reference internal" href="pyEDAA.OutputFilter.Xilinx.Commands.html#pyEDAA.OutputFilter.Xilinx.Commands.Command" title="pyEDAA.OutputFilter.Xilinx.Commands.Command"><em>Command</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyEDAA.OutputFilter.Xilinx.RouteDesign.RoutingTask.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyEDAA.OutputFilter.Xilinx.PlaceDesign.html" class="btn btn-neutral float-left" title="pyEDAA.OutputFilter.Xilinx.PlaceDesign" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.html" class="btn btn-neutral float-right" title="pyEDAA.OutputFilter.Xilinx.SynthesizeDesign" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2025, Patrick Lehmann.
+      <span class="lastupdated">Last updated on 31.10.2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

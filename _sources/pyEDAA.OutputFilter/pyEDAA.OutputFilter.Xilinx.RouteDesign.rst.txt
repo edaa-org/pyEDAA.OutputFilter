@@ -1,0 +1,360 @@
+.. # Template modified by Patrick Lehmann
+     * removed automodule on top, because private members are activated for autodoc (no doubled documentation).
+     * Made sections like 'submodules' bold text, but no headlines to reduce number of ToC levels.
+
+======================================
+pyEDAA.OutputFilter.Xilinx.RouteDesign
+======================================
+
+.. automodule:: pyEDAA.OutputFilter.Xilinx.RouteDesign
+
+
+.. currentmodule:: pyEDAA.OutputFilter.Xilinx.RouteDesign
+
+
+**Classes**
+
+- :py:class:`Phase1_BuildRTDesign`:
+  Undocumented.
+
+- :py:class:`Phase21_FixTopologyConstraints`:
+  Undocumented.
+
+- :py:class:`Phase22_PreRouteCleanup`:
+  Undocumented.
+
+- :py:class:`Phase23_UpdateTiming`:
+  Undocumented.
+
+- :py:class:`Phase24_SoftConstraintPins_FastBudgeting`:
+  Undocumented.
+
+- :py:class:`Phase2_RouterInitialization`:
+  Undocumented.
+
+- :py:class:`Phase3_GlobalRouting`:
+  Undocumented.
+
+- :py:class:`Phase41_InitialNetRoutingPass`:
+  Undocumented.
+
+- :py:class:`Phase4_InitialRouting`:
+  Undocumented.
+
+- :py:class:`Phase51_GlobalIteration0`:
+  Undocumented.
+
+- :py:class:`Phase52_GlobalIteration1`:
+  Undocumented.
+
+- :py:class:`Phase5_RipUpAndReroute`:
+  Undocumented.
+
+- :py:class:`Phase61_DelayCleanUp`:
+  Undocumented.
+
+- :py:class:`Phase62_ClockSkewOptimization`:
+  Undocumented.
+
+- :py:class:`Phase6_DelayAndSkewOptimization`:
+  Undocumented.
+
+- :py:class:`Phase71_HoldFixIter`:
+  Undocumented.
+
+- :py:class:`Phase7_PostHoldFix`:
+  Undocumented.
+
+- :py:class:`Phase8_RouteFinalize`:
+  Undocumented.
+
+- :py:class:`Phase9_VerifyingRoutedNets`:
+  Undocumented.
+
+- :py:class:`Phase10_DepositingRoutes`:
+  Undocumented.
+
+- :py:class:`Phase11_PostProcessRouting`:
+  Undocumented.
+
+- :py:class:`Phase12_PostRouterTiming`:
+  Undocumented.
+
+- :py:class:`Phase13_PostRouteEventProcessing`:
+  Undocumented.
+
+- :py:class:`RoutingTask`:
+  Undocumented.
+
+
+
+---------------------
+
+**Classes**
+
+
+
+
+.. autoclass:: Phase1_BuildRTDesign
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase1_BuildRTDesign
+      :parts: 1
+
+.. autoclass:: Phase21_FixTopologyConstraints
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase21_FixTopologyConstraints
+      :parts: 1
+
+.. autoclass:: Phase22_PreRouteCleanup
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase22_PreRouteCleanup
+      :parts: 1
+
+.. autoclass:: Phase23_UpdateTiming
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase23_UpdateTiming
+      :parts: 1
+
+.. autoclass:: Phase24_SoftConstraintPins_FastBudgeting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase24_SoftConstraintPins_FastBudgeting
+      :parts: 1
+
+.. autoclass:: Phase2_RouterInitialization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase2_RouterInitialization
+      :parts: 1
+
+.. autoclass:: Phase3_GlobalRouting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase3_GlobalRouting
+      :parts: 1
+
+.. autoclass:: Phase41_InitialNetRoutingPass
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase41_InitialNetRoutingPass
+      :parts: 1
+
+.. autoclass:: Phase4_InitialRouting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase4_InitialRouting
+      :parts: 1
+
+.. autoclass:: Phase51_GlobalIteration0
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase51_GlobalIteration0
+      :parts: 1
+
+.. autoclass:: Phase52_GlobalIteration1
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase52_GlobalIteration1
+      :parts: 1
+
+.. autoclass:: Phase5_RipUpAndReroute
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase5_RipUpAndReroute
+      :parts: 1
+
+.. autoclass:: Phase61_DelayCleanUp
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase61_DelayCleanUp
+      :parts: 1
+
+.. autoclass:: Phase62_ClockSkewOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase62_ClockSkewOptimization
+      :parts: 1
+
+.. autoclass:: Phase6_DelayAndSkewOptimization
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase6_DelayAndSkewOptimization
+      :parts: 1
+
+.. autoclass:: Phase71_HoldFixIter
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase71_HoldFixIter
+      :parts: 1
+
+.. autoclass:: Phase7_PostHoldFix
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase7_PostHoldFix
+      :parts: 1
+
+.. autoclass:: Phase8_RouteFinalize
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase8_RouteFinalize
+      :parts: 1
+
+.. autoclass:: Phase9_VerifyingRoutedNets
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase9_VerifyingRoutedNets
+      :parts: 1
+
+.. autoclass:: Phase10_DepositingRoutes
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase10_DepositingRoutes
+      :parts: 1
+
+.. autoclass:: Phase11_PostProcessRouting
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase11_PostProcessRouting
+      :parts: 1
+
+.. autoclass:: Phase12_PostRouterTiming
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase12_PostRouterTiming
+      :parts: 1
+
+.. autoclass:: Phase13_PostRouteEventProcessing
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: Phase13_PostRouteEventProcessing
+      :parts: 1
+
+.. autoclass:: RoutingTask
+   :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: __weakref__
+
+   .. rubric:: Inheritance
+   .. inheritance-diagram:: RoutingTask
+      :parts: 1
