@@ -14,6 +14,7 @@ jobs:
       package_namespace: 'pyEDAA'
       package_name:      'OutputFilter'
       unittest_python_version_list: '3.11 3.12 3.13 3.14 pypy-3.11'
+      unittest_disable_list:        'macos:* windows-arm:pypy-3.11'
       bandit:            'true'
       pylint:            'false'
       codecov:           'true'

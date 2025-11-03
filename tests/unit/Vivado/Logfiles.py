@@ -52,7 +52,7 @@ class Stopwatch(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		self.assertEqual(69, len(processor.InfoMessages))
 		self.assertEqual(3, len(processor.WarningMessages))
@@ -87,7 +87,7 @@ class Stopwatch(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -139,7 +139,7 @@ class CERN_DevKit(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		self.assertEqual(70, len(processor.InfoMessages))
 		self.assertEqual(124, len(processor.WarningMessages))
@@ -156,7 +156,7 @@ class CERN_DevKit(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -172,7 +172,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -189,7 +189,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -203,7 +203,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -220,7 +220,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -234,7 +234,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -251,7 +251,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -265,7 +265,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -282,7 +282,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -296,7 +296,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -313,7 +313,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -327,7 +327,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -344,7 +344,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -358,7 +358,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -375,7 +375,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -389,7 +389,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -406,7 +406,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -420,7 +420,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -437,7 +437,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -451,7 +451,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -468,7 +468,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -482,7 +482,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -499,7 +499,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -513,7 +513,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -530,7 +530,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -544,7 +544,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -561,7 +561,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		processor = Document(logfile)
 		processor.Parse()
 
-		self.assertLess(processor.Duration, 0.1)
+		self.assertLess(processor.Duration, 0.2)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))

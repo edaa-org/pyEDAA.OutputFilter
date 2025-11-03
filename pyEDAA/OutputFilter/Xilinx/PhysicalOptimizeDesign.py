@@ -29,12 +29,14 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
+from re     import compile, Pattern
 from typing import ClassVar, Type, Tuple, Dict
 
 from pyTooling.Decorators import export
 from pyTooling.Versioning import VersionRange, YearReleaseVersion, RangeBoundHandling
 
 from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, Phase
+from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 
 @export
@@ -45,27 +47,27 @@ class InitialUpdateTimingTask(Task):
 
 
 @export
-class Phase1_PlacerInitialization(Phase):
-	_START:  ClassVar[str] = "Phase 1 Physical Synthesis Initialization"
-	_FINISH: ClassVar[str] = "Phase 1 Physical Synthesis Initialization | Checksum:"
+class Phase_PlacerInitialization(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization \| Checksum:")
 
 
 @export
-class Phase2_DSPRegisterOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 2 DSP Register Optimization"
-	_FINISH: ClassVar[str] = "Phase 2 DSP Register Optimization | Checksum:"
+class Phase_DSPRegisterOptimization(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization \| Checksum:")
 
 
 @export
-class Phase3_CriticalPathOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 3 Critical Path Optimization"
-	_FINISH: ClassVar[str] = "Phase 3 Critical Path Optimization | Checksum:"
+class Phase_CriticalPathOptimization_1(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization \| Checksum:")
 
 
 @export
-class Phase4_CriticalPathOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 4 Critical Path Optimization"
-	_FINISH: ClassVar[str] = "Phase 4 Critical Path Optimization | Checksum:"
+class Phase_CriticalPathOptimization_2(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization \| Checksum:")
 
 
 @export
@@ -76,9 +78,9 @@ class PhysicalSynthesisTask(TaskWithPhases):
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
 		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase1_PlacerInitialization,
-			Phase2_DSPRegisterOptimization,
-			Phase3_CriticalPathOptimization,
-			Phase4_CriticalPathOptimization
+			Phase_PlacerInitialization,
+			Phase_DSPRegisterOptimization,
+			Phase_CriticalPathOptimization_1,
+			Phase_CriticalPathOptimization_2
 		)
 	}

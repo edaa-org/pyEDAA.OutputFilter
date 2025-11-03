@@ -29,6 +29,7 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
+from re     import compile, Pattern
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators import export
@@ -36,98 +37,102 @@ from pyTooling.Versioning import YearReleaseVersion, VersionRange, RangeBoundHan
 
 from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, Phase, SubPhase, SubSubPhase, SubSubSubPhase, PhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
+
+
+
 
 
 @export
-class Phase11_PlacerInitializationNetlistSorting(SubPhase):
-	_START:  ClassVar[str] = "Phase 1.1 Placer Initialization Netlist Sorting"
-	_FINISH: ClassVar[str] = "Phase 1.1 Placer Initialization Netlist Sorting | Checksum:"
+class Phase_PlacerInitializationNetlistSorting(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Initialization Netlist Sorting")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Initialization Netlist Sorting \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice(SubPhase):
-	_START:  ClassVar[str] = "Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device"
-	_FINISH: ClassVar[str] = "Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum:"
+class Phase_IOPlacement_ClockPlacement_BuildPlacerDevice(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} IO Placement/ Clock Placement/ Build Placer Device")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} IO Placement/ Clock Placement/ Build Placer Device \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase13_BuildPlacerNetlistModel(SubPhase):
-	_START:  ClassVar[str] = "Phase 1.3 Build Placer Netlist Model"
-	_FINISH: ClassVar[str] = "Phase 1.3 Build Placer Netlist Model | Checksum:"
+class Phase_BuildPlacerNetlistModel(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Build Placer Netlist Model")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Build Placer Netlist Model \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase14_ConstrainClocks_Macros(SubPhase):
-	_START:  ClassVar[str] = "Phase 1.4 Constrain Clocks/Macros"
-	_FINISH: ClassVar[str] = "Phase 1.4 Constrain Clocks/Macros | Checksum:"
+class Phase_ConstrainClocks_Macros(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Constrain Clocks/Macros")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Constrain Clocks/Macros \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase1_PlacerInitialization(PhaseWithChildren):
-	_START:  ClassVar[str] = "Phase 1 Placer Initialization"
-	_FINISH: ClassVar[str] = "Phase 1 Placer Initialization | Checksum:"
+class Phase_PlacerInitialization(PhaseWithChildren):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Placer Initialization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Placer Initialization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_SUBPHASE_PREFIX: ClassVar[str] = "Phase 1."
+	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
 		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase11_PlacerInitializationNetlistSorting,
-			Phase12_IOPlacement_ClockPlacement_BuildPlacerDevice,
-			Phase13_BuildPlacerNetlistModel,
-			Phase14_ConstrainClocks_Macros
+			Phase_PlacerInitializationNetlistSorting,
+			Phase_IOPlacement_ClockPlacement_BuildPlacerDevice,
+			Phase_BuildPlacerNetlistModel,
+			Phase_ConstrainClocks_Macros
 		)
 	}
 
 
 @export
-class Phase21_Floorplanning(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.1 Floorplanning"
-	_FINISH: ClassVar[str] = "Phase 2.1 Floorplanning | Checksum:"
+class Phase_Floorplanning(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Floorplanning")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Floorplanning \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase22_UpdateTimingBeforeSLRPathOpt(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.2 Update Timing before SLR Path Opt"
-	_FINISH: ClassVar[str] = "Phase 2.2 Update Timing before SLR Path Opt | Checksum:"
+class Phase_UpdateTimingBeforeSLRPathOpt(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing before SLR Path Opt")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing before SLR Path Opt \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase23_PostProcessingInFloorplanning(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.3 Post-Processing in Floorplanning"
-	_FINISH: ClassVar[str] = "Phase 2.3 Post-Processing in Floorplanning | Checksum:"
+class Phase_PostProcessingInFloorplanning(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post-Processing in Floorplanning")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post-Processing in Floorplanning \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase241_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 2.4.1 UpdateTiming Before Physical Synthesis"
-	_FINISH: ClassVar[str] = "Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum:"
+class Phase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase242_PhysicalSynthesisInPlacer(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 2.4.2 Physical Synthesis In Placer"
-	_FINISH: ClassVar[str] = "Phase 2.4.2 Physical Synthesis In Placer | Checksum:"
+class Phase_PhysicalSynthesisInPlacer(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 @export
-class Phase24_GlobalPlacementCore(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.4 Global Placement Core"
-	_FINISH: ClassVar[str] = "Phase 2.4 Global Placement Core | Checksum:"
+class Phase_GlobalPlacementCore(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Placement Core")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Placement Core \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase241_UpdateTimingBeforePhysicalSynthesis,
-		Phase242_PhysicalSynthesisInPlacer
+		Phase_UpdateTimingBeforePhysicalSynthesis,
+		Phase_PhysicalSynthesisInPlacer
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -151,13 +156,13 @@ class Phase24_GlobalPlacementCore(SubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2.5."):
 					for parser in activeParsers:  # type: SubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -180,35 +185,35 @@ class Phase24_GlobalPlacementCore(SubPhase):
 
 
 @export
-class Phase24_GlobalPlacePhase1(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.4 Global Place Phase1"
-	_FINISH: ClassVar[str] = "Phase 2.4 Global Place Phase1 | Checksum:"
+class Phase_GlobalPlacePhase1(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase1")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase1 \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase251_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 2.5.1 UpdateTiming Before Physical Synthesis"
-	_FINISH: ClassVar[str] = "Phase 2.5.1 UpdateTiming Before Physical Synthesis | Checksum:"
+class Phase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase252_PhysicalSynthesisInPlacer(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 2.5.2 Physical Synthesis In Placer"
-	_FINISH: ClassVar[str] = "Phase 2.5.2 Physical Synthesis In Placer | Checksum:"
+class Phase_PhysicalSynthesisInPlacer(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase25_GlobalPlacePhase2(SubPhase):
-	_START:  ClassVar[str] = "Phase 2.5 Global Place Phase2"
-	_FINISH: ClassVar[str] = "Phase 2.5 Global Place Phase2 | Checksum:"
+class Phase_GlobalPlacePhase2(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase2")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase2 \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase251_UpdateTimingBeforePhysicalSynthesis,
-		Phase252_PhysicalSynthesisInPlacer
+		Phase_UpdateTimingBeforePhysicalSynthesis,
+		Phase_PhysicalSynthesisInPlacer
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -232,13 +237,13 @@ class Phase25_GlobalPlacePhase2(SubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2.5."):
 					for parser in activeParsers:  # type: SubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -261,27 +266,29 @@ class Phase25_GlobalPlacePhase2(SubPhase):
 
 
 @export
-class Phase2_GlobalPlacement(PhaseWithChildren):
-	_START:  ClassVar[str] = "Phase 2 Global Placement"
-	_FINISH: ClassVar[str] = "Phase 2 Global Placement | Checksum:"
+class Phase_GlobalPlacement(PhaseWithChildren):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Global Placement")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Global Placement \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_SUBPHASE_PREFIX: ClassVar[str] = "Phase 2."
+	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
 		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase21_Floorplanning,
-			Phase22_UpdateTimingBeforeSLRPathOpt,
-			Phase23_PostProcessingInFloorplanning,
-			Phase24_GlobalPlacementCore
+			Phase_Floorplanning,
+			Phase_UpdateTimingBeforeSLRPathOpt,
+			Phase_PostProcessingInFloorplanning,
+			Phase_GlobalPlacePhase1,
+			Phase_GlobalPlacePhase2,
+			Phase_GlobalPlacementCore
 		),
 		VersionRange(YearReleaseVersion(2025, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase21_Floorplanning,
-			Phase22_UpdateTimingBeforeSLRPathOpt,
-			Phase23_PostProcessingInFloorplanning,
-			Phase24_GlobalPlacePhase1,
-			Phase25_GlobalPlacePhase2
+			Phase_Floorplanning,
+			Phase_UpdateTimingBeforeSLRPathOpt,
+			Phase_PostProcessingInFloorplanning,
+			Phase_GlobalPlacePhase1,
+			Phase_GlobalPlacePhase2
 		)
 	}
 
@@ -299,13 +306,13 @@ class Phase2_GlobalPlacement(PhaseWithChildren):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 2."):
 					for parser in activeParsers:  # type: Phase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -328,41 +335,41 @@ class Phase2_GlobalPlacement(PhaseWithChildren):
 
 
 @export
-class Phase31_CommitMultiColumnMacros(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.1 Commit Multi Column Macros"
-	_FINISH: ClassVar[str] = "Phase 3.1 Commit Multi Column Macros | Checksum:"
+class Phase_CommitMultiColumnMacros(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Multi Column Macros")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Multi Column Macros \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase32_CommitMostMacrosLUTRAMs(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.2 Commit Most Macros & LUTRAMs"
-	_FINISH: ClassVar[str] = "Phase 3.2 Commit Most Macros & LUTRAMs | Checksum:"
+class Phase_CommitMostMacrosLUTRAMs(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Most Macros & LUTRAMs")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Most Macros & LUTRAMs \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase331_SmallShapeClustering(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 3.3.1 Small Shape Clustering"
-	_FINISH: ClassVar[str] = "Phase 3.3.1 Small Shape Clustering | Checksum:"
+class Phase_SmallShapeClustering(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Small Shape Clustering")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Small Shape Clustering \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase3321_SliceAreaSwapInitial(SubSubSubPhase):
-	_START:  ClassVar[str] = "Phase 3.3.2.1 Slice Area Swap Initial"
-	_FINISH: ClassVar[str] = "Phase 3.3.2.1 Slice Area Swap Initial | Checksum:"
+class Phase_SliceAreaSwapInitial(SubSubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Slice Area Swap Initial")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Slice Area Swap Initial \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase332_SliceAreaSwap(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 3.3.2 Slice Area Swap"
-	_FINISH: ClassVar[str] = "Phase 3.3.2 Slice Area Swap | Checksum:"
+class Phase_SliceAreaSwap(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Slice Area Swap")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Slice Area Swap \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase3321_SliceAreaSwapInitial,
+		Phase_SliceAreaSwapInitial,
 	)
 
 	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
@@ -386,7 +393,7 @@ class Phase332_SliceAreaSwap(SubSubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 3.3.2."):
 					for parser in activeParsers:  # type: SubSubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
@@ -415,14 +422,14 @@ class Phase332_SliceAreaSwap(SubSubPhase):
 					break
 
 @export
-class Phase33_SmallShapeDP(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.3 Small Shape DP"
-	_FINISH: ClassVar[str] = "Phase 3.3 Small Shape DP | Checksum:"
+class Phase_SmallShapeDP(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape DP")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape DP \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase331_SmallShapeClustering,
-		Phase332_SliceAreaSwap
+		Phase_SmallShapeClustering,
+		Phase_SliceAreaSwap
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -446,13 +453,13 @@ class Phase33_SmallShapeDP(SubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 3.3."):
 					for parser in activeParsers:  # type: SubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -475,101 +482,83 @@ class Phase33_SmallShapeDP(SubPhase):
 
 
 @export
-class Phase33_AreaSwapOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.3 Area Swap Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.3 Area Swap Optimization | Checksum:"
+class Phase_AreaSwapOptimization(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Area Swap Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Area Swap Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase34_ReassignLUTPpins(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.4 Re-assign LUT pins"
-	_FINISH: ClassVar[str] = "Phase 3.4 Re-assign LUT pins | Checksum:"
+class Phase_ReassignLUTPins(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Re-assign LUT pins")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Re-assign LUT pins \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase34_PipelineRegisterOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.4 Pipeline Register Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.4 Pipeline Register Optimization | Checksum:"
+class Phase_PipelineRegisterOptimization_1(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase35_PipelineRegisterOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.5 Pipeline Register Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.5 Pipeline Register Optimization | Checksum:"
+class Phase_PipelineRegisterOptimization_2(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase35_FastOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.5 Fast Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.5 Fast Optimization | Checksum:"
+class Phase_FastOptimization_1(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase36_FastOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.6 Fast Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.6 Fast Optimization | Checksum:"
+class Phase_FastOptimization_2(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase36_SmallShapeDetailPlacement(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.6 Small Shape Detail Placement"
-	_FINISH: ClassVar[str] = "Phase 3.6 Small Shape Detail Placement | Checksum:"
+class Phase_SmallShapeDetailPlacement(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape Detail Placement")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape Detail Placement \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase37_ReassignLUTPins(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.7 Re-assign LUT pins"
-	_FINISH: ClassVar[str] = "Phase 3.7 Re-assign LUT pins | Checksum:"
-	_TIME:   ClassVar[str] = "Time (s):"
-
-
-@export
-class Phase38_PipelineRegisterOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.8 Pipeline Register Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.8 Pipeline Register Optimization | Checksum:"
-	_TIME:   ClassVar[str] = "Time (s):"
-
-
-@export
-class Phase39_FastOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 3.9 Fast Optimization"
-	_FINISH: ClassVar[str] = "Phase 3.9 Fast Optimization | Checksum:"
-	_TIME:   ClassVar[str] = "Time (s):"
-
-
-@export
-class Phase3_DetailPlacement(PhaseWithChildren):
-	_START:  ClassVar[str] = "Phase 3 Detail Placement"
-	_FINISH: ClassVar[str] = "Phase 3 Detail Placement | Checksum:"
+class Phase_DetailPlacement(PhaseWithChildren):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Detail Placement")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Detail Placement \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase31_CommitMultiColumnMacros,
-			Phase32_CommitMostMacrosLUTRAMs,
-			Phase33_SmallShapeDP,
-			Phase34_ReassignLUTPpins,
-			Phase35_PipelineRegisterOptimization,
-			Phase36_FastOptimization
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
+			Phase_CommitMultiColumnMacros,
+			Phase_CommitMostMacrosLUTRAMs,
+			Phase_SmallShapeDP,
+			Phase_ReassignLUTPins,
+			Phase_PipelineRegisterOptimization_1,
+			Phase_PipelineRegisterOptimization_2,
+			Phase_FastOptimization_1,
+			Phase_FastOptimization_2
 		),
-		VersionRange(YearReleaseVersion(2025, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase31_CommitMultiColumnMacros,
-			Phase32_CommitMostMacrosLUTRAMs,
-			Phase33_AreaSwapOptimization,
-			Phase34_PipelineRegisterOptimization,
-			Phase35_FastOptimization,
-			Phase36_SmallShapeDetailPlacement,
-			Phase37_ReassignLUTPins,
-			Phase38_PipelineRegisterOptimization,
-			Phase39_FastOptimization
+		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			Phase_CommitMultiColumnMacros,
+			Phase_CommitMostMacrosLUTRAMs,
+			Phase_SmallShapeDP,
+			Phase_AreaSwapOptimization,
+			Phase_PipelineRegisterOptimization_1,
+			Phase_PipelineRegisterOptimization_2,
+			Phase_FastOptimization_1,
+			Phase_FastOptimization_2,
+			Phase_SmallShapeDetailPlacement,
+			Phase_ReassignLUTPins
 		)
 	}
 
@@ -578,6 +567,8 @@ class Phase3_DetailPlacement(PhaseWithChildren):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -585,15 +576,15 @@ class Phase3_DetailPlacement(PhaseWithChildren):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 3."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Section
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						raise Exception(f"Unknown subphase: '{line!s}'")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -616,28 +607,28 @@ class Phase3_DetailPlacement(PhaseWithChildren):
 
 
 @export
-class Phase4111_BUFGInsertion(SubSubSubPhase):
-	_START:  ClassVar[str] = "Phase 4.1.1.1 BUFG Insertion"
-	_FINISH: ClassVar[str] = "Phase 4.1.1.1 BUFG Insertion | Checksum:"
+class Phase_BUFGInsertion(SubSubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} BUFG Insertion")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} BUFG Insertion \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase4112_PostPlacementTimingOptimization(SubSubSubPhase):
-	_START:  ClassVar[str] = "Phase 4.1.1.2 Post Placement Timing Optimization"
-	_FINISH: ClassVar[str] = "Phase 4.1.1.2 Post Placement Timing Optimization | Checksum:"
+class Phase_PostPlacementTimingOptimization(SubSubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Post Placement Timing Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Post Placement Timing Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase411_PostPlacementOptimization(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 4.1.1 Post Placement Optimization"
+class Phase_PostPlacementOptimization(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Post Placement Optimization")
 	_FINISH: ClassVar[str] = None  # Phase 4.1.1 Post Placement Optimization | Checksum:"
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase4111_BUFGInsertion,
-		Phase4112_PostPlacementTimingOptimization
+		Phase_BUFGInsertion,
+		Phase_PostPlacementTimingOptimization
 	)
 
 	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
@@ -661,7 +652,7 @@ class Phase411_PostPlacementOptimization(SubSubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 4.1.1."):
 					for parser in activeParsers:  # type: SubSubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
@@ -691,13 +682,13 @@ class Phase411_PostPlacementOptimization(SubSubPhase):
 
 
 @export
-class Phase41_PostCommitOptimization(SubPhase):
-	_START:  ClassVar[str] = "Phase 4.1 Post Commit Optimization"
-	_FINISH: ClassVar[str] = "Phase 4.1 Post Commit Optimization | Checksum:"
+class Phase_PostCommitOptimization(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Commit Optimization")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Commit Optimization \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase411_PostPlacementOptimization,
+		Phase_PostPlacementOptimization,
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -721,13 +712,13 @@ class Phase41_PostCommitOptimization(SubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 4.1."):
 					for parser in activeParsers:  # type: SubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -750,27 +741,27 @@ class Phase41_PostCommitOptimization(SubPhase):
 
 
 @export
-class Phase42_PostPlacementCleanup(SubPhase):
-	_START:  ClassVar[str] = "Phase 4.2 Post Placement Cleanup"
-	_FINISH: ClassVar[str] = "Phase 4.2 Post Placement Cleanup | Checksum:"
+class Phase_PostPlacementCleanup(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Placement Cleanup")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Placement Cleanup \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase431_PrintEstimatedCongestion(SubSubPhase):
-	_START:  ClassVar[str] = "Phase 4.3.1 Print Estimated Congestion"
-	_FINISH: ClassVar[str] = "Phase 4.3.1 Print Estimated Congestion | Checksum:"
+class Phase_PrintEstimatedCongestion(SubSubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Print Estimated Congestion")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Print Estimated Congestion \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 
 @export
-class Phase43_PlacerReporting(SubPhase):
-	_START:  ClassVar[str] = "Phase 4.3 Placer Reporting"
-	_FINISH: ClassVar[str] = "Phase 4.3 Placer Reporting | Checksum:"
+class Phase_PlacerReporting(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Reporting")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Reporting \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase431_PrintEstimatedCongestion,
+		Phase_PrintEstimatedCongestion,
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -794,13 +785,13 @@ class Phase43_PlacerReporting(SubPhase):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 4.3."):
 					for parser in activeParsers:  # type: SubSubPhase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -823,25 +814,25 @@ class Phase43_PlacerReporting(SubPhase):
 
 
 @export
-class Phase44_FinalPlacementCleanup(SubPhase):
-	_START:  ClassVar[str] = "Phase 4.4 Final Placement Cleanup"
-	_FINISH: ClassVar[str] = "Time (s):"
+class Phase_FinalPlacementCleanup(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Final Placement Cleanup")
+	_FINISH: ClassVar[Pattern] = compile("Time \(s\):")
 	_TIME:   ClassVar[str] = None
 
 
 @export
-class Phase4_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
-	_START:  ClassVar[str] = "Phase 4 Post Placement Optimization and Clean-Up"
-	_FINISH: ClassVar[str] = "Phase 4 Post Placement Optimization and Clean-Up | Checksum:"
+class Phase_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Placement Optimization and Clean-Up")
+	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Placement Optimization and Clean-Up \| Checksum:")
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
 		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase41_PostCommitOptimization,
-			Phase42_PostPlacementCleanup,
-			Phase43_PlacerReporting,
-			Phase44_FinalPlacementCleanup
+			Phase_PostCommitOptimization,
+			Phase_PostPlacementCleanup,
+			Phase_PlacerReporting,
+			Phase_FinalPlacementCleanup
 		)
 	}
 
@@ -856,13 +847,13 @@ class Phase4_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase 4."):
 					for parser in activeParsers:  # type: Section
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -891,9 +882,9 @@ class PlacerTask(TaskWithPhases):
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
 		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase1_PlacerInitialization,
-			Phase2_GlobalPlacement,
-			Phase3_DetailPlacement,
-			Phase4_PostPlacementOptimizationAndCleanUp
+			Phase_PlacerInitialization,
+			Phase_GlobalPlacement,
+			Phase_DetailPlacement,
+			Phase_PostPlacementOptimizationAndCleanUp
 		)
 	}

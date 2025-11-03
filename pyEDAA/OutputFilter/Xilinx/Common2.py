@@ -43,6 +43,12 @@ from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, 
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
 
 
+MAJOR = r"(?P<major>\d+)"
+MAJOR_MINOR = r"(?P<major>\d+)\.(?P<minor>\d+)"
+MAJOR_MINOR_MICRO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)"
+MAJOR_MINOR_MICRO_NANO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)\.(?P<nano>\d+)"
+
+
 @export
 class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
 	_infoMessages: List[VivadoInfoMessage]
@@ -447,7 +453,7 @@ class TaskWithPhases(Task):
 					self._AddMessage(line)
 				elif line.StartsWith("Phase "):
 					for parser in activeParsers:  # type: Phase
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
@@ -487,13 +493,15 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 	_TIME:   ClassVar[str] = "Time (s):"
 	_FINAL:  ClassVar[Nullable[str]] = None
 
-	_task:     TaskWithPhases
-	_duration: float
+	_task:       TaskWithPhases
+	_phaseIndex: int
+	_duration:   float
 
 	def __init__(self, task: TaskWithPhases):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
+		self._phaseIndex = None
 		self._task = task
 
 	@readonly
@@ -501,15 +509,17 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		return self._task
 
 	def _PhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
+		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException(f"{self.__class__.__name__}._PhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
+
+		self._phaseIndex = int(match["major"])
 
 		line._kind = LineKind.PhaseStart
 		nextLine = yield line
 		return nextLine
 
 	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if not line.StartsWith(self._FINISH):
+		if (match := self._FINISH.match(line._message)) is None:
 			raise ProcessorException(f"{self.__class__.__name__}._PhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.PhaseEnd
@@ -546,7 +556,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 				continue
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-			elif line.StartsWith(self._FINISH):
+			elif self._FINISH.match(line._message):
 				break
 
 			line = yield line
@@ -581,6 +591,8 @@ class PhaseWithChildren(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		SUBPHASE_PREFIX = self._SUBPHASE_PREFIX.format(phase=1)
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -588,15 +600,15 @@ class PhaseWithChildren(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith(self._SUBPHASE_PREFIX):
+				elif line.StartsWith(SUBPHASE_PREFIX):
 					for parser in activeParsers:  # type: Section
-						if line.StartsWith(parser._START):
+						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif line.StartsWith(self._FINISH):
+				elif self._FINISH.match(line._message):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -632,7 +644,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		self._phase = phase
 
 	def _SubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
+		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.SubPhaseStart
@@ -640,7 +652,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		return nextLine
 
 	def _SubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if not line.StartsWith(self._FINISH):
+		if (match := self._FINISH.match(line._message)) is None:
 			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		if self._TIME is None:
@@ -666,7 +678,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif line.StartsWith(self._FINISH):
+			elif self._FINISH.match(line._message):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -692,7 +704,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 		self._subphase = subphase
 
 	def _SubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
+		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubPhaseStart
@@ -700,7 +712,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 		return nextLine
 
 	def _SubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if not line.StartsWith(self._FINISH):
+		if (match := self._FINISH.match(line._message)) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubPhaseEnd
@@ -723,7 +735,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif line.StartsWith(self._FINISH):
+			elif self._FINISH.match(line._message):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -749,7 +761,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 		self._subsubphase = subsubphase
 
 	def _SubSubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
-		if not line.StartsWith(self._START):
+		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubSubPhaseStart
@@ -757,7 +769,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 		return nextLine
 
 	def _SubSubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if not line.StartsWith(self._FINISH):
+		if (match := self._FINISH.match(line._message)) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubSubPhaseEnd
@@ -780,7 +792,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif line.StartsWith(self._FINISH):
+			elif self._FINISH.match(line._message):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
