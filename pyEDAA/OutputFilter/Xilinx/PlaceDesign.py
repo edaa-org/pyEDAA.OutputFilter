@@ -147,6 +147,8 @@ class Phase_GlobalPlacementCore(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -154,7 +156,7 @@ class Phase_GlobalPlacementCore(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 2.5."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -228,6 +230,8 @@ class Phase_GlobalPlacePhase2(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -235,7 +239,7 @@ class Phase_GlobalPlacePhase2(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 2.5."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -297,6 +301,8 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -304,7 +310,7 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 2."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Phase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -384,6 +390,8 @@ class Phase_SliceAreaSwap(SubSubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}..{self._subSubPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -391,7 +399,7 @@ class Phase_SliceAreaSwap(SubSubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 3.3.2."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -444,6 +452,8 @@ class Phase_SmallShapeDP(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -451,7 +461,7 @@ class Phase_SmallShapeDP(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 3.3."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -643,6 +653,8 @@ class Phase_PostPlacementOptimization(SubSubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}..{self._subSubPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -650,7 +662,7 @@ class Phase_PostPlacementOptimization(SubSubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4.1.1."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -703,6 +715,8 @@ class Phase_PostCommitOptimization(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -710,7 +724,7 @@ class Phase_PostCommitOptimization(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4.1."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -776,6 +790,8 @@ class Phase_PlacerReporting(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -783,7 +799,7 @@ class Phase_PlacerReporting(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4.3."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -841,11 +857,13 @@ class Phase_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))

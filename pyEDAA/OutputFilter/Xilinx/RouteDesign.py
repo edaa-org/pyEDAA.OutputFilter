@@ -113,6 +113,8 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -120,7 +122,7 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 2.5."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubSubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -271,6 +273,8 @@ class Phase_Initial_Routing(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -278,7 +282,7 @@ class Phase_Initial_Routing(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 3."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -360,6 +364,8 @@ class Phase_RipUpAndReroute(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -367,7 +373,7 @@ class Phase_RipUpAndReroute(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -426,6 +432,8 @@ class Phase_InitialRouting(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -433,7 +441,7 @@ class Phase_InitialRouting(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 4."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -503,6 +511,8 @@ class Phase_DelayAndSkewOptimization(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -510,7 +520,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 5."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -577,6 +587,8 @@ class Phase_RipUpAndReroute(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -584,7 +596,7 @@ class Phase_RipUpAndReroute(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 5."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -644,6 +656,8 @@ class Phase_PostHoldFix(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -651,7 +665,7 @@ class Phase_PostHoldFix(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 6."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -718,6 +732,8 @@ class Phase_DelayAndSkewOptimization(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -725,7 +741,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 6."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -797,6 +813,8 @@ class Phase_PostHoldFix(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -804,7 +822,7 @@ class Phase_PostHoldFix(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 7."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: SubPhase
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))

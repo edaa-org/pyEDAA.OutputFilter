@@ -93,7 +93,7 @@ class Phase_Initialization(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 1."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -176,7 +176,7 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 2."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -323,7 +323,7 @@ class Phase_Finalization(Phase):
 					continue
 				elif isinstance(line, VivadoMessage):
 					self._AddMessage(line)
-				elif line.StartsWith("Phase 9."):
+				elif line.StartsWith(START_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
 							line = yield next(phase := parser.Generator(line))
@@ -460,9 +460,21 @@ class PowerOptimizationTask(TaskWithSubTasks):
 
 
 @export
-class FinalCleanupTask(Task):
+class LogicOptimizationTask(SubTask):
+	_START:  ClassVar[str] = "Starting Logic Optimization Task"
+	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
+
+
+@export
+class FinalCleanupTask(TaskWithSubTasks):
 	_START:  ClassVar[str] = "Starting Final Cleanup Task"
 	_FINISH: ClassVar[str] = "Ending Final Cleanup Task"
+
+	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubTask], ...]]] = {
+		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
+			LogicOptimizationTask,
+		)
+	}
 
 
 @export

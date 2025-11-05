@@ -502,7 +502,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		VivadoMessagesMixin.__init__(self)
 
 		self._phaseIndex = None
-		self._task = task
+		self._task =       task
 
 	@readonly
 	def Task(self) -> TaskWithPhases:
@@ -634,18 +634,25 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
-	_phase:    Phase
-	_duration: float
+	_phase:         Phase
+	_phaseIndex:    int
+	_subPhaseIndex: int
+	_duration:      float
 
 	def __init__(self, phase: Phase):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
-		self._phase = phase
+		self._phaseIndex =    None
+		self._subPhaseIndex = None
+		self._phase =         phase
 
 	def _SubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
+
+		self._phaseIndex =    int(match["major"])
+		self._subPhaseIndex = int(match["minor"])
 
 		line._kind = LineKind.SubPhaseStart
 		nextLine = yield line
@@ -694,19 +701,28 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
-	_subphase: SubPhase
-	_duration: float
+	_subphase:         SubPhase
+	_phaseIndex:       int
+	_subPhaseIndex:    int
+	_subSubPhaseIndex: int
+	_duration:         float
 
 	def __init__(self, subphase: SubPhase):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
-		self._subphase = subphase
+		self._phaseIndex =       None
+		self._subPhaseIndex =    None
+		self._subSubPhaseIndex = None
+		self._subphase =         subphase
 
 	def _SubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException()
 
+		self._phaseIndex =       int(match["major"])
+		self._subPhaseIndex =    int(match["minor"])
+		self._subSubPhaseIndex = int(match["micro"])
 		line._kind = LineKind.SubSubPhaseStart
 		nextLine = yield line
 		return nextLine
