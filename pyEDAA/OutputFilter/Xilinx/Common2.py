@@ -519,8 +519,9 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		return nextLine
 
 	def _PhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if (match := self._FINISH.match(line._message)) is None:
-			raise ProcessorException(f"{self.__class__.__name__}._PhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+		if not line.StartsWith(FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._PhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.PhaseEnd
 		line = yield line
@@ -550,13 +551,15 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
 
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
-			elif self._FINISH.match(line._message):
+			elif line.StartsWith(FINISH):
 				break
 
 			line = yield line
@@ -592,6 +595,7 @@ class PhaseWithChildren(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		SUBPHASE_PREFIX = self._SUBPHASE_PREFIX.format(phase=1)
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -608,7 +612,7 @@ class PhaseWithChildren(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -681,11 +685,13 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SubPhaseStart(line)
 
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
+
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif self._FINISH.match(line._message):
+			elif line.StartsWith(FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)

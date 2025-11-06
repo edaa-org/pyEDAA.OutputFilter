@@ -43,30 +43,30 @@ from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR
 @export
 class Phase_Retarget(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Retarget")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Retarget \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Retarget \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
 
 
 @export
 class Phase_CoreGenerationAndDesignSetup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Core Generation And Design Setup")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Core Generation And Design Setup \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Core Generation And Design Setup \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_SetupConstraintsAndSortNetlist(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Setup Constraints And Sort Netlist")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Setup Constraints And Sort Netlist \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Setup Constraints And Sort Netlist \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_Initialization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initialization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initialization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initialization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -126,30 +126,30 @@ class Phase_Initialization(Phase):
 @export
 class Phase_ConstantPropagation(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
 
 
 @export
 class Phase_TimerUpdate(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timer Update")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timer Update \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timer Update \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_TimingDataCollection(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timing Data Collection")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timing Data Collection \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timing Data Collection \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_TimerUpdateAndTimingDataCollection(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Timer Update And Timing Data Collection")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Timer Update And Timing Data Collection \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Timer Update And Timing Data Collection \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -209,94 +209,94 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 @export
 class Phase_Sweep(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
 
 
 @export
 class Phase_BUFGOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
 
 @export
 class Phase_ConstantPropagation(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
 
 
 @export
 class Phase_ShiftRegisterOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
 
 
 @export
 class Phase_Sweep(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
 
 
 @export
 class Phase_PostProcessingNetlist(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
 
 @export
 class Phase_BUFGOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
 
 @export
 class Phase_ShiftRegisterOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
 
 
 @export
 class Phase_PostProcessingNetlist(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
 
 @export
 class Phase_FinalizingDesignCoresAndUpdatingShapes(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Finalizing Design Cores and Updating Shapes")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Finalizing Design Cores and Updating Shapes \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Finalizing Design Cores and Updating Shapes \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_VerifyingNetlistConnectivity(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Verifying Netlist Connectivity")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Verifying Netlist Connectivity \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Verifying Netlist Connectivity \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_Finalization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Finalization")
-	_FINISH: ClassVar[Pattern] = compile(f"^Phase {MAJOR} Finalization \| Checksum:")
-	_TIME:   ClassVar[str] = "Time (s):"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Finalization \| Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
