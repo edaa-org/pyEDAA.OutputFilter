@@ -49,25 +49,25 @@ class InitialUpdateTimingTask(Task):
 @export
 class Phase_PlacerInitialization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization | Checksum:"
 
 
 @export
 class Phase_DSPRegisterOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} DSP Register Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} DSP Register Optimization | Checksum:"
 
 
 @export
 class Phase_CriticalPathOptimization_1(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export
 class Phase_CriticalPathOptimization_2(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export

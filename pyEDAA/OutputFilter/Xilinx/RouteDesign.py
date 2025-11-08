@@ -45,56 +45,56 @@ from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 @export
 class Phase_BuildRTDesign(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Build RT Design")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Build RT Design \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Build RT Design | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_FixTopologyConstraints(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fix Topology Constraints")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fix Topology Constraints \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fix Topology Constraints | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PreRouteCleanup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pre Route Cleanup")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pre Route Cleanup \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pre Route Cleanup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_GlobalClockNetRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Clock Net Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Clock Net Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Clock Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_UpdateTiming(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_SoftConstraintPins_FastBudgeting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Soft Constraint Pins - Fast Budgeting")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Soft Constraint Pins - Fast Budgeting \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Soft Constraint Pins - Fast Budgeting | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class SubSubPhase_UpdateTiming(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Update Timing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Update Timing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_UpdateTimingForBusSkew(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing for Bus Skew")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing for Bus Skew \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing for Bus Skew | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -114,6 +114,7 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 		activeParsers: List[Phase] = list(self._subsubphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
 
 		while True:
 			while True:
@@ -130,7 +131,7 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 					else:
 						raise Exception(f"Unknown subsubphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._SubPhaseFinish(line)
 					return nextLine
 
@@ -155,7 +156,7 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 @export
 class Phase_RouterInitialization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Router Initialization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
@@ -201,6 +202,7 @@ class Phase_RouterInitialization(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -217,7 +219,7 @@ class Phase_RouterInitialization(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -241,19 +243,19 @@ class Phase_RouterInitialization(Phase):
 @export
 class SubPhase_GlobalRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
 class Phase_InitialNetRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
 class Phase_Initial_Routing(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -274,6 +276,7 @@ class Phase_Initial_Routing(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -290,7 +293,7 @@ class Phase_Initial_Routing(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -315,35 +318,35 @@ class Phase_Initial_Routing(Phase):
 @export
 class Phase_GlobalRouting(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Global Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Global Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_GlobalIteration0(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 0")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_GlobalIteration1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_GlobalIteration2(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 2")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 2 \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 2 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_RipUpAndReroute(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -365,6 +368,7 @@ class Phase_RipUpAndReroute(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -381,7 +385,7 @@ class Phase_RipUpAndReroute(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -406,7 +410,7 @@ class Phase_RipUpAndReroute(Phase):
 @export
 class Phase_InitialNetRoutingPass(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing Pass")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing Pass \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing Pass | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
@@ -481,21 +485,21 @@ class Phase_InitialRouting(Phase):
 @export
 class Phase_DelayCleanUp(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_ClockSkewOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_DelayAndSkewOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -516,6 +520,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -532,7 +537,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -557,21 +562,21 @@ class Phase_DelayAndSkewOptimization(Phase):
 @export
 class Phase_GlobalIteration0(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 0")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_GlobalIteration1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_RipUpAndReroute(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -592,6 +597,7 @@ class Phase_RipUpAndReroute(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -608,7 +614,7 @@ class Phase_RipUpAndReroute(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -634,14 +640,14 @@ class Phase_RipUpAndReroute(Phase):
 @export
 class Phase_HoldFixIter(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PostHoldFix(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -661,6 +667,7 @@ class Phase_PostHoldFix(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -677,7 +684,7 @@ class Phase_PostHoldFix(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -702,21 +709,21 @@ class Phase_PostHoldFix(Phase):
 @export
 class Phase_DelayCleanUp(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_ClockSkewOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_DelayAndSkewOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -737,6 +744,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -753,7 +761,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -777,28 +785,28 @@ class Phase_DelayAndSkewOptimization(Phase):
 @export
 class Phase_RouteFinalize_1(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_RouteFinalize_2(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_HoldFixIter(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PostHoldFix(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
@@ -818,6 +826,7 @@ class Phase_PostHoldFix(Phase):
 		activeParsers: List[Phase] = list(self._subphases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
 			while True:
@@ -834,7 +843,7 @@ class Phase_PostHoldFix(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -859,62 +868,62 @@ class Phase_PostHoldFix(Phase):
 @export
 class Phase_VerifyingRoutedNets(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_DepositingRoutes(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_VerifyingRoutedNets(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_ResolveXTalk(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Resolve XTalk")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Resolve XTalk \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Resolve XTalk | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_DepositingRoutes(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PostProcessRouting(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Process Routing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Process Routing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Process Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PostRouterTiming(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Router Timing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
 class Phase_PostRouterTiming(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Router Timing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_PostRouteEventProcessing(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post-Route Event Processing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post-Route Event Processing \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post-Route Event Processing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 

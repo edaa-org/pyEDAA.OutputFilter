@@ -43,7 +43,7 @@ from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR
 @export
 class Phase_Retarget(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Retarget")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Retarget \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Retarget | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
 
@@ -51,21 +51,21 @@ class Phase_Retarget(Phase):
 @export
 class Phase_CoreGenerationAndDesignSetup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Core Generation And Design Setup")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Core Generation And Design Setup \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Core Generation And Design Setup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_SetupConstraintsAndSortNetlist(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Setup Constraints And Sort Netlist")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Setup Constraints And Sort Netlist \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Setup Constraints And Sort Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_Initialization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initialization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initialization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
@@ -86,6 +86,9 @@ class Phase_Initialization(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -101,7 +104,7 @@ class Phase_Initialization(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -126,7 +129,7 @@ class Phase_Initialization(Phase):
 @export
 class Phase_ConstantPropagation(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
 
@@ -134,21 +137,21 @@ class Phase_ConstantPropagation(Phase):
 @export
 class Phase_TimerUpdate(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timer Update")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timer Update \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timer Update | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_TimingDataCollection(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timing Data Collection")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timing Data Collection \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timing Data Collection | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_TimerUpdateAndTimingDataCollection(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Timer Update And Timing Data Collection")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Timer Update And Timing Data Collection \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Timer Update And Timing Data Collection | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
@@ -169,6 +172,9 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -184,7 +190,7 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 
@@ -209,7 +215,7 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 @export
 class Phase_Sweep(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
 
@@ -217,7 +223,7 @@ class Phase_Sweep(Phase):
 @export
 class Phase_BUFGOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
@@ -225,7 +231,7 @@ class Phase_BUFGOptimization(Phase):
 @export
 class Phase_ConstantPropagation(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
 
@@ -233,7 +239,7 @@ class Phase_ConstantPropagation(Phase):
 @export
 class Phase_ShiftRegisterOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
 
@@ -241,7 +247,7 @@ class Phase_ShiftRegisterOptimization(Phase):
 @export
 class Phase_Sweep(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
 
@@ -249,7 +255,7 @@ class Phase_Sweep(Phase):
 @export
 class Phase_PostProcessingNetlist(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
@@ -257,7 +263,7 @@ class Phase_PostProcessingNetlist(Phase):
 @export
 class Phase_BUFGOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
 
@@ -265,7 +271,7 @@ class Phase_BUFGOptimization(Phase):
 @export
 class Phase_ShiftRegisterOptimization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
 
@@ -273,7 +279,7 @@ class Phase_ShiftRegisterOptimization(Phase):
 @export
 class Phase_PostProcessingNetlist(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
 
@@ -281,21 +287,21 @@ class Phase_PostProcessingNetlist(Phase):
 @export
 class Phase_FinalizingDesignCoresAndUpdatingShapes(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Finalizing Design Cores and Updating Shapes")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Finalizing Design Cores and Updating Shapes \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Finalizing Design Cores and Updating Shapes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_VerifyingNetlistConnectivity(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Verifying Netlist Connectivity")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Verifying Netlist Connectivity \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Verifying Netlist Connectivity | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
 class Phase_Finalization(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Finalization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Finalization \| Checksum:"
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Finalization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
@@ -316,6 +322,9 @@ class Phase_Finalization(Phase):
 
 		activeParsers: List[Phase] = list(self._subphases.values())
 
+		START_PREFIX = f"Phase {self._phaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+
 		while True:
 			while True:
 				if line._kind is LineKind.Empty:
@@ -331,7 +340,7 @@ class Phase_Finalization(Phase):
 					else:
 						raise Exception(f"Unknown subphase: {line!r}")
 					break
-				elif self._FINISH.match(line._message):
+				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
 					return nextLine
 

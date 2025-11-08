@@ -470,16 +470,16 @@ class TaskWithPhases(Task):
 				line = yield line
 
 			while phase is not None:
-				#				print(line)
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
 				if isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 
+				isFinish = line.StartsWith("Ending")
+
 				try:
 					line = yield phase.send(line)
+					if isFinish:
+						print(f"Didn't detect finish: '{line.PreviousLine!r}'")
+						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
@@ -501,8 +501,8 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
-		self._phaseIndex = None
 		self._task =       task
+		self._phaseIndex = None
 
 	@readonly
 	def Task(self) -> TaskWithPhases:
@@ -619,15 +619,16 @@ class PhaseWithChildren(Phase):
 				line = yield line
 
 			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
 				if isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 
+				isFinish = line.StartsWith(SUBPHASE_PREFIX)
+
 				try:
 					line = yield phase.send(line)
+					if isFinish:
+						print(f"Didn't detect finish: '{line.PreviousLine!r}'")
+						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
@@ -647,9 +648,9 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
+		self._phase =         phase
 		self._phaseIndex =    None
 		self._subPhaseIndex = None
-		self._phase =         phase
 
 	def _SubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if (match := self._START.match(line._message)) is None:
@@ -663,8 +664,10 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		return nextLine
 
 	def _SubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if (match := self._FINISH.match(line._message)) is None:
-			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
+
+		if line.StartsWith(FINISH) is None:
+			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
 
 		if self._TIME is None:
 			line._kind = LineKind.SubPhaseTime
@@ -717,10 +720,10 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
+		self._subphase =         subphase
 		self._phaseIndex =       None
 		self._subPhaseIndex =    None
 		self._subSubPhaseIndex = None
-		self._subphase =         subphase
 
 	def _SubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if (match := self._START.match(line._message)) is None:
@@ -729,12 +732,15 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 		self._phaseIndex =       int(match["major"])
 		self._subPhaseIndex =    int(match["minor"])
 		self._subSubPhaseIndex = int(match["micro"])
+
 		line._kind = LineKind.SubSubPhaseStart
 		nextLine = yield line
 		return nextLine
 
 	def _SubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if (match := self._FINISH.match(line._message)) is None:
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex)
+
+		if line.StartsWith(FINISH) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubPhaseEnd
@@ -753,11 +759,13 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SubSubPhaseStart(line)
 
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex)
+
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif self._FINISH.match(line._message):
+			elif line.StartsWith(FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -773,18 +781,31 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
-	_subsubphase: SubSubPhase
-	_duration: float
+	_subsubphase:         SubSubPhase
+	_phaseIndex:          int
+	_subPhaseIndex:       int
+	_subSubPhaseIndex:    int
+	_subSubSubPhaseIndex: int
+	_duration:            float
 
 	def __init__(self, subsubphase: SubSubPhase):
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
-		self._subsubphase = subsubphase
+		self._subsubphase =         subsubphase
+		self._phaseIndex =          None
+		self._subPhaseIndex =       None
+		self._subSubPhaseIndex =    None
+		self._subSubSubPhaseIndex = None
 
 	def _SubSubSubPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
 		if (match := self._START.match(line._message)) is None:
 			raise ProcessorException()
+
+		self._phaseIndex =          int(match["major"])
+		self._subPhaseIndex =       int(match["minor"])
+		self._subSubPhaseIndex =    int(match["micro"])
+		self._subSubSubPhaseIndex = int(match["nano"])
 
 		line._kind = LineKind.SubSubSubPhaseStart
 		nextLine = yield line
@@ -810,11 +831,13 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SubSubSubPhaseStart(line)
 
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex, subSubSubPhaseIndex=self._subSubSubPhaseIndex)
+
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
 				continue
-			elif self._FINISH.match(line._message):
+			elif line.StartsWith(FINISH):
 				break
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
