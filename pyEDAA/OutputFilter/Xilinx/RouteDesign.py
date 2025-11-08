@@ -85,7 +85,7 @@ class Phase_SoftConstraintPins_FastBudgeting(SubPhase):
 
 
 @export
-class SubSubPhase_UpdateTiming(SubPhase):
+class SubSubPhase_UpdateTiming(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Update Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"

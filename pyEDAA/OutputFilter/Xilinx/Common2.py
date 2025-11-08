@@ -812,7 +812,9 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 		return nextLine
 
 	def _SubSubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
-		if (match := self._FINISH.match(line._message)) is None:
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex, subSubSubPhaseIndex=self._subSubSubPhaseIndex)
+
+		if line.StartsWith(FINISH) is None:
 			raise ProcessorException()
 
 		line._kind = LineKind.SubSubSubPhaseEnd
