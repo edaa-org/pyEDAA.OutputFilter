@@ -33,11 +33,12 @@ from re     import compile, Pattern
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators import export
-from pyTooling.Versioning import YearReleaseVersion, VersionRange, RangeBoundHandling
+from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Warning    import WarningCollector
 
 from pyEDAA.OutputFilter                    import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx             import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2     import TaskWithPhases, Phase, SubPhase
+from pyEDAA.OutputFilter.Xilinx.Common2     import TaskWithPhases, Phase, SubPhase, UnknownSubPhase
 from pyEDAA.OutputFilter.Xilinx.Common2     import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 
@@ -159,42 +160,21 @@ class Phase_RouterInitialization(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_FixTopologyConstraints,
-			Phase_PreRouteCleanup,
-			Phase_GlobalClockNetRouting,
-			Phase_UpdateTiming,
-			Phase_UpdateTimingForBusSkew
-		),
-		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_FixTopologyConstraints,
-			Phase_PreRouteCleanup,
-			Phase_GlobalClockNetRouting,
-			Phase_UpdateTiming,
-			Phase_UpdateTimingForBusSkew,
-			Phase_SoftConstraintPins_FastBudgeting
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		Phase_FixTopologyConstraints,
+		Phase_PreRouteCleanup,
+		Phase_GlobalClockNetRouting,
+		Phase_UpdateTiming,
+		Phase_UpdateTimingForBusSkew,
+		Phase_SoftConstraintPins_FastBudgeting
+	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
 
 	def __init__(self, task: TaskWithPhases):
 		super().__init__(task)
 
-		processor: "Processor" = task._command._processor
-		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
-
-		for versionRange in self._PARSERS:
-			if toolVersion in versionRange:
-				parsers = self._PARSERS[versionRange]
-				break
-		else:
-			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
-			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
-			raise ex
-
-		self._subphases = {p: p(self) for p in parsers}
+		self._subphases = {p: p(self) for p in self._PARSERS}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -612,7 +592,11 @@ class Phase_RipUpAndReroute(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -932,38 +916,21 @@ class RoutingTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Routing Task"
 	_FINISH: ClassVar[str] = "Ending Routing Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_BuildRTDesign,
-			Phase_RouterInitialization,
-			Phase_InitialRouting,
-			Phase_RipUpAndReroute,
-			Phase_DelayAndSkewOptimization,
-			Phase_PostHoldFix,
-			Phase_RouteFinalize_1,
-			Phase_VerifyingRoutedNets,
-			Phase_DepositingRoutes,
-			Phase_ResolveXTalk,
-			Phase_RouteFinalize_2,
-			Phase_PostRouterTiming,
-			Phase_PostRouteEventProcessing
-		),
-		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_BuildRTDesign,
-			Phase_RouterInitialization,
-			Phase_GlobalRouting,
-			Phase_InitialRouting,
-			Phase_RipUpAndReroute,
-			Phase_DelayAndSkewOptimization,
-			Phase_PostHoldFix,
-			Phase_RouteFinalize_1,
-			Phase_VerifyingRoutedNets,
-			Phase_DepositingRoutes,
-			Phase_ResolveXTalk,
-			Phase_RouteFinalize_2,
-			Phase_PostRouterTiming,
-			Phase_PostProcessRouting,
-			Phase_PostRouterTiming,
-			Phase_PostRouteEventProcessing
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_BuildRTDesign,
+		Phase_RouterInitialization,
+		Phase_GlobalRouting,
+		Phase_InitialRouting,
+		Phase_RipUpAndReroute,
+		Phase_DelayAndSkewOptimization,
+		Phase_PostHoldFix,
+		Phase_RouteFinalize_1,
+		Phase_VerifyingRoutedNets,
+		Phase_DepositingRoutes,
+		Phase_ResolveXTalk,
+		Phase_RouteFinalize_2,
+		Phase_PostRouterTiming,
+		Phase_PostProcessRouting,
+		Phase_PostRouterTiming,    # FIXME: duplicate
+		Phase_PostRouteEventProcessing
+	)

@@ -33,7 +33,6 @@ from re     import compile, Pattern
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators  import export
-from pyTooling.Versioning  import VersionRange, YearReleaseVersion, RangeBoundHandling
 
 from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, TaskWithPhases, TaskWithSubTasks, SubTask
@@ -379,27 +378,17 @@ class LogicOptimizationTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Logic Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_Retarget,
-			Phase_ConstantPropagation,
-			Phase_Sweep,
-			Phase_BUFGOptimization,
-			Phase_ShiftRegisterOptimization,
-			Phase_PostProcessingNetlist
-		),
-		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_Initialization,
-			Phase_TimerUpdateAndTimingDataCollection,
-			Phase_Retarget,
-			Phase_ConstantPropagation,
-			Phase_Sweep,
-			Phase_BUFGOptimization,
-			Phase_ShiftRegisterOptimization,
-			Phase_PostProcessingNetlist,
-			Phase_Finalization
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_Initialization,
+		Phase_TimerUpdateAndTimingDataCollection,
+		Phase_Retarget,
+		Phase_ConstantPropagation,
+		Phase_Sweep,
+		Phase_BUFGOptimization,
+		Phase_ShiftRegisterOptimization,
+		Phase_PostProcessingNetlist,
+		Phase_Finalization
+	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
@@ -461,11 +450,9 @@ class PowerOptimizationTask(TaskWithSubTasks):
 	_START:  ClassVar[str] = "Starting Power Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Power Optimization Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubTask], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			PowerOptPatchEnablesTask,
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[SubTask], ...]] = (
+		PowerOptPatchEnablesTask,
+	)
 
 
 @export
@@ -479,11 +466,9 @@ class FinalCleanupTask(TaskWithSubTasks):
 	_START:  ClassVar[str] = "Starting Final Cleanup Task"
 	_FINISH: ClassVar[str] = "Ending Final Cleanup Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubTask], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			LogicOptimizationTask,
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[SubTask], ...]] = (
+		LogicOptimizationTask,
+	)
 
 
 @export

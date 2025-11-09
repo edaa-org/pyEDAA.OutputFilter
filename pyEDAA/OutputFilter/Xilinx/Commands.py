@@ -34,7 +34,7 @@ from re      import compile as re_compile
 from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
-from pyTooling.Versioning import VersionRange, YearReleaseVersion, RangeBoundHandling
+from pyTooling.Versioning import YearReleaseVersion
 
 from pyEDAA.OutputFilter                         import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
@@ -138,28 +138,20 @@ class Command(Parser):
 
 			line = yield line
 
+	def __str__(self) -> str:
+		return f"{self._TCL_COMMAND}"
+
 
 @export
 class CommandWithSections(Command):
 	_sections:  Dict[Type[Section], Section]
 
-	_PARSERS: ClassVar[Dict[YearReleaseVersion, Tuple[Type[Section], ...]]] = dict()
+	_PARSERS: ClassVar[Tuple[Type[Section], ...]] = dict()
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
-		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
-
-		for versionRange in self._PARSERS:
-			if toolVersion in versionRange:
-				parsers = self._PARSERS[versionRange]
-				break
-		else:
-			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
-			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
-			raise ex
-
-		self._sections =  {p: p(self) for p in parsers}
+		self._sections =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def Sections(self) -> Dict[Type[Section], Section]:
@@ -189,59 +181,32 @@ class CommandWithTasks(Command):
 @export
 class SynthesizeDesign(CommandWithSections):
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
-	_PARSERS:     ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Section], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2020, 1), RangeBoundHandling.UpperBoundExclusive): (
-			RTLElaboration,
-			HandlingCustomAttributes1,
-			ConstraintValidation,
-			LoadingPart,
-			ApplySetProperty,
-			RTLComponentStatistics,
-			RTLHierarchicalComponentStatistics,
-			PartResourceSummary,
-			CrossBoundaryAndAreaOptimization,
-			ROM_RAM_DSP_SR_Retiming1,
-			ApplyingXDCTimingConstraints,
-			TimingOptimization,
-			ROM_RAM_DSP_SR_Retiming2,
-			TechnologyMapping,
-			IOInsertion,
-			FlatteningBeforeIOInsertion,
-			FinalNetlistCleanup,
-			RenamingGeneratedInstances,
-			RebuildingUserHierarchy,
-			RenamingGeneratedPorts,
-			HandlingCustomAttributes2,
-			RenamingGeneratedNets,
-			ROM_RAM_DSP_SR_Retiming3,
-			WritingSynthesisReport,
-		),
-		VersionRange(YearReleaseVersion(2020, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			RTLElaboration,
-			HandlingCustomAttributes1,
-			ConstraintValidation,
-			LoadingPart,
-			ApplySetProperty,
-			RTLComponentStatistics,
-			PartResourceSummary,
-			CrossBoundaryAndAreaOptimization,
-			ROM_RAM_DSP_SR_Retiming1,
-			ApplyingXDCTimingConstraints,
-			TimingOptimization,
-			ROM_RAM_DSP_SR_Retiming2,
-			TechnologyMapping,
-			IOInsertion,
-			FlatteningBeforeIOInsertion,
-			FinalNetlistCleanup,
-			RenamingGeneratedInstances,
-			RebuildingUserHierarchy,
-			RenamingGeneratedPorts,
-			HandlingCustomAttributes2,
-			RenamingGeneratedNets,
-			ROM_RAM_DSP_SR_Retiming3,
-			WritingSynthesisReport
-		)
-	}
+	_PARSERS:     ClassVar[Tuple[Type[Section], ...]] = (
+		RTLElaboration,
+		HandlingCustomAttributes1,
+		ConstraintValidation,
+		LoadingPart,
+		ApplySetProperty,
+		RTLComponentStatistics,
+		RTLHierarchicalComponentStatistics,
+		PartResourceSummary,
+		CrossBoundaryAndAreaOptimization,
+		ROM_RAM_DSP_SR_Retiming1,
+		ApplyingXDCTimingConstraints,
+		TimingOptimization,
+		ROM_RAM_DSP_SR_Retiming2,
+		TechnologyMapping,
+		IOInsertion,
+		FlatteningBeforeIOInsertion,
+		FinalNetlistCleanup,
+		RenamingGeneratedInstances,
+		RebuildingUserHierarchy,
+		RenamingGeneratedPorts,
+		HandlingCustomAttributes2,
+		RenamingGeneratedNets,
+		ROM_RAM_DSP_SR_Retiming3,
+		WritingSynthesisReport,
+	)
 
 	@readonly
 	def HasLatches(self) -> bool:

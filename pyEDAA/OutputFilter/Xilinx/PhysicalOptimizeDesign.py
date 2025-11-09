@@ -33,7 +33,6 @@ from re     import compile, Pattern
 from typing import ClassVar, Type, Tuple, Dict
 
 from pyTooling.Decorators import export
-from pyTooling.Versioning import VersionRange, YearReleaseVersion, RangeBoundHandling
 
 from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, Phase
 from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
@@ -76,11 +75,9 @@ class PhysicalSynthesisTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_PlacerInitialization,
-			Phase_DSPRegisterOptimization,
-			Phase_CriticalPathOptimization_1,
-			Phase_CriticalPathOptimization_2
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_PlacerInitialization,
+		Phase_DSPRegisterOptimization,
+		Phase_CriticalPathOptimization_1,
+		Phase_CriticalPathOptimization_2
+	)

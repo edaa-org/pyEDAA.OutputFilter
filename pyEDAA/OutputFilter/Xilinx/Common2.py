@@ -36,6 +36,7 @@ from typing   import ClassVar, Optional as Nullable, Generator, List, Dict, Tupl
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
+from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 
 from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoMessage
@@ -50,14 +51,47 @@ MAJOR_MINOR_MICRO_NANO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)\.(?P<n
 
 
 @export
+class UndetectedEnd(Warning):
+	_line: Line
+
+	def __init__(self, message: str, line: Line):
+		super().__init__(message)
+
+		self._line = line
+
+	@readonly
+	def Line(self) -> Line:
+		return self._line
+
+
+@export
+class UnknownLine(CriticalWarning):
+	_line: Line
+
+	def __init__(self, message: str, line: Line):
+		super().__init__(message)
+
+		self._line = line
+
+	@readonly
+	def Line(self) -> Line:
+		return self._line
+
+
+@export
+class UnknownSubPhase(UnknownLine):
+	pass
+
+
+@export
 class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
-	_infoMessages: List[VivadoInfoMessage]
-	_warningMessages: List[VivadoWarningMessage]
+	_infoMessages:            List[VivadoInfoMessage]
+	_warningMessages:         List[VivadoWarningMessage]
 	_criticalWarningMessages: List[VivadoCriticalWarningMessage]
-	_errorMessages: List[VivadoErrorMessage]
-	_toolIDs: Dict[int, str]
-	_toolNames: Dict[str, int]
-	_messagesByID: Dict[int, Dict[int, List[VivadoMessage]]]
+	_errorMessages:           List[VivadoErrorMessage]
+	_toolIDs:                 Dict[int, str]
+	_toolNames:               Dict[str, int]
+	_messagesByID:            Dict[int, Dict[int, List[VivadoMessage]]]
 
 	def __init__(self) -> None:
 		self._infoMessages = []
@@ -252,7 +286,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return nextLine
 
 	def __str__(self) -> str:
-		return self._NAME
+		return f"{self.__class__.__name__}: {self._START}"
 
 
 @export
@@ -268,19 +302,7 @@ class TaskWithSubTasks(Task):
 	def __init__(self, command: "Command"):
 		super().__init__(command)
 
-		processor: "Processor" = command._processor
-		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
-
-		for versionRange in self._PARSERS:
-			if toolVersion in versionRange:
-				parsers = self._PARSERS[versionRange]
-				break
-		else:
-			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
-			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
-			raise ex
-
-		self._subtasks =  {p: p(self) for p in parsers}
+		self._subtasks =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
@@ -417,19 +439,7 @@ class TaskWithPhases(Task):
 	def __init__(self, command: "Command"):
 		super().__init__(command)
 
-		processor: "Processor" = command._processor
-		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
-
-		for versionRange in self._PARSERS:
-			if toolVersion in versionRange:
-				parsers = self._PARSERS[versionRange]
-				break
-		else:
-			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
-			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
-			raise ex
-
-		self._phases =  {p: p(self) for p in parsers}
+		self._phases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
@@ -478,7 +488,11 @@ class TaskWithPhases(Task):
 				try:
 					line = yield phase.send(line)
 					if isFinish:
-						print(f"Didn't detect finish: '{line.PreviousLine!r}'")
+						previousLine = line._previousLine
+						WarningCollector.Raise(UndetectedEnd(
+							f"Didn't detect finish: '{previousLine!r}'",
+							previousLine
+						))
 						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
@@ -575,19 +589,7 @@ class PhaseWithChildren(Phase):
 	def __init__(self, task: TaskWithPhases):
 		super().__init__(task)
 
-		processor: "Processor" = task._command._processor
-		toolVersion: YearReleaseVersion = processor.Preamble.ToolVersion
-
-		for versionRange in self._PARSERS:
-			if toolVersion in versionRange:
-				parsers = self._PARSERS[versionRange]
-				break
-		else:
-			ex = OutputFilterException(f"Tool version {toolVersion} is not supported for '{self.__class__.__name__}'.")
-			ex.add_note(f"Supported tool versions: {', '.join(str(vr) for vr in self._PARSERS)}")
-			raise ex
-
-		self._subphases = {p: p(self) for p in parsers}
+		self._subphases = {p: p(self) for p in self._PARSERS}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -627,7 +629,11 @@ class PhaseWithChildren(Phase):
 				try:
 					line = yield phase.send(line)
 					if isFinish:
-						print(f"Didn't detect finish: '{line.PreviousLine!r}'")
+						previousLine = line._previousLine
+						WarningCollector.Raise(UndetectedEnd(
+							f"Didn't detect finish: '{previousLine!r}'",
+							previousLine
+						))
 						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)

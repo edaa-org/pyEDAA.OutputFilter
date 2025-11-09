@@ -33,7 +33,6 @@ from re     import compile, Pattern
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators import export
-from pyTooling.Versioning import YearReleaseVersion, VersionRange, RangeBoundHandling
 
 from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
 from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, Phase, SubPhase, SubSubPhase, SubSubSubPhase, PhaseWithChildren
@@ -80,14 +79,12 @@ class Phase_PlacerInitialization(PhaseWithChildren):
 
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_PlacerInitializationNetlistSorting,
-			Phase_IOPlacement_ClockPlacement_BuildPlacerDevice,
-			Phase_BuildPlacerNetlistModel,
-			Phase_ConstrainClocks_Macros
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		Phase_PlacerInitializationNetlistSorting,
+		Phase_IOPlacement_ClockPlacement_BuildPlacerDevice,
+		Phase_BuildPlacerNetlistModel,
+		Phase_ConstrainClocks_Macros
+	)
 
 
 @export
@@ -280,23 +277,14 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2025, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_Floorplanning,
-			Phase_UpdateTimingBeforeSLRPathOpt,
-			Phase_PostProcessingInFloorplanning,
-			Phase_GlobalPlacePhase1,
-			Phase_GlobalPlacePhase2,
-			Phase_GlobalPlacementCore
-		),
-		VersionRange(YearReleaseVersion(2025, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_Floorplanning,
-			Phase_UpdateTimingBeforeSLRPathOpt,
-			Phase_PostProcessingInFloorplanning,
-			Phase_GlobalPlacePhase1,
-			Phase_GlobalPlacePhase2
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_Floorplanning,
+		Phase_UpdateTimingBeforeSLRPathOpt,
+		Phase_PostProcessingInFloorplanning,
+		Phase_GlobalPlacePhase1,
+		Phase_GlobalPlacePhase2,
+		Phase_GlobalPlacementCore
+	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -551,30 +539,18 @@ class Phase_DetailPlacement(PhaseWithChildren):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2023, 2), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_CommitMultiColumnMacros,
-			Phase_CommitMostMacrosLUTRAMs,
-			Phase_SmallShapeDP,
-			Phase_ReassignLUTPins,
-			Phase_PipelineRegisterOptimization_1,
-			Phase_PipelineRegisterOptimization_2,
-			Phase_FastOptimization_1,
-			Phase_FastOptimization_2
-		),
-		VersionRange(YearReleaseVersion(2023, 2), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_CommitMultiColumnMacros,
-			Phase_CommitMostMacrosLUTRAMs,
-			Phase_SmallShapeDP,
-			Phase_AreaSwapOptimization,
-			Phase_PipelineRegisterOptimization_1,
-			Phase_PipelineRegisterOptimization_2,
-			Phase_FastOptimization_1,
-			Phase_FastOptimization_2,
-			Phase_SmallShapeDetailPlacement,
-			Phase_ReassignLUTPins
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_CommitMultiColumnMacros,
+		Phase_CommitMostMacrosLUTRAMs,
+		Phase_SmallShapeDP,
+		Phase_AreaSwapOptimization,
+		Phase_PipelineRegisterOptimization_1,
+		Phase_PipelineRegisterOptimization_2,
+		Phase_FastOptimization_1,
+		Phase_FastOptimization_2,
+		Phase_SmallShapeDetailPlacement,
+		Phase_ReassignLUTPins
+	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -851,14 +827,12 @@ class Phase_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[SubPhase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_PostCommitOptimization,
-			Phase_PostPlacementCleanup,
-			Phase_PlacerReporting,
-			Phase_FinalPlacementCleanup
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		Phase_PostCommitOptimization,
+		Phase_PostPlacementCleanup,
+		Phase_PlacerReporting,
+		Phase_FinalPlacementCleanup
+	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
@@ -908,11 +882,9 @@ class PlacerTask(TaskWithPhases):
 	_START:  ClassVar[str] = "Starting Placer Task"
 	_FINISH: ClassVar[str] = "Ending Placer Task"
 
-	_PARSERS: ClassVar[Dict[VersionRange[YearReleaseVersion], Tuple[Type[Phase], ...]]] = {
-		VersionRange(YearReleaseVersion(2019, 1), YearReleaseVersion(2030, 1), RangeBoundHandling.UpperBoundExclusive): (
-			Phase_PlacerInitialization,
-			Phase_GlobalPlacement,
-			Phase_DetailPlacement,
-			Phase_PostPlacementOptimizationAndCleanUp
-		)
-	}
+	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+		Phase_PlacerInitialization,
+		Phase_GlobalPlacement,
+		Phase_DetailPlacement,
+		Phase_PostPlacementOptimizationAndCleanUp
+	)
