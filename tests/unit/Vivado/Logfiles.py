@@ -33,9 +33,10 @@ from pathlib  import Path
 from unittest import TestCase as TestCase
 
 from pyTooling.Versioning                        import YearReleaseVersion
+from pyTooling.Warning                           import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, LinkDesign, OptimizeDesign, PlaceDesign, RouteDesign, \
-	PhysicalOptimizeDesign, WriteBitstream
+from pyEDAA.OutputFilter.Xilinx                  import Document, LinkDesign, OptimizeDesign, PlaceDesign, RouteDesign
+from pyEDAA.OutputFilter.Xilinx                  import PhysicalOptimizeDesign, WriteBitstream
 from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, \
 	RTLElaboration
@@ -63,9 +64,14 @@ class Aggregator:
 
 class Stopwatch(TestCase):
 	def test_SynthesisLogfile(self) -> None:
+		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -99,8 +105,12 @@ class Stopwatch(TestCase):
 	def test_ImplementationLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -160,9 +170,14 @@ class Stopwatch(TestCase):
 
 class CERN_DevKit(TestCase):
 	def test_SynthesisLogfile(self) -> None:
+		print()
 		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -177,9 +192,14 @@ class CERN_DevKit(TestCase):
 		self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile(self) -> None:
+		print()
 		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -239,9 +259,14 @@ class CERN_DevKit(TestCase):
 
 class Enclustra_Mercury_ZX5(TestCase):
 	def test_SynthesisLogfile_2019_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -256,9 +281,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2019_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -316,9 +346,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2019_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -333,9 +368,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2019_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -393,9 +433,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2020_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -410,9 +455,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2020_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -470,9 +520,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2020_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -487,9 +542,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2020_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -547,9 +607,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2021_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -564,9 +629,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2021_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -624,9 +694,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2021_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -641,9 +716,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2021_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -701,9 +781,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2022_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -718,9 +803,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2022_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -778,9 +868,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2022_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -795,9 +890,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2022_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -855,9 +955,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2023_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -872,9 +977,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2023_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -932,9 +1042,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2023_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -949,9 +1064,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2023_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1009,9 +1129,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2024_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1026,9 +1151,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2024_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1086,9 +1216,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2024_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.2.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1103,9 +1238,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2024_2(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.2.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1163,9 +1303,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 	def test_SynthesisLogfile_2025_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.1.vds")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1180,9 +1325,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2025_1(self) -> None:
+		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.1.vdi")
-		processor = Document(logfile)
-		processor.Parse()
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(warning)
 
 		self.assertLess(processor.Duration, 0.2)
 
