@@ -50,42 +50,42 @@ class Phase_BuildRTDesign(Phase):
 
 
 @export
-class Phase_CreateTimer(SubPhase):
+class SubPhase_CreateTimer(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Create Timer")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Create Timer | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_FixTopologyConstraints(SubPhase):
+class SubPhase_FixTopologyConstraints(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fix Topology Constraints")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fix Topology Constraints | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PreRouteCleanup(SubPhase):
+class SubPhase_PreRouteCleanup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pre Route Cleanup")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pre Route Cleanup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_GlobalClockNetRouting(SubPhase):
+class SubPhase_GlobalClockNetRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Clock Net Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Clock Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_UpdateTiming(SubPhase):
+class SubPhase_UpdateTiming(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SoftConstraintPins_FastBudgeting(SubPhase):
+class SubPhase_SoftConstraintPins_FastBudgeting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Soft Constraint Pins - Fast Budgeting")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Soft Constraint Pins - Fast Budgeting | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -99,7 +99,7 @@ class SubSubPhase_UpdateTiming(SubSubPhase):
 
 
 @export
-class Phase_UpdateTimingForBusSkew(SubPhase):
+class SubPhase_UpdateTimingForBusSkew(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing for Bus Skew")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing for Bus Skew | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -171,13 +171,13 @@ class Phase_RouterInitialization(Phase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
-		Phase_CreateTimer,
-		Phase_FixTopologyConstraints,
-		Phase_PreRouteCleanup,
-		Phase_GlobalClockNetRouting,
-		Phase_UpdateTiming,
-		Phase_UpdateTimingForBusSkew,
-		Phase_SoftConstraintPins_FastBudgeting
+		SubPhase_CreateTimer,
+		SubPhase_FixTopologyConstraints,
+		SubPhase_PreRouteCleanup,
+		SubPhase_GlobalClockNetRouting,
+		SubPhase_UpdateTiming,
+		SubPhase_UpdateTimingForBusSkew,
+		SubPhase_SoftConstraintPins_FastBudgeting
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -242,7 +242,7 @@ class SubPhase_GlobalRouting(SubPhase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
-class Phase_InitialNetRouting(SubPhase):
+class SubPhase_InitialNetRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -253,9 +253,9 @@ class Phase_Initial_Routing(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_GlobalRouting,
-		Phase_InitialNetRouting
+		SubPhase_InitialNetRouting
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -322,28 +322,28 @@ class Phase_GlobalRouting(Phase):
 
 
 @export
-class Phase_GlobalIteration0(SubPhase):
+class SubPhase_GlobalIteration0(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 0")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_AdditionalIterationForHold(SubPhase):
+class SubPhase_AdditionalIterationForHold(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Additional Iteration for Hold")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Additional Iteration for Hold | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_GlobalIteration1(SubPhase):
+class SubPhase_GlobalIteration1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_GlobalIteration2(SubPhase):
+class SubPhase_GlobalIteration2(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 2")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 2 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -355,11 +355,11 @@ class Phase_RipUpAndReroute(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_GlobalIteration0,
-		Phase_AdditionalIterationForHold,
-		Phase_GlobalIteration1,
-		Phase_GlobalIteration2
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_GlobalIteration0,
+		SubPhase_AdditionalIterationForHold,
+		SubPhase_GlobalIteration1,
+		SubPhase_GlobalIteration2
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -419,7 +419,7 @@ class Phase_RipUpAndReroute(Phase):
 
 
 @export
-class Phase_InitialNetRoutingPass(SubPhase):
+class SubPhase_InitialNetRoutingPass(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing Pass")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing Pass | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -431,10 +431,10 @@ class Phase_InitialRouting(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_InitialNetRoutingPass,
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_InitialNetRoutingPass,
 		SubPhase_GlobalRouting,
-		Phase_InitialNetRouting
+		SubPhase_InitialNetRouting
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -498,14 +498,14 @@ class Phase_InitialRouting(Phase):
 # 5.1.2 Update Timing
 
 @export
-class Phase_DelayCleanUp(SubPhase):
+class SubPhase_DelayCleanUp(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_ClockSkewOptimization(SubPhase):
+class SubPhase_ClockSkewOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -517,9 +517,9 @@ class Phase_DelayAndSkewOptimization(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_DelayCleanUp,
-		Phase_ClockSkewOptimization
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_DelayCleanUp,
+		SubPhase_ClockSkewOptimization
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -580,7 +580,7 @@ class Phase_DelayAndSkewOptimization(Phase):
 # 6.1.1 Update Timing
 
 @export
-class Phase_HoldFixIter(SubPhase):
+class SubPhase_HoldFixIter(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -592,8 +592,8 @@ class Phase_PostHoldFix(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_HoldFixIter,
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_HoldFixIter,
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -653,14 +653,14 @@ class Phase_PostHoldFix(Phase):
 
 
 @export
-class Phase_DelayCleanUp(SubPhase):
+class SubPhase_DelayCleanUp(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_ClockSkewOptimization(SubPhase):
+class SubPhase_ClockSkewOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -672,9 +672,9 @@ class Phase_DelayAndSkewOptimization(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_DelayCleanUp,
-		Phase_ClockSkewOptimization
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_DelayCleanUp,
+		SubPhase_ClockSkewOptimization
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -747,7 +747,7 @@ class Phase_RouteFinalize_2(Phase):
 
 
 @export
-class Phase_HoldFixIter(SubPhase):
+class SubPhase_HoldFixIter(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -759,8 +759,8 @@ class Phase_PostHoldFix(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_HoldFixIter,
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_HoldFixIter,
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]

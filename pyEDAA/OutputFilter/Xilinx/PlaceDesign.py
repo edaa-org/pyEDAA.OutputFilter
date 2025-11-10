@@ -39,32 +39,29 @@ from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, Phase, SubPhase, 
 from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 
-
-
-
 @export
-class Phase_PlacerInitializationNetlistSorting(SubPhase):
+class SubPhase_PlacerInitializationNetlistSorting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Initialization Netlist Sorting")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Placer Initialization Netlist Sorting | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_IOPlacement_ClockPlacement_BuildPlacerDevice(SubPhase):
+class SubPhase_IOPlacement_ClockPlacement_BuildPlacerDevice(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} IO Placement/ Clock Placement/ Build Placer Device")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} IO Placement/ Clock Placement/ Build Placer Device | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_BuildPlacerNetlistModel(SubPhase):
+class SubPhase_BuildPlacerNetlistModel(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Build Placer Netlist Model")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Build Placer Netlist Model | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_ConstrainClocks_Macros(SubPhase):
+class SubPhase_ConstrainClocks_Macros(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Constrain Clocks/Macros")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Constrain Clocks/Macros | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -80,56 +77,56 @@ class Phase_PlacerInitialization(PhaseWithChildren):
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
-		Phase_PlacerInitializationNetlistSorting,
-		Phase_IOPlacement_ClockPlacement_BuildPlacerDevice,
-		Phase_BuildPlacerNetlistModel,
-		Phase_ConstrainClocks_Macros
+		SubPhase_PlacerInitializationNetlistSorting,
+		SubPhase_IOPlacement_ClockPlacement_BuildPlacerDevice,
+		SubPhase_BuildPlacerNetlistModel,
+		SubPhase_ConstrainClocks_Macros
 	)
 
 
 @export
-class Phase_Floorplanning(SubPhase):
+class SubPhase_Floorplanning(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Floorplanning")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Floorplanning | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_UpdateTimingBeforeSLRPathOpt(SubPhase):
+class SubPhase_UpdateTimingBeforeSLRPathOpt(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing before SLR Path Opt")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing before SLR Path Opt | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PostProcessingInFloorplanning(SubPhase):
+class SubPhase_PostProcessingInFloorplanning(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post-Processing in Floorplanning")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Post-Processing in Floorplanning | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+class SubSubPhase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} UpdateTiming Before Physical Synthesis | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PhysicalSynthesisInPlacer(SubSubPhase):
+class SubSubPhase_PhysicalSynthesisInPlacer(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Physical Synthesis In Placer | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
-class Phase_GlobalPlacementCore(SubPhase):
+class SubPhase_GlobalPlacementCore(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Placement Core")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Placement Core | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_UpdateTimingBeforePhysicalSynthesis,
-		Phase_PhysicalSynthesisInPlacer
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
+		SubSubPhase_UpdateTimingBeforePhysicalSynthesis,
+		SubSubPhase_PhysicalSynthesisInPlacer
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -185,35 +182,35 @@ class Phase_GlobalPlacementCore(SubPhase):
 
 
 @export
-class Phase_GlobalPlacePhase1(SubPhase):
+class SubPhase_GlobalPlacePhase1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase1")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Place Phase1 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
+class SubSubPhase_UpdateTimingBeforePhysicalSynthesis(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} UpdateTiming Before Physical Synthesis")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} UpdateTiming Before Physical Synthesis | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PhysicalSynthesisInPlacer(SubSubPhase):
+class SubSubPhase_PhysicalSynthesisInPlacer(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Physical Synthesis In Placer")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Physical Synthesis In Placer | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_GlobalPlacePhase2(SubPhase):
+class SubPhase_GlobalPlacePhase2(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Place Phase2")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Place Phase2 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_UpdateTimingBeforePhysicalSynthesis,
-		Phase_PhysicalSynthesisInPlacer
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
+		SubSubPhase_UpdateTimingBeforePhysicalSynthesis,
+		SubSubPhase_PhysicalSynthesisInPlacer
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -277,13 +274,13 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phase}."
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_Floorplanning,
-		Phase_UpdateTimingBeforeSLRPathOpt,
-		Phase_PostProcessingInFloorplanning,
-		Phase_GlobalPlacePhase1,
-		Phase_GlobalPlacePhase2,
-		Phase_GlobalPlacementCore
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_Floorplanning,
+		SubPhase_UpdateTimingBeforeSLRPathOpt,
+		SubPhase_PostProcessingInFloorplanning,
+		SubPhase_GlobalPlacePhase1,
+		SubPhase_GlobalPlacePhase2,
+		SubPhase_GlobalPlacementCore
 	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
@@ -332,41 +329,41 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 
 
 @export
-class Phase_CommitMultiColumnMacros(SubPhase):
+class SubPhase_CommitMultiColumnMacros(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Multi Column Macros")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Commit Multi Column Macros | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_CommitMostMacrosLUTRAMs(SubPhase):
+class SubPhase_CommitMostMacrosLUTRAMs(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Commit Most Macros & LUTRAMs")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Commit Most Macros & LUTRAMs | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SmallShapeClustering(SubSubPhase):
+class SubSubPhase_SmallShapeClustering(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Small Shape Clustering")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Small Shape Clustering | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SliceAreaSwapInitial(SubSubSubPhase):
+class SubSubSubPhase_SliceAreaSwapInitial(SubSubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Slice Area Swap Initial")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex}.{subSubSubPhaseIndex} Slice Area Swap Initial | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SliceAreaSwap(SubSubPhase):
+class SubSubPhase_SliceAreaSwap(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Slice Area Swap")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Slice Area Swap | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_SliceAreaSwapInitial,
+	_PARSERS: ClassVar[Tuple[Type[SubSubSubPhase], ...]] = (
+		SubSubSubPhase_SliceAreaSwapInitial,
 	)
 
 	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
@@ -421,14 +418,14 @@ class Phase_SliceAreaSwap(SubSubPhase):
 					break
 
 @export
-class Phase_SmallShapeDP(SubPhase):
+class SubPhase_SmallShapeDP(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape DP")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Small Shape DP | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_SmallShapeClustering,
-		Phase_SliceAreaSwap
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
+		SubSubPhase_SmallShapeClustering,
+		SubSubPhase_SliceAreaSwap
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -484,49 +481,49 @@ class Phase_SmallShapeDP(SubPhase):
 
 
 @export
-class Phase_AreaSwapOptimization(SubPhase):
+class SubPhase_AreaSwapOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Area Swap Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Area Swap Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_ReassignLUTPins(SubPhase):
+class SubPhase_ReassignLUTPins(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Re-assign LUT pins")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Re-assign LUT pins | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PipelineRegisterOptimization_1(SubPhase):
+class SubPhase_PipelineRegisterOptimization_1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pipeline Register Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PipelineRegisterOptimization_2(SubPhase):
+class SubPhase_PipelineRegisterOptimization_2(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pipeline Register Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pipeline Register Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_FastOptimization_1(SubPhase):
+class SubPhase_FastOptimization_1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fast Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_FastOptimization_2(SubPhase):
+class SubPhase_FastOptimization_2(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fast Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fast Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SmallShapeDetailPlacement(SubPhase):
+class SubPhase_SmallShapeDetailPlacement(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Small Shape Detail Placement")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Small Shape Detail Placement | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -539,17 +536,17 @@ class Phase_DetailPlacement(PhaseWithChildren):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_CommitMultiColumnMacros,
-		Phase_CommitMostMacrosLUTRAMs,
-		Phase_SmallShapeDP,
-		Phase_AreaSwapOptimization,
-		Phase_PipelineRegisterOptimization_1,
-		Phase_PipelineRegisterOptimization_2,
-		Phase_FastOptimization_1,
-		Phase_FastOptimization_2,
-		Phase_SmallShapeDetailPlacement,
-		Phase_ReassignLUTPins
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_CommitMultiColumnMacros,
+		SubPhase_CommitMostMacrosLUTRAMs,
+		SubPhase_SmallShapeDP,
+		SubPhase_AreaSwapOptimization,
+		SubPhase_PipelineRegisterOptimization_1,
+		SubPhase_PipelineRegisterOptimization_2,
+		SubPhase_FastOptimization_1,
+		SubPhase_FastOptimization_2,
+		SubPhase_SmallShapeDetailPlacement,
+		SubPhase_ReassignLUTPins
 	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
@@ -598,28 +595,28 @@ class Phase_DetailPlacement(PhaseWithChildren):
 
 
 @export
-class Phase_BUFGInsertion(SubSubSubPhase):
+class SubSubSubPhase_BUFGInsertion(SubSubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} BUFG Insertion")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex}.{subSubSubPhaseIndex} BUFG Insertion | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PostPlacementTimingOptimization(SubSubSubPhase):
+class SubSubSubPhase_PostPlacementTimingOptimization(SubSubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} Post Placement Timing Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex}.{subSubSubPhaseIndex} Post Placement Timing Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PostPlacementOptimization(SubSubPhase):
+class SubSubPhase_PostPlacementOptimization(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Post Placement Optimization")
 	_FINISH: ClassVar[str] = None  # Phase 4.1.1 Post Placement Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_BUFGInsertion,
-		Phase_PostPlacementTimingOptimization
+	_PARSERS: ClassVar[Tuple[Type[SubSubSubPhase], ...]] = (
+		SubSubSubPhase_BUFGInsertion,
+		SubSubSubPhase_PostPlacementTimingOptimization
 	)
 
 	_subsubsubphases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
@@ -675,13 +672,13 @@ class Phase_PostPlacementOptimization(SubSubPhase):
 
 
 @export
-class Phase_PostCommitOptimization(SubPhase):
+class SubPhase_PostCommitOptimization(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Commit Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Post Commit Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_PostPlacementOptimization,
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
+		SubSubPhase_PostPlacementOptimization,
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -738,27 +735,27 @@ class Phase_PostCommitOptimization(SubPhase):
 
 
 @export
-class Phase_PostPlacementCleanup(SubPhase):
+class SubPhase_PostPlacementCleanup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Post Placement Cleanup")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Post Placement Cleanup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PrintEstimatedCongestion(SubSubPhase):
+class SubSubPhase_PrintEstimatedCongestion(SubSubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Print Estimated Congestion")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Print Estimated Congestion | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_PlacerReporting(SubPhase):
+class SubPhase_PlacerReporting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Placer Reporting")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Placer Reporting | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_PrintEstimatedCongestion,
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
+		SubSubPhase_PrintEstimatedCongestion,
 	)
 
 	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
@@ -814,7 +811,7 @@ class Phase_PlacerReporting(SubPhase):
 
 
 @export
-class Phase_FinalPlacementCleanup(SubPhase):
+class SubPhase_FinalPlacementCleanup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Final Placement Cleanup")
 	_FINISH: ClassVar[Pattern] = compile("Time \(s\):")
 	_TIME:   ClassVar[str] = None
@@ -828,10 +825,10 @@ class Phase_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
-		Phase_PostCommitOptimization,
-		Phase_PostPlacementCleanup,
-		Phase_PlacerReporting,
-		Phase_FinalPlacementCleanup
+		SubPhase_PostCommitOptimization,
+		SubPhase_PostPlacementCleanup,
+		SubPhase_PlacerReporting,
+		SubPhase_FinalPlacementCleanup
 	)
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:

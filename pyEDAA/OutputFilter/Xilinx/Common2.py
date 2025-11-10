@@ -51,7 +51,7 @@ MAJOR_MINOR_MICRO_NANO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)\.(?P<n
 
 
 @export
-class UndetectedEnd(Warning):
+class UndetectedEnd(CriticalWarning):
 	_line: Line
 
 	def __init__(self, message: str, line: Line):
@@ -65,7 +65,7 @@ class UndetectedEnd(Warning):
 
 
 @export
-class UnknownLine(CriticalWarning):
+class UnknownLine(Warning):
 	_line: Line
 
 	def __init__(self, message: str, line: Line):

@@ -48,14 +48,14 @@ class Phase_Retarget(Phase):
 
 
 @export
-class Phase_CoreGenerationAndDesignSetup(SubPhase):
+class SubPhase_CoreGenerationAndDesignSetup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Core Generation And Design Setup")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Core Generation And Design Setup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_SetupConstraintsAndSortNetlist(SubPhase):
+class SubPhase_SetupConstraintsAndSortNetlist(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Setup Constraints And Sort Netlist")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Setup Constraints And Sort Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -68,9 +68,9 @@ class Phase_Initialization(Phase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_CoreGenerationAndDesignSetup,
-		Phase_SetupConstraintsAndSortNetlist
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_CoreGenerationAndDesignSetup,
+		SubPhase_SetupConstraintsAndSortNetlist
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -134,14 +134,14 @@ class Phase_ConstantPropagation(Phase):
 
 
 @export
-class Phase_TimerUpdate(SubPhase):
+class SubPhase_TimerUpdate(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timer Update")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timer Update | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_TimingDataCollection(SubPhase):
+class SubPhase_TimingDataCollection(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timing Data Collection")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timing Data Collection | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -154,9 +154,9 @@ class Phase_TimerUpdateAndTimingDataCollection(Phase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_TimerUpdate,
-		Phase_TimingDataCollection
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_TimerUpdate,
+		SubPhase_TimingDataCollection
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -284,14 +284,14 @@ class Phase_PostProcessingNetlist(Phase):
 
 
 @export
-class Phase_FinalizingDesignCoresAndUpdatingShapes(SubPhase):
+class SubPhase_FinalizingDesignCoresAndUpdatingShapes(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Finalizing Design Cores and Updating Shapes")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Finalizing Design Cores and Updating Shapes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
 @export
-class Phase_VerifyingNetlistConnectivity(SubPhase):
+class SubPhase_VerifyingNetlistConnectivity(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Verifying Netlist Connectivity")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Verifying Netlist Connectivity | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -304,9 +304,9 @@ class Phase_Finalization(Phase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 	_FINAL:  ClassVar[str] = None
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_FinalizingDesignCoresAndUpdatingShapes,
-		Phase_VerifyingNetlistConnectivity
+	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_FinalizingDesignCoresAndUpdatingShapes,
+		SubPhase_VerifyingNetlistConnectivity
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
