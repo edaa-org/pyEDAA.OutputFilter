@@ -71,7 +71,7 @@ class Stopwatch(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -110,7 +110,7 @@ class Stopwatch(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -177,7 +177,7 @@ class CERN_DevKit(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -199,7 +199,7 @@ class CERN_DevKit(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -266,7 +266,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -288,7 +288,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -353,7 +353,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -375,7 +375,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -440,7 +440,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -462,7 +462,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -527,7 +527,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -549,7 +549,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -614,7 +614,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -636,7 +636,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -701,7 +701,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -723,7 +723,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -788,7 +788,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -810,7 +810,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -875,7 +875,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -897,7 +897,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -962,7 +962,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -984,7 +984,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1049,7 +1049,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1071,7 +1071,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1136,7 +1136,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1158,7 +1158,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1223,7 +1223,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1245,7 +1245,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1310,7 +1310,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 
@@ -1332,7 +1332,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 			processor.Parse()
 
 		for warning in warnings:
-			print(warning)
+			print(f"Warning: {warning}")
 
 		self.assertLess(processor.Duration, 0.2)
 

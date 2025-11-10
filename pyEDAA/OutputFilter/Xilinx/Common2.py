@@ -596,22 +596,27 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		nextLine = yield from self._PhaseFinish(line)
 		return nextLine
 
+	def __str__(self) -> str:
+		return f"{self.__class__.__name__}: {self._START.pattern}"
+
 
 @export
 class PhaseWithChildren(Phase):
-	_subphases: Dict[Type["SubPhase"], "SubPhase"]
+	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phaseIndex}."
+
+	_subPhases: Dict[Type["SubPhase"], "SubPhase"]
 
 	def __init__(self, task: TaskWithPhases):
 		super().__init__(task)
 
-		self._subphases = {p: p(self) for p in self._PARSERS}
+		self._subPhases = {p: p(self) for p in self._PARSERS}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
 
-		activeParsers: List[Phase] = list(self._subphases.values())
+		activeParsers: List[SubPhase] = list(self._subPhases.values())
 
-		SUBPHASE_PREFIX = self._SUBPHASE_PREFIX.format(phase=1)
+		SUBPHASE_PREFIX = self._SUBPHASE_PREFIX.format(phaseIndex=self._phaseIndex)
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
 
 		while True:
@@ -624,10 +629,16 @@ class PhaseWithChildren(Phase):
 				elif line.StartsWith(SUBPHASE_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
+							print(line)
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current phase:   start pattern='{self}'")
+						ex.add_note(f"Current task:    start pattern='{self._task}'")
+						ex.add_note(f"Current command: {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -639,7 +650,7 @@ class PhaseWithChildren(Phase):
 				if isinstance(line, VivadoMessage):
 					self._AddMessage(line)
 
-				isFinish = line.StartsWith(SUBPHASE_PREFIX)
+				isFinish = False  # line.StartsWith(SUBPHASE_PREFIX)
 
 				try:
 					line = yield phase.send(line)
@@ -654,6 +665,7 @@ class PhaseWithChildren(Phase):
 					activeParsers.remove(parser)
 					line = ex.value
 					break
+
 
 @export
 class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
@@ -725,6 +737,67 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 		nextLine = yield from self._SubPhaseFinish(line)
 		return nextLine
 
+	def __str__(self) -> str:
+		return f"{self.__class__.__name__}: {self._START.pattern}"
+
+
+@export
+class SubPhaseWithChildren(SubPhase):
+	_subSubPhases: Dict[Type["SubSubPhase"], "SubSubPhase"]
+
+	def __init__(self, phase: Phase):
+		super().__init__(phase)
+
+		self._subSubPhases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubPhaseStart(line)
+
+		activeParsers: List["SubSubPhase"] = list(self._subSubPhases.values())
+
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith(START_PREFIX):
+					for parser in activeParsers:  # type: SubSubPhase
+						if (match := parser._START.match(line._message)) is not None:
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subsubphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subsubphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
+					break
+				elif line.StartsWith(FINISH):
+					nextLine = yield from self._SubPhaseFinish(line)
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
 
 @export
 class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
@@ -795,6 +868,63 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 
 		nextLine = yield from self._SubSubPhaseFinish(line)
 		return nextLine
+
+	def __str__(self) -> str:
+		return f"{self.__class__.__name__}: {self._START.pattern}"
+
+
+@export
+class SubSubPhaseWithChildren(SubSubPhase):
+	_subSubSubPhases: Dict[Type["SubSubSubPhase"], "SubSubSubPhase"]
+
+	def __init__(self, subphase: SubPhase):
+		super().__init__(subphase)
+
+		self._subSubSubPhases = {p: p(self) for p in self._PARSERS}
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubPhaseStart(line)
+
+		activeParsers: List["SubSubSubPhase"] = list(self._subSubSubPhases.values())
+
+		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith(START_PREFIX):
+					for parser in activeParsers:  # type: SubSubSubPhase
+						if (match := parser._START.match(line._message)) is not None:
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						raise Exception(f"Unknown subsubsubphase: {line!r}")
+					break
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.SubSubPhaseTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while phase is not None:
+				# if line.StartsWith("Ending"):
+				# 	line = yield task.send(line)
+				# 	break
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				try:
+					line = yield phase.send(line)
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
 
 
 @export
@@ -869,3 +999,6 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 
 		nextLine = yield from self._SubSubSubPhaseFinish(line)
 		return nextLine
+
+	def __str__(self) -> str:
+		return f"{self.__class__.__name__}: {self._START.pattern}"

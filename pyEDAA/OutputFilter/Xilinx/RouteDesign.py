@@ -35,9 +35,9 @@ from typing import Generator, ClassVar, List, Type, Dict, Tuple
 from pyTooling.Decorators import export
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter                    import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx             import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2     import TaskWithPhases, Phase, SubPhase, UnknownSubPhase
+from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, Phase, SubPhase, UnknownSubPhase, PhaseWithChildren, \
+	SubPhaseWithChildren
 from pyEDAA.OutputFilter.Xilinx.Common2     import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 
@@ -99,73 +99,18 @@ class SubSubPhase_UpdateTiming(SubSubPhase):
 
 
 @export
-class SubPhase_UpdateTimingForBusSkew(SubPhase):
+class SubPhase_UpdateTimingForBusSkew(SubPhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing for Bus Skew")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing for Bus Skew | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
+	_PARSERS: ClassVar[Tuple[Type[SubSubPhase], ...]] = (
 		SubSubPhase_UpdateTiming,
 	)
 
-	_subsubphases: Dict[Type[SubSubPhase], SubSubPhase]
-
-	def __init__(self, subphase: SubPhase):
-		super().__init__(subphase)
-
-		self._subsubphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._SubPhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subsubphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubSubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subsubphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subsubphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._SubPhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
-
 
 @export
-class Phase_RouterInitialization(Phase):
+class Phase_RouterInitialization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Router Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -180,60 +125,6 @@ class Phase_RouterInitialization(Phase):
 		SubPhase_SoftConstraintPins_FastBudgeting
 	)
 
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, task: TaskWithPhases):
-		super().__init__(task)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
 
 @export
 class SubPhase_GlobalRouting(SubPhase):
@@ -241,14 +132,16 @@ class SubPhase_GlobalRouting(SubPhase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
+
 @export
 class SubPhase_InitialNetRouting(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
+
 @export
-class Phase_Initial_Routing(Phase):
+class Phase_Initial_Routing(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -257,61 +150,6 @@ class Phase_Initial_Routing(Phase):
 		SubPhase_GlobalRouting,
 		SubPhase_InitialNetRouting
 	)
-
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
 
 
 @export
@@ -350,7 +188,7 @@ class SubPhase_GlobalIteration2(SubPhase):
 
 
 @export
-class Phase_RipUpAndReroute(Phase):
+class Phase_RipUpAndReroute(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -362,61 +200,6 @@ class Phase_RipUpAndReroute(Phase):
 		SubPhase_GlobalIteration2
 	)
 
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
-
 
 @export
 class SubPhase_InitialNetRoutingPass(SubPhase):
@@ -426,7 +209,7 @@ class SubPhase_InitialNetRoutingPass(SubPhase):
 
 
 @export
-class Phase_InitialRouting(Phase):
+class Phase_InitialRouting(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -437,65 +220,6 @@ class Phase_InitialRouting(Phase):
 		SubPhase_InitialNetRouting
 	)
 
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH_START = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						print(parser._START.pattern)
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH_START):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
-
-
-# 5.1.1 Update Timing
-# 5.1.2 Update Timing
 
 @export
 class SubPhase_DelayCleanUp(SubPhase):
@@ -512,7 +236,7 @@ class SubPhase_ClockSkewOptimization(SubPhase):
 
 
 @export
-class Phase_DelayAndSkewOptimization(Phase):
+class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -522,62 +246,6 @@ class Phase_DelayAndSkewOptimization(Phase):
 		SubPhase_ClockSkewOptimization
 	)
 
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
-
-# 6.1.1 Update Timing
 
 @export
 class SubPhase_HoldFixIter(SubPhase):
@@ -587,7 +255,7 @@ class SubPhase_HoldFixIter(SubPhase):
 
 
 @export
-class Phase_PostHoldFix(Phase):
+class Phase_PostHoldFix(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -595,61 +263,6 @@ class Phase_PostHoldFix(Phase):
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_HoldFixIter,
 	)
-
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
 
 
 @export
@@ -667,7 +280,7 @@ class SubPhase_ClockSkewOptimization(SubPhase):
 
 
 @export
-class Phase_DelayAndSkewOptimization(Phase):
+class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -677,60 +290,6 @@ class Phase_DelayAndSkewOptimization(Phase):
 		SubPhase_ClockSkewOptimization
 	)
 
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
 
 @export
 class Phase_RouteFinalize_1(Phase):
@@ -754,7 +313,7 @@ class SubPhase_HoldFixIter(SubPhase):
 
 
 @export
-class Phase_PostHoldFix(Phase):
+class Phase_PostHoldFix(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -762,61 +321,6 @@ class Phase_PostHoldFix(Phase):
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_HoldFixIter,
 	)
-
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
-						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
-						raise ex
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
 
 
 @export
@@ -860,12 +364,6 @@ class Phase_PostProcessRouting(Phase):
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Process Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
-
-@export
-class Phase_PostRouterTiming(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Router Timing")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
 
 @export
 class Phase_PostRouterTiming(Phase):

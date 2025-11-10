@@ -39,6 +39,7 @@ from pyTooling.Attributes.ArgParse               import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag          import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag    import LongValuedFlag
 from pyTooling.Stopwatch                         import Stopwatch
+from pyTooling.Warning                           import WarningCollector
 
 from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException, SynthesizeDesign, Processor
 from pyEDAA.OutputFilter.Xilinx.Common           import LineKind, Line
@@ -97,11 +98,15 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			writeOutput = self._WriteOutput
 
 		with Stopwatch() as sw:
-			next(generator := processor.LineClassification())
-			for rawLine in inputFile.readlines():
-				line = generator.send(rawLine.rstrip("\r\n"))
+			with WarningCollector() as warnings:
+				next(generator := processor.LineClassification())
+				for rawLine in inputFile.readlines():
+					line = generator.send(rawLine.rstrip("\r\n"))
 
-				writeOutput(line)
+					writeOutput(line)
+
+			for warning in warnings:
+				print(warning)
 
 	def _WriteOutput(self, line: Line):
 		self.WriteNormal(f"{line.LineNumber:4}: {line}")
