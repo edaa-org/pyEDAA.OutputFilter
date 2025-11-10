@@ -35,12 +35,13 @@ from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any,
 
 from pyTooling.Decorators import export, readonly
 from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Warning    import WarningCollector
 
 from pyEDAA.OutputFilter                         import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
 from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Common2          import Parser
+from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, RTLHierarchicalComponentStatistics
@@ -284,7 +285,11 @@ class SynthesizeDesign(CommandWithSections):
 							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 							break
 					else:
-						raise Exception(f"Unknown section: {line!r}")
+						WarningCollector.Raise(UnknownSection(f"Unknown section: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown section: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith("Starting "):
 					if line.StartsWith(rtlElaboration._START):
@@ -460,7 +465,11 @@ class OptimizeDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -526,7 +535,11 @@ class PlaceDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -593,7 +606,11 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -659,7 +676,11 @@ class RouteDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):

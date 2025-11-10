@@ -33,7 +33,6 @@ from re     import compile, Pattern
 from typing import Generator, ClassVar, List, Type, Dict, Tuple
 
 from pyTooling.Decorators import export
-from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
 from pyEDAA.OutputFilter                    import OutputFilterException
@@ -47,6 +46,13 @@ from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 class Phase_BuildRTDesign(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Build RT Design")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Build RT Design | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+
+
+@export
+class Phase_CreateTimer(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Create Timer")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Create Timer | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 
@@ -130,7 +136,11 @@ class Phase_UpdateTimingForBusSkew(SubPhase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subsubphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subsubphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subsubphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._SubPhaseFinish(line)
@@ -161,6 +171,7 @@ class Phase_RouterInitialization(Phase):
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		Phase_CreateTimer,
 		Phase_FixTopologyConstraints,
 		Phase_PreRouteCleanup,
 		Phase_GlobalClockNetRouting,
@@ -197,7 +208,11 @@ class Phase_RouterInitialization(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -271,7 +286,11 @@ class Phase_Initial_Routing(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -310,6 +329,13 @@ class Phase_GlobalIteration0(SubPhase):
 
 
 @export
+class Phase_AdditionalIterationForHold(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Additional Iteration for Hold")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Additional Iteration for Hold | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+
+
+@export
 class Phase_GlobalIteration1(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
@@ -331,6 +357,7 @@ class Phase_RipUpAndReroute(Phase):
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase_GlobalIteration0,
+		Phase_AdditionalIterationForHold,
 		Phase_GlobalIteration1,
 		Phase_GlobalIteration2
 	)
@@ -363,7 +390,11 @@ class Phase_RipUpAndReroute(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -435,7 +466,11 @@ class Phase_InitialRouting(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH_START):
 					nextLine = yield from self._PhaseFinish(line)
@@ -485,83 +520,6 @@ class Phase_DelayAndSkewOptimization(Phase):
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
 		Phase_DelayCleanUp,
 		Phase_ClockSkewOptimization
-	)
-
-	_subphases: Dict[Type[SubPhase], SubPhase]
-
-	def __init__(self, phase: Phase):
-		super().__init__(phase)
-
-		self._subphases = {p: p(self) for p in self._PARSERS}
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._PhaseStart(line)
-
-		activeParsers: List[Phase] = list(self._subphases.values())
-
-		START_PREFIX = f"Phase {self._phaseIndex}."
-		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith(START_PREFIX):
-					for parser in activeParsers:  # type: SubPhase
-						if (match := parser._START.match(line._message)) is not None:
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						raise Exception(f"Unknown subphase: {line!r}")
-					break
-				elif line.StartsWith(FINISH):
-					nextLine = yield from self._PhaseFinish(line)
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break
-
-
-@export
-class Phase_GlobalIteration0(SubPhase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 0")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-
-@export
-class Phase_GlobalIteration1(SubPhase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-
-@export
-class Phase_RipUpAndReroute(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase_GlobalIteration0,
-		Phase_GlobalIteration1
 	)
 
 	_subphases: Dict[Type[SubPhase], SubPhase]
@@ -666,7 +624,11 @@ class Phase_PostHoldFix(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -743,7 +705,11 @@ class Phase_DelayAndSkewOptimization(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)
@@ -825,7 +791,11 @@ class Phase_PostHoldFix(Phase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subphase: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(FINISH):
 					nextLine = yield from self._PhaseFinish(line)

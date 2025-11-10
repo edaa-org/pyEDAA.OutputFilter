@@ -79,6 +79,21 @@ class UnknownLine(CriticalWarning):
 
 
 @export
+class UnknownTask(UnknownLine):
+	pass
+
+
+@export
+class UnknownSection(UnknownLine):
+	pass
+
+
+@export
+class UnknownPhase(UnknownLine):
+	pass
+
+
+@export
 class UnknownSubPhase(UnknownLine):
 	pass
 
