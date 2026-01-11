@@ -366,7 +366,7 @@ class SubPhase_PlacerReporting(SubPhaseWithChildren):
 @export
 class SubPhase_FinalPlacementCleanup(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Final Placement Cleanup")
-	_FINISH: ClassVar[Pattern] = compile("Time \(s\):")
+	_FINISH: ClassVar[Pattern] = compile(r"Time \(s\):")
 	_TIME:   ClassVar[str] = None
 
 

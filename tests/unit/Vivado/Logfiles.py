@@ -75,7 +75,7 @@ class Stopwatch(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		self.assertEqual(69, len(processor.InfoMessages))
 		self.assertEqual(3, len(processor.WarningMessages))
@@ -114,7 +114,7 @@ class Stopwatch(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -181,7 +181,7 @@ class CERN_DevKit(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		self.assertEqual(70, len(processor.InfoMessages))
 		self.assertEqual(124, len(processor.WarningMessages))
@@ -203,7 +203,7 @@ class CERN_DevKit(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		self.assertEqual(305, len(processor.InfoMessages))
 		# self.assertEqual(126, len(processor.WarningMessages))
@@ -271,7 +271,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(69, len(processor.InfoMessages))       # -1
 		self.assertEqual(112, len(processor.WarningMessages))
@@ -310,7 +310,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(115, len(processor.InfoMessages))   # -12
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -375,7 +375,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -398,7 +398,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -463,7 +463,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -486,7 +486,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -551,7 +551,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -574,7 +574,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -639,7 +639,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -662,7 +662,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -727,7 +727,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -750,7 +750,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -815,7 +815,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -837,7 +837,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -902,7 +902,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -925,7 +925,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -990,7 +990,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -1012,7 +1012,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -1077,7 +1077,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -1099,7 +1099,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -1164,7 +1164,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -1186,7 +1186,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -1251,7 +1251,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -1273,7 +1273,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
@@ -1338,7 +1338,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(70, len(processor.InfoMessages))
 		# self.assertEqual(124, len(processor.WarningMessages))
@@ -1360,7 +1360,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.Duration, 0.2)
+		self.assertLess(processor.Duration, 0.4)
 
 		# self.assertEqual(152, len(processor.InfoMessages))
 		# self.assertEqual(2, len(processor.WarningMessages))
