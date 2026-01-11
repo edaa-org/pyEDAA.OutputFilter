@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -30,7 +30,7 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, List, Type
+from typing import ClassVar, Dict, Generator, Type
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -65,7 +65,7 @@ class Section(BaseParser, BaseSection):
 	_command:  "Command"
 	_duration: float
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__()  #command._processor)
 
 		self._command = command
@@ -279,7 +279,7 @@ class LoadingPart(Section):
 
 	_part: str
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._part = None
@@ -344,6 +344,12 @@ class RTLComponentStatistics(Section):
 
 
 @export
+class RTLHierarchicalComponentStatistics(Section):
+	_START:  ClassVar[str] = "Start RTL Hierarchical Component Statistics"
+	_FINISH: ClassVar[str] = "Finished RTL Hierarchical Component Statistics"
+
+
+@export
 class PartResourceSummary(Section):
 	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
@@ -398,7 +404,7 @@ class IOInsertion(Section):
 
 	_subsections: Dict[Type[SubSection], SubSection]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._subsections = {}
@@ -485,7 +491,7 @@ class WritingSynthesisReport(Section):
 	_blackboxes: Dict[str, int]
 	_cells:      Dict[str, int]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._blackboxes = {}

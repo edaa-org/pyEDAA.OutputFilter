@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -389,7 +389,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 	_sourceFile:       Path
 	_sourceLineNumber: int
 
-	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int):
+	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int) -> None:
 		super().__init__(lineNumber, LineKind.InfoMessage, tool, toolID, messageKindID, rawMessage)
 
 		self._reportMessage = reportMessage

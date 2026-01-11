@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -29,12 +29,13 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from typing import Generator, ClassVar, List, Type, Tuple
+from re     import compile, Pattern
+from typing import ClassVar, Type, Tuple, Dict
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx           import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2   import Task, Phase
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, Phase
+from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 
 @export
@@ -45,83 +46,38 @@ class InitialUpdateTimingTask(Task):
 
 
 @export
-class Phase1_PlacerInitialization(Phase):
-	_START:  ClassVar[str] = "Phase 1 Physical Synthesis Initialization"
-	_FINISH: ClassVar[str] = "Phase 1 Physical Synthesis Initialization | Checksum:"
+class Phase_PlacerInitialization(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization | Checksum:"
 
 
 @export
-class Phase2_DSPRegisterOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 2 DSP Register Optimization"
-	_FINISH: ClassVar[str] = "Phase 2 DSP Register Optimization | Checksum:"
+class Phase_DSPRegisterOptimization(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} DSP Register Optimization | Checksum:"
 
 
 @export
-class Phase3_CriticalPathOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 3 Critical Path Optimization"
-	_FINISH: ClassVar[str] = "Phase 3 Critical Path Optimization | Checksum:"
+class Phase_CriticalPathOptimization_1(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export
-class Phase4_CriticalPathOptimization(Phase):
-	_START:  ClassVar[str] = "Phase 4 Critical Path Optimization"
-	_FINISH: ClassVar[str] = "Phase 4 Critical Path Optimization | Checksum:"
+class Phase_CriticalPathOptimization_2(Phase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export
-class PhysicalSynthesisTask(Task):
+class PhysicalSynthesisTask(TaskWithPhases):
 	_NAME:   ClassVar[str] = "Physical Synthesis Task"
 	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
 
 	_PARSERS: ClassVar[Tuple[Type[Phase], ...]] = (
-		Phase1_PlacerInitialization,
-		Phase2_DSPRegisterOptimization,
-		Phase3_CriticalPathOptimization,
-		Phase4_CriticalPathOptimization
+		Phase_PlacerInitialization,
+		Phase_DSPRegisterOptimization,
+		Phase_CriticalPathOptimization_1,
+		Phase_CriticalPathOptimization_2
 	)
-
-	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
-		line = yield from self._TaskStart(line)
-
-		activeParsers: List[Phase] = list(self._phases.values())
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-				elif line.StartsWith("Phase "):
-					for parser in activeParsers:  # type: Phase
-						if line.StartsWith(parser._START):
-							line = yield next(phase := parser.Generator(line))
-							break
-					else:
-						raise Exception(f"Unknown phase: {line!r}")
-					break
-				elif line.StartsWith("Ending"):
-					nextLine = yield from self._TaskFinish(line)
-					return nextLine
-				elif line.StartsWith(self._TIME):
-					line._kind = LineKind.TaskTime
-					nextLine = yield line
-					return nextLine
-
-				line = yield line
-
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				try:
-					line = yield phase.send(line)
-				except StopIteration as ex:
-					activeParsers.remove(parser)
-					line = ex.value
-					break

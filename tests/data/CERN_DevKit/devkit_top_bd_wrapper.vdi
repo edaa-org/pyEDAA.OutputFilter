@@ -1,0 +1,1281 @@
+#-----------------------------------------------------------
+# Vivado v2024.2 (64-bit)
+# SW Build 5239630 on Fri Nov 08 22:34:34 MST 2024
+# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+# Start of session at: Wed Jul 30 12:04:57 2025
+# Process ID         : 2855
+# Current directory  : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1
+# Command line       : vivado -log devkit_top_bd_wrapper.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source devkit_top_bd_wrapper.tcl -notrace
+# Log file           : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper.vdi
+# Journal file       : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/vivado.jou
+# Running On         : jonas-tower-pc
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 22.04.5 LTS
+# Processor Detail   : 11th Gen Intel(R) Core(TM) i5-11500 @ 2.70GHz
+# CPU Frequency      : 800.000 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 33352 MB
+# Swap memory        : 10737 MB
+# Total Virtual      : 44089 MB
+# Available Virtual  : 31761 MB
+#-----------------------------------------------------------
+source devkit_top_bd_wrapper.tcl -notrace
+Command: link_design -top devkit_top_bd_wrapper -part xczu17eg-ffvc1760-1-e
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xczu17eg-ffvc1760-1-e
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/devkit_top_bd_lpd_interconnect_0.dcp' for cell 'devkit_top_bd_i/lpd_interconnect'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0.dcp' for cell 'devkit_top_bd_i/main_pll'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0.dcp' for cell 'devkit_top_bd_i/mb_top_wrapper_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0.dcp' for cell 'devkit_top_bd_i/pl_clkref_ibufds'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0.dcp' for cell 'devkit_top_bd_i/psr_fpd'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0.dcp' for cell 'devkit_top_bd_i/rst_ps_clk0'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/devkit_top_bd_system_ila_0_0.dcp' for cell 'devkit_top_bd_i/system_ila_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/devkit_top_bd_system_ila_0_1.dcp' for cell 'devkit_top_bd_i/system_ila_1'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0.dcp' for cell 'devkit_top_bd_i/wr_dac_spi_iface_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0.dcp' for cell 'devkit_top_bd_i/zynqmp_ps'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0.dcp' for cell 'devkit_top_bd_i/crate_control/emio_ctrl'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0.dcp' for cell 'devkit_top_bd_i/lpd_domain/axi_iic_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_fpga_dev_0/devkit_top_bd_fpga_dev_0.dcp' for cell 'devkit_top_bd_i/lpd_domain/fpga_dev'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/devkit.gen/sources_1/ip/axi_iic_0/axi_iic_0.dcp' for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_i2c/x_spi'
+INFO: [Project 1-454] Reading design checkpoint '/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0.dcp' for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi'
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 3060.402 ; gain = 0.000 ; free physical = 19476 ; free virtual = 28724
+INFO: [Netlist 29-17] Analyzing 31520 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 3 CPU seconds
+WARNING: [Netlist 29-1115] Found multi-term driver net: devkit_top_bd_i/pl_clkref_ibufds/U0/<const0>.
+INFO: [Project 1-479] Netlist was created with Vivado 2024.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-141] Inserted 1 OBUFs to IO ports without IO buffers.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[0]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[0]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[0]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[10]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[10]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[10]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[11]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[11]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[11]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[13]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[13]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[13]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[16]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[16]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[16]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[17]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[17]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[17]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[18]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[18]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[18]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[21]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[21]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[21]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[22]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[22]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[22]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[23]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[23]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[23]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[24]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[24]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[24]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[25]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[25]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[25]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[3]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[3]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[3]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[4]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[4]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[4]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[5]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[5]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[5]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[6]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[6]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[6]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[7]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[7]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[7]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[8]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[8]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[8]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[9]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[9]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_i[9]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[0]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[0]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[0]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[10]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[10]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[10]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[11]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[11]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[11]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[13]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[13]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[13]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[16]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[16]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[16]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[17]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[17]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[17]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[18]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[18]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[18]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[21]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[21]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[21]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[22]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[22]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[22]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[23]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[23]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[23]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[24]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[24]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[24]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[25]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[25]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[25]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[3]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[3]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[3]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[4]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'DRIVE' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[4]' is not directly connected to top level port. 'DRIVE' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[4]' is not directly connected to top level port. 'IBUF_LOW_PWR' is ignored for synthesis but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'SLEW' constraint because net 'devkit_top_bd_i/crate_control/emio_ctrl/ps_emio_o[5]' is not directly connected to top level port. 'SLEW' is ignored for synthesis but preserved for implementation.
+INFO: [Common 17-14] Message 'Constraints 18-550' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OUT_FF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site BITSLICE_RX_TX_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OPFF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site HDIOLOGIC_M_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST. Illegal to place instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST on site BITSLICE_RX_TX_X0Y0. The location site type (BITSLICE_RX_TX) and bel type (OPFF_S) do not match the cell type (FDRE). Please choose a compatible site for the instance.
+INFO: [Chipscope 16-324] Core: devkit_top_bd_i/system_ila_0/inst/ila_lib UUID: afe21961-a6d8-554d-aa8b-458ff86dd888
+INFO: [Chipscope 16-324] Core: devkit_top_bd_i/system_ila_1/inst/ila_lib UUID: 006a6a22-84aa-5499-a01f-13bdea15e00f
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0.xdc] for cell 'devkit_top_bd_i/psr_fpd/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0.xdc] for cell 'devkit_top_bd_i/psr_fpd/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/bd_0/ip/ip_0/ila_v6_2/constraints/ila.xdc] for cell 'devkit_top_bd_i/system_ila_1/inst/ila_lib/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/bd_0/ip/ip_0/ila_v6_2/constraints/ila.xdc] for cell 'devkit_top_bd_i/system_ila_1/inst/ila_lib/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/bd_0/ip/ip_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'devkit_top_bd_i/system_ila_1/inst/ila_lib/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/bd_0/ip/ip_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'devkit_top_bd_i/system_ila_1/inst/ila_lib/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/bd_0/ip/ip_0/ila_v6_2/constraints/ila.xdc] for cell 'devkit_top_bd_i/system_ila_0/inst/ila_lib/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/bd_0/ip/ip_0/ila_v6_2/constraints/ila.xdc] for cell 'devkit_top_bd_i/system_ila_0/inst/ila_lib/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/bd_0/ip/ip_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'devkit_top_bd_i/system_ila_0/inst/ila_lib/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/bd_0/ip/ip_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'devkit_top_bd_i/system_ila_0/inst/ila_lib/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0.xdc] for cell 'devkit_top_bd_i/main_pll/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0.xdc] for cell 'devkit_top_bd_i/main_pll/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0_board.xdc] for cell 'devkit_top_bd_i/main_pll/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0_board.xdc] for cell 'devkit_top_bd_i/main_pll/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_board.xdc] for cell 'devkit_top_bd_i/pl_clkref_ibufds/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_board.xdc] for cell 'devkit_top_bd_i/pl_clkref_ibufds/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0_board.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0_board.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0/U0'
+Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_iic_0/axi_iic_0_board.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_i2c/x_spi/U0'
+Finished Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_iic_0/axi_iic_0_board.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_i2c/x_spi/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0_board.xdc] for cell 'devkit_top_bd_i/psr_fpd/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0_board.xdc] for cell 'devkit_top_bd_i/psr_fpd/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/smartconnect.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/smartconnect.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/bd_0/ip/ip_1/bd_8666_psr_aclk_0.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst/clk_map/psr_aclk/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/bd_0/ip/ip_1/bd_8666_psr_aclk_0.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst/clk_map/psr_aclk/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/bd_0/ip/ip_1/bd_8666_psr_aclk_0_board.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst/clk_map/psr_aclk/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/bd_0/ip/ip_1/bd_8666_psr_aclk_0_board.xdc] for cell 'devkit_top_bd_i/lpd_interconnect/inst/clk_map/psr_aclk/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0_board.xdc] for cell 'devkit_top_bd_i/lpd_domain/axi_iic_0/U0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0_board.xdc] for cell 'devkit_top_bd_i/lpd_domain/axi_iic_0/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0.xdc] for cell 'devkit_top_bd_i/zynqmp_ps/inst'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0.xdc] for cell 'devkit_top_bd_i/zynqmp_ps/inst'
+Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+Finished Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_board.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+Finished Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_board.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/diot.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/diot.xdc]
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/cpci.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/cpci.xdc]
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/timings.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/timings.xdc]
+Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_clocks.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+INFO: [Timing 38-35] Done setting XDC timing constraints. [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_clocks.xdc:51]
+INFO: [Timing 38-2] Deriving generated clocks [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_clocks.xdc:51]
+get_clocks: Time (s): cpu = 00:00:51 ; elapsed = 00:00:18 . Memory (MB): peak = 5259.059 ; gain = 1172.535 ; free physical = 17581 ; free virtual = 26831
+Finished Parsing XDC File [/home/jonas/projects/devkit.gen/sources_1/ip/axi_quad_spi_0/axi_quad_spi_0_clocks.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0'
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.rd_pntr_cdc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.wr_pntr_cdc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.rd_pntr_cdc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.wr_pntr_cdc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.wr_pntr_cdc_dc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.wr_pntr_cdc_dc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.rd_pntr_cdc_dc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
+     Instance: devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_cdc_pntr.rd_pntr_cdc_dc_inst
+  This will add unnecessary latency to the design. Please check the design for the following:
+ 1) Manually instantiated XPM_CDC modules: AMD recommends that you remove these modules.
+ 2) AMD IP that contains XPM_CDC modules: Verify the connections to the IP to determine whether you can safely ignore this message.
+ [/opt/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/tcl/xpm_cdc_gray.tcl:16]
+INFO: [Project 1-1714] 64 XPM XDC files have been applied to the design.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OUT_FF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site BITSLICE_RX_TX_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OPFF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site HDIOLOGIC_M_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST. Illegal to place instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST on site BITSLICE_RX_TX_X0Y0. The location site type (BITSLICE_RX_TX) and bel type (OPFF_S) do not match the cell type (FDRE). Please choose a compatible site for the instance.
+WARNING: [Constraints 18-5572] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/IO0_I_REG has IOB constraint set, However, the instance does not seem to have valid I/O connection to be placed into I/O. The constraint on the instance will be ignored.
+WARNING: [Constraints 18-5572] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/IO1_I_REG has IOB constraint set, However, the instance does not seem to have valid I/O connection to be placed into I/O. The constraint on the instance will be ignored.
+INFO: [Project 1-1687] 8 scoped IP constraints or related sub-commands were skipped due to synthesis logic optimizations usually triggered by constant connectivity or unconnected output pins. To review the skipped constraints and messages, run the command 'set_param netlist.IPMsgFiltering false' before opening the design.
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 5259.059 ; gain = 0.000 ; free physical = 17580 ; free virtual = 26831
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2393 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 1392 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 798 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 63 instances
+  IBUFDS => IBUFDS (DIFFINBUF, IBUFCTRL): 32 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 26 instances
+  OBUFDS => OBUFDS: 37 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 19 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 18 instances
+  RAM64X1S => RAM64X1S (RAMS64E): 8 instances
+
+30 Infos, 117 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:02:04 ; elapsed = 00:01:30 . Memory (MB): peak = 5259.059 ; gain = 3654.289 ; free physical = 17580 ; free virtual = 26831
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 5267.062 ; gain = 0.000 ; free physical = 17572 ; free virtual = 26823
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 160a0bff1
+
+Time (s): cpu = 00:00:45 ; elapsed = 00:00:15 . Memory (MB): peak = 5267.062 ; gain = 0.000 ; free physical = 17609 ; free virtual = 26863
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+
+Phase 1.1.1 Generate And Synthesize Debug Cores
+INFO: [Chipscope 16-329] Generating Script for core instance : dbg_hub
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:xsdbm:3.0 for cell dbg_hub_CV.
+Done building netlist checker database: Time (s): cpu = 00:00:00.09 ; elapsed = 00:00:00.1 . Memory (MB): peak = 5496.891 ; gain = 0.000 ; free physical = 17181 ; free virtual = 26525
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OUT_FF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site BITSLICE_RX_TX_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OPFF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site HDIOLOGIC_M_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST. Illegal to place instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST on site BITSLICE_RX_TX_X0Y0. The location site type (BITSLICE_RX_TX) and bel type (OPFF_S) do not match the cell type (FDRE). Please choose a compatible site for the instance.
+get_clocks: Time (s): cpu = 00:00:45 ; elapsed = 00:00:14 . Memory (MB): peak = 5504.891 ; gain = 8.000 ; free physical = 17131 ; free virtual = 26494
+Netlist sorting complete. Time (s): cpu = 00:00:00.12 ; elapsed = 00:00:00.12 . Memory (MB): peak = 5504.891 ; gain = 0.000 ; free physical = 17131 ; free virtual = 26494
+Phase 1.1.1 Generate And Synthesize Debug Cores | Checksum: 1e37c887e
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:01:39 . Memory (MB): peak = 5504.891 ; gain = 27.844 ; free physical = 17131 ; free virtual = 26494
+Phase 1.1 Core Generation And Design Setup | Checksum: 1e37c887e
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:01:39 . Memory (MB): peak = 5504.891 ; gain = 27.844 ; free physical = 17131 ; free virtual = 26494
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 1e37c887e
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:01:39 . Memory (MB): peak = 5504.891 ; gain = 27.844 ; free physical = 17131 ; free virtual = 26494
+Phase 1 Initialization | Checksum: 1e37c887e
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:01:39 . Memory (MB): peak = 5504.891 ; gain = 27.844 ; free physical = 17131 ; free virtual = 26494
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Timer Update
+Phase 2.1 Timer Update | Checksum: 1e37c887e
+
+Time (s): cpu = 00:02:05 ; elapsed = 00:01:44 . Memory (MB): peak = 5589.781 ; gain = 112.734 ; free physical = 17047 ; free virtual = 26411
+
+Phase 2.2 Timing Data Collection
+Phase 2.2 Timing Data Collection | Checksum: 1e37c887e
+
+Time (s): cpu = 00:02:05 ; elapsed = 00:01:45 . Memory (MB): peak = 5653.781 ; gain = 176.734 ; free physical = 16984 ; free virtual = 26348
+Phase 2 Timer Update And Timing Data Collection | Checksum: 1e37c887e
+
+Time (s): cpu = 00:02:05 ; elapsed = 00:01:45 . Memory (MB): peak = 5653.781 ; gain = 176.734 ; free physical = 16984 ; free virtual = 26348
+
+Phase 3 Retarget
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-1566] Pulled 32 inverters resulting in an inversion of 770 pins
+INFO: [Opt 31-138] Pushed 221 inverter(s) to 113213 load pin(s).
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OUT_FF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site BITSLICE_RX_TX_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST.
+	to bel OPFF. Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST cannot be placed in site HDIOLOGIC_M_X0Y0 because the output signal of the cell requires general routing to fabric and cells placed in OLOGIC can only be routed to delay or I/O site.
+WARNING: [Shape Builder 18-132] Instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST has IOB = TRUE property, but it cannot be placed in an OLOGIC site. devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST. Illegal to place instance devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/LOGIC_FOR_MD_0_GEN.SPI_MODULE_I/RATIO_NOT_EQUAL_4_GENERATE.SCK_O_NQ_4_NO_STARTUP_USED.SCK_O_NE_4_FDRE_INST on site BITSLICE_RX_TX_X0Y0. The location site type (BITSLICE_RX_TX) and bel type (OPFF_S) do not match the cell type (FDRE). Please choose a compatible site for the instance.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[11].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[12].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[13].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[15].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[16].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[17].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[18].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[19].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[1].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[20].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[21].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[22].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[24].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[25].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[26].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[27].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[28].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[29].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[2].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[30].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[31].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[32].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[33].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[34].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[35].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[36].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[37].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[38].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[39].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[3].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[40].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[41].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[42].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[43].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[44].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[45].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[46].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[47].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[48].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[49].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[4].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[50].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[51].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[52].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[53].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[54].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[55].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[56].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[6].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[8].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.BLK_MEM_GEN[0].trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[9].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[11].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[12].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[13].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[15].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[16].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[17].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[18].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[19].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[1].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[20].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[21].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[22].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[24].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[25].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[26].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[27].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[28].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[29].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[2].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[30].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[31].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[3].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[4].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[5].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[6].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[8].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_0/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[9].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM18.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[11].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[12].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[13].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[14].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[15].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[16].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[17].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[18].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell devkit_top_bd_i/system_ila_1/inst/ila_lib/inst/ila_core_inst/ila_trace_memory_inst/SUBCORE_RAM_BLK_MEM_1.trace_block_memory/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[19].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Common 17-14] Message 'Opt 31-422' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 18aadfa9a
+
+Time (s): cpu = 00:02:14 ; elapsed = 00:01:53 . Memory (MB): peak = 5653.781 ; gain = 176.734 ; free physical = 16981 ; free virtual = 26345
+Retarget | Checksum: 18aadfa9a
+INFO: [Opt 31-389] Phase Retarget created 127 cells and removed 653 cells
+INFO: [Opt 31-1021] In phase Retarget, 164 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail.
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 4 Constant propagation | Checksum: 204a47a9a
+
+Time (s): cpu = 00:02:16 ; elapsed = 00:01:55 . Memory (MB): peak = 5653.781 ; gain = 176.734 ; free physical = 16989 ; free virtual = 26353
+Constant propagation | Checksum: 204a47a9a
+INFO: [Opt 31-389] Phase Constant propagation created 63 cells and removed 595 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 133 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail.
+
+Phase 5 Sweep
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.09 ; elapsed = 00:00:00.09 . Memory (MB): peak = 5653.781 ; gain = 0.000 ; free physical = 16988 ; free virtual = 26352
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.08 ; elapsed = 00:00:00.08 . Memory (MB): peak = 5653.781 ; gain = 0.000 ; free physical = 16974 ; free virtual = 26338
+INFO: [Opt 31-120] Instance devkit_top_bd_i/lpd_interconnect/inst/m00_nodes/m00_w_node/inst/inst_mi_handler (devkit_top_bd_lpd_interconnect_0_sc_node_v1_0_17_mi_handler__parameterized3_13) has been optimized to an empty box cell during sweep but it has constraints that prevent its removal. Empty box cells do not impact the implementation flow but they have no functional relevance.
+Resolution: If this is not expected, please check for DONT_TOUCH properties or timing constraint set on the empty box cell or on nets connected to the cell. If found, remove the relevant DONT_TOUCH property or timing constraint and re-run opt_design.
+INFO: [Opt 31-120] Instance devkit_top_bd_i/lpd_interconnect/inst/m00_nodes/m00_b_node/inst/inst_mi_handler (devkit_top_bd_lpd_interconnect_0_sc_node_v1_0_17_mi_handler__parameterized1_15) has been optimized to an empty box cell during sweep but it has constraints that prevent its removal. Empty box cells do not impact the implementation flow but they have no functional relevance.
+Resolution: If this is not expected, please check for DONT_TOUCH properties or timing constraint set on the empty box cell or on nets connected to the cell. If found, remove the relevant DONT_TOUCH property or timing constraint and re-run opt_design.
+INFO: [Opt 31-120] Instance devkit_top_bd_i/lpd_interconnect/inst/m00_nodes/m00_aw_node/inst/inst_mi_handler (devkit_top_bd_lpd_interconnect_0_sc_node_v1_0_17_mi_handler__parameterized0_16) has been optimized to an empty box cell during sweep but it has constraints that prevent its removal. Empty box cells do not impact the implementation flow but they have no functional relevance.
+Resolution: If this is not expected, please check for DONT_TOUCH properties or timing constraint set on the empty box cell or on nets connected to the cell. If found, remove the relevant DONT_TOUCH property or timing constraint and re-run opt_design.
+Phase 5 Sweep | Checksum: 1ff9fe178
+
+Time (s): cpu = 00:02:22 ; elapsed = 00:02:01 . Memory (MB): peak = 5653.781 ; gain = 176.734 ; free physical = 16960 ; free virtual = 26325
+Sweep | Checksum: 1ff9fe178
+INFO: [Opt 31-389] Phase Sweep created 35 cells and removed 648 cells
+INFO: [Opt 31-1021] In phase Sweep, 4756 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail.
+
+Phase 6 BUFG optimization
+INFO: [Opt 31-194] Inserted BUFG devkit_top_bd_i/zynqmp_ps/inst/fmio_gem_tsu_clk_to_pl_bufg_BUFG_inst to drive 1 load(s) on clock net devkit_top_bd_i/zynqmp_ps/inst/fmio_gem_tsu_clk_to_pl_bufg_BUFG
+INFO: [Opt 31-193] Inserted 1 BUFG(s) on clock nets
+INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
+INFO: [Opt 31-129] Inserted BUFG to drive high-fanout reset|set|enable net. BUFG cell: devkit_top_bd_i/psr_fpd/U0/peripheral_aresetn[0]_BUFG_inst, Net: devkit_top_bd_i/psr_fpd/U0/peripheral_aresetn[0]
+Phase 6 BUFG optimization | Checksum: 15edbc506
+
+Time (s): cpu = 00:02:29 ; elapsed = 00:02:05 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16967 ; free virtual = 26332
+BUFG optimization | Checksum: 15edbc506
+INFO: [Opt 31-662] Phase BUFG optimization created 3 cells of which 1 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 15edbc506
+
+Time (s): cpu = 00:02:29 ; elapsed = 00:02:05 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16967 ; free virtual = 26332
+Shift Register Optimization | Checksum: 15edbc506
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+INFO: [Opt 31-1566] Pulled 2 inverters resulting in an inversion of 2 pins
+Phase 8 Post Processing Netlist | Checksum: 1c096228d
+
+Time (s): cpu = 00:02:30 ; elapsed = 00:02:06 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16966 ; free virtual = 26331
+Post Processing Netlist | Checksum: 1c096228d
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 2 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 156 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail.
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 111cc7992
+
+Time (s): cpu = 00:02:39 ; elapsed = 00:02:15 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16957 ; free virtual = 26322
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00.33 ; elapsed = 00:00:00.33 . Memory (MB): peak = 5685.797 ; gain = 0.000 ; free physical = 16957 ; free virtual = 26322
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 111cc7992
+
+Time (s): cpu = 00:02:40 ; elapsed = 00:02:15 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16957 ; free virtual = 26322
+Phase 9 Finalization | Checksum: 111cc7992
+
+Time (s): cpu = 00:02:40 ; elapsed = 00:02:15 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16957 ; free virtual = 26322
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |             127  |             653  |                                            164  |
+|  Constant propagation         |              63  |             595  |                                            133  |
+|  Sweep                        |              35  |             648  |                                           4756  |
+|  BUFG optimization            |               3  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               2  |                                            156  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 111cc7992
+
+Time (s): cpu = 00:02:40 ; elapsed = 00:02:15 . Memory (MB): peak = 5685.797 ; gain = 208.750 ; free physical = 16957 ; free virtual = 26322
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+INFO: [Power 33-23] Power model is not available for i_DNA_PORTE2
+INFO: [Pwropt 34-9] Applying IDT optimizations ...
+INFO: [Pwropt 34-10] Applying ODC optimizations ...
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+
+
+Starting PowerOpt Patch Enables Task
+INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 120 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+INFO: [Pwropt 34-201] Structural ODC has moved 9 WE to EN ports
+Number of BRAM Ports augmented: 121 newly gated: 9 Total Ports: 240
+Ending PowerOpt Patch Enables Task | Checksum: a4be4c4b
+
+Time (s): cpu = 00:00:00.99 ; elapsed = 00:00:00.95 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15064 ; free virtual = 24434
+Ending Power Optimization Task | Checksum: a4be4c4b
+
+Time (s): cpu = 00:01:51 ; elapsed = 00:00:35 . Memory (MB): peak = 7660.480 ; gain = 1974.684 ; free physical = 15064 ; free virtual = 24433
+
+Starting Final Cleanup Task
+
+Starting Logic Optimization Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Logic Optimization Task | Checksum: 121bf037e
+
+Time (s): cpu = 00:01:04 ; elapsed = 00:00:25 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15045 ; free virtual = 24415
+Ending Final Cleanup Task | Checksum: 121bf037e
+
+Time (s): cpu = 00:01:06 ; elapsed = 00:00:27 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15045 ; free virtual = 24415
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15045 ; free virtual = 24415
+Ending Netlist Obfuscation Task | Checksum: 121bf037e
+
+Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.05 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15045 ; free virtual = 24415
+INFO: [Common 17-83] Releasing license: Implementation
+179 Infos, 123 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:06:29 ; elapsed = 00:03:35 . Memory (MB): peak = 7660.480 ; gain = 2401.422 ; free physical = 15045 ; free virtual = 24415
+INFO: [Vivado 12-24828] Executing command : report_drc -file devkit_top_bd_wrapper_drc_opted.rpt -pb devkit_top_bd_wrapper_drc_opted.pb -rpx devkit_top_bd_wrapper_drc_opted.rpx
+Command: report_drc -file devkit_top_bd_wrapper_drc_opted.rpt -pb devkit_top_bd_wrapper_drc_opted.pb -rpx devkit_top_bd_wrapper_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_drc_opted.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:00:21 ; elapsed = 00:00:06 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15031 ; free virtual = 24403
+generate_parallel_reports: Time (s): cpu = 00:00:21 ; elapsed = 00:00:06 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15031 ; free virtual = 24403
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.01 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15047 ; free virtual = 24420
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 15047 ; free virtual = 24420
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.38 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14980 ; free virtual = 24403
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:04 ; elapsed = 00:00:00.83 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14945 ; free virtual = 24405
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14945 ; free virtual = 24405
+Wrote Device Cache: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.01 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14937 ; free virtual = 24401
+Write Physdb Complete: Time (s): cpu = 00:00:04 ; elapsed = 00:00:00.86 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14937 ; free virtual = 24402
+INFO: [Common 17-1381] The checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_opt.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:01:04 ; elapsed = 00:00:26 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14874 ; free virtual = 24315
+INFO: [Chipscope 16-240] Debug cores have already been implemented
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+INFO: [Common 17-83] Releasing license: Implementation
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 4 CPUs
+
+Starting Placer Task
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14906 ; free virtual = 24347
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 863e829e
+
+Time (s): cpu = 00:00:00.2 ; elapsed = 00:00:00.14 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14906 ; free virtual = 24348
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14914 ; free virtual = 24356
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+CRITICAL WARNING: [Place 30-73] Invalid constraint on register 'devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/IO1_I_REG'. It has the property IOB=TRUE, but it is not driving or driven by any IO element.
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 14d7b7bf0
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:21 . Memory (MB): peak = 7660.480 ; gain = 0.000 ; free physical = 14810 ; free virtual = 24387
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 20f786385
+
+Time (s): cpu = 00:02:01 ; elapsed = 00:01:08 . Memory (MB): peak = 8409.680 ; gain = 749.199 ; free physical = 13986 ; free virtual = 23564
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 20f786385
+
+Time (s): cpu = 00:02:01 ; elapsed = 00:01:08 . Memory (MB): peak = 8409.680 ; gain = 749.199 ; free physical = 13986 ; free virtual = 23565
+Phase 1 Placer Initialization | Checksum: 20f786385
+
+Time (s): cpu = 00:02:02 ; elapsed = 00:01:09 . Memory (MB): peak = 8409.680 ; gain = 749.199 ; free physical = 13986 ; free virtual = 23565
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+
+Phase 2.1.1 Partition Driven Placement
+
+Phase 2.1.1.1 PBP: Partition Driven Placement
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 1a59b4d8f
+
+Time (s): cpu = 00:06:38 ; elapsed = 00:02:57 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13817 ; free virtual = 23434
+
+Phase 2.1.1.2 PBP: Clock Region Placement
+INFO: [Place 30-3162] Check ILP status : ILP-based clock placer completed successfully.
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: cd506b3f
+
+Time (s): cpu = 00:06:45 ; elapsed = 00:03:04 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13770 ; free virtual = 23399
+
+Phase 2.1.1.3 PBP: Compute Congestion
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: cd506b3f
+
+Time (s): cpu = 00:07:18 ; elapsed = 00:03:13 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13305 ; free virtual = 23371
+
+Phase 2.1.1.4 PBP: UpdateTiming
+Phase 2.1.1.4 PBP: UpdateTiming | Checksum: 16b09c771
+
+Time (s): cpu = 00:07:37 ; elapsed = 00:03:24 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13321 ; free virtual = 23387
+
+Phase 2.1.1.5 PBP: Add part constraints
+Phase 2.1.1.5 PBP: Add part constraints | Checksum: 16b09c771
+
+Time (s): cpu = 00:07:37 ; elapsed = 00:03:24 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13321 ; free virtual = 23387
+Phase 2.1.1 Partition Driven Placement | Checksum: 16b09c771
+
+Time (s): cpu = 00:07:38 ; elapsed = 00:03:24 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13322 ; free virtual = 23388
+Phase 2.1 Floorplanning | Checksum: 15fa9e87c
+
+Time (s): cpu = 00:07:38 ; elapsed = 00:03:24 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13322 ; free virtual = 23388
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 15fa9e87c
+
+Time (s): cpu = 00:07:38 ; elapsed = 00:03:25 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13322 ; free virtual = 23388
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 1795a6da2
+
+Time (s): cpu = 00:07:39 ; elapsed = 00:03:25 . Memory (MB): peak = 8612.227 ; gain = 951.746 ; free physical = 13322 ; free virtual = 23388
+
+Phase 2.4 Global Place Phase1
+Phase 2.4 Global Place Phase1 | Checksum: 194e159aa
+
+Time (s): cpu = 00:16:35 ; elapsed = 00:07:27 . Memory (MB): peak = 8778.414 ; gain = 1117.934 ; free physical = 12862 ; free virtual = 23060
+
+Phase 2.5 Global Place Phase2
+
+Phase 2.5.1 UpdateTiming Before Physical Synthesis
+Phase 2.5.1 UpdateTiming Before Physical Synthesis | Checksum: 1de894ea0
+
+Time (s): cpu = 00:17:00 ; elapsed = 00:07:36 . Memory (MB): peak = 8778.414 ; gain = 1117.934 ; free physical = 12884 ; free virtual = 23106
+
+Phase 2.5.2 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 84 LUTNM shape to break, 5444 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 74, two critical 10, total 84, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 1737 nets or LUTs. Breaked 84 LUTs, combined 1653 existing LUTs and moved 0 existing LUT
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 8854.070 ; gain = 0.000 ; free physical = 13030 ; free virtual = 23231
+INFO: [Physopt 32-1030] Pass 1. Identified 209 candidate driver sets for equivalent driver rewiring.
+INFO: [Physopt 32-661] Optimized 175 nets.  Re-placed 1451 instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 175 nets or cells. Created 0 new cell, deleted 27 existing cells and moved 1451 existing cells
+Netlist sorting complete. Time (s): cpu = 00:00:00.67 ; elapsed = 00:00:00.67 . Memory (MB): peak = 8854.070 ; gain = 0.000 ; free physical = 12920 ; free virtual = 23209
+INFO: [Physopt 32-1408] Pass 1. Identified 4 candidate nets for high-fanout optimization.
+INFO: [Physopt 32-81] Processed net devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/x_adc_regs/rd_addr_reg[2]_0[0]. Replicated 77 times.
+INFO: [Physopt 32-81] Processed net devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/x_adc_regs/rd_addr[7]. Replicated 47 times.
+INFO: [Physopt 32-81] Processed net devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/x_adc_regs/rd_addr[8]. Replicated 33 times.
+INFO: [Physopt 32-81] Processed net devkit_top_bd_i/psr_fpd/U0/peripheral_aresetn[0]. Replicated 7 times.
+INFO: [Physopt 32-232] Optimized 4 nets. Created 164 new instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 4 nets or cells. Created 164 new cells, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 8854.070 ; gain = 0.000 ; free physical = 12895 ; free virtual = 23216
+INFO: [Physopt 32-457] Pass 1. Identified 14 candidate cells for DSP register optimization.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[30].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[30].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[20].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[22].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[22].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[20].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[40].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[21].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[23].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[40].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[21].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[23].x_m_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[34].x_r_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-665] Processed cell devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_ad_block/x_analog/filt[34].x_r_fir/minusOp. 1 register was pushed out.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 14 nets or cells. Created 14 new cells, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.55 ; elapsed = 00:00:00.55 . Memory (MB): peak = 8854.070 ; gain = 0.000 ; free physical = 12948 ; free virtual = 23241
+INFO: [Physopt 32-1123] No candidate cells found for Shift Register to Pipeline optimization
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1401] No candidate cells found for Shift Register optimization.
+INFO: [Physopt 32-677] No candidate cells for Shift Register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-526] No candidate cells for BRAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 8854.070 ; gain = 0.000 ; free physical = 12931 ; free virtual = 23241
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |           84  |           1653  |                  1737  |           0  |           1  |  00:00:03  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Equivalent Driver Rewiring                       |            0  |             27  |                   175  |           1  |           1  |  00:00:21  |
+|  Very High Fanout                                 |          164  |              0  |                     4  |           0  |           1  |  00:00:07  |
+|  DSP Register                                     |           14  |              0  |                    14  |           0  |           1  |  00:00:02  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |          262  |           1680  |                  1930  |           1  |          10  |  00:00:33  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.5.2 Physical Synthesis In Placer | Checksum: 156e1371c
+
+Time (s): cpu = 00:18:04 ; elapsed = 00:08:30 . Memory (MB): peak = 8854.070 ; gain = 1193.590 ; free physical = 12971 ; free virtual = 23277
+Phase 2.5 Global Place Phase2 | Checksum: 235ef56d5
+
+Time (s): cpu = 00:20:27 ; elapsed = 00:09:22 . Memory (MB): peak = 8854.070 ; gain = 1193.590 ; free physical = 12942 ; free virtual = 23238
+Phase 2 Global Placement | Checksum: 235ef56d5
+
+Time (s): cpu = 00:20:28 ; elapsed = 00:09:22 . Memory (MB): peak = 8854.070 ; gain = 1193.590 ; free physical = 12942 ; free virtual = 23238
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 26478dec8
+
+Time (s): cpu = 00:21:34 ; elapsed = 00:09:44 . Memory (MB): peak = 8854.070 ; gain = 1193.590 ; free physical = 13014 ; free virtual = 23301
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1ac08b10f
+
+Time (s): cpu = 00:22:00 ; elapsed = 00:09:57 . Memory (MB): peak = 8854.070 ; gain = 1193.590 ; free physical = 13015 ; free virtual = 23247
+
+Phase 3.3 Small Shape DP
+
+Phase 3.3.1 Small Shape Clustering
+Phase 3.3.1 Small Shape Clustering | Checksum: 208f6192d
+
+Time (s): cpu = 00:25:43 ; elapsed = 00:11:14 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13162 ; free virtual = 23445
+
+Phase 3.3.2 Slice Area Swap
+
+Phase 3.3.2.1 Slice Area Swap Initial
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 1c613a963
+
+Time (s): cpu = 00:26:15 ; elapsed = 00:11:39 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13180 ; free virtual = 23460
+Phase 3.3.2 Slice Area Swap | Checksum: 1c613a963
+
+Time (s): cpu = 00:26:17 ; elapsed = 00:11:40 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13183 ; free virtual = 23463
+Phase 3.3 Small Shape DP | Checksum: 1037261f5
+
+Time (s): cpu = 00:27:19 ; elapsed = 00:11:58 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13180 ; free virtual = 23459
+
+Phase 3.4 Re-assign LUT pins
+Phase 3.4 Re-assign LUT pins | Checksum: 1255ea4a7
+
+Time (s): cpu = 00:27:31 ; elapsed = 00:12:09 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13168 ; free virtual = 23444
+
+Phase 3.5 Pipeline Register Optimization
+Phase 3.5 Pipeline Register Optimization | Checksum: 17bd1d183
+
+Time (s): cpu = 00:27:34 ; elapsed = 00:12:10 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13171 ; free virtual = 23447
+
+Phase 3.6 Fast Optimization
+Phase 3.6 Fast Optimization | Checksum: 1a4f2fdb6
+
+Time (s): cpu = 00:29:18 ; elapsed = 00:12:42 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13167 ; free virtual = 23448
+Phase 3 Detail Placement | Checksum: 1a4f2fdb6
+
+Time (s): cpu = 00:29:20 ; elapsed = 00:12:43 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13167 ; free virtual = 23448
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 27955b3ff
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 4 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=0.117 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 2271c3987
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:04 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13227 ; free virtual = 23509
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+Ending Physical Synthesis Task | Checksum: 21cad4f83
+
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:06 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13227 ; free virtual = 23509
+Phase 4.1.1.1 BUFG Insertion | Checksum: 27955b3ff
+
+Time (s): cpu = 00:32:35 ; elapsed = 00:14:00 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13227 ; free virtual = 23509
+
+Phase 4.1.1.2 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=0.117. For the most accurate timing information please run report_timing.
+Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: 1ac8ef87e
+
+Time (s): cpu = 00:32:52 ; elapsed = 00:14:14 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13261 ; free virtual = 23546
+
+Time (s): cpu = 00:32:52 ; elapsed = 00:14:14 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13261 ; free virtual = 23546
+Phase 4.1 Post Commit Optimization | Checksum: 1ac8ef87e
+
+Time (s): cpu = 00:32:54 ; elapsed = 00:14:14 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13261 ; free virtual = 23546
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13282 ; free virtual = 23567
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 1b1931999
+
+Time (s): cpu = 00:33:39 ; elapsed = 00:14:34 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion
+ ________________________________________________________________________
+|           | Global Congestion | Long Congestion   | Short Congestion  |
+| Direction | Region Size       | Region Size       | Region Size       |
+|___________|___________________|___________________|___________________|
+|      North|                1x1|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+|      South|                2x2|                1x1|                4x4|
+|___________|___________________|___________________|___________________|
+|       East|                4x4|                2x2|              16x16|
+|___________|___________________|___________________|___________________|
+|       West|                8x8|                2x2|              16x16|
+|___________|___________________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 1b1931999
+
+Time (s): cpu = 00:33:41 ; elapsed = 00:14:35 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+Phase 4.3 Placer Reporting | Checksum: 1b1931999
+
+Time (s): cpu = 00:33:44 ; elapsed = 00:14:36 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13302 ; free virtual = 23587
+
+Time (s): cpu = 00:33:44 ; elapsed = 00:14:36 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 1c60f02f9
+
+Time (s): cpu = 00:33:46 ; elapsed = 00:14:36 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+Ending Placer Task | Checksum: 1be5e8aca
+
+Time (s): cpu = 00:33:48 ; elapsed = 00:14:37 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+246 Infos, 123 Warnings, 1 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:34:04 ; elapsed = 00:14:43 . Memory (MB): peak = 9070.695 ; gain = 1410.215 ; free physical = 13302 ; free virtual = 23587
+INFO: [Vivado 12-24838] Running report commands "report_control_sets, report_io, report_utilization" in parallel.
+Running report generation with 3 threads.
+INFO: [Vivado 12-24828] Executing command : report_io -file devkit_top_bd_wrapper_io_placed.rpt
+report_io: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.51 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13286 ; free virtual = 23572
+INFO: [Vivado 12-24828] Executing command : report_control_sets -verbose -file devkit_top_bd_wrapper_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13266 ; free virtual = 23557
+INFO: [Vivado 12-24828] Executing command : report_utilization -file devkit_top_bd_wrapper_utilization_placed.rpt -pb devkit_top_bd_wrapper_utilization_placed.pb
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.49 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13189 ; free virtual = 23549
+Wrote PlaceDB: Time (s): cpu = 00:00:28 ; elapsed = 00:00:13 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12789 ; free virtual = 23541
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12789 ; free virtual = 23541
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.72 ; elapsed = 00:00:00.75 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12785 ; free virtual = 23541
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.3 ; elapsed = 00:00:00.31 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12746 ; free virtual = 23544
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12746 ; free virtual = 23547
+Write Physdb Complete: Time (s): cpu = 00:00:29 ; elapsed = 00:00:14 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12746 ; free virtual = 23547
+report_design_analysis: Time (s): cpu = 00:00:29 ; elapsed = 00:00:12 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12762 ; free virtual = 23564
+INFO: [Common 17-1381] The checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_placed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:01:04 ; elapsed = 00:00:32 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13121 ; free virtual = 23516
+Command: phys_opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+
+Starting Initial Update Timing Task
+
+Time (s): cpu = 00:01:34 ; elapsed = 00:00:33 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13215 ; free virtual = 23610
+INFO: [Vivado_Tcl 4-2279] Estimated Timing Summary | WNS= 0.121 | TNS= 0.000 |
+INFO: [Vivado_Tcl 4-383] Design worst setup slack (WNS) is greater than or equal to 0.000 ns. All physical synthesis setup optimizations will be skipped.
+INFO: [Vivado_Tcl 4-232] No setup violation found. The netlist was not modified.
+INFO: [Common 17-83] Releasing license: Implementation
+258 Infos, 123 Warnings, 1 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully
+phys_opt_design: Time (s): cpu = 00:01:36 ; elapsed = 00:00:36 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13215 ; free virtual = 23610
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.44 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13136 ; free virtual = 23599
+Wrote PlaceDB: Time (s): cpu = 00:00:28 ; elapsed = 00:00:13 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12676 ; free virtual = 23562
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12676 ; free virtual = 23562
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.72 ; elapsed = 00:00:00.74 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12674 ; free virtual = 23563
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.3 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12637 ; free virtual = 23565
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12630 ; free virtual = 23561
+Write Physdb Complete: Time (s): cpu = 00:00:29 ; elapsed = 00:00:14 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12630 ; free virtual = 23561
+INFO: [Common 17-1381] The checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_physopt.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:35 ; elapsed = 00:00:20 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13025 ; free virtual = 23529
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 4 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: 8815a8de ConstDB: 0 ShapeSum: ef522003 RouteDB: 46f6c1e9
+Nodegraph reading from file.  Time (s): cpu = 00:00:00.61 ; elapsed = 00:00:00.65 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13014 ; free virtual = 23522
+Post Restoration Checksum: NetGraph: fcc1b3d | NumContArr: d474d1ad | Constraints: c97a4afb | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 270643282
+
+Time (s): cpu = 00:01:36 ; elapsed = 00:00:30 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12872 ; free virtual = 23393
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 270643282
+
+Time (s): cpu = 00:01:38 ; elapsed = 00:00:30 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12880 ; free virtual = 23401
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 270643282
+
+Time (s): cpu = 00:01:39 ; elapsed = 00:00:31 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 12939 ; free virtual = 23460
+
+Phase 2.3 Global Clock Net Routing
+ Number of Nodes with overlaps = 0
+Phase 2.3 Global Clock Net Routing | Checksum: 1cf89f8de
+
+Time (s): cpu = 00:01:54 ; elapsed = 00:00:40 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13020 ; free virtual = 23542
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 27eb1b57c
+
+Time (s): cpu = 00:02:53 ; elapsed = 00:01:02 . Memory (MB): peak = 9070.695 ; gain = 0.000 ; free physical = 13075 ; free virtual = 23597
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.164  | TNS=0.000  | WHS=-0.081 | THS=-15.899|
+
+
+Phase 2.5 Update Timing for Bus Skew
+
+Phase 2.5.1 Update Timing
+Phase 2.5.1 Update Timing | Checksum: 2bff0d69a
+
+Time (s): cpu = 00:05:25 ; elapsed = 00:01:54 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 12996 ; free virtual = 23535
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.164  | TNS=0.000  | WHS=-0.134 | THS=-20.556|
+
+Phase 2.5 Update Timing for Bus Skew | Checksum: 22fb4a296
+
+Time (s): cpu = 00:05:26 ; elapsed = 00:01:54 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13004 ; free virtual = 23543
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.00295744 %
+  Global Horizontal Routing Utilization  = 0.000844896 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 369127
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 330709
+  Number of Partially Routed Nets     = 38418
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: 1e6edb3cb
+
+Time (s): cpu = 00:05:36 ; elapsed = 00:01:58 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13034 ; free virtual = 23568
+
+Phase 3 Global Routing
+Phase 3 Global Routing | Checksum: 1e6edb3cb
+
+Time (s): cpu = 00:05:36 ; elapsed = 00:01:58 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13034 ; free virtual = 23568
+
+Phase 4 Initial Routing
+
+Phase 4.1 Initial Net Routing Pass
+Phase 4.1 Initial Net Routing Pass | Checksum: 29384d76b
+
+Time (s): cpu = 00:07:17 ; elapsed = 00:02:35 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13032 ; free virtual = 23564
+Phase 4 Initial Routing | Checksum: 22f19bd2e
+
+Time (s): cpu = 00:07:22 ; elapsed = 00:02:37 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13032 ; free virtual = 23564
+
+Phase 5 Rip-up And Reroute
+
+Phase 5.1 Global Iteration 0
+ Number of Nodes with overlaps = 100126
+ Number of Nodes with overlaps = 15039
+ Number of Nodes with overlaps = 3708
+ Number of Nodes with overlaps = 1358
+ Number of Nodes with overlaps = 593
+ Number of Nodes with overlaps = 294
+ Number of Nodes with overlaps = 182
+ Number of Nodes with overlaps = 105
+ Number of Nodes with overlaps = 61
+ Number of Nodes with overlaps = 31
+ Number of Nodes with overlaps = 19
+ Number of Nodes with overlaps = 13
+ Number of Nodes with overlaps = 9
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.065  | TNS=0.000  | WHS=-0.011 | THS=-0.034 |
+
+Phase 5.1 Global Iteration 0 | Checksum: 1a1dba801
+
+Time (s): cpu = 00:26:56 ; elapsed = 00:11:12 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13062 ; free virtual = 23602
+
+Phase 5.2 Additional Iteration for Hold
+Phase 5.2 Additional Iteration for Hold | Checksum: e1481130
+
+Time (s): cpu = 00:26:59 ; elapsed = 00:11:13 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13060 ; free virtual = 23599
+Phase 5 Rip-up And Reroute | Checksum: e1481130
+
+Time (s): cpu = 00:27:00 ; elapsed = 00:11:13 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13060 ; free virtual = 23599
+
+Phase 6 Delay and Skew Optimization
+
+Phase 6.1 Delay CleanUp
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.065  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.065  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+Phase 6.1 Delay CleanUp | Checksum: 17116a1a7
+
+Time (s): cpu = 00:28:06 ; elapsed = 00:11:35 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13050 ; free virtual = 23585
+
+Phase 6.2 Clock Skew Optimization
+Phase 6.2 Clock Skew Optimization | Checksum: 17116a1a7
+
+Time (s): cpu = 00:28:07 ; elapsed = 00:11:35 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13050 ; free virtual = 23585
+Phase 6 Delay and Skew Optimization | Checksum: 17116a1a7
+
+Time (s): cpu = 00:28:08 ; elapsed = 00:11:36 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13050 ; free virtual = 23586
+
+Phase 7 Post Hold Fix
+
+Phase 7.1 Hold Fix Iter
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=0.065  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+Phase 7.1 Hold Fix Iter | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:28:56 ; elapsed = 00:11:52 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13042 ; free virtual = 23578
+Phase 7 Post Hold Fix | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:28:57 ; elapsed = 00:11:53 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13011 ; free virtual = 23547
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 17.7999 %
+  Global Horizontal Routing Utilization  = 19.0696 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 8 Route finalize | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:02 ; elapsed = 00:11:54 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13024 ; free virtual = 23559
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:04 ; elapsed = 00:11:55 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13024 ; free virtual = 23559
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:26 ; elapsed = 00:12:09 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13027 ; free virtual = 23563
+
+Phase 11 Resolve XTalk
+Phase 11 Resolve XTalk | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:27 ; elapsed = 00:12:10 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13027 ; free virtual = 23563
+
+Phase 12 Post Process Routing
+Phase 12 Post Process Routing | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:31 ; elapsed = 00:12:12 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13027 ; free virtual = 23563
+
+Phase 13 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=0.065  | TNS=0.000  | WHS=0.011  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 13 Post Router Timing | Checksum: 14ad8fb93
+
+Time (s): cpu = 00:29:32 ; elapsed = 00:12:12 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13027 ; free virtual = 23563
+Total Elapsed time in route_design: 731.89 secs
+
+Phase 14 Post-Route Event Processing
+Phase 14 Post-Route Event Processing | Checksum: 15fb8f208
+
+Time (s): cpu = 00:29:35 ; elapsed = 00:12:13 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13027 ; free virtual = 23563
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 15fb8f208
+
+Time (s): cpu = 00:29:39 ; elapsed = 00:12:14 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13025 ; free virtual = 23561
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+273 Infos, 123 Warnings, 1 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:29:41 ; elapsed = 00:12:16 . Memory (MB): peak = 9095.695 ; gain = 25.000 ; free physical = 13024 ; free virtual = 23560
+INFO: [Vivado 12-24828] Executing command : report_drc -file devkit_top_bd_wrapper_drc_routed.rpt -pb devkit_top_bd_wrapper_drc_routed.pb -rpx devkit_top_bd_wrapper_drc_routed.rpx
+Command: report_drc -file devkit_top_bd_wrapper_drc_routed.rpt -pb devkit_top_bd_wrapper_drc_routed.pb -rpx devkit_top_bd_wrapper_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_drc_routed.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:00:56 ; elapsed = 00:00:18 . Memory (MB): peak = 9126.133 ; gain = 30.438 ; free physical = 12960 ; free virtual = 23498
+INFO: [Vivado 12-24828] Executing command : report_methodology -file devkit_top_bd_wrapper_methodology_drc_routed.rpt -pb devkit_top_bd_wrapper_methodology_drc_routed.pb -rpx devkit_top_bd_wrapper_methodology_drc_routed.rpx
+Command: report_methodology -file devkit_top_bd_wrapper_methodology_drc_routed.rpt -pb devkit_top_bd_wrapper_methodology_drc_routed.pb -rpx devkit_top_bd_wrapper_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 4 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_methodology_drc_routed.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:03:21 ; elapsed = 00:01:00 . Memory (MB): peak = 9126.133 ; gain = 0.000 ; free physical = 12943 ; free virtual = 23481
+INFO: [Vivado 12-24828] Executing command : report_timing_summary -max_paths 10 -report_unconstrained -file devkit_top_bd_wrapper_timing_summary_routed.rpt -pb devkit_top_bd_wrapper_timing_summary_routed.pb -rpx devkit_top_bd_wrapper_timing_summary_routed.rpx -warn_on_violation
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Temperature grade: E, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+report_timing_summary: Time (s): cpu = 00:01:09 ; elapsed = 00:00:26 . Memory (MB): peak = 9192.133 ; gain = 66.000 ; free physical = 12878 ; free virtual = 23419
+INFO: [Vivado 12-24838] Running report commands "report_bus_skew, report_incremental_reuse, report_route_status" in parallel.
+Running report generation with 3 threads.
+INFO: [Vivado 12-24828] Executing command : report_incremental_reuse -file devkit_top_bd_wrapper_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [Vivado 12-24828] Executing command : report_bus_skew -warn_on_violation -file devkit_top_bd_wrapper_bus_skew_routed.rpt -pb devkit_top_bd_wrapper_bus_skew_routed.pb -rpx devkit_top_bd_wrapper_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Temperature grade: E, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [Vivado 12-24828] Executing command : report_route_status -file devkit_top_bd_wrapper_route_status.rpt -pb devkit_top_bd_wrapper_route_status.pb
+INFO: [Vivado 12-24828] Executing command : report_power -file devkit_top_bd_wrapper_power_routed.rpt -pb devkit_top_bd_wrapper_power_summary_routed.pb -rpx devkit_top_bd_wrapper_power_routed.rpx
+Command: report_power -file devkit_top_bd_wrapper_power_routed.rpt -pb devkit_top_bd_wrapper_power_summary_routed.pb -rpx devkit_top_bd_wrapper_power_routed.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+WARNING: [Power 33-332] Found switching activity that implies high-fanout reset nets being asserted for excessive periods of time which may result in inaccurate power analysis.
+Resolution: To review and fix problems, please run Power Constraints Advisor in the GUI from Tools > Power Constraints Advisor or run report_power with the -advisory option to generate a text report.
+293 Infos, 125 Warnings, 1 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+report_power: Time (s): cpu = 00:01:20 ; elapsed = 00:00:31 . Memory (MB): peak = 9312.145 ; gain = 120.012 ; free physical = 12754 ; free virtual = 23311
+INFO: [Vivado 12-24828] Executing command : report_clock_utilization -file devkit_top_bd_wrapper_clock_utilization_routed.rpt
+report_clock_utilization: Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 9329.383 ; gain = 17.238 ; free physical = 12671 ; free virtual = 23217
+generate_parallel_reports: Time (s): cpu = 00:07:05 ; elapsed = 00:02:35 . Memory (MB): peak = 9329.383 ; gain = 233.688 ; free physical = 12671 ; free virtual = 23217
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.46 . Memory (MB): peak = 9419.250 ; gain = 89.867 ; free physical = 12490 ; free virtual = 23111
+Wrote PlaceDB: Time (s): cpu = 00:00:28 ; elapsed = 00:00:13 . Memory (MB): peak = 9479.250 ; gain = 149.867 ; free physical = 12049 ; free virtual = 23067
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9479.250 ; gain = 0.000 ; free physical = 12049 ; free virtual = 23067
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 9549.250 ; gain = 70.000 ; free physical = 11892 ; free virtual = 22981
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.29 ; elapsed = 00:00:00.31 . Memory (MB): peak = 9549.250 ; gain = 0.000 ; free physical = 11826 ; free virtual = 22958
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 9549.250 ; gain = 0.000 ; free physical = 11818 ; free virtual = 22953
+Write Physdb Complete: Time (s): cpu = 00:00:32 ; elapsed = 00:00:15 . Memory (MB): peak = 9549.250 ; gain = 219.867 ; free physical = 11818 ; free virtual = 22953
+INFO: [Common 17-1381] The checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/impl_1/devkit_top_bd_wrapper_routed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:39 ; elapsed = 00:00:23 . Memory (MB): peak = 9549.250 ; gain = 219.867 ; free physical = 12186 ; free virtual = 22873
+INFO: [Memdata 28-167] Found XPM memory block devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to auto. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.TX_FIFO_II/xpm_fifo_instance.xpm_fifo_async_inst/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+INFO: [Memdata 28-167] Found XPM memory block devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to auto. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_spi/x_spi/U0/NO_DUAL_QUAD_MODE.QSPI_NORMAL/QSPI_LEGACY_MD_GEN.QSPI_CORE_INTERFACE_I/FIFO_EXISTS.RX_FIFO_II/gnuram_async_fifo.xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+INFO: [Memdata 28-167] Found XPM memory block devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_event_log/x_axi_pwm/x_logging/x_log_entry_fifo/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst with a P_MEMORY_PRIMITIVE property set to auto. A value of block is required. You will not be able to use the updatemem program to update the bitstream with new data for the devkit_top_bd_i/mb_top_wrapper_0/inst/x_top/x_event_log/x_axi_pwm/x_logging/x_log_entry_fifo/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst block.
+Command: write_bitstream -force devkit_top_bd_wrapper.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 4 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./devkit_top_bd_wrapper.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Common 17-83] Releasing license: Implementation
+308 Infos, 125 Warnings, 1 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:01:43 ; elapsed = 00:00:46 . Memory (MB): peak = 10580.602 ; gain = 879.277 ; free physical = 11222 ; free virtual = 21956
+INFO: [Common 17-206] Exiting Vivado at Wed Jul 30 12:43:05 2025...

@@ -1,0 +1,793 @@
+#-----------------------------------------------------------
+# Vivado v2024.2 (64-bit)
+# SW Build 5239630 on Fri Nov 08 22:34:34 MST 2024
+# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+# Start of session at: Wed Jul 30 12:03:41 2025
+# Process ID         : 2555
+# Current directory  : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1
+# Command line       : vivado -log devkit_top_bd_wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source devkit_top_bd_wrapper.tcl
+# Log file           : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/devkit_top_bd_wrapper.vds
+# Journal file       : /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/vivado.jou
+# Running On         : jonas-tower-pc
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 22.04.5 LTS
+# Processor Detail   : 11th Gen Intel(R) Core(TM) i5-11500 @ 2.70GHz
+# CPU Frequency      : 3637.552 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 33352 MB
+# Swap memory        : 10737 MB
+# Total Virtual      : 44089 MB
+# Available Virtual  : 32354 MB
+#-----------------------------------------------------------
+source devkit_top_bd_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2024.2/data/ip'.
+INFO: [Project 1-5578] Found utility IPs instantiated in block design /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.srcs/sources_1/bd/devkit_top_bd/devkit_top_bd.bd which have equivalent inline hdl with improved performance and reduced diskspace.
+It is recommended to migrate these utility IPs to inline hdl  using the command upgrade_project -migrate_to_inline_hdl.  The utility IPs may be deprecated in future releases.
+More information on inline hdl is available in UG994. 
+Command: synth_design -top devkit_top_bd_wrapper -part xczu17eg-ffvc1760-1-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu17eg'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu17eg'
+INFO: [Common 17-1686] The version limit for your license is '2025.07' and will not allow you to run AMD software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+INFO: [Device 21-403] Loading part xczu17eg-ffvc1760-1-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 2602
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 3002.895 ; gain = 135.773 ; free physical = 19344 ; free virtual = 28530
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_wrapper' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/hdl/devkit_top_bd_wrapper.v:13]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:91]
+INFO: [Synth 8-6157] synthesizing module 'crate_control_imp_66BSR7' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:13]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_emio_ctrl_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_emio_ctrl_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_emio_ctrl_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_emio_ctrl_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'crate_control_imp_66BSR7' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:13]
+INFO: [Synth 8-6157] synthesizing module 'lpd_domain_imp_KQPSWG' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:1100]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_axi_iic_0_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_axi_iic_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_axi_iic_0_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_axi_iic_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'gpo' of module 'devkit_top_bd_axi_iic_0_0' is unconnected for instance 'axi_iic_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:1240]
+WARNING: [Synth 8-7023] instance 'axi_iic_0' of module 'devkit_top_bd_axi_iic_0_0' has 27 connections declared, but only 26 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:1240]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_fpga_dev_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_fpga_dev_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_fpga_dev_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_fpga_dev_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'lpd_domain_imp_KQPSWG' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:1100]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_lpd_interconnect_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_lpd_interconnect_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_lpd_interconnect_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_lpd_interconnect_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'M01_AXI_awprot' of module 'devkit_top_bd_lpd_interconnect_0' is unconnected for instance 'lpd_interconnect' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:587]
+WARNING: [Synth 8-7071] port 'M01_AXI_arprot' of module 'devkit_top_bd_lpd_interconnect_0' is unconnected for instance 'lpd_interconnect' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:587]
+WARNING: [Synth 8-7023] instance 'lpd_interconnect' of module 'devkit_top_bd_lpd_interconnect_0' has 79 connections declared, but only 77 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:587]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_main_pll_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_main_pll_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_main_pll_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_main_pll_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_mb_top_wrapper_0_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_mb_top_wrapper_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_mb_top_wrapper_0_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_mb_top_wrapper_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 's_axi_buser' of module 'devkit_top_bd_mb_top_wrapper_0_0' is unconnected for instance 'mb_top_wrapper_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:669]
+WARNING: [Synth 8-7071] port 's_axi_ruser' of module 'devkit_top_bd_mb_top_wrapper_0_0' is unconnected for instance 'mb_top_wrapper_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:669]
+WARNING: [Synth 8-7023] instance 'mb_top_wrapper_0' of module 'devkit_top_bd_mb_top_wrapper_0_0' has 147 connections declared, but only 145 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:669]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_pl_clkref_ibufds_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_pl_clkref_ibufds_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_pl_clkref_ibufds_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_pl_clkref_ibufds_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_plps_irq_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_plps_irq_0/synth/devkit_top_bd_plps_irq_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'xlconcat_v2_1_6_xlconcat' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ipshared/6120/hdl/xlconcat_v2_1_vl_rfs.v:59]
+INFO: [Synth 8-6155] done synthesizing module 'xlconcat_v2_1_6_xlconcat' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ipshared/6120/hdl/xlconcat_v2_1_vl_rfs.v:59]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_plps_irq_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_plps_irq_0/synth/devkit_top_bd_plps_irq_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_psr_fpd_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_psr_fpd_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_psr_fpd_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_psr_fpd_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'mb_reset' of module 'devkit_top_bd_psr_fpd_0' is unconnected for instance 'psr_fpd' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:829]
+WARNING: [Synth 8-7071] port 'bus_struct_reset' of module 'devkit_top_bd_psr_fpd_0' is unconnected for instance 'psr_fpd' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:829]
+WARNING: [Synth 8-7071] port 'peripheral_reset' of module 'devkit_top_bd_psr_fpd_0' is unconnected for instance 'psr_fpd' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:829]
+WARNING: [Synth 8-7071] port 'interconnect_aresetn' of module 'devkit_top_bd_psr_fpd_0' is unconnected for instance 'psr_fpd' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:829]
+WARNING: [Synth 8-7023] instance 'psr_fpd' of module 'devkit_top_bd_psr_fpd_0' has 10 connections declared, but only 6 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:829]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_rst_ps_clk0_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_rst_ps_clk0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_rst_ps_clk0_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_rst_ps_clk0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'mb_reset' of module 'devkit_top_bd_rst_ps_clk0_0' is unconnected for instance 'rst_ps_clk0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:836]
+WARNING: [Synth 8-7071] port 'bus_struct_reset' of module 'devkit_top_bd_rst_ps_clk0_0' is unconnected for instance 'rst_ps_clk0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:836]
+WARNING: [Synth 8-7071] port 'peripheral_reset' of module 'devkit_top_bd_rst_ps_clk0_0' is unconnected for instance 'rst_ps_clk0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:836]
+WARNING: [Synth 8-7023] instance 'rst_ps_clk0' of module 'devkit_top_bd_rst_ps_clk0_0' has 10 connections declared, but only 7 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:836]
+WARNING: [Synth 8-4446] all outputs are unconnected for this instance and logic may be removed [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:844]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_system_ila_0_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_system_ila_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_system_ila_0_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_system_ila_0_0_stub.v:6]
+WARNING: [Synth 8-4446] all outputs are unconnected for this instance and logic may be removed [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:928]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_system_ila_0_1' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_system_ila_0_1_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_system_ila_0_1' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_system_ila_0_1_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_wr_dac_spi_iface_0_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_wr_dac_spi_iface_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_wr_dac_spi_iface_0_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_wr_dac_spi_iface_0_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'devkit_top_bd_zynqmp_ps_0' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_zynqmp_ps_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_zynqmp_ps_0' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/.Xil/Vivado-2555-jonas-tower-pc/realtime/devkit_top_bd_zynqmp_ps_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'emio_enet0_tsu_timer_cmp_val' of module 'devkit_top_bd_zynqmp_ps_0' is unconnected for instance 'zynqmp_ps' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:951]
+WARNING: [Synth 8-7071] port 'pl_clk1' of module 'devkit_top_bd_zynqmp_ps_0' is unconnected for instance 'zynqmp_ps' [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:951]
+WARNING: [Synth 8-7023] instance 'zynqmp_ps' of module 'devkit_top_bd_zynqmp_ps_0' has 148 connections declared, but only 146 given [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:951]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:91]
+INFO: [Synth 8-6157] synthesizing module 'IOBUF' [/opt/Xilinx/Vivado/2024.2/scripts/rt/data/unisim_comp.v:80391]
+INFO: [Synth 8-6155] done synthesizing module 'IOBUF' (0#1) [/opt/Xilinx/Vivado/2024.2/scripts/rt/data/unisim_comp.v:80391]
+INFO: [Synth 8-6155] done synthesizing module 'devkit_top_bd_wrapper' (0#1) [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/hdl/devkit_top_bd_wrapper.v:13]
+WARNING: [Synth 8-3848] Net i2c1_irq in module/entity lpd_domain_imp_KQPSWG does not have driver. [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/synth/devkit_top_bd.v:1190]
+WARNING: [Synth 8-7129] Port In8[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In9[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In10[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In11[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In12[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In13[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In14[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In15[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In16[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In17[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In18[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In19[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In20[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In21[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In22[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In23[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In24[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In25[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In26[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In27[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In28[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In29[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In30[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In31[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In32[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In33[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In34[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In35[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In36[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In37[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In38[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In39[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In40[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In41[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In42[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In43[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In44[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In45[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In46[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In47[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In48[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In49[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In50[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In51[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In52[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In53[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In54[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In55[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In56[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In57[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In58[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In59[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In60[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In61[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In62[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In63[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In64[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In65[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In66[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In67[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In68[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In69[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In70[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In71[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In72[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In73[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In74[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In75[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In76[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In77[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In78[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In79[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In80[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In81[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In82[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In83[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In84[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In85[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In86[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In87[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In88[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In89[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In90[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In91[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In92[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In93[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In94[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In95[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In96[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In97[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In98[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In99[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In100[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In101[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In102[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In103[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In104[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In105[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In106[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+WARNING: [Synth 8-7129] Port In107[0] in module xlconcat_v2_1_6_xlconcat is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3086.863 ; gain = 219.742 ; free physical = 19216 ; free virtual = 28419
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3086.863 ; gain = 219.742 ; free physical = 19216 ; free virtual = 28419
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3086.863 ; gain = 219.742 ; free physical = 19216 ; free virtual = 28419
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3094.863 ; gain = 0.000 ; free physical = 19217 ; free virtual = 28420
+INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0_in_context.xdc] for cell 'devkit_top_bd_i/zynqmp_ps'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0/devkit_top_bd_zynqmp_ps_0_in_context.xdc] for cell 'devkit_top_bd_i/zynqmp_ps'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc] for cell 'devkit_top_bd_i/wr_dac_spi_iface_0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc] for cell 'devkit_top_bd_i/wr_dac_spi_iface_0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_fpga_dev_0/devkit_top_bd_fpga_dev_0/devkit_top_bd_fpga_dev_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_domain/fpga_dev'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_fpga_dev_0/devkit_top_bd_fpga_dev_0/devkit_top_bd_fpga_dev_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_domain/fpga_dev'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_domain/axi_iic_0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0/devkit_top_bd_axi_iic_0_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_domain/axi_iic_0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc] for cell 'devkit_top_bd_i/crate_control/emio_ctrl'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc] for cell 'devkit_top_bd_i/crate_control/emio_ctrl'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/devkit_top_bd_lpd_interconnect_0/devkit_top_bd_lpd_interconnect_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_interconnect'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_lpd_interconnect_0/devkit_top_bd_lpd_interconnect_0/devkit_top_bd_lpd_interconnect_0_in_context.xdc] for cell 'devkit_top_bd_i/lpd_interconnect'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0_in_context.xdc] for cell 'devkit_top_bd_i/psr_fpd'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0/devkit_top_bd_psr_fpd_0_in_context.xdc] for cell 'devkit_top_bd_i/psr_fpd'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0_in_context.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0/devkit_top_bd_rst_ps_clk0_0_in_context.xdc] for cell 'devkit_top_bd_i/rst_ps_clk0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc] for cell 'devkit_top_bd_i/pl_clkref_ibufds'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc] for cell 'devkit_top_bd_i/pl_clkref_ibufds'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0_in_context.xdc] for cell 'devkit_top_bd_i/main_pll'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0/devkit_top_bd_main_pll_0_in_context.xdc] for cell 'devkit_top_bd_i/main_pll'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc] for cell 'devkit_top_bd_i/mb_top_wrapper_0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/devkit_top_bd_system_ila_0_0/devkit_top_bd_system_ila_0_0_in_context.xdc] for cell 'devkit_top_bd_i/system_ila_0'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_0/devkit_top_bd_system_ila_0_0/devkit_top_bd_system_ila_0_0_in_context.xdc] for cell 'devkit_top_bd_i/system_ila_0'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/devkit_top_bd_system_ila_0_1/devkit_top_bd_system_ila_0_1_in_context.xdc] for cell 'devkit_top_bd_i/system_ila_1'
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_system_ila_0_1/devkit_top_bd_system_ila_0_1/devkit_top_bd_system_ila_0_1_in_context.xdc] for cell 'devkit_top_bd_i/system_ila_1'
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/diot.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/diot.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/diot.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/devkit_top_bd_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/devkit_top_bd_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/cpci.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/cpci.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/cpci.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/devkit_top_bd_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/devkit_top_bd_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/timings.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/projects/devkit_v1/constraints/timings.xdc]
+Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3158.391 ; gain = 0.000 ; free physical = 19300 ; free virtual = 28465
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 2 instances
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3158.391 ; gain = 0.000 ; free physical = 19300 ; free virtual = 28465
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 3158.391 ; gain = 291.270 ; free physical = 19338 ; free virtual = 28503
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xczu17eg-ffvc1760-1-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 3166.395 ; gain = 299.273 ; free physical = 19346 ; free virtual = 28511
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property IO_BUFFER_TYPE = NONE for wr_dac_din. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 1).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for wr_dac_din. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 2).
+Applied set_property IO_BUFFER_TYPE = NONE for wr_dac_sck. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for wr_dac_sck. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 4).
+Applied set_property IO_BUFFER_TYPE = NONE for wr_dac_sync1. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 5).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for wr_dac_sync1. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0/devkit_top_bd_wr_dac_spi_iface_0_0_in_context.xdc, line 6).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_f_io[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 1).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_f_io[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 2).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_f_io[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_f_io[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 4).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_p_io[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 5).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_p_io[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 6).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_p_io[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 7).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_p_io[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 8).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_p_io[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 9).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_p_io[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 10).
+Applied set_property IO_BUFFER_TYPE = NONE for rst_n. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 11).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for rst_n. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 12).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 13).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 14).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 15).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 16).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 17).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 18).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 19).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 20).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 21).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 22).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 23).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 24).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 25).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 26).
+Applied set_property IO_BUFFER_TYPE = NONE for servmod[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 27).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for servmod[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 28).
+Applied set_property IO_BUFFER_TYPE = NONE for shared_bus[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 29).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for shared_bus[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 30).
+Applied set_property IO_BUFFER_TYPE = NONE for shared_bus[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 31).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for shared_bus[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 32).
+Applied set_property IO_BUFFER_TYPE = NONE for shared_bus[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 33).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for shared_bus[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 34).
+Applied set_property IO_BUFFER_TYPE = NONE for mon_bus_f_rst. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 35).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for mon_bus_f_rst. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 36).
+Applied set_property IO_BUFFER_TYPE = NONE for pl_pcycle_req. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 37).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pl_pcycle_req. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0/devkit_top_bd_emio_ctrl_0_in_context.xdc, line 38).
+Applied set_property IO_BUFFER_TYPE = NONE for pl_clkref_clk_n[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc, line 2).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pl_clkref_clk_n[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc, line 3).
+Applied set_property IO_BUFFER_TYPE = NONE for pl_clkref_clk_p[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc, line 4).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pl_clkref_clk_p[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0/devkit_top_bd_pl_clkref_ibufds_0_in_context.xdc, line 5).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_busy_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 1).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_busy_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 2).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_busy_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_busy_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 4).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_busy_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 5).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_busy_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 6).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_busy_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 7).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_busy_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 8).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_cnv_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 9).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_cnv_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 10).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_cnv_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 11).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_cnv_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 12).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_data_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 13).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_data_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 14).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_data_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 15).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_data_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 16).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_data_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 17).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_data_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 18).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_data_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 19).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_data_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 20).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_sck_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 21).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_sck_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 22).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_cal_sck_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 23).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_cal_sck_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 24).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 25).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 26).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 27).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 28).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 29).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_n_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 30).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 31).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 32).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 33).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 34).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 35).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_busy_p_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 36).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cnv_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 37).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cnv_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 38).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cnv_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 39).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cnv_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 40).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 41).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 42).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 43).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 44).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 45).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_n_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 46).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 47).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 48).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 49).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 50).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 51).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_cs_p_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 52).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 53).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 54).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 55).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 56).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 57).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 58).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 59).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 60).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 61).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 62).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 63).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 64).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 65).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 66).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 67).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 68).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 69).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 70).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 71).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 72).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 73).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 74).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 75).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 76).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 77).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 78).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 79).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 80).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 81).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 82).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 83).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 84).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 85).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 86).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 87).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 88).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 89).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 90).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 91).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 92).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 93).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 94).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 95).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 96).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 97).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 98).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_n_i[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 99).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_n_i[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 100).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 101).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 102).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 103).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 104).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 105).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 106).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 107).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 108).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 109).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 110).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 111).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 112).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 113).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 114).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 115).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 116).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 117).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 118).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 119).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 120).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 121).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 122).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 123).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 124).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 125).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 126).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 127).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 128).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 129).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 130).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 131).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 132).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 133).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 134).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 135).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 136).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 137).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 138).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 139).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 140).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 141).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 142).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 143).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 144).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 145).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 146).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_data_p_i[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 147).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_data_p_i[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 148).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_reset_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 149).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_reset_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 150).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_reset_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 151).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_reset_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 152).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_sck_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 153).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_sck_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 154).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_sck_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 155).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_sck_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 156).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_sdi_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 157).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_sdi_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 158).
+Applied set_property IO_BUFFER_TYPE = NONE for adc_uncal_sdi_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 159).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for adc_uncal_sdi_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 160).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_clk_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 161).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_clk_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 162).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_clk_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 163).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_clk_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 164).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_cs_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 165).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_cs_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 166).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_cs_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 167).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_cs_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 168).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_data_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 169).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_data_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 170).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_data_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 171).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_data_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 172).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_ldac_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 173).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_ldac_n_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 174).
+Applied set_property IO_BUFFER_TYPE = NONE for dac_ldac_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 175).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for dac_ldac_p_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 176).
+Applied set_property IO_BUFFER_TYPE = NONE for i2c_scl_io. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 177).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for i2c_scl_io. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 178).
+Applied set_property IO_BUFFER_TYPE = NONE for i2c_sda_io. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 179).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for i2c_sda_io. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 180).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 181).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 182).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 183).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 184).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 185).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 186).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 187).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 188).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 189).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 190).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 191).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 192).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 193).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 194).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 195).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 196).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 197).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 198).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 199).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 200).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 201).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 202).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 203).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 204).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 205).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 206).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 207).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 208).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 209).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 210).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 211).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 212).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 213).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 214).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 215).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 216).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 217).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 218).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 219).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 220).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 221).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 222).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 223).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 224).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 225).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 226).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_n_o[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 227).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_n_o[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 228).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 229).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[0]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 230).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 231).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[10]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 232).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 233).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[11]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 234).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 235).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[12]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 236).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 237).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[13]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 238).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 239).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[14]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 240).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 241).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[15]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 242).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 243).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[16]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 244).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 245).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[17]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 246).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 247).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[18]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 248).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 249).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[19]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 250).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 251).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[1]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 252).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 253).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[20]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 254).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 255).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[21]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 256).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 257).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[22]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 258).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 259).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[23]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 260).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 261).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[2]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 262).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 263).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[3]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 264).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 265).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[4]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 266).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 267).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[5]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 268).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 269).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[6]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 270).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 271).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[7]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 272).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 273).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[8]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 274).
+Applied set_property IO_BUFFER_TYPE = NONE for pwm_p_o[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 275).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for pwm_p_o[9]. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 276).
+Applied set_property IO_BUFFER_TYPE = NONE for spi_mosi_actrl_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 277).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for spi_mosi_actrl_o. (constraint file  /home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.gen/sources_1/bd/devkit_top_bd/ip/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0/devkit_top_bd_mb_top_wrapper_0_0_in_context.xdc, line 278).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/zynqmp_ps. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/wr_dac_spi_iface_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/lpd_domain/fpga_dev. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/lpd_domain/axi_iic_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/crate_control/emio_ctrl. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/lpd_interconnect. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/plps_irq. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/psr_fpd. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/rst_ps_clk0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/pl_clkref_ibufds. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/main_pll. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/mb_top_wrapper_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/system_ila_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for devkit_top_bd_i/system_ila_1. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 3166.395 ; gain = 299.273 ; free physical = 19355 ; free virtual = 28520
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 3166.395 ; gain = 299.273 ; free physical = 19353 ; free virtual = 28519
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1590 (col length:264)
+BRAMs: 1592 (col length: RAMB18 264 RAMB36 132)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 3166.395 ; gain = 299.273 ; free physical = 19359 ; free virtual = 28531
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 3814.516 ; gain = 947.395 ; free physical = 18788 ; free virtual = 27970
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 3814.516 ; gain = 947.395 ; free physical = 18788 ; free virtual = 27970
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 3827.531 ; gain = 960.410 ; free physical = 18773 ; free virtual = 27954
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18668 ; free virtual = 27850
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18668 ; free virtual = 27850
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18668 ; free virtual = 27850
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18674 ; free virtual = 27855
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18674 ; free virtual = 27855
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18667 ; free virtual = 27848
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+-----------------------------------+----------+
+|      |BlackBox name                      |Instances |
++------+-----------------------------------+----------+
+|1     |devkit_top_bd_lpd_interconnect_0   |         1|
+|2     |devkit_top_bd_main_pll_0           |         1|
+|3     |devkit_top_bd_mb_top_wrapper_0_0   |         1|
+|4     |devkit_top_bd_pl_clkref_ibufds_0   |         1|
+|5     |devkit_top_bd_psr_fpd_0            |         1|
+|6     |devkit_top_bd_rst_ps_clk0_0        |         1|
+|7     |devkit_top_bd_system_ila_0_0       |         1|
+|8     |devkit_top_bd_system_ila_0_1       |         1|
+|9     |devkit_top_bd_wr_dac_spi_iface_0_0 |         1|
+|10    |devkit_top_bd_zynqmp_ps_0          |         1|
+|11    |devkit_top_bd_emio_ctrl_0          |         1|
+|12    |devkit_top_bd_axi_iic_0_0          |         1|
+|13    |devkit_top_bd_fpga_dev_0           |         1|
++------+-----------------------------------+----------+
+
+Report Cell Usage: 
++------+---------------------------------+------+
+|      |Cell                             |Count |
++------+---------------------------------+------+
+|1     |devkit_top_bd_axi_iic_0          |     1|
+|2     |devkit_top_bd_emio_ctrl          |     1|
+|3     |devkit_top_bd_fpga_dev           |     1|
+|4     |devkit_top_bd_lpd_interconnect   |     1|
+|5     |devkit_top_bd_main_pll           |     1|
+|6     |devkit_top_bd_mb_top_wrapper_0   |     1|
+|7     |devkit_top_bd_pl_clkref_ibufds   |     1|
+|8     |devkit_top_bd_psr_fpd            |     1|
+|9     |devkit_top_bd_rst_ps_clk0        |     1|
+|10    |devkit_top_bd_system_ila_0       |     2|
+|12    |devkit_top_bd_wr_dac_spi_iface_0 |     1|
+|13    |devkit_top_bd_zynqmp_ps          |     1|
+|14    |IBUF                             |    63|
+|15    |IOBUF                            |     2|
+|16    |OBUF                             |    44|
++------+---------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18667 ; free virtual = 27848
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 1 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 3987.344 ; gain = 1048.695 ; free physical = 18666 ; free virtual = 27847
+Synthesis Optimization Complete : Time (s): cpu = 00:00:22 ; elapsed = 00:00:22 . Memory (MB): peak = 3987.344 ; gain = 1120.223 ; free physical = 18666 ; free virtual = 27847
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3987.344 ; gain = 0.000 ; free physical = 18837 ; free virtual = 28019
+INFO: [Netlist 29-17] Analyzing 65 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3987.344 ; gain = 0.000 ; free physical = 18850 ; free virtual = 28032
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 65 instances were transformed.
+  IBUF => IBUF (IBUFCTRL, INBUF): 63 instances
+  IOBUF => IOBUF (IBUFCTRL, INBUF, OBUFT): 2 instances
+
+Synth Design complete | Checksum: 662159b6
+INFO: [Common 17-83] Releasing license: Synthesis
+65 Infos, 124 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:33 ; elapsed = 00:00:30 . Memory (MB): peak = 3987.344 ; gain = 2387.125 ; free physical = 18850 ; free virtual = 28032
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3366.602; main = 3276.713; forked = 308.007
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4755.164; main = 3913.516; forked = 908.629
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3987.344 ; gain = 0.000 ; free physical = 18850 ; free virtual = 28032
+INFO: [Common 17-1381] The checkpoint '/home/jonas/projects/fgc4/diot/gateware/build_dir/devkit_v1/devkit.runs/synth_1/devkit_top_bd_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file devkit_top_bd_wrapper_utilization_synth.rpt -pb devkit_top_bd_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Jul 30 12:04:22 2025...

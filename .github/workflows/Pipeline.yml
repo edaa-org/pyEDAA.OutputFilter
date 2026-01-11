@@ -7,17 +7,26 @@ on:
 # Every Friday at 22:00 - rerun pipeline to check for dependency-based issues
     - cron: '0 22 * * 5'
 
+permissions:
+  actions:  write
+  contents: write
+  pages:    write
+  id-token: write
+
 jobs:
   Pipeline:
-    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@dev
+    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@r7
     with:
-      package_namespace: pyEDAA
-      package_name:      OutputFilter
-      unittest_python_version_list: '3.11 3.12 3.13'
-      codecov:           true
-      codacy:            true
-      dorny:             true
-      cleanup:           false
+      package_namespace: 'pyEDAA'
+      package_name:      'OutputFilter'
+      unittest_python_version_list: '3.11 3.12 3.13 3.14 pypy-3.11'
+      unittest_disable_list:        'macos:* windows-arm:pypy-3.11'
+      bandit:            'true'
+      pylint:            'false'
+      codecov:           'true'
+      codacy:            'true'
+      dorny:             'true'
+      cleanup:           'false'
     secrets:
       PYPI_TOKEN:    ${{ secrets.PYPI_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

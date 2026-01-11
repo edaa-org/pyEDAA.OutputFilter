@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -31,23 +31,27 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib import Path
 from re      import compile as re_compile
-from typing import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
+from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
+from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx           import VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
-from pyEDAA.OutputFilter.Xilinx.Common    import Line, LineKind, VivadoMessage, VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Common2   import Parser
+from pyEDAA.OutputFilter                         import OutputFilterException
+from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
+from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
+from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, PartResourceSummary
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import CrossBoundaryAndAreaOptimization, ROM_RAM_DSP_SR_Retiming
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ApplyingXDCTimingConstraints, TimingOptimization
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TechnologyMapping, IOInsertion, FlatteningBeforeIOInsertion
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FinalNetlistCleanup, RenamingGeneratedInstances
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RebuildingUserHierarchy, RenamingGeneratedPorts
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedNets, WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, RTLHierarchicalComponentStatistics
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import PartResourceSummary, CrossBoundaryAndAreaOptimization
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ROM_RAM_DSP_SR_Retiming, ApplyingXDCTimingConstraints
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import TimingOptimization, TechnologyMapping, IOInsertion
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FlatteningBeforeIOInsertion, FinalNetlistCleanup
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedInstances, RebuildingUserHierarchy
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedPorts, RenamingGeneratedNets
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import Task, DRCTask, CacheTimingInformationTask, LogicOptimizationTask
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import PowerOptimizationTask, FinalCleanupTask, NetlistObfuscationTask
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign      import PlacerTask
@@ -135,10 +139,15 @@ class Command(Parser):
 
 			line = yield line
 
+	def __str__(self) -> str:
+		return f"{self._TCL_COMMAND}"
+
 
 @export
 class CommandWithSections(Command):
 	_sections:  Dict[Type[Section], Section]
+
+	_PARSERS: ClassVar[Tuple[Type[Section], ...]] = dict()
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
@@ -157,7 +166,7 @@ class CommandWithSections(Command):
 class CommandWithTasks(Command):
 	_tasks: Dict[Type[Task], Task]
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._tasks = {t: t(self) for t in self._PARSERS}
@@ -173,13 +182,14 @@ class CommandWithTasks(Command):
 @export
 class SynthesizeDesign(CommandWithSections):
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
-	_PARSERS:     ClassVar[List[Type[Section]]] = (
+	_PARSERS:     ClassVar[Tuple[Type[Section], ...]] = (
 		RTLElaboration,
 		HandlingCustomAttributes1,
 		ConstraintValidation,
 		LoadingPart,
 		ApplySetProperty,
 		RTLComponentStatistics,
+		RTLHierarchicalComponentStatistics,
 		PartResourceSummary,
 		CrossBoundaryAndAreaOptimization,
 		ROM_RAM_DSP_SR_Retiming1,
@@ -275,7 +285,11 @@ class SynthesizeDesign(CommandWithSections):
 							line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 							break
 					else:
-						raise Exception(f"Unknown section: {line!r}")
+						WarningCollector.Raise(UnknownSection(f"Unknown section: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown section: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith("Starting "):
 					if line.StartsWith(rtlElaboration._START):
@@ -335,7 +349,7 @@ class LinkDesign(Command):
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
 	_perCellXDCFiles: Dict[Path, Dict[str, List[VivadoMessage]]]
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._commonXDCFiles = {}
@@ -451,7 +465,11 @@ class OptimizeDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -517,7 +535,11 @@ class PlaceDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -584,7 +606,11 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):
@@ -650,7 +676,11 @@ class RouteDesign(CommandWithTasks):
 							line = yield next(task := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown task: {line!r}")
+						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
+						ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
 					if line[len(self._TCL_COMMAND) + 1:].startswith("completed successfully"):

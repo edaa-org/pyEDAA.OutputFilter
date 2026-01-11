@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2025 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -60,7 +60,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_preamble:                Preamble
 	_commands:                Dict[Type[Command], Command]
 
-	def __init__(self):
+	def __init__(self) -> None:
 		super().__init__()
 
 		self._duration =                0.0
@@ -91,9 +91,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	def IsIncompleteLog(self) -> bool:
 		"""
 
-		:return:
+		:returns: undocumented
 
-		.. info::
+		.. note::
 
 		   ``INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.``
 		"""
@@ -254,6 +254,10 @@ class Document(Processor):
 		super().__init__()
 
 		self._logfile = logfile
+
+	@readonly
+	def Logfile(self) -> Path:
+		return self._logfile
 
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
