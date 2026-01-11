@@ -91,9 +91,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	def IsIncompleteLog(self) -> bool:
 		"""
 
-		:return:
+		:returns: undocumented
 
-		.. info::
+		.. note::
 
 		   ``INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.``
 		"""

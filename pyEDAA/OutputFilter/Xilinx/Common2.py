@@ -627,7 +627,6 @@ class PhaseWithChildren(Phase):
 				elif line.StartsWith(SUBPHASE_PREFIX):
 					for parser in activeParsers:  # type: Section
 						if (match := parser._START.match(line._message)) is not None:
-							print(line)
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
