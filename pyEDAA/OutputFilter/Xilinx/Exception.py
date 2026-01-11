@@ -44,7 +44,7 @@ class ClassificationException(ProcessorException):
 	_lineNumber: int
 	_rawMessage: str
 
-	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str):
+	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str) -> None:
 		super().__init__(errorMessage)
 
 		self._lineNumber = lineNumber

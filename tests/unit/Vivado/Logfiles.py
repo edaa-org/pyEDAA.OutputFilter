@@ -50,7 +50,7 @@ if __name__ == "__main__": # pragma: no cover
 class Aggregator:
 	_s: int
 
-	def __init__(self, s: int = 0):
+	def __init__(self, s: int = 0) -> None:
 		self._s = s
 
 	def sum(self, s: int) -> int:

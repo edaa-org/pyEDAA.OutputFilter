@@ -166,7 +166,7 @@ class CommandWithSections(Command):
 class CommandWithTasks(Command):
 	_tasks: Dict[Type[Task], Task]
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._tasks = {t: t(self) for t in self._PARSERS}
@@ -349,7 +349,7 @@ class LinkDesign(Command):
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
 	_perCellXDCFiles: Dict[Path, Dict[str, List[VivadoMessage]]]
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._commonXDCFiles = {}

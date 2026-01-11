@@ -389,7 +389,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 	_sourceFile:       Path
 	_sourceLineNumber: int
 
-	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int):
+	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int) -> None:
 		super().__init__(lineNumber, LineKind.InfoMessage, tool, toolID, messageKindID, rawMessage)
 
 		self._reportMessage = reportMessage

@@ -65,7 +65,7 @@ class Section(BaseParser, BaseSection):
 	_command:  "Command"
 	_duration: float
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__()  #command._processor)
 
 		self._command = command
@@ -279,7 +279,7 @@ class LoadingPart(Section):
 
 	_part: str
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
 		self._part = None
@@ -404,7 +404,7 @@ class IOInsertion(Section):
 
 	_subsections: Dict[Type[SubSection], SubSection]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._subsections = {}
@@ -491,7 +491,7 @@ class WritingSynthesisReport(Section):
 	_blackboxes: Dict[str, int]
 	_cells:      Dict[str, int]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._blackboxes = {}

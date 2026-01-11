@@ -60,7 +60,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_preamble:                Preamble
 	_commands:                Dict[Type[Command], Command]
 
-	def __init__(self):
+	def __init__(self) -> None:
 		super().__init__()
 
 		self._duration =                0.0

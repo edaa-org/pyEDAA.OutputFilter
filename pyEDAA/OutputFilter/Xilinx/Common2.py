@@ -54,7 +54,7 @@ MAJOR_MINOR_MICRO_NANO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)\.(?P<n
 class UndetectedEnd(CriticalWarning):
 	_line: Line
 
-	def __init__(self, message: str, line: Line):
+	def __init__(self, message: str, line: Line) -> None:
 		super().__init__(message)
 
 		self._line = line
@@ -68,7 +68,7 @@ class UndetectedEnd(CriticalWarning):
 class UnknownLine(Warning):
 	_line: Line
 
-	def __init__(self, message: str, line: Line):
+	def __init__(self, message: str, line: Line) -> None:
 		super().__init__(message)
 
 		self._line = line
@@ -177,7 +177,7 @@ class BaseParser(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 class Parser(BaseParser):
 	_processor: "Processor"
 
-	def __init__(self, processor: "Processor"):
+	def __init__(self, processor: "Processor") -> None:
 		super().__init__()
 
 		self._processor = processor
@@ -195,7 +195,7 @@ class Preamble(Parser):
 	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+ \w+ \d+ \d+:\d+:\d+ \d+)""")
 
-	def __init__(self, processor: "BaseProcessor"):
+	def __init__(self, processor: "BaseProcessor") -> None:
 		super().__init__(processor)
 
 		self._toolVersion =   None
@@ -245,7 +245,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_command:  "Command"
 	_duration: float
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -314,7 +314,7 @@ class TaskWithSubTasks(Task):
 
 	_subtasks:   Dict[Type["SubTask"], "SubTask"]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._subtasks =  {p: p(self) for p in self._PARSERS}
@@ -333,7 +333,6 @@ class TaskWithSubTasks(Task):
 
 		while True:
 			while True:
-				#				print(line)
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
@@ -382,7 +381,7 @@ class SubTask(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tru
 	_task:     TaskWithSubTasks
 	_duration: float
 
-	def __init__(self, task: TaskWithSubTasks):
+	def __init__(self, task: TaskWithSubTasks) -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -451,7 +450,7 @@ class TaskWithPhases(Task):
 
 	_phases:   Dict[Type["Phase"], "Phase"]
 
-	def __init__(self, command: "Command"):
+	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
 
 		self._phases =  {p: p(self) for p in self._PARSERS}
@@ -470,7 +469,6 @@ class TaskWithPhases(Task):
 
 		while True:
 			while True:
-				#				print(line)
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
@@ -526,7 +524,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 	_phaseIndex: int
 	_duration:   float
 
-	def __init__(self, task: TaskWithPhases):
+	def __init__(self, task: TaskWithPhases) -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -606,7 +604,7 @@ class PhaseWithChildren(Phase):
 
 	_subPhases: Dict[Type["SubPhase"], "SubPhase"]
 
-	def __init__(self, task: TaskWithPhases):
+	def __init__(self, task: TaskWithPhases) -> None:
 		super().__init__(task)
 
 		self._subPhases = {p: p(self) for p in self._PARSERS}
@@ -677,7 +675,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 	_subPhaseIndex: int
 	_duration:      float
 
-	def __init__(self, phase: Phase):
+	def __init__(self, phase: Phase) -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -745,7 +743,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 class SubPhaseWithChildren(SubPhase):
 	_subSubPhases: Dict[Type["SubSubPhase"], "SubSubPhase"]
 
-	def __init__(self, phase: Phase):
+	def __init__(self, phase: Phase) -> None:
 		super().__init__(phase)
 
 		self._subSubPhases = {p: p(self) for p in self._PARSERS}
@@ -810,7 +808,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 	_subSubPhaseIndex: int
 	_duration:         float
 
-	def __init__(self, subphase: SubPhase):
+	def __init__(self, subphase: SubPhase) -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -877,7 +875,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 class SubSubPhaseWithChildren(SubSubPhase):
 	_subSubSubPhases: Dict[Type["SubSubSubPhase"], "SubSubSubPhase"]
 
-	def __init__(self, subphase: SubPhase):
+	def __init__(self, subphase: SubPhase) -> None:
 		super().__init__(subphase)
 
 		self._subSubSubPhases = {p: p(self) for p in self._PARSERS}
@@ -939,7 +937,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 	_subSubSubPhaseIndex: int
 	_duration:            float
 
-	def __init__(self, subsubphase: SubSubPhase):
+	def __init__(self, subsubphase: SubSubPhase) -> None:
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
