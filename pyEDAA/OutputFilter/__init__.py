@@ -34,7 +34,7 @@ __author__ =    "Patrick Lehmann"
 __email__ =     "Paebbels@gmail.com"
 __copyright__ = "2014-2026, Patrick Lehmann"
 __license__ =   "Apache License, Version 2.0"
-__version__ =   "0.5.0"
+__version__ =   "0.5.1"
 __keywords__ =  ["cli", "abstraction layer", "eda", "filter", "classification"]
 
 
