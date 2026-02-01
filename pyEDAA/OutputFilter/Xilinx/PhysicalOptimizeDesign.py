@@ -30,7 +30,7 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile, Pattern
-from typing import ClassVar, Type, Tuple, Dict
+from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
@@ -47,30 +47,55 @@ class InitialUpdateTimingTask(Task):
 
 @export
 class Phase_PlacerInitialization(Phase):
+	"""
+	*Physical Synthesis Initialization* phase.
+
+	Used by task :class:`PhysicalSynthesisTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization | Checksum:"
 
 
 @export
 class Phase_DSPRegisterOptimization(Phase):
+	"""
+	*DSP Register Optimization* phase.
+
+	Used by task :class:`PhysicalSynthesisTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} DSP Register Optimization | Checksum:"
 
 
 @export
 class Phase_CriticalPathOptimization_1(Phase):
+	"""
+	*Critical Path Optimization* phase.
+
+	Used by task :class:`PhysicalSynthesisTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export
 class Phase_CriticalPathOptimization_2(Phase):
+	"""
+	*Critical Path Optimization* phase.
+
+	Used by task :class:`PhysicalSynthesisTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
 
 
 @export
 class PhysicalSynthesisTask(TaskWithPhases):
+	"""
+	Parses *Physical Synthesis* task's outputs.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.PhysicalOptimizeDesign`.
+	"""
 	_NAME:   ClassVar[str] = "Physical Synthesis Task"
 	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
 	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task"
