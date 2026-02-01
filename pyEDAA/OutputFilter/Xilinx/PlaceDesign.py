@@ -30,13 +30,13 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile, Pattern
-from typing import Generator, ClassVar, List, Type, Dict, Tuple
+from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx         import Line, VivadoMessage, LineKind
-from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, Phase, SubPhase, SubSubPhase, SubSubSubPhase, \
-	PhaseWithChildren, SubPhaseWithChildren, SubSubPhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases
+from pyEDAA.OutputFilter.Xilinx.Common2 import Phase, SubPhase, SubSubPhase, SubSubSubPhase
+from pyEDAA.OutputFilter.Xilinx.Common2 import PhaseWithChildren, SubPhaseWithChildren, SubSubPhaseWithChildren
 from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 

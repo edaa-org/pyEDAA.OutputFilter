@@ -30,7 +30,7 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile, Pattern
-from typing import ClassVar, Type, Tuple, Dict
+from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 

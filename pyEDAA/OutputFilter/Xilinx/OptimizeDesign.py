@@ -34,8 +34,8 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators  import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2 import Task, Phase, SubPhase, TaskWithPhases, TaskWithSubTasks, SubTask, \
-	PhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, TaskWithSubTasks, SubTask
+from pyEDAA.OutputFilter.Xilinx.Common2 import Phase, SubPhase, PhaseWithChildren
 from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR
 
 
@@ -47,9 +47,9 @@ class Phase_Retarget(Phase):
 	Used by task :class:`LogicOptimizationTask`.
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Retarget")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Retarget | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Retarget | Checksum:"
+	_FINISH: ClassVar[str] =     "Phase {phaseIndex} Retarget | Checksum:"
+	_TIME:   ClassVar[str] =     "Time (s):"
+	_FINAL:  ClassVar[str] =     "Retarget | Checksum:"
 
 
 @export

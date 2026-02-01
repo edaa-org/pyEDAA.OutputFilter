@@ -35,8 +35,7 @@ from typing import ClassVar, Dict, Generator, Type
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx.Common import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, \
-	VHDLReportMessage, VivadoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
+from pyEDAA.OutputFilter.Xilinx.Common  import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
 from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
