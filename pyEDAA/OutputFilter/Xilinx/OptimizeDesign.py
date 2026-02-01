@@ -265,12 +265,6 @@ class PowerOptimizationTask(TaskWithSubTasks):
 
 
 @export
-class LogicOptimizationTask(SubTask):
-	_START:  ClassVar[str] = "Starting Logic Optimization Task"
-	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
-
-
-@export
 class FinalCleanupTask(TaskWithSubTasks):
 	_START:  ClassVar[str] = "Starting Final Cleanup Task"
 	_FINISH: ClassVar[str] = "Ending Final Cleanup Task"

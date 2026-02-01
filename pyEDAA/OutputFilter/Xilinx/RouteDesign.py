@@ -430,20 +430,6 @@ class Phase_PostHoldFix(PhaseWithChildren):
 
 
 @export
-class SubPhase_DelayCleanUp(SubPhase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-
-@export
-class SubPhase_ClockSkewOptimization(SubPhase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-
-@export
 class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	"""
 	*Delay and Skew Optimization* phase.
@@ -486,13 +472,6 @@ class Phase_RouteFinalize_2(Phase):
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-
-
-@export
-class SubPhase_HoldFixIter(SubPhase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
 
 

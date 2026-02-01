@@ -30,7 +30,7 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, Type
+from typing import ClassVar, Dict, Generator, Type, Optional as Nullable
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -58,13 +58,21 @@ class BaseSection(metaclass=ExtendedType, mixin=True):
 
 @export
 class Section(BaseParser, BaseSection):
+	"""
+	Base-class for sections within log outputs from *synthesize design*.
+	"""
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
-	_command:  "Command"
-	_duration: float
+	_command:  "Command"  #: Reference to the command (parent).
+	_duration: float      #: Duration synthesis spent in processing a synthesis step logged in this log output section.
 
 	def __init__(self, command: "Command") -> None:
+		"""
+		Initialized a section.
+
+		:param command: Reference to the parent TCL command.
+		"""
 		super().__init__()  #command._processor)
 
 		self._command = command
@@ -72,6 +80,12 @@ class Section(BaseParser, BaseSection):
 
 	@readonly
 	def Duration(self) -> float:
+		"""
+		Read-only property to access the duration synthesis spent in processing a synthesis step logged in this log output
+		section.
+
+		:returns: Synthesis step duration in seconds.
+		"""
 		return self._duration
 
 	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
@@ -157,9 +171,17 @@ class Section(BaseParser, BaseSection):
 
 @export
 class SubSection(BaseParser, BaseSection):
-	_section: Section
+	"""
+	Base-class for subsections within log outputs from *synthesize design*.
+	"""
+	_section: Section  #: Reference to the section (parent).
 
 	def __init__(self, section: Section) -> None:
+		"""
+		Initialized a subsection.
+
+		:param section: Reference to the parent section.
+		"""
 		super().__init__()
 		self._section = section
 
@@ -215,6 +237,19 @@ class SubSection(BaseParser, BaseSection):
 
 		nextLine = yield from self._SectionFinish(line)
 		return nextLine
+
+
+@export
+class SectionWithChildren(Section):
+	"""
+	Base-class for sections with subsections.
+	"""
+	_subsections: Dict[Type[SubSection], SubSection]
+
+	def __init__(self, command: "Command") -> None:
+		super().__init__(command)
+
+		self._subsections = {}
 
 
 @export
@@ -296,15 +331,25 @@ class LoadingPart(Section):
 	_START:  ClassVar[str] = "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
 
-	_part: str
+	_part:   Nullable[str]  #: Part name of the device this design was synthesized for.
 
-	def __init__(self, processor: "Processor") -> None:
-		super().__init__(processor)
+	def __init__(self, command: "Command") -> None:
+		"""
+		Initializes the section for loading the device information.
+
+		:param command: Reference to the TCL command.
+		"""
+		super().__init__(command)
 
 		self._part = None
 
 	@readonly
-	def Part(self) -> str:
+	def Part(self) -> Nullable[str]:
+		"""
+		Read-only property to access the used device's part name.
+
+		:returns: Part name of the device this design was synthesized for.
+		"""
 		return self._part
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
@@ -451,18 +496,28 @@ class TechnologyMapping(Section):
 
 @export
 class FlatteningBeforeIOInsertion(SubSection):
+	"""
+	*Flattening Before IO Insertion* subsection.
+
+	Used by section :class:`IOInsertion`.
+	"""
 	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
 
 
 @export
 class FinalNetlistCleanup(SubSection):
+	"""
+	*Final Netlist Cleanup* subsection.
+
+	Used by section :class:`IOInsertion`.
+	"""
 	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
 
 @export
-class IOInsertion(Section):
+class IOInsertion(SectionWithChildren):
 	"""
 	*IO Insertion* section.
 
@@ -470,13 +525,6 @@ class IOInsertion(Section):
 	"""
 	_START:  ClassVar[str] = "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
-
-	_subsections: Dict[Type[SubSection], SubSection]
-
-	def __init__(self, command: "Command") -> None:
-		super().__init__(command)
-
-		self._subsections = {}
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
@@ -582,8 +630,8 @@ class WritingSynthesisReport(Section):
 	_START:  ClassVar[str] = "Start Writing Synthesis Report"
 	_FINISH: ClassVar[str] = "Finished Writing Synthesis Report : "
 
-	_blackboxes: Dict[str, int]
-	_cells:      Dict[str, int]
+	_blackboxes: Dict[str, int]  #: Blackbox statistics: blackbox name -> count
+	_cells:      Dict[str, int]  #: Cell statistics: cell name -> count
 
 	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
@@ -593,13 +641,41 @@ class WritingSynthesisReport(Section):
 
 	@readonly
 	def Cells(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of synthesized cell statistics.
+
+		:returns: The dictionary of used cell statistics.
+		"""
 		return self._cells
 
 	@readonly
 	def Blackboxes(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of found blackbox statistics.
+
+		:returns: The dictionary of found blackbox statistics.
+		"""
 		return self._blackboxes
 
 	def _BlackboxesGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A parser parsing the blackboxes table.
+
+		:param line: First line to process.
+		:returns:    A generator to process multiple lines containing a table of blackboxes.
+
+		.. topic:: Example
+
+		.. code-block::
+
+		   Report BlackBoxes:
+		   +------+----------------------------------+----------+
+		   |      |BlackBox name                     |Instances |
+		   +------+----------------------------------+----------+
+		   |1     |name                              |         1|
+		   |[...] |[...]                             |     [...]|
+		   +------+----------------------------------+----------+
+		"""
 		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
@@ -636,6 +712,24 @@ class WritingSynthesisReport(Section):
 		return nextLine
 
 	def _CellGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A parser parsing the cell statistic table.
+
+		:param line: First line to process.
+		:returns:    A generator to process multiple lines containing a table of cell statistics.
+
+		.. topic:: Example
+
+		.. code-block::
+
+		   Report Cell Usage:
+		   +------+----------------------------------+------+
+		   |      |Cell                              |Count |
+		   +------+----------------------------------+------+
+		   |1     |name                              |     1|
+		   |[...] |[...]                             | [...]|
+		   +------+----------------------------------+------+
+		"""
 		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
