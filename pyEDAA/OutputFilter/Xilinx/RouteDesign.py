@@ -44,6 +44,11 @@ from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 
 @export
 class Phase_BuildRTDesign(Phase):
+	"""
+	*Build RT Design* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Build RT Design")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Build RT Design | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -51,6 +56,11 @@ class Phase_BuildRTDesign(Phase):
 
 @export
 class SubPhase_CreateTimer(SubPhase):
+	"""
+	*Create Timer* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Create Timer")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Create Timer | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -58,6 +68,11 @@ class SubPhase_CreateTimer(SubPhase):
 
 @export
 class SubPhase_FixTopologyConstraints(SubPhase):
+	"""
+	*Fix Topology Constraints* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Fix Topology Constraints")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Fix Topology Constraints | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -65,6 +80,11 @@ class SubPhase_FixTopologyConstraints(SubPhase):
 
 @export
 class SubPhase_PreRouteCleanup(SubPhase):
+	"""
+	*Pre Route Cleanup* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Pre Route Cleanup")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Pre Route Cleanup | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -72,6 +92,11 @@ class SubPhase_PreRouteCleanup(SubPhase):
 
 @export
 class SubPhase_GlobalClockNetRouting(SubPhase):
+	"""
+	*Global Clock Net Routing* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Clock Net Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Clock Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -79,6 +104,11 @@ class SubPhase_GlobalClockNetRouting(SubPhase):
 
 @export
 class SubPhase_UpdateTiming(SubPhase):
+	"""
+	*Update Timing* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -86,6 +116,11 @@ class SubPhase_UpdateTiming(SubPhase):
 
 @export
 class SubPhase_SoftConstraintPins_FastBudgeting(SubPhase):
+	"""
+	*Soft Constraint Pins - Fast Budgeting* subphase.
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Soft Constraint Pins - Fast Budgeting")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Soft Constraint Pins - Fast Budgeting | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -93,6 +128,11 @@ class SubPhase_SoftConstraintPins_FastBudgeting(SubPhase):
 
 @export
 class SubSubPhase_UpdateTiming(SubSubPhase):
+	"""
+	*Update Timing - Fast Budgeting* sub-subphase.
+
+	Used by phase :class:`SubPhase_UpdateTimingForBusSkew`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO} Update Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex} Update Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -100,6 +140,15 @@ class SubSubPhase_UpdateTiming(SubSubPhase):
 
 @export
 class SubPhase_UpdateTimingForBusSkew(SubPhaseWithChildren):
+	"""
+	*Update Timing for Bus Skew* subphase.
+
+	.. topic:: Uses
+
+	* :class:`SubSubPhase_UpdateTiming`
+
+	Used by phase :class:`Phase_RouterInitialization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Update Timing for Bus Skew")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Update Timing for Bus Skew | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -111,6 +160,21 @@ class SubPhase_UpdateTimingForBusSkew(SubPhaseWithChildren):
 
 @export
 class Phase_RouterInitialization(PhaseWithChildren):
+	"""
+	*Router Initialization* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_CreateTimer`
+	* :class:`SubPhase_FixTopologyConstraints`
+	* :class:`SubPhase_PreRouteCleanup`
+	* :class:`SubPhase_GlobalClockNetRouting`
+	* :class:`SubPhase_UpdateTiming`
+	* :class:`SubPhase_UpdateTimingForBusSkew`
+	* :class:`SubPhase_SoftConstraintPins_FastBudgeting`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Router Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -128,6 +192,11 @@ class Phase_RouterInitialization(PhaseWithChildren):
 
 @export
 class SubPhase_GlobalRouting(SubPhase):
+	"""
+	*Global Routing* subphase.
+
+	Used by phase :class:`Phase_Initial_Routing`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -135,6 +204,11 @@ class SubPhase_GlobalRouting(SubPhase):
 
 @export
 class SubPhase_InitialNetRouting(SubPhase):
+	"""
+	*Initial Net Routing* subphase.
+
+	Used by phase :class:`Phase_Initial_Routing`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -142,6 +216,16 @@ class SubPhase_InitialNetRouting(SubPhase):
 
 @export
 class Phase_Initial_Routing(PhaseWithChildren):
+	"""
+	*Initial Routing* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_GlobalRouting`
+	* :class:`SubPhase_InitialNetRouting`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -154,6 +238,11 @@ class Phase_Initial_Routing(PhaseWithChildren):
 
 @export
 class Phase_GlobalRouting(Phase):
+	"""
+	*Global Routing* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Global Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -161,6 +250,11 @@ class Phase_GlobalRouting(Phase):
 
 @export
 class SubPhase_GlobalIteration0(SubPhase):
+	"""
+	*Global Iteration 0* subphase.
+
+	Used by phase :class:`Phase_RipUpAndReroute`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 0")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 0 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -168,6 +262,11 @@ class SubPhase_GlobalIteration0(SubPhase):
 
 @export
 class SubPhase_AdditionalIterationForHold(SubPhase):
+	"""
+	*Additional Iteration for Hold* subphase.
+
+	Used by phase :class:`Phase_RipUpAndReroute`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Additional Iteration for Hold")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Additional Iteration for Hold | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -175,6 +274,11 @@ class SubPhase_AdditionalIterationForHold(SubPhase):
 
 @export
 class SubPhase_GlobalIteration1(SubPhase):
+	"""
+	*Global Iteration 1* subphase.
+
+	Used by phase :class:`Phase_RipUpAndReroute`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 1")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 1 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -182,6 +286,11 @@ class SubPhase_GlobalIteration1(SubPhase):
 
 @export
 class SubPhase_GlobalIteration2(SubPhase):
+	"""
+	*Global Iteration 2* subphase.
+
+	Used by phase :class:`Phase_RipUpAndReroute`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Global Iteration 2")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Global Iteration 2 | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -189,6 +298,18 @@ class SubPhase_GlobalIteration2(SubPhase):
 
 @export
 class Phase_RipUpAndReroute(PhaseWithChildren):
+	"""
+	*Rip-up And Reroute* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_GlobalIteration0`
+	* :class:`SubPhase_AdditionalIterationForHold`
+	* :class:`SubPhase_GlobalIteration1`
+	* :class:`SubPhase_GlobalIteration2`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -203,6 +324,11 @@ class Phase_RipUpAndReroute(PhaseWithChildren):
 
 @export
 class SubPhase_InitialNetRoutingPass(SubPhase):
+	"""
+	*Initial Net Routing Pass* subphase.
+
+	Used by phase :class:`Phase_InitialRouting`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Initial Net Routing Pass")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Initial Net Routing Pass | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -210,6 +336,17 @@ class SubPhase_InitialNetRoutingPass(SubPhase):
 
 @export
 class Phase_InitialRouting(PhaseWithChildren):
+	"""
+	*Initial Routing* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_InitialNetRoutingPass`
+	* :class:`SubPhase_GlobalRouting`
+	* :class:`SubPhase_InitialNetRouting`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -223,6 +360,11 @@ class Phase_InitialRouting(PhaseWithChildren):
 
 @export
 class SubPhase_DelayCleanUp(SubPhase):
+	"""
+	*Delay CleanUp* subphase.
+
+	Used by phase :class:`Phase_DelayAndSkewOptimization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Delay CleanUp")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Delay CleanUp | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -230,6 +372,11 @@ class SubPhase_DelayCleanUp(SubPhase):
 
 @export
 class SubPhase_ClockSkewOptimization(SubPhase):
+	"""
+	*Clock Skew Optimization* subphase.
+
+	Used by phase :class:`Phase_DelayAndSkewOptimization`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Clock Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Clock Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -237,6 +384,16 @@ class SubPhase_ClockSkewOptimization(SubPhase):
 
 @export
 class Phase_DelayAndSkewOptimization(PhaseWithChildren):
+	"""
+	*Delay and Skew Optimization* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_DelayCleanUp`
+	* :class:`SubPhase_ClockSkewOptimization`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -249,6 +406,11 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 
 @export
 class SubPhase_HoldFixIter(SubPhase):
+	"""
+	*Hold Fix Iter* subphase.
+
+	Used by phase :class:`Phase_PostHoldFix`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Hold Fix Iter")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Hold Fix Iter | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -256,6 +418,11 @@ class SubPhase_HoldFixIter(SubPhase):
 
 @export
 class Phase_PostHoldFix(PhaseWithChildren):
+	"""
+	*Post Hold Fix* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -281,6 +448,16 @@ class SubPhase_ClockSkewOptimization(SubPhase):
 
 @export
 class Phase_DelayAndSkewOptimization(PhaseWithChildren):
+	"""
+	*Delay and Skew Optimization* phase.
+
+	.. topic:: Uses
+
+	* :class:`SubPhase_DelayCleanUp`
+	* :class:`SubPhase_ClockSkewOptimization`
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -293,6 +470,11 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 
 @export
 class Phase_RouteFinalize_1(Phase):
+	"""
+	*Route finalize* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -300,6 +482,11 @@ class Phase_RouteFinalize_1(Phase):
 
 @export
 class Phase_RouteFinalize_2(Phase):
+	"""
+	*Route finalize* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -314,6 +501,11 @@ class SubPhase_HoldFixIter(SubPhase):
 
 @export
 class Phase_PostHoldFix(PhaseWithChildren):
+	"""
+	*Post Hold Fix* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -325,6 +517,11 @@ class Phase_PostHoldFix(PhaseWithChildren):
 
 @export
 class Phase_VerifyingRoutedNets(Phase):
+	"""
+	*Verifying routed nets* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -332,6 +529,11 @@ class Phase_VerifyingRoutedNets(Phase):
 
 @export
 class Phase_DepositingRoutes(Phase):
+	"""
+	*Depositing Routes* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -339,6 +541,11 @@ class Phase_DepositingRoutes(Phase):
 
 @export
 class Phase_VerifyingRoutedNets(Phase):
+	"""
+	*Verifying routed nets* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -346,6 +553,11 @@ class Phase_VerifyingRoutedNets(Phase):
 
 @export
 class Phase_ResolveXTalk(Phase):
+	"""
+	*Resolve XTalk* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Resolve XTalk")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Resolve XTalk | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -353,6 +565,11 @@ class Phase_ResolveXTalk(Phase):
 
 @export
 class Phase_DepositingRoutes(Phase):
+	"""
+	*Depositing Routes* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -360,6 +577,11 @@ class Phase_DepositingRoutes(Phase):
 
 @export
 class Phase_PostProcessRouting(Phase):
+	"""
+	*Post Process Routing* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Process Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Process Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -367,6 +589,11 @@ class Phase_PostProcessRouting(Phase):
 
 @export
 class Phase_PostRouterTiming(Phase):
+	"""
+	*Post Router Timing* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Router Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -374,6 +601,11 @@ class Phase_PostRouterTiming(Phase):
 
 @export
 class Phase_PostRouteEventProcessing(Phase):
+	"""
+	*Post-Route Event Processing* phase.
+
+	Used by task :class:`RoutingTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post-Route Event Processing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post-Route Event Processing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -381,6 +613,30 @@ class Phase_PostRouteEventProcessing(Phase):
 
 @export
 class RoutingTask(TaskWithPhases):
+	"""
+	*Routing* task.
+
+	.. topic:: Uses
+
+	* :class:`Phase_BuildRTDesign`
+	* :class:`Phase_RouterInitialization`
+	* :class:`Phase_GlobalRouting`
+	* :class:`Phase_InitialRouting`
+	* :class:`Phase_RipUpAndReroute`
+	* :class:`Phase_DelayAndSkewOptimization`
+	* :class:`Phase_PostHoldFix`
+	* :class:`Phase_RouteFinalize_1`
+	* :class:`Phase_VerifyingRoutedNets`
+	* :class:`Phase_DepositingRoutes`
+	* :class:`Phase_ResolveXTalk`
+	* :class:`Phase_RouteFinalize_2`
+	* :class:`Phase_PostRouterTiming`
+	* :class:`Phase_PostProcessRouting`
+	* :class:`Phase_PostRouterTiming`
+	* :class:`Phase_PostRouteEventProcessing`
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.RouteDesign`.
+	"""
 	_START:  ClassVar[str] = "Starting Routing Task"
 	_FINISH: ClassVar[str] = "Ending Routing Task"
 

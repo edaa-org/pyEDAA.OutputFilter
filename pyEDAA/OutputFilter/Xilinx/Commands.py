@@ -96,9 +96,50 @@ class ROM_RAM_DSP_SR_Retiming3(ROM_RAM_DSP_SR_Retiming):
 
 @export
 class Command(Parser):
+	"""
+	This parser parses outputs from Vivado TCL commands.
+
+	Depending on the command's output (and how it's implemented), they use different subcategories.
+
+	.. rubric:: Command subcategories
+
+	* :class:`CommandWithSections`
+	* :class:`CommandWithtasks`
+
+	.. rubric:: Supported commands
+
+	* :class:`SynthesizeDesign`
+	* :class:`LinkDesign`
+	* :class:`OptimizeDesign`
+	* :class:`PlaceDesign`
+	* :class:`PhysicalOptimizeDesign`
+	* :class:`RouteDesign`
+	* :class:`WriteBitstream`
+	* :class:`ReportDRC`
+	* :class:`ReportMethodology`
+	* :class:`ReportPower`
+
+	.. rubric:: Example
+
+	.. code-block::
+
+     [...]
+	   Command: synth_design -top system_top -part xc7z015clg485-2
+     Starting synth_design
+     [...]
+	"""
+
 	# _TCL_COMMAND: ClassVar[str]
 
 	def _CommandStart(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator accepting a line containing the expected Vivado TCL command.
+
+		When the generator exits, the returned line is the successor line to the line containing the Vivado TCL command.
+
+		:param line: The first line for the generator to process.
+		:returns:    A generator processing Vivado output log lines.
+		"""
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
 			raise ProcessorException()
 
@@ -145,6 +186,27 @@ class Command(Parser):
 
 @export
 class CommandWithSections(Command):
+	"""
+	A Vivado command writing sections into the output log.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   [...]
+	   ---------------------------------------------------------------------------------
+	   Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 847.230 ; gain = 176.500
+	   ---------------------------------------------------------------------------------
+	   INFO: [Synth 8-638] synthesizing module 'system_top' [C:/Users/tgomes/git/2019_1/src/system_top_PE1.vhd:257]
+	   [...]
+	   [...]
+	   [...]
+	   ---------------------------------------------------------------------------------
+	   Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 917.641 ; gain = 246.910
+	   ---------------------------------------------------------------------------------
+	   [...]
+	"""
+
 	_sections:  Dict[Type[Section], Section]
 
 	_PARSERS: ClassVar[Tuple[Type[Section], ...]] = dict()
@@ -156,6 +218,11 @@ class CommandWithSections(Command):
 
 	@readonly
 	def Sections(self) -> Dict[Type[Section], Section]:
+		"""
+		Read-only property to access a dictionary of found sections within the TCL command's output.
+
+		:returns: A dictionary of found :class:`~pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section`s.
+		"""
 		return self._sections
 
 	def __getitem__(self, key: Type[Section]) -> Section:
@@ -164,6 +231,21 @@ class CommandWithSections(Command):
 
 @export
 class CommandWithTasks(Command):
+	"""
+	A Vivado command writing tasks into the output log.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+     [...]
+     Starting Cache Timing Information Task
+     INFO: [Timing 38-35] 79-Done setting XDC timing constraints.
+     [...]
+     [...]
+     Ending Cache Timing Information Task | Checksum: 19fe8cb97
+     [...]
+	"""
 	_tasks: Dict[Type[Task], Task]
 
 	def __init__(self, processor: "Processor") -> None:
@@ -173,6 +255,11 @@ class CommandWithTasks(Command):
 
 	@readonly
 	def Tasks(self) -> Dict[Type[Task], Task]:
+		"""
+		Read-only property to access a dictionary of found tasks within the TCL command's output.
+
+		:returns: A dictionary of found :class:`~pyEDAA.OutputFilter.Xilinx.Common2.Task`s.
+		"""
 		return self._tasks
 
 	def __getitem__(self, key: Type[Task]) -> Task:
@@ -181,6 +268,9 @@ class CommandWithTasks(Command):
 
 @export
 class SynthesizeDesign(CommandWithSections):
+	"""
+	A Vivado command output parser for ``synth_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
 	_PARSERS:     ClassVar[Tuple[Type[Section], ...]] = (
 		RTLElaboration,
@@ -211,6 +301,16 @@ class SynthesizeDesign(CommandWithSections):
 
 	@readonly
 	def HasLatches(self) -> bool:
+		"""
+		Read-only property returning if synthesis inferred latches into the design.
+
+		Latch detection is based on:
+
+		* Vivado message ``synth 8-327``
+		* Cells of lind ``LD`` listed in the *Cell Usage* report.
+
+		:returns: True, if the design contains latches.
+		"""
 		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
 			return True
 
@@ -338,6 +438,9 @@ class SynthesizeDesign(CommandWithSections):
 
 @export
 class LinkDesign(Command):
+	"""
+	A Vivado command output parser for ``link_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "link_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
@@ -435,6 +538,9 @@ class LinkDesign(Command):
 
 @export
 class OptimizeDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``opt_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -510,6 +616,9 @@ class OptimizeDesign(CommandWithTasks):
 
 @export
 class PlaceDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``place_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "place_design"
 	_TIME:        ClassVar[str] = None
 
@@ -580,6 +689,9 @@ class PlaceDesign(CommandWithTasks):
 
 @export
 class PhysicalOptimizeDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``phy_opt_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -651,6 +763,9 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 
 @export
 class RouteDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``route_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "route_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
@@ -721,23 +836,35 @@ class RouteDesign(CommandWithTasks):
 
 @export
 class WriteBitstream(Command):
+	"""
+	A Vivado command output parser for ``write_bitstream``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "write_bitstream"
 	_TIME:        ClassVar[str] = "Time (s):"
 
 
 @export
 class ReportDRC(Command):
+	"""
+	A Vivado command output parser for ``report_drc``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_drc"
 	_TIME:        ClassVar[str] = None
 
 
 @export
 class ReportMethodology(Command):
+	"""
+	A Vivado command output parser for ``report_methodology``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_methodology"
 	_TIME:        ClassVar[str] = None
 
 
 @export
 class ReportPower(Command):
+	"""
+	A Vivado command output parser for ``report_power``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_power"
 	_TIME:        ClassVar[str] = None

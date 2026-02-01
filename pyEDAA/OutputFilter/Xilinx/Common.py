@@ -32,7 +32,7 @@
 from enum    import Flag
 from pathlib import Path
 from re      import Pattern, compile as re_compile
-from typing import Optional as Nullable, Self, ClassVar, Tuple, Union, Any
+from typing  import Optional as Nullable, Self, ClassVar, Tuple, Union, Any
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
@@ -40,6 +40,9 @@ from pyTooling.MetaClasses import ExtendedType
 
 @export
 class LineKind(Flag):
+	"""
+	Classification of a log message line.
+	"""
 	Unprocessed =                0
 	ProcessorError =         2** 0
 	Empty =                  2** 1
@@ -440,6 +443,10 @@ class TclCommand(Line):
 
 @export
 class VivadoTclCommand(TclCommand):
+	"""
+	Represents a Vivado specific TCL command.
+	"""
+
 	_PREFIX: ClassVar[str] = "Command:"
 
 	@classmethod

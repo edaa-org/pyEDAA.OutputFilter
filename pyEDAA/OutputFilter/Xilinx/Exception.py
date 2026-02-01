@@ -36,15 +36,27 @@ from pyEDAA.OutputFilter  import OutputFilterException
 
 @export
 class ProcessorException(OutputFilterException):
-	pass
+	"""
+	Base-class for exceptions raised by processors parsing log outputs.
+	"""
 
 
 @export
 class ClassificationException(ProcessorException):
-	_lineNumber: int
-	_rawMessage: str
+	"""
+	Raised if a log output line couldn't be classified.
+	"""
+	_lineNumber: int  #: Line number of the unclassified line.
+	_rawMessage: str  #: Raw message of the unclassified line.
 
 	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str) -> None:
+		"""
+		Initializes a classification exception.
+
+		:param errorMessage:   Error message why the line couldn't be classified.
+		:param lineNumber:     Line number of the unclassified line.
+		:param rawMessageLine: Raw message of the unclassified line.
+		"""
 		super().__init__(errorMessage)
 
 		self._lineNumber = lineNumber
@@ -56,4 +68,6 @@ class ClassificationException(ProcessorException):
 
 @export
 class ParserStateException(ProcessorException):
-	pass
+	"""
+	Raised if a log output parser has a broken state.
+	"""

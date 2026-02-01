@@ -41,6 +41,11 @@ from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR
 
 @export
 class Phase_Retarget(Phase):
+	"""
+	*Retarget* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Retarget")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Retarget | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -63,6 +68,11 @@ class SubPhase_SetupConstraintsAndSortNetlist(SubPhase):
 
 @export
 class Phase_Initialization(PhaseWithChildren):
+	"""
+	*Initialization* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -76,6 +86,11 @@ class Phase_Initialization(PhaseWithChildren):
 
 @export
 class Phase_ConstantPropagation(Phase):
+	"""
+	*Constant propagation* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -98,6 +113,11 @@ class SubPhase_TimingDataCollection(SubPhase):
 
 @export
 class Phase_TimerUpdateAndTimingDataCollection(PhaseWithChildren):
+	"""
+	*Timer Update And Timing Data Collection* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Timer Update And Timing Data Collection")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Timer Update And Timing Data Collection | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -111,6 +131,11 @@ class Phase_TimerUpdateAndTimingDataCollection(PhaseWithChildren):
 
 @export
 class Phase_Sweep(Phase):
+	"""
+	*Sweep* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -119,46 +144,11 @@ class Phase_Sweep(Phase):
 
 @export
 class Phase_BUFGOptimization(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "BUFG optimization | Checksum:"
+	"""
+	*BUFG optimization* phase.
 
-
-@export
-class Phase_ConstantPropagation(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Constant propagation")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Constant propagation | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Constant propagation | Checksum:"
-
-
-@export
-class Phase_ShiftRegisterOptimization(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Shift Register Optimization | Checksum:"
-
-
-@export
-class Phase_Sweep(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Sweep")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Sweep | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Sweep | Checksum:"
-
-
-@export
-class Phase_PostProcessingNetlist(Phase):
-	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
-	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist | Checksum:"
-	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
-
-
-@export
-class Phase_BUFGOptimization(Phase):
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} BUFG optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} BUFG optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -167,6 +157,11 @@ class Phase_BUFGOptimization(Phase):
 
 @export
 class Phase_ShiftRegisterOptimization(Phase):
+	"""
+	*Shift Register Optimization* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Shift Register Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Shift Register Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -175,6 +170,11 @@ class Phase_ShiftRegisterOptimization(Phase):
 
 @export
 class Phase_PostProcessingNetlist(Phase):
+	"""
+	*Post Processing Netlist* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -197,6 +197,11 @@ class SubPhase_VerifyingNetlistConnectivity(SubPhase):
 
 @export
 class Phase_Finalization(PhaseWithChildren):
+	"""
+	*Finalization* phase.
+
+	Used by task :class:`LogicOptimizationTask`.
+	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Finalization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Finalization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
@@ -222,6 +227,11 @@ class CacheTimingInformationTask(Task):
 
 @export
 class LogicOptimizationTask(TaskWithPhases):
+	"""
+	*Logic Optimization* task.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.OptimizeDesign`.
+	"""
 	_START:  ClassVar[str] = "Starting Logic Optimization Task"
 	_FINISH: ClassVar[str] = "Ending Logic Optimization Task"
 
