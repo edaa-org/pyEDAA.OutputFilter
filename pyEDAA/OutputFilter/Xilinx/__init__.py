@@ -168,7 +168,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		# wait for first line
 		line = yield
-		# process preable
+		# process preamble
 		line = yield from self._preamble.Generator(line)
 
 		while True:

@@ -41,7 +41,7 @@ from pyEDAA.OutputFilter                         import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
 from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
 from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask
+from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask, Task
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, RTLHierarchicalComponentStatistics
@@ -52,7 +52,7 @@ from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FlatteningBeforeIOInsert
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedInstances, RebuildingUserHierarchy
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedPorts, RenamingGeneratedNets
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
-from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import Task, DRCTask, CacheTimingInformationTask, LogicOptimizationTask
+from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import DRCTask, CacheTimingInformationTask, LogicOptimizationTask
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import PowerOptimizationTask, FinalCleanupTask, NetlistObfuscationTask
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign      import PlacerTask
 from pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign import PhysicalSynthesisTask, InitialUpdateTimingTask
@@ -141,7 +141,7 @@ class Command(Parser):
 		:returns:    A generator processing Vivado output log lines.
 		"""
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
 		nextLine = yield line
 		return nextLine
@@ -325,6 +325,11 @@ class SynthesizeDesign(CommandWithSections):
 
 	@readonly
 	def HasBlackboxes(self) -> bool:
+		"""
+		Read-only property returning if the design contains black-boxes.
+
+		:returns: True, if the design contains black-boxes.
+		"""
 		return len(self._sections[WritingSynthesisReport]._blackboxes) > 0
 
 	@readonly
@@ -359,7 +364,7 @@ class SynthesizeDesign(CommandWithSections):
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
 		activeParsers: List[Parser] = list(self._sections.values())
 

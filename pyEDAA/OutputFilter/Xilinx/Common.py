@@ -414,22 +414,28 @@ class VHDLAssertionMessage(VHDLReportMessage):
 
 @export
 class TclCommand(Line):
-	_command: str
-	_args:    Tuple[str, ...]
+	"""
+	Represents a TCL command found in a Vivado log output.
 
-	def __init__(self, lineNumber: int, command: str, arguments: Tuple[str, ...], tclCommand: str) -> None:
-		super().__init__(lineNumber, LineKind.GenericTclCommand, tclCommand)
+	Besides the full log message (:class:`Line`), this class splits the TCL command into the command name and its
+	arguments.
+	"""
+	_command:   str
+	_arguments: Tuple[str, ...]
+
+	def __init__(self, lineNumber: int, command: str, arguments: Tuple[str, ...], rawMessage: str) -> None:
+		super().__init__(lineNumber, LineKind.GenericTclCommand, rawMessage)
 
 		self._command = command
-		self._args = arguments
+		self._arguments = arguments
 
 	@readonly
 	def Command(self) -> str:
 		return self._command
 
 	@readonly
-	def Arguments(self) -> Tuple[str]:
-		return self._args
+	def Arguments(self) -> Tuple[str, ...]:
+		return self._arguments
 
 	@classmethod
 	def FromLine(cls, line: Line) -> Nullable[Self]:
@@ -438,7 +444,7 @@ class TclCommand(Line):
 		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message)
 
 	def __str__(self) -> str:
-		return f"{self._command} {' '.join(self._args)}"
+		return f"{self._command} {' '.join(self._arguments)}"
 
 
 @export
@@ -454,9 +460,9 @@ class VivadoTclCommand(TclCommand):
 		command = rawMessage[len(cls._PREFIX) + 1:]
 		args = command.split()
 
-		command = cls(lineNumber, args[0], tuple(args[1:]), command)
-		command._kind = LineKind.VivadoTclCommand
-		return command
+		vivadoCommand = cls(lineNumber, args[0], tuple(args[1:]), rawMessage)
+		vivadoCommand._kind = LineKind.VivadoTclCommand
+		return vivadoCommand
 
 	def __str__(self) -> str:
-		return f"{self._PREFIX} {self._command} {' '.join(self._args)}"
+		return f"{self._PREFIX} {self._command} {' '.join(self._arguments)}"
