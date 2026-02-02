@@ -54,6 +54,9 @@ ProcessedLine = Union[Line, ProcessorException]
 
 @export
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	"""
+	A processor for Vivado log outputs.
+	"""
 	_duration:                float
 
 	_lines:                   List[ProcessedLine]
@@ -84,6 +87,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	@readonly
 	def Duration(self) -> float:
 		return self._duration
+
+	def __contains__(self, item: Type[Command]) -> bool:
+		return item in self._commands
 
 	def __getitem__(self, item: Type[Command]) -> Command:
 		return self._commands[item]
