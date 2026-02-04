@@ -664,7 +664,7 @@ class WritingSynthesisReport(Section):
 		:param line: First line to process.
 		:returns:    A generator to process multiple lines containing a table of blackboxes.
 
-		.. topic:: Example
+		.. rubric:: Example
 
 		.. code-block::
 
@@ -718,7 +718,7 @@ class WritingSynthesisReport(Section):
 		:param line: First line to process.
 		:returns:    A generator to process multiple lines containing a table of cell statistics.
 
-		.. topic:: Example
+		.. rubric:: Example
 
 		.. code-block::
 

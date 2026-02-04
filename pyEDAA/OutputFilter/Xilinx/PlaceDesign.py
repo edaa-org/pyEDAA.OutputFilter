@@ -93,7 +93,7 @@ class Phase_PlacerInitialization(PhaseWithChildren):
 	"""
 	*Placer Initialization* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_PlacerInitializationNetlistSorting`
 	* :class:`SubPhase_IOPlacement_ClockPlacement_BuildPlacerDevice`
@@ -230,7 +230,7 @@ class Phase_GlobalPlacement(PhaseWithChildren):
 	"""
 	*Global Placement* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_Floorplanning`
 	* :class:`SubPhase_UpdateTimingBeforeSLRPathOpt`
@@ -411,7 +411,7 @@ class Phase_DetailPlacement(PhaseWithChildren):
 	"""
 	*Detail Placement* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_CommitMultiColumnMacros`
 	* :class:`SubPhase_CommitMostMacrosLUTRAMs`
@@ -539,7 +539,7 @@ class Phase_PostPlacementOptimizationAndCleanUp(PhaseWithChildren):
 	"""
 	*Post Placement Optimization and Clean-Up* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_PostCommitOptimization`
 	* :class:`SubPhase_PostPlacementCleanup`
@@ -566,7 +566,7 @@ class PlacerTask(TaskWithPhases):
 	"""
 	*Placer* task.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`Phase_PlacerInitialization`
 	* :class:`Phase_GlobalPlacement`

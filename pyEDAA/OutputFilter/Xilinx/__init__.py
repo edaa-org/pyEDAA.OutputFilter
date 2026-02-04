@@ -56,17 +56,25 @@ ProcessedLine = Union[Line, ProcessorException]
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	"""
 	A processor for Vivado log outputs.
-	"""
-	_duration:                float
 
-	_lines:                   List[ProcessedLine]
-	_preamble:                Preamble
-	_commands:                Dict[Type[Command], Command]
+	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
+	doubly-linked list.
+	"""
+	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
+	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
+
+	_lines:                   List[ProcessedLine]           #: A list of processed log message lines.
+	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
+	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
 	def __init__(self) -> None:
+		"""
+		Initializes a Vivado log output processor.
+		"""
 		super().__init__()
 
 		self._duration =                0.0
+		self._processingDuration =      0.0
 
 		self._lines =                   []
 		self._preamble =                None
@@ -74,34 +82,88 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	@readonly
 	def Lines(self) -> List[ProcessedLine]:
+		"""
+		Read-only property to access the list of processed and classified log lines (messages).
+
+		:returns: A list of processed lines.
+		"""
 		return self._lines
 
 	@readonly
 	def Preamble(self) -> Preamble:
+		"""
+		Read-only property to access the parsed preamble information.
+
+		:returns: The log output preamble.
+		"""
 		return self._preamble
 
 	@readonly
 	def Commands(self) -> Dict[Type[Command], Command]:
+		"""
+		Read-only property to access the dictionary of processed Vivado commands.
+
+		:returns: The dictionary of processed Vivado commands.
+		"""
 		return self._commands
 
 	@readonly
 	def Duration(self) -> float:
+		"""
+		 Duration of the observed process (e.g. start to end of synthesis).
+
+		:returns: The observed process' execution duration in seconds.
+		"""
+		start = self._preamble._startDatetime
+
+
 		return self._duration
 
+	@readonly
+	def ProcessingDuration(self) -> float:
+		"""
+		Processing duration for the log output processor to parse all log messages.
+
+		:returns: The processing duration in seconds.
+		"""
+		return self._processingDuration
+
 	def __contains__(self, item: Type[Command]) -> bool:
+		"""
+		Returns True, if log outputs where found for the given command.
+
+		:param item: Vivado command (class).
+		:returns:    True, if the Vivado command's outputs were found in log outputs.
+		"""
 		return item in self._commands
 
 	def __getitem__(self, item: Type[Command]) -> Command:
+		"""
+		Access Vivado command specific log outputs and parsed data by the command.
+
+		:param item: Vivado command (class) to access.
+		:returns:    A Vivado command instance with parsed log messages and extracted data.
+		"""
 		return self._commands[item]
 
+	@readonly
 	def IsIncompleteLog(self) -> bool:
 		"""
+		Read-only property returning true if the processed Vivado log output is incomplete.
 
-		:returns: undocumented
+		A log can be incomplete, because:
+
+		* Vivado disabled messages, because too many messages of the same kind appeared. Usually, a message type is disabled
+		  after 100 messages of that type. This is indicated by message ``[Common 17-14]``.
+
+		:returns: True, if messages where silenced by Vivado.
 
 		.. note::
 
-		   ``INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.``
+		   .. code-block::
+
+		      INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be
+		      disabled. Use the Tcl command set_msg_config to change the current settings.
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
@@ -254,15 +316,33 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 @export
 class Document(Processor):
-	_logfile: Path
+	"""
+	A Vivado log output processor for a log file.
 
+	This processor represents a Vivado log file (e.g. ``*.vds`` or ``*.vdi``). It processees its content line-by-line
+	while	classifying each line as a message. The processing duration is available via :data:`ProcessingDuration`.
+	"""
+	_logfile: Path  #: Path to the processed logfile.
+
+	# FIXME: parse=True parameter
 	def __init__(self, logfile: Path) -> None:
+		"""
+		Initializes a log file.
+
+		:param logfile: Path to the log file.
+		"""
 		super().__init__()
 
+		# FIXME: check if path
 		self._logfile = logfile
 
 	@readonly
 	def Logfile(self) -> Path:
+		"""
+		Read-only property to access the document's path.
+
+		:returns: Path to the log file.
+		"""
 		return self._logfile
 
 	def Parse(self) -> None:
@@ -274,4 +354,4 @@ class Document(Processor):
 			for rawLine in content.splitlines():
 				generator.send(rawLine)
 
-		self._duration = sw.Duration
+		self._processingDuration = sw.Duration

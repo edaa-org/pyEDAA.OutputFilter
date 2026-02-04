@@ -189,13 +189,45 @@ class Parser(BaseParser):
 
 @export
 class Preamble(Parser):
-	_toolVersion:   Nullable[YearReleaseVersion]
-	_startDatetime: Nullable[datetime]
+	"""
+	A parser for the preamble emitted by Vivado at session start.
 
+	.. rubric:: Extracted information
+
+	* Vivado tool version. |br|
+	  See :data:`ToolVersion`
+	* Session start timestamp (date and time). |br|
+	  See :data:`StartDatetime`
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   #-----------------------------------------------------------
+	   # Vivado v2019.1 (64-bit)
+	   # SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+	   # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+	   # Start of session at: Tue Sep  2 08:44:13 2025
+	   # Process ID: 35680
+	   # Current directory: C:/[...]/MercuryZX5_PE1.runs/synth_1
+	   # Command line: vivado.exe -log system_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source system_top.tcl
+	   # Log file: C:/[...]/MercuryZX5_PE1.runs/synth_1/system_top.vds
+	   # Journal file: C:/[...]/MercuryZX5_PE1.runs/synth_1/vivado.jou
+	   #-----------------------------------------------------------
+
+	"""
 	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+ \w+ \d+ \d+:\d+:\d+ \d+)""")
+	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+
+	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
+	_startDatetime: Nullable[datetime]            #: Session start timestamp.
 
 	def __init__(self, processor: "BaseProcessor") -> None:
+		"""
+		Initializes a Vivado preamble parser.
+
+		:param processor: Reference to the Vivado log processor.
+		"""
 		super().__init__(processor)
 
 		self._toolVersion =   None
@@ -203,21 +235,38 @@ class Preamble(Parser):
 
 	@readonly
 	def ToolVersion(self) -> YearReleaseVersion:
+		"""
+		Read-only property to access the extracted Vivado tool version.
+
+		:returns: The used Vivado version as reported in the Vivado log messages.
+		"""
 		return self._toolVersion
 
 	@readonly
 	def StartDatetime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when the Vivado session was started.
+
+		:returns: Datatime when the session was started.
+		"""
 		return self._startDatetime
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator for processing the Vivado session preamble line-by-line.
+
+		:param line: First line to process.
+		:returns:    A generator processing log messages.
+		"""
 		if line.StartsWith("#----"):
 			line._kind = LineKind.SectionDelimiter
 		else:
-			line._kind |= LineKind.ProcessorError
+			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
 
 		line = yield line
 
-		while True:
+		# a normal preamble has 11 lines including both delimiter lines.
+		for _ in range(15):
 			if (match := self._VERSION.match(line._message)) is not None:
 				self._toolVersion = YearReleaseVersion.Parse(match[1])
 				line._kind = LineKind.Normal
@@ -231,6 +280,8 @@ class Preamble(Parser):
 				line._kind = LineKind.Verbose
 
 			line = yield line
+		else:
+			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
 
 		nextLine = yield line
 		return nextLine
@@ -238,14 +289,37 @@ class Preamble(Parser):
 
 @export
 class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+	"""
+	A task's output emitted by a Vivado command.
+
+	.. rubric:: Extracted information
+
+	* Vivado messages (info, warning, critical warning, error).
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   Starting Cache Timing Information Task
+	   INFO: [Timing 38-35] 79-Done setting XDC timing constraints.
+	   Ending Cache Timing Information Task | Checksum: 19fe8cb97
+
+	   Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1370.594 ; gain = 493.266
+
+	"""
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_command:  "Command"
-	_duration: float
+	_command:  "Command"  #: Reference to the command (parent).
+	_duration: float      #: Duration of a task according to reported times by Vivado.
 
 	def __init__(self, command: "Command") -> None:
+		"""
+		Initializes a task (without child elements).
+
+		:param command: Reference to the command.
+		"""
 		super().__init__()
 		VivadoMessagesMixin.__init__(self)
 
@@ -253,9 +327,21 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	@readonly
 	def Command(self) -> "Command":
+		"""
+		Read-only property to access the command.
+
+		:returns: The command this task's output was logged for.
+		"""
 		return self._command
 
 	def _TaskStart(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator for processing a task start (single line).
+
+		:param line:                First line to process (task start).
+		:returns:                   A generator processing log messages.
+		:raises ProcessorException: If first line doesn't conform to the *task start* pattern.
+		"""
 		if not line.StartsWith(self._START):
 			raise ProcessorException(f"{self.__class__.__name__}._TaskStart(): Expected '{self._START}' at line {line._lineNumber}.")
 
@@ -264,12 +350,19 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return nextLine
 
 	def _TaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator for processing a task finish line-by-line.
+
+		:param line:                First line to process (task finish).
+		:returns:                   A generator processing log messages.
+		:raises ProcessorException: If finish line doesn't conform to the *task finish* pattern.
+		"""
 		if not line.StartsWith(self._FINISH):
 			raise ProcessorException(f"{self.__class__.__name__}._TaskFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.TaskEnd
 		line = yield line
-		while self._TIME is not None:
+		while self._TIME is not None:       # TODO: limit search for time pattern to XX lines
 			if line.StartsWith(self._TIME):
 				line._kind = LineKind.TaskTime
 				break
@@ -280,6 +373,23 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return line
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator for processing a task without child elements line-by-line.
+
+		.. rubric:: Algorithm
+
+		1. Send first line to :meth:`_TaskStart`.
+		2. Process body lines
+
+		   * Collect Vivado messages (info, warning, critical warning, error).
+		   * Check for *task finish* pattern.
+		   * Check for *time* pattern.
+
+		3. Send last lines to :meth:`_TaskFinish`.
+
+		:param line:                First line to process.
+		:returns:                   A generator processing log messages.
+		"""
 		line = yield from self._TaskStart(line)
 
 		while True:
@@ -306,13 +416,32 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 @export
 class TaskWithSubTasks(Task):
+	"""
+	A task's output emitted by a Vivado command.
+
+	.. rubric:: Extracted information
+
+	* Vivado messages (info, warning, critical warning, error).
+	* Subtasks
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   Starting Cache Timing Information Task
+	   INFO: [Timing 38-35] 79-Done setting XDC timing constraints.
+	   Ending Cache Timing Information Task | Checksum: 19fe8cb97
+
+	   Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1370.594 ; gain = 493.266
+
+	"""
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	# _TIME:   ClassVar[str] = "Time (s):"
 
-	_PARSERS: ClassVar[Dict[YearReleaseVersion,Tuple[Type["SubTask"], ...]]] = dict()
+	_PARSERS:  ClassVar[Dict[YearReleaseVersion,Tuple[Type["SubTask"], ...]]] = dict()
 
-	_subtasks:   Dict[Type["SubTask"], "SubTask"]
+	_subtasks: Dict[Type["SubTask"], "SubTask"]
 
 	def __init__(self, command: "Command") -> None:
 		super().__init__(command)

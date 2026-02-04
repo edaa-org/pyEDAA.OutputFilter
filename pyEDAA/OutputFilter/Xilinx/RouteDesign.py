@@ -140,7 +140,7 @@ class SubPhase_UpdateTimingForBusSkew(SubPhaseWithChildren):
 	"""
 	*Update Timing for Bus Skew* subphase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubSubPhase_UpdateTiming`
 
@@ -160,7 +160,7 @@ class Phase_RouterInitialization(PhaseWithChildren):
 	"""
 	*Router Initialization* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_CreateTimer`
 	* :class:`SubPhase_FixTopologyConstraints`
@@ -216,7 +216,7 @@ class Phase_Initial_Routing(PhaseWithChildren):
 	"""
 	*Initial Routing* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_GlobalRouting`
 	* :class:`SubPhase_InitialNetRouting`
@@ -298,7 +298,7 @@ class Phase_RipUpAndReroute(PhaseWithChildren):
 	"""
 	*Rip-up And Reroute* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_GlobalIteration0`
 	* :class:`SubPhase_AdditionalIterationForHold`
@@ -336,7 +336,7 @@ class Phase_InitialRouting(PhaseWithChildren):
 	"""
 	*Initial Routing* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_InitialNetRoutingPass`
 	* :class:`SubPhase_GlobalRouting`
@@ -384,7 +384,7 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	"""
 	*Delay and Skew Optimization* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_DelayCleanUp`
 	* :class:`SubPhase_ClockSkewOptimization`
@@ -434,7 +434,7 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	"""
 	*Delay and Skew Optimization* phase.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`SubPhase_DelayCleanUp`
 	* :class:`SubPhase_ClockSkewOptimization`
@@ -592,7 +592,7 @@ class RoutingTask(TaskWithPhases):
 	"""
 	*Routing* task.
 
-	.. topic:: Uses
+	.. rubric:: Uses
 
 	* :class:`Phase_BuildRTDesign`
 	* :class:`Phase_RouterInitialization`
