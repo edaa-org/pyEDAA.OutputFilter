@@ -412,11 +412,11 @@ class SynthesizeDesign(CommandWithSections):
 		except KeyError as ex:
 			raise SectionNotPresentException(F"Section '{item._NAME}' not present in '{self._parent.logfile}'.") from ex
 
-	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
+	def SectionDetector(self, line: Line) -> Generator[Line, Line, None]:
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
 			raise ProcessorException()  # FIXME: add exception message
 
-		activeParsers: List[Parser] = list(self._sections.values())
+		activeParsers: List[Section] = list(self._sections.values())
 
 		rtlElaboration = self._sections[RTLElaboration]
 		# constraintValidation = self._sections[ConstraintValidation]
@@ -442,8 +442,8 @@ class SynthesizeDesign(CommandWithSections):
 					else:
 						WarningCollector.Raise(UnknownSection(f"Unknown section: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown section: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith("Starting "):
@@ -628,8 +628,8 @@ class OptimizeDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -701,8 +701,8 @@ class PlaceDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -775,8 +775,8 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -848,8 +848,8 @@ class RouteDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):

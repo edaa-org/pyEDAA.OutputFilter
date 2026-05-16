@@ -288,6 +288,49 @@ class Preamble(Parser):
 
 
 @export
+class Postamble(Parser):
+	_INFO:    Tuple[int, int]   = (17, 206)
+	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+
+	_exitDatetime: Nullable[datetime]            #: Session exit timestamp.
+
+	def __init__(self, processor: "BaseProcessor") -> None:
+		"""
+		Initializes a Vivado postamble parser.
+
+		:param processor: Reference to the Vivado log processor.
+		"""
+		super().__init__(processor)
+
+		self._exitDatetime = None
+
+	@readonly
+	def ExitDatetime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when the Vivado session was exited.
+
+		:returns: Datatime when the session was exited.
+		"""
+		return self._exitDatetime
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator for processing the Vivado session preamble line-by-line.
+
+		:param line: First line to process.
+		:returns:    A generator processing log messages.
+		"""
+		if (match := self._ENDTIME.match(line._message)) is not None:
+			self._exitDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+		else:
+			pass
+
+		line = yield line
+
+		return line
+
+
+@export
 class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	"""
 	A task's output emitted by a Vivado command.
@@ -439,7 +482,7 @@ class TaskWithSubTasks(Task):
 	# _FINISH: ClassVar[str]
 	# _TIME:   ClassVar[str] = "Time (s):"
 
-	_PARSERS:  ClassVar[Dict[YearReleaseVersion,Tuple[Type["SubTask"], ...]]] = dict()
+	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
 	_subtasks: Dict[Type["SubTask"], "SubTask"]
 
@@ -575,9 +618,9 @@ class TaskWithPhases(Task):
 	# _FINISH: ClassVar[str]
 	# _TIME:   ClassVar[str] = "Time (s):"
 
-	_PARSERS: ClassVar[Dict[YearReleaseVersion,Tuple[Type["Phase"], ...]]] = tuple()
+	# _PARSERS: ClassVar[Tuple[Type["Phase"], ...]]
 
-	_phases:   Dict[Type["Phase"], "Phase"]
+	_phases:  Dict[Type["Phase"], "Phase"]
 
 	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
@@ -825,7 +868,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tr
 	def _SubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
 
-		if line.StartsWith(FINISH) is None:
+		if not line.StartsWith(FINISH):
 			raise ProcessorException(f"{self.__class__.__name__}._SubPhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
 
 		if self._TIME is None:
@@ -960,8 +1003,8 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots
 	def _SubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex)
 
-		if line.StartsWith(FINISH) is None:
-			raise ProcessorException()
+		if not line.StartsWith(FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._SubSubPhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.SubSubPhaseEnd
 		line = yield line
@@ -1091,8 +1134,8 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, sl
 	def _SubSubSubPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex, subSubPhaseIndex=self._subSubPhaseIndex, subSubSubPhaseIndex=self._subSubSubPhaseIndex)
 
-		if line.StartsWith(FINISH) is None:
-			raise ProcessorException()
+		if not line.StartsWith(FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._SubSubSubPhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
 
 		line._kind = LineKind.SubSubSubPhaseEnd
 		line = yield line

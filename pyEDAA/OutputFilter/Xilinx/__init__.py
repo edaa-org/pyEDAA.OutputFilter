@@ -29,6 +29,7 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
+from datetime import datetime
 from pathlib  import Path
 from typing   import Optional as Nullable, Dict, List, Generator, Union, Type
 
@@ -43,9 +44,9 @@ from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMe
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
+from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
 	PhysicalOptimizeDesign, RouteDesign, WriteBitstream, ReportDRC, ReportMethodology, ReportPower
-from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
+from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin, Postamble
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
 
@@ -65,6 +66,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	_lines:                   List[ProcessedLine]           #: A list of processed log message lines.
 	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
+	_postamble:               Postamble                     #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
 	def __init__(self) -> None:
@@ -78,6 +80,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		self._lines =                   []
 		self._preamble =                None
+		self._postamble =               None
 		self._commands =                {}
 
 	@readonly
@@ -99,6 +102,15 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return self._preamble
 
 	@readonly
+	def Postamble(self) -> Postamble:
+		"""
+		Read-only property to access the parsed postamble information.
+
+		:returns: The log output postamble.
+		"""
+		return self._postamble
+
+	@readonly
 	def Commands(self) -> Dict[Type[Command], Command]:
 		"""
 		Read-only property to access the dictionary of processed Vivado commands.
@@ -115,9 +127,13 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		:returns: The observed process' execution duration in seconds.
 		"""
 		start = self._preamble._startDatetime
+		endInfo = self.MessagesByID[17][206][0]
 
+		# TODO: Workaround until postamble is detected and works.
+		match = Postamble._ENDTIME.search(endInfo._message)
+		exitTime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 
-		return self._duration
+		return (exitTime - start).total_seconds()
 
 	@readonly
 	def ProcessingDuration(self) -> float:
@@ -229,8 +245,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			rawMessageLine = yield line
 
 	def CommandFinder(self) -> Generator[Line, Line, None]:
-		self._preamble = Preamble(self)
-		cmd = None
+		self._preamble =  Preamble(self)
+		self._postamble = Postamble(self)
 
 		tclProcedures = {"source"}
 

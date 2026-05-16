@@ -141,7 +141,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		# 	influxString += f",branch=main"
 		# 	influxString += f",design=Stopwatch"
 		# 	influxString += " "
-		# 	influxString += f"processing_duration={processor.Duration:.3f}"
+		# 	influxString += f"processing_duration={processor.ProcessingDuration:.3f}"
+		# 	influxString += f",duration={processor.Duration:.3f}"
 		# 	influxString += f",synthesis_duration={synthesizeDesign[WritingSynthesisReport].Duration:.1f}"
 		# 	influxString += f",info_count={len(processor.InfoMessages)}u"
 		# 	influxString += f",warning_count={len(processor.WarningMessages)}u"
@@ -163,7 +164,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		# 	self.WriteNormal("Summary:")
 		# 	self.WriteNormal(f"  Tool version:        {processor.Preamble.ToolVersion}")
 		# 	self.WriteNormal(f"  Started at:          {processor.Preamble.StartDatetime}")
-		# 	self.WriteNormal(f"  Processing duration: {processor.Duration:.3f} s")
+		# 	self.WriteNormal(f"  Duration:            {processor.Duration:.3f} s")
+		# 	self.WriteNormal(f"  Processing duration: {processor.ProcessingDuration:.3f} s")
 		# 	self.WriteNormal(f"  Info:                {len(processor.InfoMessages)}")
 		# 	self.WriteNormal(f"  Warning:             {len(processor.WarningMessages)}")
 		# 	self.WriteNormal(f"  Critical Warning:    {len(processor.CriticalWarningMessages)}")

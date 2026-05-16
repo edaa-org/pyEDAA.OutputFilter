@@ -29,7 +29,9 @@ Processing the ``*.vds`` File
       :ref:`latches <XIL/Vivado/Synth/Latches>`.
 
       The whole processing duration is measured and accessible via
-      :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.Duration`.
+      :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.ProcessingDuration`. While the observed process' duration
+      is accessible via :data:`~pyEDAA.OutputFilter.Xilinx.Synthesis.Processor.Duration`.
+
 
    .. grid-item::
       :columns: 6
@@ -42,7 +44,7 @@ Processing the ``*.vds`` File
          processor = Processor(logfile)
          processor.Parse()
 
-         print(f"Processing duration: {processor.Duration:.3f} seconds")
+         print(f"Processing duration: {processor.ProcessingDuration:.3f} seconds")
 
 
 .. _XIL/Vivado/Synth/ExtractedInformation:
