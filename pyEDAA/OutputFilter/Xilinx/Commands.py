@@ -209,7 +209,7 @@ class CommandWithSections(Command):
 
 	_sections:  Dict[Type[Section], Section]
 
-	_PARSERS: ClassVar[Tuple[Type[Section], ...]] = dict()
+	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
@@ -425,7 +425,7 @@ class SynthesizeDesign(CommandWithSections):
 		if line == "Starting synth_design":
 			line._kind = LineKind.Verbose
 		else:
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
 		line = yield line
 		while True:
@@ -433,6 +433,8 @@ class SynthesizeDesign(CommandWithSections):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Start "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -466,9 +468,6 @@ class SynthesizeDesign(CommandWithSections):
 				elif line.StartsWith("----"):
 					if LineKind.Phase in line._previousLine._kind:
 						line._kind = LineKind.PhaseEnd | LineKind.PhaseDelimiter
-				elif not isinstance(line, VivadoMessage):
-					pass
-					# line._kind = LineKind.Unprocessed
 
 				line = yield line
 

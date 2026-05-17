@@ -37,15 +37,16 @@ from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Stopwatch   import Stopwatch
 
-from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line
+from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line, VivadoStuntedInfoMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VivadoMessage, TclCommand, VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage
-from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoIrregularWarningMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoDRCWarningMessage, VivadoXPMWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
-	PhysicalOptimizeDesign, RouteDesign, WriteBitstream, ReportDRC, ReportMethodology, ReportPower
+from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign
+from pyEDAA.OutputFilter.Xilinx.Commands  import PhysicalOptimizeDesign, RouteDesign, WriteBitstream
+from pyEDAA.OutputFilter.Xilinx.Commands  import ReportDRC, ReportMethodology, ReportPower
 from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin, Postamble
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
@@ -198,44 +199,51 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			rawMessageLine = rawMessageLine.rstrip()
 			errorMessage = _errorMessage
 
-			if rawMessageLine.startswith(VivadoInfoMessage._MESSAGE_KIND):
+			if len(rawMessageLine) == 0:
+				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
+			elif rawMessageLine.startswith("INFO"):
 				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
-					line = VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)
+					if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
+						line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
-			elif rawMessageLine.startswith(VivadoWarningMessage._MESSAGE_KIND):
+			elif rawMessageLine.startswith("WARNING"):
 				if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine)) is None:
-					line = VivadoIrregularWarningMessage.Parse(lineNumber, rawMessageLine)
+					if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine)) is None:
+						if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine)) is None:
+							line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
-			elif rawMessageLine.startswith(VivadoCriticalWarningMessage._MESSAGE_KIND):
+			elif rawMessageLine.startswith("CRITICAL WARNING"):
 				line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-			elif rawMessageLine.startswith(VivadoErrorMessage._MESSAGE_KIND):
+			elif rawMessageLine.startswith("ERROR"):
 				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
-			elif len(rawMessageLine) == 0:
-				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
 			elif rawMessageLine.startswith("Command: "):
 				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine)
+
 				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
 			else:
 				line = Line(lineNumber, LineKind.Unprocessed, rawMessageLine)
 
-			if line is None:
-				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
-			else:
 				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
 					line._kind = LineKind.Verbose
 
+			if line is None:
+				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
+
+				raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
 			line.PreviousLine = lastLine
 			lastLine = line
-			line = cmdFinder.send(line)
 
 			if isinstance(line, VivadoMessage):
 				self._AddMessage(line)
+
+			line = cmdFinder.send(line)
 
 			if line._kind is LineKind.ProcessorError:
 				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)

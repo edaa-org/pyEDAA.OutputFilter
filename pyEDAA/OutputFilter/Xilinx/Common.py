@@ -255,32 +255,40 @@ class VivadoMessage(Line):
 	# _MESSAGE_KIND:  ClassVar[str]
 	# _REGEXP:        ClassVar[Pattern]
 
-	_toolID:        int
-	_toolName:      str
-	_messageKindID: int
+	_toolName:      Nullable[str]
+	_toolID:        Nullable[int]
+	_messageKindID: Nullable[int]
 
-	def __init__(self, lineNumber: int, kind: LineKind, tool: str, toolID: int, messageKindID: int, message: str) -> None:
+	def __init__(
+		self,
+		lineNumber:    int,
+		kind:          LineKind,
+		message:       str,
+		toolName:      Nullable[str] = None,
+		toolID:        Nullable[int] = None,
+		messageKindID: Nullable[int] = None
+	) -> None:
 		super().__init__(lineNumber, kind, message)
-		self._toolID = toolID
-		self._toolName = tool
+		self._toolName =      toolName
+		self._toolID =        toolID
 		self._messageKindID = messageKindID
 
 	@readonly
-	def ToolName(self) -> str:
+	def ToolName(self) -> Nullable[str]:
 		return self._toolName
 
 	@readonly
-	def ToolID(self) -> int:
+	def ToolID(self) -> Nullable[int]:
 		return self._toolID
 
 	@readonly
-	def MessageKindID(self) -> int:
+	def MessageKindID(self) -> Nullable[int]:
 		return self._messageKindID
 
 	@classmethod
 	def Parse(cls, lineNumber: int, kind: LineKind, rawMessage: str) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, kind, match[1], int(match[2]), int(match[3]), match[4])
+			return cls(lineNumber, kind, match[4], match[1], int(match[2]), int(match[3]))
 
 		return None
 
@@ -309,17 +317,37 @@ class VivadoIrregularInfoMessage(VivadoMessage, InfoMessage):
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
-	_REGEXP:      ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: \[(\w+)-(\d+)\] (.*)""")
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.InfoMessage, match[1], None, int(match[2]), match[3])
+			return cls(lineNumber, LineKind.InfoMessage, match[3], toolName=match[1], messageKindID=int(match[2]))
 
 		return None
 
 	def __str__(self) -> str:
 		return f"{self._MESSAGE_KIND}: [{self._toolName}-{self._messageKindID}] {self._message}"
+
+
+@export
+class VivadoStuntedInfoMessage(VivadoMessage, InfoMessage):
+	"""
+	This class represents a stunted AMD/Xilinx Vivado info message.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] =     "INFO"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: ([^\[].*)""")
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.InfoMessage, match[1])
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: {self._message}"
 
 
 @export
@@ -329,7 +357,7 @@ class VivadoWarningMessage(VivadoMessage, WarningMessage):
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
-	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(\w+) (\d+)-(\d+)\] (.*)""")
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(\w+(?: \w+)*?) (\d+)-(\d+)\] (.*)""")
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
@@ -337,18 +365,98 @@ class VivadoWarningMessage(VivadoMessage, WarningMessage):
 
 
 @export
-class VivadoIrregularWarningMessage(VivadoMessage, WarningMessage):
+class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 	"""
-	This class represents an AMD/Xilinx Vivado warning message.
+	This class represents an AMD/Xilinx Vivado Design Rule Check (DRC) warning message.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
-	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: (.*)""")
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[DRC (\w+)-(\d+)\] (.*)""")
+
+	_drcRuleName:     str
+
+	def __init__(
+		self,
+		lineNumber:    int,
+		kind:          LineKind,
+		drcRuleName:   str,
+		message:       str,
+		toolName:      Nullable[str] = None,
+		toolID:        Nullable[int] = None,
+		messageKindID: Nullable[int] = None
+	) -> None:
+		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID)
+
+		self._drcRuleName = drcRuleName
+
+	@readonly
+	def DRCRuleName(self) -> str:
+		return self._drcRuleName
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, None, None, None, match[1])
+			return cls(lineNumber, LineKind.WarningMessage, match[1], match[3], toolName="DRC", toolID=None, messageKindID=int(match[2]))
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: [DRC {self._drcRuleName}-{self._messageKindID}] {self._message}"
+
+
+@export
+class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado XPM warning message.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: \[(XPM_\w+): (\w+)-(\d+)\] (.*)""")
+
+	_xpmName:      str
+
+	def __init__(
+		self,
+		lineNumber:    int,
+		kind:          LineKind,
+		xpmName:      str,
+		message:       str,
+		toolName:      Nullable[str] = None,
+		toolID:        Nullable[int] = None,
+		messageKindID: Nullable[int] = None
+	) -> None:
+		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID)
+
+		self._xpmName = xpmName
+
+	@readonly
+	def XPMName(self) -> str:
+		return self._xpmName
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.WarningMessage, match[1], match[4], toolName=match[2], toolID=None, messageKindID=int(match[3]))
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: [{self._xpmName}: {self._toolName}-{self._messageKindID}] {self._message}"
+
+
+@export
+class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
+	"""
+	This class represents a stunted AMD/Xilinx Vivado warning message.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""WARNING: ([^\[].*)""")
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.WarningMessage, match[1])
 
 		return None
 
@@ -392,8 +500,18 @@ class VHDLReportMessage(VivadoInfoMessage):
 	_sourceFile:       Path
 	_sourceLineNumber: int
 
-	def __init__(self, lineNumber: int, tool: str, toolID: int, messageKindID: int, rawMessage: str, reportMessage: str, sourceFile: Path, sourceLineNumber: int) -> None:
-		super().__init__(lineNumber, LineKind.InfoMessage, tool, toolID, messageKindID, rawMessage)
+	def __init__(
+		self,
+		lineNumber: int,
+		rawMessage: str,
+		toolName: str,
+		toolID: int,
+		messageKindID: int,
+		reportMessage: str,
+		sourceFile: Path,
+		sourceLineNumber: int
+	) -> None:
+		super().__init__(lineNumber, LineKind.InfoMessage, rawMessage, toolName, toolID, messageKindID)
 
 		self._reportMessage = reportMessage
 		self._sourceFile = sourceFile
@@ -402,7 +520,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 	@classmethod
 	def Convert(cls, line: VivadoInfoMessage) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(line._message)) is not None:
-			return cls(line._lineNumber, line._toolName, line._toolID, line._messageKindID, line._message, match[1], Path(match[2]), int(match[3]))
+			return cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, match[1], Path(match[2]), int(match[3]))
 
 		return None
 
