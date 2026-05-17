@@ -71,3 +71,8 @@ class ParserStateException(ProcessorException):
 	"""
 	Raised if a log output parser has a broken state.
 	"""
+
+
+@export
+class NotPresentException(ProcessorException):
+	pass

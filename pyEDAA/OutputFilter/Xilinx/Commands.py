@@ -31,15 +31,14 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib import Path
 from re      import compile as re_compile
-from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
+from typing  import ClassVar, Generator, Union, List, Type, Dict, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
-from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Common     import getFullyQualifiedName
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter                         import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException, NotPresentException
 from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
 from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask, Task
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
@@ -60,11 +59,6 @@ from pyEDAA.OutputFilter.Xilinx.RouteDesign      import RoutingTask
 
 
 @export
-class NotPresentException(ProcessorException):
-	pass
-
-
-@export
 class SectionNotPresentException(NotPresentException):
 	pass
 
@@ -78,7 +72,7 @@ class HandlingCustomAttributes1(HandlingCustomAttributes):
 class HandlingCustomAttributes2(HandlingCustomAttributes):
 	pass
 
-
+# FIXME: remove duplications
 @export
 class ROM_RAM_DSP_SR_Retiming1(ROM_RAM_DSP_SR_Retiming):
 	pass
@@ -406,7 +400,15 @@ class SynthesizeDesign(CommandWithSections):
 
 		return []
 
-	def __getitem__(self, item: Type[Parser]) -> Union[_PARSERS]:
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Section):
+			ex = TypeError(f"Parameter 'item' is not a Section.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._sections
+
+	def __getitem__(self, item: Type[Section]) -> Union[_PARSERS]:
 		try:
 			return self._sections[item]
 		except KeyError as ex:

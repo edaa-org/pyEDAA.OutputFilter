@@ -495,6 +495,7 @@ class TaskWithSubTasks(Task):
 	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
 		return self._subtasks
 
+	# todo: raise proper task not present exception
 	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
 		return self._subtasks[key]
 

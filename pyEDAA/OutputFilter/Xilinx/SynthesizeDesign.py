@@ -30,15 +30,22 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, Type, Optional as Nullable
+from typing import ClassVar, Dict, Generator, Type, Optional as Nullable, Any, Union
 
+from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx.Common  import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
-from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
+from pyEDAA.OutputFilter.Xilinx.Exception import NotPresentException
+from pyEDAA.OutputFilter.Xilinx.Common    import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
+
+
+@export
+class SubSectionNotPresentException(NotPresentException):
+	pass
 
 
 @export
@@ -61,6 +68,7 @@ class Section(BaseParser, BaseSection):
 	"""
 	Base-class for sections within log outputs from *synthesize design*.
 	"""
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
@@ -174,6 +182,8 @@ class SubSection(BaseParser, BaseSection):
 	"""
 	Base-class for subsections within log outputs from *synthesize design*.
 	"""
+	# _NAME:    ClassVar[str]
+
 	_section: Section  #: Reference to the section (parent).
 
 	def __init__(self, section: Section) -> None:
@@ -251,6 +261,20 @@ class SectionWithChildren(Section):
 
 		self._subsections = {}
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubSection):
+			ex = TypeError(f"Parameter 'item' is not a SubSection.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subsections
+
+	def __getitem__(self, item: Type[Section]) -> Union[_PARSERS]:
+		try:
+			return self._sections[item]
+		except KeyError as ex:
+			raise SubSectionNotPresentException(f"SubSection '{item._NAME}' not present in '{self._parent._parent.logfile}'.") from ex
+
 
 @export
 class RTLElaboration(Section):
@@ -259,6 +283,7 @@ class RTLElaboration(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "RTL Elaboration"
 	_START:  ClassVar[str] = "Starting RTL Elaboration : "
 	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
 
@@ -306,6 +331,7 @@ class HandlingCustomAttributes(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Handling Custom Attributes"
 	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
@@ -317,6 +343,7 @@ class ConstraintValidation(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Constraint Validation"
 	_START:  ClassVar[str] = "Finished RTL Optimization Phase 1"
 	_FINISH: ClassVar[str] = "Finished Constraint Validation : "
 
@@ -328,6 +355,7 @@ class LoadingPart(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Loading Part and Timing Information"
 	_START:  ClassVar[str] = "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
 
@@ -382,6 +410,7 @@ class ApplySetProperty(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Applying 'set_property' XDC Constraints"
 	_START:  ClassVar[str] = "Start Applying 'set_property' XDC Constraints"
 	_FINISH: ClassVar[str] = "Finished applying 'set_property' XDC Constraints : "
 
@@ -393,6 +422,7 @@ class RTLComponentStatistics(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "RTL Component Statistics"
 	_START:  ClassVar[str] = "Start RTL Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Component Statistics"
 
@@ -424,6 +454,7 @@ class RTLHierarchicalComponentStatistics(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "RTL Hierarchical Component Statistics"
 	_START:  ClassVar[str] = "Start RTL Hierarchical Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Hierarchical Component Statistics"
 
@@ -435,6 +466,7 @@ class PartResourceSummary(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Part Resource Summary"
 	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
 
@@ -446,6 +478,7 @@ class CrossBoundaryAndAreaOptimization(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Cross Boundary and Area Optimization"
 	_START:  ClassVar[str] = "Start Cross Boundary and Area Optimization"
 	_FINISH: ClassVar[str] = "Finished Cross Boundary and Area Optimization : "
 
@@ -457,6 +490,7 @@ class ROM_RAM_DSP_SR_Retiming(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "ROM, RAM, DSP, Shift Register and Retiming Reporting"
 	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
 	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting"
 
@@ -468,6 +502,7 @@ class ApplyingXDCTimingConstraints(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Applying XDC Timing Constraints"
 	_START:  ClassVar[str] = "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
 
@@ -479,6 +514,7 @@ class TimingOptimization(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Timing Optimization"
 	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
 
@@ -490,6 +526,7 @@ class TechnologyMapping(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Technology Mapping"
 	_START:  ClassVar[str] = "Start Technology Mapping"
 	_FINISH: ClassVar[str] = "Finished Technology Mapping : "
 
@@ -501,6 +538,7 @@ class FlatteningBeforeIOInsertion(SubSection):
 
 	Used by section :class:`IOInsertion`.
 	"""
+	_NAME:   ClassVar[str] = "Flattening Before IO Insertion"
 	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
 
@@ -512,6 +550,7 @@ class FinalNetlistCleanup(SubSection):
 
 	Used by section :class:`IOInsertion`.
 	"""
+	_NAME:   ClassVar[str] = "Final Netlist Cleanup"
 	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
@@ -523,9 +562,11 @@ class IOInsertion(SectionWithChildren):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "IO Insertion"
 	_START:  ClassVar[str] = "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
+	# TODO: generalize, use _PARSERS and move to SectionWithChildren
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
@@ -583,6 +624,7 @@ class RenamingGeneratedInstances(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Instances"
 	_START:  ClassVar[str] = "Start Renaming Generated Instances"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Instances : "
 
@@ -594,6 +636,7 @@ class RebuildingUserHierarchy(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Rebuilding User Hierarchy"
 	_START:  ClassVar[str] = "Start Rebuilding User Hierarchy"
 	_FINISH: ClassVar[str] = "Finished Rebuilding User Hierarchy : "
 
@@ -605,6 +648,7 @@ class RenamingGeneratedPorts(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Ports"
 	_START:  ClassVar[str] = "Start Renaming Generated Ports"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Ports : "
 
@@ -616,6 +660,7 @@ class RenamingGeneratedNets(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Nets"
 	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
 
@@ -627,6 +672,7 @@ class WritingSynthesisReport(Section):
 
 	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
 	"""
+	_NAME:   ClassVar[str] = "Writing Synthesis Report"
 	_START:  ClassVar[str] = "Start Writing Synthesis Report"
 	_FINISH: ClassVar[str] = "Finished Writing Synthesis Report : "
 
