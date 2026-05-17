@@ -57,8 +57,6 @@ class SynthDesign(TestCase):
 			#-----------------------------------------------------------""")
 	_POSTAMBLE: ClassVar[str] = ("""\
 			INFO: [Common 17-206] 3-Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
-	_SOURCE_TCL: ClassVar[str] = ("""\
-			source system_top.tcl -notrace""")
 	_SYNTHESIS_START: ClassVar[str] = ("""\
 			Command: synth_design -top system_top -part xc7z015clg485-2
 			Starting synth_design""")
@@ -71,6 +69,8 @@ class SynthDesign(TestCase):
 			Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
 			INFO: [Common 17-1381] 1-The checkpoint 'C:/Users/tgomes/git/2019_1/Vivado_PE1/MercuryZX5_PE1.runs/synth_1/system_top.dcp' has been generated.
 			INFO: [runtcl-4] 2-Executing : report_utilization -file system_top_utilization_synth.rpt -pb system_top_utilization_synth.pb""")
+	_SOURCE_TCL: ClassVar[str] = ("""\
+			source system_top.tcl -notrace""")
 
 	def test_SynthesisLogfile(self) -> None:
 		print()
