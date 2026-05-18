@@ -178,7 +178,7 @@ class Phase_PostProcessingNetlist(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Processing Netlist")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Processing Netlist | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
-	_FINAL:  ClassVar[str] = "Post Processing Netlist | Checksum:"
+	_FINAL:  ClassVar[str]     = "Post Processing Netlist | Checksum:"
 
 
 @export

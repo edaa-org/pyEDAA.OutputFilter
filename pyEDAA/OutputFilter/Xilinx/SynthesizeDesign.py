@@ -269,7 +269,7 @@ class SectionWithChildren(Section):
 
 		return key in self._subsections
 
-	def __getitem__(self, item: Type[Section]) -> Union[_PARSERS]:
+	def __getitem__(self, item: Type[SubSection]) -> SubSection:
 		try:
 			return self._sections[item]
 		except KeyError as ex:

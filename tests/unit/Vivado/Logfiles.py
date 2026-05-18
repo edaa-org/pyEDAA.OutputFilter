@@ -72,9 +72,9 @@ class Stopwatch(TestCase):
 			processor = Document(logfile)
 			processor.Parse()
 
-		for warning in warnings:
-			print(f"Warning: {warning}")
+		self.assertEqual(0, len(warnings))
 
+		self.assertEqual(processor.Duration, 42)
 		self.assertLess(processor.ProcessingDuration, 0.4)
 
 		self.assertEqual(69, len(processor.InfoMessages))
@@ -85,7 +85,7 @@ class Stopwatch(TestCase):
 		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		self.assertEqual(69 - (5 + 5 + 2 + 10), len(synthesis.InfoMessages))
+		self.assertEqual(66, len(synthesis.InfoMessages))
 		self.assertEqual(3, len(synthesis.WarningMessages))
 		self.assertEqual(0, len(synthesis.CriticalWarningMessages))
 		self.assertEqual(0, len(synthesis.ErrorMessages))

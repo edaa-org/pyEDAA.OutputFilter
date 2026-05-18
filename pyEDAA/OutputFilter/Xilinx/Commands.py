@@ -200,10 +200,10 @@ class CommandWithSections(Command):
 	   ---------------------------------------------------------------------------------
 	   [...]
 	"""
+	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
 
 	_sections:  Dict[Type[Section], Section]
 
-	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
@@ -219,8 +219,19 @@ class CommandWithSections(Command):
 		"""
 		return self._sections
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Section):
+			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._sections
+
 	def __getitem__(self, key: Type[Section]) -> Section:
-		return self._sections[key]
+		try:
+			return self._sections[key]
+		except KeyError as ex:
+			raise SectionNotPresentException(F"Section '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 
 @export
@@ -240,12 +251,14 @@ class CommandWithTasks(Command):
      Ending Cache Timing Information Task | Checksum: 19fe8cb97
      [...]
 	"""
+	# _PARSERS: Tuple[Type[Task], ...]
+
 	_tasks: Dict[Type[Task], Task]
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
-		self._tasks = {t: t(self) for t in self._PARSERS}
+		self._tasks = {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def Tasks(self) -> Dict[Type[Task], Task]:
@@ -256,8 +269,19 @@ class CommandWithTasks(Command):
 		"""
 		return self._tasks
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Task):
+			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._tasks
+
 	def __getitem__(self, key: Type[Task]) -> Task:
-		return self._tasks[key]
+		try:
+			return self._tasks[key]
+		except KeyError as ex:
+			raise SectionNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 
 @export
@@ -399,20 +423,6 @@ class SynthesizeDesign(CommandWithSections):
 				return [message for message in synthMessages[63]]
 
 		return []
-
-	def __contains__(self, key: Any) -> bool:
-		if not issubclass(key, Section):
-			ex = TypeError(f"Parameter 'item' is not a Section.")
-			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
-			raise ex
-
-		return key in self._sections
-
-	def __getitem__(self, item: Type[Section]) -> Union[_PARSERS]:
-		try:
-			return self._sections[item]
-		except KeyError as ex:
-			raise SectionNotPresentException(F"Section '{item._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 	def SectionDetector(self, line: Line) -> Generator[Line, Line, None]:
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):

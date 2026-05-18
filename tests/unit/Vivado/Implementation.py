@@ -39,6 +39,10 @@ from pyTooling.Versioning import YearReleaseVersion
 from pyEDAA.OutputFilter.Xilinx import Processor, LinkDesign as xil_LinkDesign, OptimizeDesign as xil_OptimizeDesign
 from pyEDAA.OutputFilter.Xilinx import PlaceDesign as xil_PlaceDesign, RouteDesign as xil_RouteDesign
 from pyEDAA.OutputFilter.Xilinx import ReportDRC
+from pyEDAA.OutputFilter.Xilinx.OptimizeDesign import DRCTask, CacheTimingInformationTask, LogicOptimizationTask, \
+	PowerOptimizationTask, PowerOptPatchEnablesTask, FinalCleanupTask, NetlistObfuscationTask, Phase_Retarget, \
+	Phase_ConstantPropagation, Phase_Sweep, Phase_BUFGOptimization, Phase_ShiftRegisterOptimization, \
+	Phase_PostProcessingNetlist
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -190,6 +194,310 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(reportDRC.WarningMessages))
 		self.assertEqual(0, len(reportDRC.CriticalWarningMessages))
 		self.assertEqual(0, len(reportDRC.ErrorMessages))
+
+	def test_DRCTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting DRC Task
+			INFO: [DRC 23-27] Running DRC with 2 threads
+			INFO: [Project 1-461] DRC finished with 0 Errors
+			INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+			Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.707 . Memory (MB): peak = 877.328 ; gain = 22.953
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+
+		self.assertIn(DRCTask, optimizeDesign)
+		drcTask = optimizeDesign[DRCTask]
+		self.assertEqual(3, len(drcTask.InfoMessages))
+		self.assertEqual(0, len(drcTask.WarningMessages))
+		self.assertEqual(0, len(drcTask.CriticalWarningMessages))
+		self.assertEqual(0, len(drcTask.ErrorMessages))
+
+	def test_CacheTimingInformationTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting Cache Timing Information Task
+			INFO: [Timing 38-35] Done setting XDC timing constraints.
+			Ending Cache Timing Information Task | Checksum: 19fe8cb97
+
+			Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1370.594 ; gain = 493.266
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+
+		self.assertIn(CacheTimingInformationTask, optimizeDesign)
+		cacheTimingInformationTask = optimizeDesign[CacheTimingInformationTask]
+		self.assertEqual(1, len(cacheTimingInformationTask.InfoMessages))
+		self.assertEqual(0, len(cacheTimingInformationTask.WarningMessages))
+		self.assertEqual(0, len(cacheTimingInformationTask.CriticalWarningMessages))
+		self.assertEqual(0, len(cacheTimingInformationTask.ErrorMessages))
+
+	def test_LogicOptimizationTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting Logic Optimization Task
+
+			Phase 1 Retarget
+			INFO: [Opt 31-138] 1-Pushed 1 inverter(s) to 4 load pin(s).
+			INFO: [Opt 31-49] 2-Retargeted 0 cell(s).
+			Phase 1 Retarget | Checksum: 160bb552c
+
+			Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.368 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-389] 3-Phase Retarget created 20 cells and removed 99 cells
+			INFO: [Opt 31-1021] 4-In phase Retarget, 1 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail.
+
+			Phase 2 Constant propagation
+			INFO: [Opt 31-138] 5-Pushed 1 inverter(s) to 2 load pin(s).
+			Phase 2 Constant propagation | Checksum: 1cf5a7919
+
+			Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.603 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-389] 6-Phase Constant propagation created 90 cells and removed 462 cells
+
+			Phase 3 Sweep
+			Phase 3 Sweep | Checksum: 10a3ccb0f
+
+			Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-389] 7-Phase Sweep created 0 cells and removed 778 cells
+
+			Phase 4 BUFG optimization
+			Phase 4 BUFG optimization | Checksum: 10a3ccb0f
+
+			Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-662] 8-Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+			Phase 5 Shift Register Optimization
+			INFO: [Opt 31-1064] 9-SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+			Phase 5 Shift Register Optimization | Checksum: 10a3ccb0f
+
+			Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-389] 10-Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+			Phase 6 Post Processing Netlist
+			Phase 6 Post Processing Netlist | Checksum: 12e9e2477
+
+			Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			INFO: [Opt 31-389] 11-Phase Post Processing Netlist created 0 cells and removed 1 cells
+			Opt_design Change Summary
+			=========================
+
+
+			-------------------------------------------------------------------------------------------------------------------------
+			|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+			-------------------------------------------------------------------------------------------------------------------------
+			|  Retarget                     |              20  |              99  |                                              1  |
+			|  Constant propagation         |              90  |             462  |                                              0  |
+			|  Sweep                        |               0  |             778  |                                              0  |
+			|  BUFG optimization            |               0  |               0  |                                              0  |
+			|  Shift Register Optimization  |               0  |               0  |                                              0  |
+			|  Post Processing Netlist      |               0  |               1  |                                              0  |
+			-------------------------------------------------------------------------------------------------------------------------
+
+
+
+			#Starting Connectivity Check Task
+
+			#Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 1515.172 ; gain = 0.000
+			Ending Logic Optimization Task | Checksum: a7afd030
+
+			Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1515.172 ; gain = 0.000
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		self.assertEqual(20, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+		self.assertEqual(13, len(optimizeDesign.InfoMessages))
+		self.assertEqual(0, len(optimizeDesign.WarningMessages))
+		self.assertEqual(0, len(optimizeDesign.CriticalWarningMessages))
+		self.assertEqual(0, len(optimizeDesign.ErrorMessages))
+
+		self.assertIn(LogicOptimizationTask, optimizeDesign)
+		logicOptimizationTask = optimizeDesign[LogicOptimizationTask]
+		for msg in logicOptimizationTask.InfoMessages:
+			print(msg)
+		self.assertEqual(11, len(logicOptimizationTask.InfoMessages))
+		self.assertEqual(0, len(logicOptimizationTask.WarningMessages))
+		self.assertEqual(0, len(logicOptimizationTask.CriticalWarningMessages))
+		self.assertEqual(0, len(logicOptimizationTask.ErrorMessages))
+
+		self.assertIn(Phase_Retarget, logicOptimizationTask)
+		retarget = logicOptimizationTask[Phase_Retarget]
+		self.assertEqual(2, len(retarget.InfoMessages))
+		self.assertEqual(0, len(retarget.WarningMessages))
+		self.assertEqual(0, len(retarget.CriticalWarningMessages))
+		self.assertEqual(0, len(retarget.ErrorMessages))
+
+		self.assertIn(Phase_ConstantPropagation, logicOptimizationTask)
+		constantPropagation = logicOptimizationTask[Phase_ConstantPropagation]
+		self.assertEqual(1, len(constantPropagation.InfoMessages))
+		self.assertEqual(0, len(constantPropagation.WarningMessages))
+		self.assertEqual(0, len(constantPropagation.CriticalWarningMessages))
+		self.assertEqual(0, len(constantPropagation.ErrorMessages))
+
+		self.assertIn(Phase_Sweep, logicOptimizationTask)
+		sweep = logicOptimizationTask[Phase_Sweep]
+		self.assertEqual(0, len(sweep.InfoMessages))
+		self.assertEqual(0, len(sweep.WarningMessages))
+		self.assertEqual(0, len(sweep.CriticalWarningMessages))
+		self.assertEqual(0, len(sweep.ErrorMessages))
+
+		self.assertIn(Phase_BUFGOptimization, logicOptimizationTask)
+		bufgOptimization = logicOptimizationTask[Phase_BUFGOptimization]
+		self.assertEqual(0, len(bufgOptimization.InfoMessages))
+		self.assertEqual(0, len(bufgOptimization.WarningMessages))
+		self.assertEqual(0, len(bufgOptimization.CriticalWarningMessages))
+		self.assertEqual(0, len(bufgOptimization.ErrorMessages))
+
+		self.assertIn(Phase_ShiftRegisterOptimization, logicOptimizationTask)
+		shiftRegisterOptimization = logicOptimizationTask[Phase_ShiftRegisterOptimization]
+		self.assertEqual(1, len(shiftRegisterOptimization.InfoMessages))
+		self.assertEqual(0, len(shiftRegisterOptimization.WarningMessages))
+		self.assertEqual(0, len(shiftRegisterOptimization.CriticalWarningMessages))
+		self.assertEqual(0, len(shiftRegisterOptimization.ErrorMessages))
+
+		self.assertIn(Phase_PostProcessingNetlist, logicOptimizationTask)
+		postProcessingNetlist = logicOptimizationTask[Phase_PostProcessingNetlist]
+		self.assertEqual(0, len(postProcessingNetlist.InfoMessages))
+		self.assertEqual(0, len(postProcessingNetlist.WarningMessages))
+		self.assertEqual(0, len(postProcessingNetlist.CriticalWarningMessages))
+		self.assertEqual(0, len(postProcessingNetlist.ErrorMessages))
+
+	def test_PowerOptimizationTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting Power Optimization Task
+			INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+			INFO: [Pwropt 34-9] Applying IDT optimizations ...
+			INFO: [Pwropt 34-10] Applying ODC optimizations ...
+			INFO: [Timing 38-35] Done setting XDC timing constraints.
+			INFO: [Physopt 32-619] Estimated Timing Summary | WNS=5.346 | TNS=0.000 |
+			Running Vector-less Activity Propagation...
+
+			Finished Running Vector-less Activity Propagation
+
+
+			Starting PowerOpt Patch Enables Task
+			INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 2 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+			INFO: [Pwropt 34-201] Structural ODC has moved 0 WE to EN ports
+			Number of BRAM Ports augmented: 0 newly gated: 0 Total Ports: 4
+			Ending PowerOpt Patch Enables Task | Checksum: a7afd030
+
+			Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 1652.383 ; gain = 0.000
+			Ending Power Optimization Task | Checksum: a7afd030
+
+			Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 1652.383 ; gain = 137.211
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+
+		self.assertIn(PowerOptimizationTask, optimizeDesign)
+		powerOptimizationTask = optimizeDesign[PowerOptimizationTask]
+		self.assertEqual(7, len(powerOptimizationTask.InfoMessages))
+		self.assertEqual(0, len(powerOptimizationTask.WarningMessages))
+		self.assertEqual(0, len(powerOptimizationTask.CriticalWarningMessages))
+		self.assertEqual(0, len(powerOptimizationTask.ErrorMessages))
+
+		self.assertIn(PowerOptPatchEnablesTask, powerOptimizationTask)
+		powerOptPatchEnablesTask = powerOptimizationTask[PowerOptPatchEnablesTask]
+		self.assertEqual(2, len(powerOptPatchEnablesTask.InfoMessages))
+		self.assertEqual(0, len(powerOptPatchEnablesTask.WarningMessages))
+		self.assertEqual(0, len(powerOptPatchEnablesTask.CriticalWarningMessages))
+		self.assertEqual(0, len(powerOptPatchEnablesTask.ErrorMessages))
+
+	def test_FinalCleanupTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting Final Cleanup Task
+			Ending Final Cleanup Task | Checksum: a7afd030
+
+			Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1652.383 ; gain = 0.000
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+
+		self.assertIn(FinalCleanupTask, optimizeDesign)
+		finalCleanupTask = optimizeDesign[FinalCleanupTask]
+		self.assertEqual(0, len(finalCleanupTask.InfoMessages))
+		self.assertEqual(0, len(finalCleanupTask.WarningMessages))
+		self.assertEqual(0, len(finalCleanupTask.CriticalWarningMessages))
+		self.assertEqual(0, len(finalCleanupTask.ErrorMessages))
+
+	def test_NetlistObfuscationTask(self) -> None:
+		print()
+		report = dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._OPTDESIGN_START}
+			Starting Netlist Obfuscation Task
+			Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1652.383 ; gain = 0.000
+			Ending Netlist Obfuscation Task | Checksum: a7afd030
+
+			Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1652.383 ; gain = 0.000
+
+{self._OPTDESIGN_FINISH}
+{self._POSTAMBLE}""")
+
+		processor = Processor()
+		next(generator := processor.LineClassification())
+		for rawLine in report.splitlines():
+			generator.send(rawLine)
+
+		optimizeDesign = processor[xil_OptimizeDesign]
+
+		self.assertIn(NetlistObfuscationTask, optimizeDesign)
+		netlistObfuscationTask = optimizeDesign[NetlistObfuscationTask]
+		self.assertEqual(0, len(netlistObfuscationTask.InfoMessages))
+		self.assertEqual(0, len(netlistObfuscationTask.WarningMessages))
+		self.assertEqual(0, len(netlistObfuscationTask.CriticalWarningMessages))
+		self.assertEqual(0, len(netlistObfuscationTask.ErrorMessages))
 
 
 class PlaceDesign(TestCase):

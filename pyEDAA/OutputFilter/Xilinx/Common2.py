@@ -31,8 +31,9 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from datetime import datetime
 from re       import Pattern, compile as re_compile
-from typing   import ClassVar, Optional as Nullable, Generator, List, Dict, Tuple, Type
+from typing import ClassVar, Optional as Nullable, Generator, List, Dict, Tuple, Type, Any
 
+from pyTooling.Common import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
@@ -41,8 +42,7 @@ from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoMessage, InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
-from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException
-
+from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, NotPresentException
 
 MAJOR = r"(?P<major>\d+)"
 MAJOR_MINOR = r"(?P<major>\d+)\.(?P<minor>\d+)"
@@ -95,6 +95,16 @@ class UnknownPhase(UnknownLine):
 
 @export
 class UnknownSubPhase(UnknownLine):
+	pass
+
+
+@export
+class SubTaskNotPresentException(NotPresentException):
+	pass
+
+
+@export
+class PhaseNotPresentException(NotPresentException):
 	pass
 
 
@@ -499,6 +509,21 @@ class TaskWithSubTasks(Task):
 	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
 		return self._subtasks[key]
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubTask):
+			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subtasks
+
+	def __getitem__(self, key: Type[SubTask]) -> SubTask:
+		try:
+			return self._subtasks[key]
+		except KeyError as ex:
+			raise SubTaskNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
 
@@ -632,8 +657,19 @@ class TaskWithPhases(Task):
 	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
 		return self._phases
 
-	def __getitem__(self, key: Type["Phase"]) -> "Phase":
-		return self._phases[key]
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Phase):
+			ex = TypeError(f"Parameter 'item' is not a Phase.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._phases
+
+	def __getitem__(self, key: Type[Phase]) -> Phase:
+		try:
+			return self._phases[key]
+		except KeyError as ex:
+			raise PhaseNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
@@ -675,10 +711,7 @@ class TaskWithPhases(Task):
 					line = yield phase.send(line)
 					if isFinish:
 						previousLine = line._previousLine
-						WarningCollector.Raise(UndetectedEnd(
-							f"Didn't detect finish: '{previousLine!r}'",
-							previousLine
-						))
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{previousLine!r}'", previousLine))
 						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
@@ -736,7 +769,7 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 
 			line = yield line
 
-		if self._FINAL is not None:
+		if self._FINAL is not None and self._task._command._processor._preamble._toolVersion >= "2023.2":
 			while self._FINAL is not None:
 				if line.StartsWith(self._FINAL):
 					line._kind = LineKind.PhaseFinal
