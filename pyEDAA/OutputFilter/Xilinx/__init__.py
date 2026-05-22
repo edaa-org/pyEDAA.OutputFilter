@@ -39,7 +39,7 @@ from pyTooling.Stopwatch   import Stopwatch
 
 from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line, VivadoStuntedInfoMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VivadoMessage, TclCommand, VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoDRCInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoDRCWarningMessage, VivadoXPMWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
@@ -203,8 +203,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
 			elif rawMessageLine.startswith("INFO"):
 				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
-					if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
-						line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine)
+					if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
+						if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
+							line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine)
 
 				errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
 			elif rawMessageLine.startswith("WARNING"):

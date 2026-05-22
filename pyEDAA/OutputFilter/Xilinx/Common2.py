@@ -84,6 +84,11 @@ class UnknownTask(UnknownLine):
 
 
 @export
+class UnknownSubTask(UnknownLine):
+	pass
+
+
+@export
 class UnknownSection(UnknownLine):
 	pass
 
@@ -298,7 +303,22 @@ class Preamble(Parser):
 
 
 @export
-class Postamble(Parser):
+class Postamble(Parser, VivadoMessagesMixin):
+	"""
+	A parser for the postamble emitted by Vivado at session end.
+
+	.. rubric:: Extracted information
+
+	* Session exit timestamp (date and time). |br|
+	  See :data:`ExitDatetime`
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:46:23 2025...
+
+	"""
 	_INFO:    Tuple[int, int]   = (17, 206)
 	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
@@ -311,11 +331,12 @@ class Postamble(Parser):
 		:param processor: Reference to the Vivado log processor.
 		"""
 		super().__init__(processor)
+		VivadoMessagesMixin.__init__(self)
 
 		self._exitDatetime = None
 
 	@readonly
-	def ExitDatetime(self) -> datetime:
+	def ExitDatetime(self) -> Nullable[datetime]:
 		"""
 		Read-only property to access the date and time when the Vivado session was exited.
 
@@ -330,6 +351,12 @@ class Postamble(Parser):
 		:param line: First line to process.
 		:returns:    A generator processing log messages.
 		"""
+		if isinstance(line, VivadoMessage):
+			self._AddMessage(line)
+
+			if not isinstance(line, VivadoInfoMessage):
+				raise ProcessorException(f"{self.__class__.__name__}.Generator(): Expected '{self._ENDTIME}' at line {line._lineNumber}.")
+
 		if (match := self._ENDTIME.match(line._message)) is not None:
 			self._exitDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 		else:
@@ -337,11 +364,12 @@ class Postamble(Parser):
 
 		line = yield line
 
+		# todo: should we receive and expect an ned-token like None?
 		return line
 
 
 @export
-class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class Task(BaseParser, VivadoMessagesMixin):
 	"""
 	A task's output emitted by a Vivado command.
 
@@ -360,6 +388,7 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	   Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1370.594 ; gain = 493.266
 
 	"""
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
@@ -422,8 +451,8 @@ class Task(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 			line = yield line
 
-		line = yield line
-		return line
+		nextLine = yield line
+		return nextLine
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		"""
@@ -488,10 +517,6 @@ class TaskWithSubTasks(Task):
 	   Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1370.594 ; gain = 493.266
 
 	"""
-	# _START:  ClassVar[str]
-	# _FINISH: ClassVar[str]
-	# _TIME:   ClassVar[str] = "Time (s):"
-
 	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
 	_subtasks: Dict[Type["SubTask"], "SubTask"]
@@ -505,13 +530,9 @@ class TaskWithSubTasks(Task):
 	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
 		return self._subtasks
 
-	# todo: raise proper task not present exception
-	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
-		return self._subtasks[key]
-
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubTask):
-			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex = TypeError(f"Parameter 'key' is not a Subtask.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -521,8 +542,7 @@ class TaskWithSubTasks(Task):
 		try:
 			return self._subtasks[key]
 		except KeyError as ex:
-			raise SubTaskNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
-
+			raise SubTaskNotPresentException(F"Subtask '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
@@ -542,7 +562,11 @@ class TaskWithSubTasks(Task):
 							line = yield next(subtask := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subtask: {line!r}")
+						WarningCollector.Raise(UnknownSubTask(f"Unknown subtask: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subtask: '{line!r}'")
+						ex.add_note(f"Current task:    start pattern='{self}'")
+						ex.add_note(f"Current command: {self._command}")
+						raise ex
 					break
 				elif line.StartsWith("Ending"):
 					nextLine = yield from self._TaskFinish(line)
@@ -554,27 +578,33 @@ class TaskWithSubTasks(Task):
 
 				line = yield line
 
-			while subtask is not None:
-				#				print(line)
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
+			while True:
+				isFinish = False  # line.StartsWith("Ending") # FIXME: detect end, but time might come later
 
 				try:
-					line = yield subtask.send(line)
+					processedLine = subtask.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
+					if isFinish:
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
+						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
 					break
 
+				line = yield processedLine
+
+
 @export
-class SubTask(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
-	# _START:  ClassVar[str]
-	# _FINISH: ClassVar[str]
-	_TIME:   ClassVar[str] = "Time (s):"
+class SubTask(BaseParser, VivadoMessagesMixin):
+	# _NAME:     ClassVar[str]
+	# _START:    ClassVar[str]
+	# _FINISH:   ClassVar[str]
+	_TIME:     ClassVar[str] = "Time (s):"
 
 	_task:     TaskWithSubTasks
 	_duration: float
@@ -610,8 +640,8 @@ class SubTask(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tru
 
 			line = yield line
 
-		line = yield line
-		return line
+		nextLine = yield line
+		return nextLine
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
@@ -640,10 +670,6 @@ class SubTask(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=Tru
 
 @export
 class TaskWithPhases(Task):
-	# _START:  ClassVar[str]
-	# _FINISH: ClassVar[str]
-	# _TIME:   ClassVar[str] = "Time (s):"
-
 	# _PARSERS: ClassVar[Tuple[Type["Phase"], ...]]
 
 	_phases:  Dict[Type["Phase"], "Phase"]
@@ -669,7 +695,7 @@ class TaskWithPhases(Task):
 		try:
 			return self._phases[key]
 		except KeyError as ex:
-			raise PhaseNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+			raise PhaseNotPresentException(F"Phase '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._TaskStart(line)
@@ -689,7 +715,11 @@ class TaskWithPhases(Task):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown phase: {line!r}")
+						WarningCollector.Raise(UnknownPhase(f"Unknown phase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown phase: '{line!r}'")
+						ex.add_note(f"Current task:    start pattern='{self}'")
+						ex.add_note(f"Current command: {self._command}")
+						raise ex
 					break
 				elif line.StartsWith("Ending"):
 					nextLine = yield from self._TaskFinish(line)
@@ -701,26 +731,30 @@ class TaskWithPhases(Task):
 
 				line = yield line
 
-			while phase is not None:
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
+			while True:
 				isFinish = line.StartsWith("Ending")
 
 				try:
-					line = yield phase.send(line)
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
 					if isFinish:
-						previousLine = line._previousLine
-						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{previousLine!r}'", previousLine))
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
 						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
 					break
 
+				line = yield processedLine
+
 
 @export
-class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class Phase(BaseParser, VivadoMessagesMixin):
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
@@ -760,24 +794,30 @@ class Phase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True)
 		line = yield line
 
 		if self._TIME is not None:
-			while self._TIME is not None:
+			while True:
 				if line.StartsWith(self._TIME):
 					line._kind = LineKind.PhaseTime
 					break
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 
 				line = yield line
 
 			line = yield line
 
 		if self._FINAL is not None and self._task._command._processor._preamble._toolVersion >= "2023.2":
-			while self._FINAL is not None:
+			while True:
 				if line.StartsWith(self._FINAL):
 					line._kind = LineKind.PhaseFinal
 					break
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 
 				line = yield line
 
 			line = yield line
+
+		# TODO: optionally collect following INFO messages like 31-389, 31-1021, 31-662
 
 		return line
 
@@ -815,6 +855,20 @@ class PhaseWithChildren(Phase):
 
 		self._subPhases = {p: p(self) for p in self._PARSERS}
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubPhase):
+			ex = TypeError(f"Parameter 'item' is not a SubPhase.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subPhases
+
+	def __getitem__(self, key: Type[SubPhase]) -> SubPhase:
+		try:
+			return self._subPhases[key]
+		except KeyError as ex:
+			raise PhaseNotPresentException(F"SubPhase '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._PhaseStart(line)
 
@@ -849,29 +903,30 @@ class PhaseWithChildren(Phase):
 
 				line = yield line
 
-			while phase is not None:
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				isFinish = False  # line.StartsWith(SUBPHASE_PREFIX)
+			while True:
+				isFinish = False  # line.StartsWith(SUBPHASE_PREFIX)  # FIXME: detect end, but end (e.g. time) is later then ending text
 
 				try:
-					line = yield phase.send(line)
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
 					if isFinish:
-						previousLine = line._previousLine
-						WarningCollector.Raise(UndetectedEnd(
-							f"Didn't detect finish: '{previousLine!r}'",
-							previousLine
-						))
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
 						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
 					break
 
+				line = yield processedLine
+
 
 @export
-class SubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class SubPhase(BaseParser, VivadoMessagesMixin):
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
@@ -953,6 +1008,20 @@ class SubPhaseWithChildren(SubPhase):
 
 		self._subSubPhases = {p: p(self) for p in self._PARSERS}
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubSubPhase):
+			ex = TypeError(f"Parameter 'item' is not a SubSubPhase.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subSubPhases
+
+	def __getitem__(self, key: Type[SubSubPhase]) -> SubSubPhase:
+		try:
+			return self._subSubPhases[key]
+		except KeyError as ex:
+			raise PhaseNotPresentException(F"SubSubPhase '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SubPhaseStart(line)
 
@@ -976,8 +1045,10 @@ class SubPhaseWithChildren(SubPhase):
 					else:
 						WarningCollector.Raise(UnknownSubPhase(f"Unknown subsubphase: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown subsubphase: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						ex.add_note(f"Current subphase: start pattern='{self}'")
+						ex.add_note(f"Current phase: start pattern='{self._phase}'")
+						ex.add_note(f"Current task: start pattern='{self._phase._task}'")
+						ex.add_note(f"Current cmd:  {self._phase._task._command}")
 						raise ex
 					break
 				elif line.StartsWith(FINISH):
@@ -986,24 +1057,30 @@ class SubPhaseWithChildren(SubPhase):
 
 				line = yield line
 
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
+			while True:
+				isFinish = line.StartsWith("Ending")
 
 				try:
-					line = yield phase.send(line)
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
+					if isFinish:
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
+						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
 					break
 
+				line = yield processedLine
+
 
 @export
-class SubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class SubSubPhase(BaseParser, VivadoMessagesMixin):
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
@@ -1085,6 +1162,20 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 		self._subSubSubPhases = {p: p(self) for p in self._PARSERS}
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubSubSubPhase):
+			ex = TypeError(f"Parameter 'item' is not a SubSubSubPhase.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subSubSubPhases
+
+	def __getitem__(self, key: Type[SubSubSubPhase]) -> SubSubSubPhase:
+		try:
+			return self._subSubSubPhases[key]
+		except KeyError as ex:
+			raise PhaseNotPresentException(F"SubSubSubPhase '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SubSubPhaseStart(line)
 
@@ -1105,7 +1196,14 @@ class SubSubPhaseWithChildren(SubSubPhase):
 							line = yield next(phase := parser.Generator(line))
 							break
 					else:
-						raise Exception(f"Unknown subsubsubphase: {line!r}")
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown subsubsubphase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown subsubsubphase: '{line!r}'")
+						ex.add_note(f"Current subsubphase: start pattern='{self}'")
+						ex.add_note(f"Current subphase: start pattern='{self._subphase}'")
+						ex.add_note(f"Current phase: start pattern='{self._subphase._phase}'")
+						ex.add_note(f"Current task: start pattern='{self._subphase._phase._task}'")
+						ex.add_note(f"Current cmd:  {self._subphase._phase._task._command}")
+						raise ex
 					break
 				elif line.StartsWith(self._TIME):
 					line._kind = LineKind.SubSubPhaseTime
@@ -1114,24 +1212,30 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 				line = yield line
 
-			while phase is not None:
-				# if line.StartsWith("Ending"):
-				# 	line = yield task.send(line)
-				# 	break
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
+			while True:
+				isFinish = line.StartsWith("Ending")
 
 				try:
-					line = yield phase.send(line)
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
+					if isFinish:
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
+						break
 				except StopIteration as ex:
 					activeParsers.remove(parser)
 					line = ex.value
 					break
 
+				line = yield processedLine
+
 
 @export
-class SubSubSubPhase(BaseParser, VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class SubSubSubPhase(BaseParser, VivadoMessagesMixin):
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 

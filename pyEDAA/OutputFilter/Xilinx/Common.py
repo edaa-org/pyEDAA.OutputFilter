@@ -300,6 +300,12 @@ class VivadoMessage(Line):
 class VivadoInfoMessage(VivadoMessage, InfoMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado info message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   INFO: [Common 17-83] 66-Releasing license: Synthesis
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
@@ -311,9 +317,62 @@ class VivadoInfoMessage(VivadoMessage, InfoMessage):
 
 
 @export
+class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
+	"""
+	This class represents an AMD/Xilinx Vivado Design Rule Check (DRC) info message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   INFO: [DRC AVAL-4] enum_USE_DPORT_FALSE_enum_DREG_ADREG_0_connects_CED_CEAD_RSTD_GND: i_system/xbip_dsp48_macro_0/U0/i_synth/i_synth_option.i_synth_model/opt_7series.i_uniwrap/i_primitive: DSP48E1 is not using the D port (USE_DPORT = FALSE). For improved power characteristics, set DREG and ADREG to '1', tie CED, CEAD, and RSTD to logic '0'.
+	"""
+
+	_MESSAGE_KIND: ClassVar[str] = "INFO"
+	_REGEXP:       ClassVar[Pattern] = re_compile(r"""INFO: \[DRC (\w+)-(\d+)\] (.*)""")
+
+	_drcRuleName: str
+
+	def __init__(
+		self,
+		lineNumber: int,
+		kind: LineKind,
+		drcRuleName: str,
+		message: str,
+		toolName: Nullable[str] = None,
+		toolID: Nullable[int] = None,
+		messageKindID: Nullable[int] = None
+	) -> None:
+		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID)
+
+		self._drcRuleName = drcRuleName
+
+	@readonly
+	def DRCRuleName(self) -> str:
+		return self._drcRuleName
+
+	@classmethod
+	def Parse(cls, lineNumber: int, rawMessage: str) -> Nullable[Self]:
+		if (match := cls._REGEXP.match(rawMessage)) is not None:
+			return cls(lineNumber, LineKind.WarningMessage, match[1], match[3], toolName="DRC", toolID=None,
+			           messageKindID=int(match[2]))
+
+		return None
+
+	def __str__(self) -> str:
+		return f"{self._MESSAGE_KIND}: [DRC {self._drcRuleName}-{self._messageKindID}] {self._message}"
+
+
+@export
 class VivadoIrregularInfoMessage(VivadoMessage, InfoMessage):
 	"""
 	This class represents an irregular AMD/Xilinx Vivado info message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   INFO: [runtcl-4] Executing : report_io -file system_top_io_placed.rpt
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
@@ -334,6 +393,12 @@ class VivadoIrregularInfoMessage(VivadoMessage, InfoMessage):
 class VivadoStuntedInfoMessage(VivadoMessage, InfoMessage):
 	"""
 	This class represents a stunted AMD/Xilinx Vivado info message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   INFO: Helper process launched with PID 29056
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "INFO"
@@ -354,6 +419,12 @@ class VivadoStuntedInfoMessage(VivadoMessage, InfoMessage):
 class VivadoWarningMessage(VivadoMessage, WarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado warning message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -368,6 +439,12 @@ class VivadoWarningMessage(VivadoMessage, WarningMessage):
 class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado Design Rule Check (DRC) warning message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   WARNING: [DRC PDCN-1569] LUT equation term check: Used physical LUT pin 'A1' of cell ps/path/to/cell (pin ps/path/to/cell/I0) is not included in the LUT equation: 'O6=(A6+~A6)*((A3*A2)+(A3*(~A2)*A5)+((~A3)*A4*A5)+((~A3)*(~A4)*A2)+((~A3)*(~A4)*(~A2)*A5))'. If this cell is a user instantiated LUT in the design, please remove connectivity to the pin or change the equation and/or INIT string of the LUT to prevent this issue. If the cell is inferred or IP created LUT, please regenerate the IP and/or resynthesize the design to attempt to correct the issue.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -408,6 +485,12 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado XPM warning message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   WARNING: [XPM_CDC_GRAY: TCL-1000] The source and destination clocks are the same.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -448,6 +531,12 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 	"""
 	This class represents a stunted AMD/Xilinx Vivado warning message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   WARNING: Some message text
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -468,6 +557,12 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 class VivadoCriticalWarningMessage(VivadoMessage, CriticalWarningMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado critical warning message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   CRITICAL WARNING: [Constraints 18-1056] Clock 'RefClkA_SFP_Quad' completely overrides clock 'USRCLKA_SFP[P]'.
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "CRITICAL WARNING"
@@ -482,6 +577,12 @@ class VivadoCriticalWarningMessage(VivadoMessage, CriticalWarningMessage):
 class VivadoErrorMessage(VivadoMessage, ErrorMessage):
 	"""
 	This class represents an AMD/Xilinx Vivado error message.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   ERROR: [Memdata 28-96] Could not find a BMM_INFO_DESIGN property in the design. Could not generate the merged BMM file: C:/Users/username/git/design.runs/impl_1/system_top_bd.bmm
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "ERROR"

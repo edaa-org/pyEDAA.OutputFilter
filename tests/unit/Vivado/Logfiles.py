@@ -299,7 +299,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2019_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vdi")
@@ -387,7 +386,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2019_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vdi")
@@ -475,7 +473,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2020_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vdi")
@@ -563,7 +560,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2020_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vdi")
@@ -651,7 +647,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2021_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.1.vdi")
@@ -739,7 +734,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2021_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vdi")
@@ -914,7 +908,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
 
-	@mark.xfail()
 	def test_ImplementationLogfile_2022_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vdi")
