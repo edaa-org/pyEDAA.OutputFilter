@@ -410,31 +410,27 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(21, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(27, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(24, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
-		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
-		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
-		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
-		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
+		self.assertNotIn(PhysicalOptimizeDesign, processor)
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
@@ -509,25 +505,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -596,25 +592,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(12, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -683,25 +679,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -770,25 +766,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -944,25 +940,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))

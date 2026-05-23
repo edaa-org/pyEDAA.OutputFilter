@@ -530,7 +530,7 @@ class SubPhase_FinalPlacementCleanup(SubPhase):
 	Used by phase :class:`Phase_PostPlacementOptimizationAndCleanUp`.
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Final Placement Cleanup")
-	_FINISH: ClassVar[Pattern] = compile(r"Time \(s\):")
+	_FINISH: ClassVar[str] = "Time (s):"
 	_TIME:   ClassVar[str] = None
 
 

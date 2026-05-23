@@ -88,7 +88,7 @@ class LinkDesign(TestCase):
 			link_design completed successfully
 			link_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:15 . Memory (MB): peak = 854.375 ; gain = 448.512"""
 	_POSTAMBLE: ClassVar[str] = """\
-			INFO: [Common 17-206] 8-Exiting Vivado at Tue Sep  2 08:46:23 2025..."""
+			INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:46:23 2025..."""
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
@@ -105,7 +105,7 @@ class LinkDesign(TestCase):
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDatetime)
-		# self.assertEqual(151, processor.Duration)  # TODO: check Duration computation
+		self.assertEqual(91, processor.Duration)
 		self.assertEqual(8, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))

@@ -59,6 +59,11 @@ from pyEDAA.OutputFilter.Xilinx.RouteDesign      import RoutingTask
 
 
 @export
+class CommandNotPresentException(NotPresentException):
+	pass
+
+
+@export
 class SectionNotPresentException(NotPresentException):
 	pass
 
@@ -147,16 +152,14 @@ class Command(Parser):
 			line._kind |= LineKind.Failed
 
 		line = yield line
-		end = f"{self._TCL_COMMAND}: {self._TIME}"
-		while self._TIME is not None:
+
+		if self._TIME is not None:  # and self._processor._preamble._toolVersion > "2022.2":
+			end = f"{self._TCL_COMMAND}: {self._TIME}"
 			if line.StartsWith(end):
 				line._kind = LineKind.TaskTime
-				break
+				line = yield line
 
-			line = yield line
-
-		nextLine = yield line
-		return nextLine
+		return line
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
 		line = yield from self._CommandStart(line)
@@ -915,7 +918,7 @@ class ReportDRC(Command):
 	A Vivado command output parser for ``report_drc``.
 	"""
 	_TCL_COMMAND: ClassVar[str] = "report_drc"
-	_TIME:        ClassVar[str] = None
+	_TIME:        ClassVar[str] = "Time (s):"
 
 
 @export

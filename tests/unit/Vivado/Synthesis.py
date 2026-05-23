@@ -56,7 +56,7 @@ class SynthDesign(TestCase):
 			# Start of session at: Tue Sep  2 08:44:13 2025
 			#-----------------------------------------------------------""")
 	_POSTAMBLE: ClassVar[str] = ("""\
-			INFO: [Common 17-206] 3-Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
+			INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
 	_SYNTHESIS_START: ClassVar[str] = ("""\
 			Command: synth_design -top system_top -part xc7z015clg485-2
 			Starting synth_design""")

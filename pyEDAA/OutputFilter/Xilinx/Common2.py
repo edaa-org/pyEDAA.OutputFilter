@@ -177,8 +177,10 @@ class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
 			else:
 				sub[message._messageKindID] = [message]
 		else:
-			self._toolIDs[message._toolID] = message._toolName
-			self._toolNames[message._toolName] = message._toolID
+			if message._toolID is not None:
+				self._toolIDs[message._toolID] = message._toolName
+				self._toolNames[message._toolName] = message._toolID
+
 			self._messagesByID[message._toolID] = {message._messageKindID: [message]}
 
 
@@ -685,7 +687,7 @@ class TaskWithPhases(Task):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Phase):
-			ex = TypeError(f"Parameter 'item' is not a Phase.")
+			ex = TypeError(f"Parameter 'key' is not a Phase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
