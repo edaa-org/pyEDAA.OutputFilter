@@ -29,17 +29,16 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
-from datetime import datetime
-from re       import Pattern, compile as re_compile
-from typing import ClassVar, Optional as Nullable, Generator, List, Dict, Tuple, Type, Any
+from datetime              import datetime
+from re                    import Pattern, compile as re_compile
+from typing                import ClassVar, Optional as Nullable, Generator, List, Dict, Tuple, Type, Any
 
-from pyTooling.Common import getFullyQualifiedName
+from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
 from pyTooling.Versioning  import YearReleaseVersion
 from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 
-from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import Line, LineKind, VivadoMessage, InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, NotPresentException
@@ -540,7 +539,7 @@ class TaskWithSubTasks(Task):
 
 		return key in self._subtasks
 
-	def __getitem__(self, key: Type[SubTask]) -> SubTask:
+	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
 		try:
 			return self._subtasks[key]
 		except KeyError as ex:
@@ -693,7 +692,7 @@ class TaskWithPhases(Task):
 
 		return key in self._phases
 
-	def __getitem__(self, key: Type[Phase]) -> Phase:
+	def __getitem__(self, key: Type["Phase"]) -> "Phase":
 		try:
 			return self._phases[key]
 		except KeyError as ex:
@@ -865,7 +864,7 @@ class PhaseWithChildren(Phase):
 
 		return key in self._subPhases
 
-	def __getitem__(self, key: Type[SubPhase]) -> SubPhase:
+	def __getitem__(self, key: Type["SubPhase"]) -> "SubPhase":
 		try:
 			return self._subPhases[key]
 		except KeyError as ex:
@@ -1018,7 +1017,7 @@ class SubPhaseWithChildren(SubPhase):
 
 		return key in self._subSubPhases
 
-	def __getitem__(self, key: Type[SubSubPhase]) -> SubSubPhase:
+	def __getitem__(self, key: Type["SubSubPhase"]) -> "SubSubPhase":
 		try:
 			return self._subSubPhases[key]
 		except KeyError as ex:
@@ -1172,7 +1171,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 		return key in self._subSubSubPhases
 
-	def __getitem__(self, key: Type[SubSubSubPhase]) -> SubSubSubPhase:
+	def __getitem__(self, key: Type["SubSubSubPhase"]) -> "SubSubSubPhase":
 		try:
 			return self._subSubSubPhases[key]
 		except KeyError as ex:

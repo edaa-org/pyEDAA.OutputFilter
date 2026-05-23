@@ -135,10 +135,11 @@ class Parsing(TestCase):
 
 		self.assertEqual(messageText, str(message))
 
-	@mark.xfail
-	def test_Info_AbnormalFormat(self) -> None:
+	# todo: there are more info formats
+	def test_Info_IrregularFormat(self) -> None:
 		messageText = "INFO: [runctrl-25] some message"
-		message = VivadoInfoMessage.Parse(1, messageText)
+		if (message := VivadoInfoMessage.Parse(1, messageText)) is None:
+			message = VivadoIrregularInfoMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("runctrl", message.ToolName)
@@ -154,6 +155,7 @@ class Parsing(TestCase):
 
 		self.assertIsNone(message)
 
+	# todo: there are more warning formats
 	def test_Warning(self) -> None:
 		messageText = "WARNING: [synth 8-25] some message"
 		message = VivadoWarningMessage.Parse(1, messageText)
@@ -166,10 +168,10 @@ class Parsing(TestCase):
 
 		self.assertEqual(messageText, str(message))
 
-	@mark.xfail
 	def test_Warning_AbnormalFormat(self) -> None:
 		messageText = "WARNING: some message"
-		message = VivadoInfoMessage.Parse(1, messageText)
+		if (message := VivadoInfoMessage.Parse(1, messageText)) is None:
+			message = VivadoStuntedWarningMessage.Parse(1, messageText)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertIsNone(message.ToolName)
