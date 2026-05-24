@@ -30,16 +30,22 @@
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
 from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, Type
+from typing import ClassVar, Dict, Generator, Type, Optional as Nullable, Any, Union
 
+from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 
-from pyEDAA.OutputFilter.Xilinx.Common import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, \
-	VHDLReportMessage, VivadoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage
-from pyEDAA.OutputFilter.Xilinx.Common2 import BaseParser
+from pyEDAA.OutputFilter.Xilinx.Exception import NotPresentException
+from pyEDAA.OutputFilter.Xilinx.Common    import VHDLAssertionMessage, Line, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx.Common2   import BaseParser
 
 TIME_MEMORY_PATTERN = re_compile(r"""Time \(s\): cpu = (\d{2}:\d{2}:\d{2}) ; elapsed = (\d{2}:\d{2}:\d{2}) . Memory \(MB\): peak = (\d+\.\d+) ; gain = (\d+\.\d+)""")
+
+
+@export
+class SubSectionNotPresentException(NotPresentException):
+	pass
 
 
 @export
@@ -59,13 +65,22 @@ class BaseSection(metaclass=ExtendedType, mixin=True):
 
 @export
 class Section(BaseParser, BaseSection):
+	"""
+	Base-class for sections within log outputs from *synthesize design*.
+	"""
+	# _NAME:   ClassVar[str]
 	# _START:  ClassVar[str]
 	# _FINISH: ClassVar[str]
 
-	_command:  "Command"
-	_duration: float
+	_command:  "Command"  #: Reference to the command (parent).
+	_duration: float      #: Duration synthesis spent in processing a synthesis step logged in this log output section.
 
 	def __init__(self, command: "Command") -> None:
+		"""
+		Initialized a section.
+
+		:param command: Reference to the parent TCL command.
+		"""
 		super().__init__()  #command._processor)
 
 		self._command = command
@@ -73,6 +88,12 @@ class Section(BaseParser, BaseSection):
 
 	@readonly
 	def Duration(self) -> float:
+		"""
+		Read-only property to access the duration synthesis spent in processing a synthesis step logged in this log output
+		section.
+
+		:returns: Synthesis step duration in seconds.
+		"""
 		return self._duration
 
 	def _SectionStart(self, line: Line) -> Generator[Line, Line, Line]:
@@ -158,9 +179,19 @@ class Section(BaseParser, BaseSection):
 
 @export
 class SubSection(BaseParser, BaseSection):
-	_section: Section
+	"""
+	Base-class for subsections within log outputs from *synthesize design*.
+	"""
+	# _NAME:    ClassVar[str]
+
+	_section: Section  #: Reference to the section (parent).
 
 	def __init__(self, section: Section) -> None:
+		"""
+		Initialized a subsection.
+
+		:param section: Reference to the parent section.
+		"""
 		super().__init__()
 		self._section = section
 
@@ -219,7 +250,40 @@ class SubSection(BaseParser, BaseSection):
 
 
 @export
+class SectionWithChildren(Section):
+	"""
+	Base-class for sections with subsections.
+	"""
+	_subsections: Dict[Type[SubSection], SubSection]
+
+	def __init__(self, command: "Command") -> None:
+		super().__init__(command)
+
+		self._subsections = {}
+
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, SubSection):
+			ex = TypeError(f"Parameter 'item' is not a SubSection.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._subsections
+
+	def __getitem__(self, item: Type[SubSection]) -> SubSection:
+		try:
+			return self._sections[item]
+		except KeyError as ex:
+			raise SubSectionNotPresentException(f"SubSection '{item._NAME}' not present in '{self._parent._parent.logfile}'.") from ex
+
+
+@export
 class RTLElaboration(Section):
+	"""
+	*RTL Elaboration* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "RTL Elaboration"
 	_START:  ClassVar[str] = "Starting RTL Elaboration : "
 	_FINISH: ClassVar[str] = "Finished RTL Elaboration : "
 
@@ -262,30 +326,58 @@ class RTLElaboration(Section):
 
 @export
 class HandlingCustomAttributes(Section):
+	"""
+	*Handling Custom Attributes* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Handling Custom Attributes"
 	_START:  ClassVar[str] = "Start Handling Custom Attributes"
 	_FINISH: ClassVar[str] = "Finished Handling Custom Attributes : "
 
 
 @export
 class ConstraintValidation(Section):
+	"""
+	*Constraint Validation* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Constraint Validation"
 	_START:  ClassVar[str] = "Finished RTL Optimization Phase 1"
 	_FINISH: ClassVar[str] = "Finished Constraint Validation : "
 
 
 @export
 class LoadingPart(Section):
+	"""
+	*Loading Part and Timing Information* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Loading Part and Timing Information"
 	_START:  ClassVar[str] = "Start Loading Part and Timing Information"
 	_FINISH: ClassVar[str] = "Finished Loading Part and Timing Information : "
 
-	_part: str
+	_part:   Nullable[str]  #: Part name of the device this design was synthesized for.
 
-	def __init__(self, processor: "Processor") -> None:
-		super().__init__(processor)
+	def __init__(self, command: "Command") -> None:
+		"""
+		Initializes the section for loading the device information.
+
+		:param command: Reference to the TCL command.
+		"""
+		super().__init__(command)
 
 		self._part = None
 
 	@readonly
-	def Part(self) -> str:
+	def Part(self) -> Nullable[str]:
+		"""
+		Read-only property to access the used device's part name.
+
+		:returns: Part name of the device this design was synthesized for.
+		"""
 		return self._part
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
@@ -313,12 +405,24 @@ class LoadingPart(Section):
 
 @export
 class ApplySetProperty(Section):
+	"""
+	*Applying 'set_property' XDC Constraints* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Applying 'set_property' XDC Constraints"
 	_START:  ClassVar[str] = "Start Applying 'set_property' XDC Constraints"
 	_FINISH: ClassVar[str] = "Finished applying 'set_property' XDC Constraints : "
 
 
 @export
 class RTLComponentStatistics(Section):
+	"""
+	*RTL Component Statistics* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "RTL Component Statistics"
 	_START:  ClassVar[str] = "Start RTL Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Component Statistics"
 
@@ -345,70 +449,124 @@ class RTLComponentStatistics(Section):
 
 @export
 class RTLHierarchicalComponentStatistics(Section):
+	"""
+	*RTL Hierarchical Component Statistics* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "RTL Hierarchical Component Statistics"
 	_START:  ClassVar[str] = "Start RTL Hierarchical Component Statistics"
 	_FINISH: ClassVar[str] = "Finished RTL Hierarchical Component Statistics"
 
 
 @export
 class PartResourceSummary(Section):
+	"""
+	*Part Resource Summary* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Part Resource Summary"
 	_START:  ClassVar[str] = "Start Part Resource Summary"
 	_FINISH: ClassVar[str] = "Finished Part Resource Summary"
 
 
 @export
 class CrossBoundaryAndAreaOptimization(Section):
+	"""
+	*Cross Boundary and Area Optimization* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Cross Boundary and Area Optimization"
 	_START:  ClassVar[str] = "Start Cross Boundary and Area Optimization"
 	_FINISH: ClassVar[str] = "Finished Cross Boundary and Area Optimization : "
 
 
 @export
 class ROM_RAM_DSP_SR_Retiming(Section):
+	"""
+	*ROM, RAM, DSP, Shift Register and Retiming Reporting* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "ROM, RAM, DSP, Shift Register and Retiming Reporting"
 	_START:  ClassVar[str] = "Start ROM, RAM, DSP, Shift Register and Retiming Reporting"
 	_FINISH: ClassVar[str] = "Finished ROM, RAM, DSP, Shift Register and Retiming Reporting"
 
 
 @export
 class ApplyingXDCTimingConstraints(Section):
+	"""
+	*Applying XDC Timing Constraints* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Applying XDC Timing Constraints"
 	_START:  ClassVar[str] = "Start Applying XDC Timing Constraints"
 	_FINISH: ClassVar[str] = "Finished Applying XDC Timing Constraints : "
 
 
 @export
 class TimingOptimization(Section):
+	"""
+	*Timing Optimization* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Timing Optimization"
 	_START:  ClassVar[str] = "Start Timing Optimization"
 	_FINISH: ClassVar[str] = "Finished Timing Optimization : "
 
 
 @export
 class TechnologyMapping(Section):
+	"""
+	*Technology Mapping* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Technology Mapping"
 	_START:  ClassVar[str] = "Start Technology Mapping"
 	_FINISH: ClassVar[str] = "Finished Technology Mapping : "
 
 
 @export
 class FlatteningBeforeIOInsertion(SubSection):
+	"""
+	*Flattening Before IO Insertion* subsection.
+
+	Used by section :class:`IOInsertion`.
+	"""
+	_NAME:   ClassVar[str] = "Flattening Before IO Insertion"
 	_START:  ClassVar[str] = "Start Flattening Before IO Insertion"
 	_FINISH: ClassVar[str] = "Finished Flattening Before IO Insertion"
 
 
 @export
 class FinalNetlistCleanup(SubSection):
+	"""
+	*Final Netlist Cleanup* subsection.
+
+	Used by section :class:`IOInsertion`.
+	"""
+	_NAME:   ClassVar[str] = "Final Netlist Cleanup"
 	_START:  ClassVar[str] = "Start Final Netlist Cleanup"
 	_FINISH: ClassVar[str] = "Finished Final Netlist Cleanup"
 
 
 @export
-class IOInsertion(Section):
+class IOInsertion(SectionWithChildren):
+	"""
+	*IO Insertion* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "IO Insertion"
 	_START:  ClassVar[str] = "Start IO Insertion"
 	_FINISH: ClassVar[str] = "Finished IO Insertion : "
 
-	_subsections: Dict[Type[SubSection], SubSection]
-
-	def __init__(self, command: "Command") -> None:
-		super().__init__(command)
-
-		self._subsections = {}
-
+	# TODO: generalize, use _PARSERS and move to SectionWithChildren
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
 		line = yield from self._SectionStart(line)
 
@@ -461,35 +619,65 @@ class IOInsertion(Section):
 
 @export
 class RenamingGeneratedInstances(Section):
+	"""
+	*Renaming Generated Instances* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Instances"
 	_START:  ClassVar[str] = "Start Renaming Generated Instances"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Instances : "
 
 
 @export
 class RebuildingUserHierarchy(Section):
+	"""
+	*Rebuilding User Hierarchy* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Rebuilding User Hierarchy"
 	_START:  ClassVar[str] = "Start Rebuilding User Hierarchy"
 	_FINISH: ClassVar[str] = "Finished Rebuilding User Hierarchy : "
 
 
 @export
 class RenamingGeneratedPorts(Section):
+	"""
+	*Renaming Generated Ports* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Ports"
 	_START:  ClassVar[str] = "Start Renaming Generated Ports"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Ports : "
 
 
 @export
 class RenamingGeneratedNets(Section):
+	"""
+	*Renaming Generated Nets* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Renaming Generated Nets"
 	_START:  ClassVar[str] = "Start Renaming Generated Nets"
 	_FINISH: ClassVar[str] = "Finished Renaming Generated Nets : "
 
 
 @export
 class WritingSynthesisReport(Section):
+	"""
+	*Writing Synthesis Report* section.
+
+	Used by Vivado command :class:`~pyEDAA.OutputFilter.Xilinx.Commands.SynthesizeDesign`.
+	"""
+	_NAME:   ClassVar[str] = "Writing Synthesis Report"
 	_START:  ClassVar[str] = "Start Writing Synthesis Report"
 	_FINISH: ClassVar[str] = "Finished Writing Synthesis Report : "
 
-	_blackboxes: Dict[str, int]
-	_cells:      Dict[str, int]
+	_blackboxes: Dict[str, int]  #: Blackbox statistics: blackbox name -> count
+	_cells:      Dict[str, int]  #: Cell statistics: cell name -> count
 
 	def __init__(self, command: "Command") -> None:
 		super().__init__(command)
@@ -499,13 +687,41 @@ class WritingSynthesisReport(Section):
 
 	@readonly
 	def Cells(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of synthesized cell statistics.
+
+		:returns: The dictionary of used cell statistics.
+		"""
 		return self._cells
 
 	@readonly
 	def Blackboxes(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of found blackbox statistics.
+
+		:returns: The dictionary of found blackbox statistics.
+		"""
 		return self._blackboxes
 
 	def _BlackboxesGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A parser parsing the blackboxes table.
+
+		:param line: First line to process.
+		:returns:    A generator to process multiple lines containing a table of blackboxes.
+
+		.. rubric:: Example
+
+		.. code-block::
+
+		   Report BlackBoxes:
+		   +------+----------------------------------+----------+
+		   |      |BlackBox name                     |Instances |
+		   +------+----------------------------------+----------+
+		   |1     |name                              |         1|
+		   |[...] |[...]                             |     [...]|
+		   +------+----------------------------------+----------+
+		"""
 		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:
@@ -542,6 +758,24 @@ class WritingSynthesisReport(Section):
 		return nextLine
 
 	def _CellGenerator(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A parser parsing the cell statistic table.
+
+		:param line: First line to process.
+		:returns:    A generator to process multiple lines containing a table of cell statistics.
+
+		.. rubric:: Example
+
+		.. code-block::
+
+		   Report Cell Usage:
+		   +------+----------------------------------+------+
+		   |      |Cell                              |Count |
+		   +------+----------------------------------+------+
+		   |1     |name                              |     1|
+		   |[...] |[...]                             | [...]|
+		   +------+----------------------------------+------+
+		"""
 		if line.StartsWith("+-"):
 			line._kind = LineKind.TableFrame
 		else:

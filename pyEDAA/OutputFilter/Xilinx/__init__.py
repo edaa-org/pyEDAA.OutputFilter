@@ -29,23 +29,26 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
+from datetime import datetime
 from pathlib  import Path
 from typing   import Optional as Nullable, Dict, List, Generator, Union, Type
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
+from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
 
-from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line
+from pyEDAA.OutputFilter.Xilinx.Common    import LineKind, Line, VivadoStuntedInfoMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VivadoMessage, TclCommand, VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoIrregularInfoMessage
-from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoIrregularWarningMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import InfoMessage, VivadoInfoMessage, VivadoDRCInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
+from pyEDAA.OutputFilter.Xilinx.Common    import WarningMessage, VivadoWarningMessage, VivadoDRCWarningMessage, VivadoXPMWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import CriticalWarningMessage, VivadoCriticalWarningMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import ErrorMessage, VivadoErrorMessage
 from pyEDAA.OutputFilter.Xilinx.Common    import VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Commands import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, \
-	PhysicalOptimizeDesign, RouteDesign, WriteBitstream, ReportDRC, ReportMethodology, ReportPower
-from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin
+from pyEDAA.OutputFilter.Xilinx.Commands  import Command, SynthesizeDesign, LinkDesign, OptimizeDesign, PlaceDesign, CommandNotPresentException
+from pyEDAA.OutputFilter.Xilinx.Commands  import PhysicalOptimizeDesign, RouteDesign, WriteBitstream
+from pyEDAA.OutputFilter.Xilinx.Commands  import ReportDRC, ReportMethodology, ReportPower
+from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin, Postamble
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
 
@@ -54,48 +57,137 @@ ProcessedLine = Union[Line, ProcessorException]
 
 @export
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
-	_duration:                float
+	"""
+	A processor for Vivado log outputs.
 
-	_lines:                   List[ProcessedLine]
-	_preamble:                Preamble
-	_commands:                Dict[Type[Command], Command]
+	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
+	doubly-linked list.
+	"""
+	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
+	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
+
+	_lines:                   List[ProcessedLine]           #: A list of processed log message lines.
+	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
+	_postamble:               Postamble                     #: Reference to the Vivado postamble written after tool startup.
+	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
 	def __init__(self) -> None:
+		"""
+		Initializes a Vivado log output processor.
+		"""
 		super().__init__()
 
 		self._duration =                0.0
+		self._processingDuration =      0.0
 
 		self._lines =                   []
 		self._preamble =                None
+		self._postamble =               None
 		self._commands =                {}
 
 	@readonly
 	def Lines(self) -> List[ProcessedLine]:
+		"""
+		Read-only property to access the list of processed and classified log lines (messages).
+
+		:returns: A list of processed lines.
+		"""
 		return self._lines
 
 	@readonly
 	def Preamble(self) -> Preamble:
+		"""
+		Read-only property to access the parsed preamble information.
+
+		:returns: The log output preamble.
+		"""
 		return self._preamble
 
 	@readonly
+	def Postamble(self) -> Postamble:
+		"""
+		Read-only property to access the parsed postamble information.
+
+		:returns: The log output postamble.
+		"""
+		return self._postamble
+
+	@readonly
 	def Commands(self) -> Dict[Type[Command], Command]:
+		"""
+		Read-only property to access the dictionary of processed Vivado commands.
+
+		:returns: The dictionary of processed Vivado commands.
+		"""
 		return self._commands
 
 	@readonly
 	def Duration(self) -> float:
-		return self._duration
+		"""
+		 Duration of the observed process (e.g. start to end of synthesis).
 
-	def __getitem__(self, item: Type[Command]) -> Command:
-		return self._commands[item]
+		:returns: The observed process' execution duration in seconds.
+		"""
+		if (startTime := self._preamble._startDatetime) is None:
+			raise ProcessorException("No start timestamp extracted from preamble.")
+		if (exitTime := self._postamble._exitDatetime) is None:
+			raise ProcessorException("No exit timestamp extracted from postamble.")
 
+		return (exitTime - startTime).total_seconds()
+
+	@readonly
+	def ProcessingDuration(self) -> float:
+		"""
+		Processing duration for the log output processor to parse all log messages.
+
+		:returns: The processing duration in seconds.
+		"""
+		return self._processingDuration
+
+	def __contains__(self, key: Type[Command]) -> bool:
+		"""
+		Returns True, if log outputs where found for the given command.
+
+		:param key: Vivado command (class).
+		:returns:   True, if the Vivado command's outputs were found in log outputs.
+		"""
+		if not issubclass(key, Command):
+			ex = TypeError(f"Parameter 'key' is not a Command.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._commands
+
+	def __getitem__(self, key: Type[Command]) -> Command:
+		"""
+		Access Vivado command specific log outputs and parsed data by the command.
+
+		:param key: Vivado command (class) to access.
+		:returns:   A Vivado command instance with parsed log messages and extracted data.
+		"""
+		try:
+			return self._commands[key]
+		except KeyError as ex:
+			raise CommandNotPresentException(F"Command '{key._TCL_COMMAND}' not present in '{self._logfile}'.") from ex
+
+	@readonly
 	def IsIncompleteLog(self) -> bool:
 		"""
+		Read-only property returning true if the processed Vivado log output is incomplete.
 
-		:returns: undocumented
+		A log can be incomplete, because:
+
+		* Vivado disabled messages, because too many messages of the same kind appeared. Usually, a message type is disabled
+		  after 100 messages of that type. This is indicated by message ``[Common 17-14]``.
+
+		:returns: True, if messages where silenced by Vivado.
 
 		.. note::
 
-		   ``INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.``
+		   .. code-block::
+
+		      INFO: [Common 17-14] Message 'Synth 8-3321' appears 100 times and further instances of the messages will be
+		      disabled. Use the Tcl command set_msg_config to change the current settings.
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
@@ -114,61 +206,67 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			rawMessageLine = rawMessageLine.rstrip()
 			errorMessage = _errorMessage
 
-			if rawMessageLine.startswith(VivadoInfoMessage._MESSAGE_KIND):
-				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine)) is None:
-					line = VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine)
+			if len(rawMessageLine) == 0:
+				line = Line(lineNumber, LineKind.Empty, rawMessageLine, previousLine=lastLine)
+			elif rawMessageLine.startswith("INFO"):
+				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+					if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 				errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
-			elif rawMessageLine.startswith(VivadoWarningMessage._MESSAGE_KIND):
-				if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine)) is None:
-					line = VivadoIrregularWarningMessage.Parse(lineNumber, rawMessageLine)
+			elif rawMessageLine.startswith("WARNING"):
+				if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+					if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 				errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
-			elif rawMessageLine.startswith(VivadoCriticalWarningMessage._MESSAGE_KIND):
-				line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine)
+			elif rawMessageLine.startswith("CRITICAL WARNING"):
+				line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 				errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-			elif rawMessageLine.startswith(VivadoErrorMessage._MESSAGE_KIND):
-				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine)
+			elif rawMessageLine.startswith("ERROR"):
+				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 				errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
-			elif len(rawMessageLine) == 0:
-				line = Line(lineNumber, LineKind.Empty, rawMessageLine)
 			elif rawMessageLine.startswith("Command: "):
-				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine)
+				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
 				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
 			else:
-				line = Line(lineNumber, LineKind.Unprocessed, rawMessageLine)
+				line = Line(lineNumber, LineKind.Unprocessed, rawMessageLine, previousLine=lastLine)
 
-			if line is None:
-				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine)
-			else:
 				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
 					line._kind = LineKind.Verbose
 
-			line.PreviousLine = lastLine
-			lastLine = line
-			line = cmdFinder.send(line)
+			if line is None:
+				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine, previousLine=lastLine)
+
+				raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
 			if isinstance(line, VivadoMessage):
 				self._AddMessage(line)
+
+			line = cmdFinder.send(line)
 
 			if line._kind is LineKind.ProcessorError:
 				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
 			self._lines.append(line)
 
+			lastLine = line
 			rawMessageLine = yield line
 
 	def CommandFinder(self) -> Generator[Line, Line, None]:
-		self._preamble = Preamble(self)
-		cmd = None
+		self._preamble =  Preamble(self)
+		self._postamble = Postamble(self)
 
 		tclProcedures = {"source"}
 
 		# wait for first line
 		line = yield
-		# process preable
+		# process preamble
 		line = yield from self._preamble.Generator(line)
 
 		while True:
@@ -176,6 +274,10 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoInfoMessage):
+					if line.ToolID == 17 and line.MessageKindID == 206:
+						lastLine = yield from self._postamble.Generator(line)
+						return lastLine
 				elif isinstance(line, VivadoTclCommand):
 					if line._command == SynthesizeDesign._TCL_COMMAND:
 						self._commands[SynthesizeDesign] = (cmd := SynthesizeDesign(self))
@@ -248,15 +350,33 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 @export
 class Document(Processor):
-	_logfile: Path
+	"""
+	A Vivado log output processor for a log file.
 
+	This processor represents a Vivado log file (e.g. ``*.vds`` or ``*.vdi``). It processees its content line-by-line
+	while	classifying each line as a message. The processing duration is available via :data:`ProcessingDuration`.
+	"""
+	_logfile: Path  #: Path to the processed logfile.
+
+	# FIXME: parse=True parameter
 	def __init__(self, logfile: Path) -> None:
+		"""
+		Initializes a log file.
+
+		:param logfile: Path to the log file.
+		"""
 		super().__init__()
 
+		# FIXME: check if path
 		self._logfile = logfile
 
 	@readonly
 	def Logfile(self) -> Path:
+		"""
+		Read-only property to access the document's path.
+
+		:returns: Path to the log file.
+		"""
 		return self._logfile
 
 	def Parse(self) -> None:
@@ -268,4 +388,4 @@ class Document(Processor):
 			for rawLine in content.splitlines():
 				generator.send(rawLine)
 
-		self._duration = sw.Duration
+		self._processingDuration = sw.Duration

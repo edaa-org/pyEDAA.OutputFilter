@@ -4,11 +4,11 @@
    # percent encoding so that the URL is properly parsed.
 
 .. # Sourcecode link to GitHub
-.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:svg:OutputFilter-github| image:: https://img.shields.io/badge/pyEDAA-OutputFilter-ffca28?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
-.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-OutputFilter-ffca28.svg?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
+.. |SHIELD:png:OutputFilter-github| image:: https://raster.shields.io/badge/pyEDAA-OutputFilter-ffca28?longCache=true&style=flat-square&logo=github&longCache=true&logo=GitHub&labelColor=ff8f00
    :alt: Sourcecode on GitHub
    :height: 22
    :target: https://GitHub.com/edaa-org/pyEDAA.OutputFilter
@@ -170,11 +170,11 @@
    :target: https://edaa-org.github.io/pyEDAA.OutputFilter/
 
 .. # Gitter
-.. |SHIELD:svg:OutputFilter-gitter| image:: https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef
+.. |SHIELD:svg:OutputFilter-gitter| image:: https://img.shields.io/badge/chat-on%20gitter-4db797?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef
    :alt: Documentation License
    :height: 22
    :target: https://gitter.im/hdl/community
-.. |SHIELD:png:OutputFilter-gitter| image:: https://raster.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef
+.. |SHIELD:png:OutputFilter-gitter| image:: https://raster.shields.io/badge/chat-on%20gitter-4db797?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef
    :alt: Documentation License
    :height: 22
    :target: https://gitter.im/hdl/community

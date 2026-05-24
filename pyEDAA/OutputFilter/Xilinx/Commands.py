@@ -31,17 +31,16 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from pathlib import Path
 from re      import compile as re_compile
-from typing  import ClassVar, Generator, Union, List, Type, Dict, Iterator, Any, Tuple
+from typing  import ClassVar, Generator, Union, List, Type, Dict, Any, Tuple
 
 from pyTooling.Decorators import export, readonly
-from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Common     import getFullyQualifiedName
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter                         import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx                  import VivadoTclCommand
-from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException
+from pyEDAA.OutputFilter.Xilinx.Exception        import ProcessorException, NotPresentException
 from pyEDAA.OutputFilter.Xilinx.Common           import Line, LineKind, VivadoMessage, VHDLReportMessage
-from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask
+from pyEDAA.OutputFilter.Xilinx.Common2          import Parser, UnknownSection, UnknownTask, Task
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import Section, RTLElaboration, HandlingCustomAttributes
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import ConstraintValidation, LoadingPart, ApplySetProperty
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLComponentStatistics, RTLHierarchicalComponentStatistics
@@ -52,7 +51,7 @@ from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import FlatteningBeforeIOInsert
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedInstances, RebuildingUserHierarchy
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RenamingGeneratedPorts, RenamingGeneratedNets
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
-from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import Task, DRCTask, CacheTimingInformationTask, LogicOptimizationTask
+from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import DRCTask, CacheTimingInformationTask, LogicOptimizationTask
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign   import PowerOptimizationTask, FinalCleanupTask, NetlistObfuscationTask
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign      import PlacerTask
 from pyEDAA.OutputFilter.Xilinx.PhysicalOptimizeDesign import PhysicalSynthesisTask, InitialUpdateTimingTask
@@ -60,7 +59,7 @@ from pyEDAA.OutputFilter.Xilinx.RouteDesign      import RoutingTask
 
 
 @export
-class NotPresentException(ProcessorException):
+class CommandNotPresentException(NotPresentException):
 	pass
 
 
@@ -78,7 +77,7 @@ class HandlingCustomAttributes1(HandlingCustomAttributes):
 class HandlingCustomAttributes2(HandlingCustomAttributes):
 	pass
 
-
+# FIXME: remove duplications
 @export
 class ROM_RAM_DSP_SR_Retiming1(ROM_RAM_DSP_SR_Retiming):
 	pass
@@ -96,11 +95,52 @@ class ROM_RAM_DSP_SR_Retiming3(ROM_RAM_DSP_SR_Retiming):
 
 @export
 class Command(Parser):
+	"""
+	This parser parses outputs from Vivado TCL commands.
+
+	Depending on the command's output (and how it's implemented), they use different subcategories.
+
+	.. rubric:: Command subcategories
+
+	* :class:`CommandWithSections`
+	* :class:`CommandWithtasks`
+
+	.. rubric:: Supported commands
+
+	* :class:`SynthesizeDesign`
+	* :class:`LinkDesign`
+	* :class:`OptimizeDesign`
+	* :class:`PlaceDesign`
+	* :class:`PhysicalOptimizeDesign`
+	* :class:`RouteDesign`
+	* :class:`WriteBitstream`
+	* :class:`ReportDRC`
+	* :class:`ReportMethodology`
+	* :class:`ReportPower`
+
+	.. rubric:: Example
+
+	.. code-block::
+
+     [...]
+	   Command: synth_design -top system_top -part xc7z015clg485-2
+     Starting synth_design
+     [...]
+	"""
+
 	# _TCL_COMMAND: ClassVar[str]
 
 	def _CommandStart(self, line: Line) -> Generator[Line, Line, Line]:
+		"""
+		A generator accepting a line containing the expected Vivado TCL command.
+
+		When the generator exits, the returned line is the successor line to the line containing the Vivado TCL command.
+
+		:param line: The first line for the generator to process.
+		:returns:    A generator processing Vivado output log lines.
+		"""
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
 		nextLine = yield line
 		return nextLine
@@ -112,16 +152,14 @@ class Command(Parser):
 			line._kind |= LineKind.Failed
 
 		line = yield line
-		end = f"{self._TCL_COMMAND}: {self._TIME}"
-		while self._TIME is not None:
+
+		if self._TIME is not None:  # and self._processor._preamble._toolVersion > "2022.2":
+			end = f"{self._TCL_COMMAND}: {self._TIME}"
 			if line.StartsWith(end):
 				line._kind = LineKind.TaskTime
-				break
+				line = yield line
 
-			line = yield line
-
-		nextLine = yield line
-		return nextLine
+		return line
 
 	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
 		line = yield from self._CommandStart(line)
@@ -145,9 +183,30 @@ class Command(Parser):
 
 @export
 class CommandWithSections(Command):
+	"""
+	A Vivado command writing sections into the output log.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   [...]
+	   ---------------------------------------------------------------------------------
+	   Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 847.230 ; gain = 176.500
+	   ---------------------------------------------------------------------------------
+	   INFO: [Synth 8-638] synthesizing module 'system_top' [C:/Users/tgomes/git/2019_1/src/system_top_PE1.vhd:257]
+	   [...]
+	   [...]
+	   [...]
+	   ---------------------------------------------------------------------------------
+	   Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 917.641 ; gain = 246.910
+	   ---------------------------------------------------------------------------------
+	   [...]
+	"""
+	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
+
 	_sections:  Dict[Type[Section], Section]
 
-	_PARSERS: ClassVar[Tuple[Type[Section], ...]] = dict()
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
@@ -156,31 +215,83 @@ class CommandWithSections(Command):
 
 	@readonly
 	def Sections(self) -> Dict[Type[Section], Section]:
+		"""
+		Read-only property to access a dictionary of found sections within the TCL command's output.
+
+		:returns: A dictionary of found :class:`~pyEDAA.OutputFilter.Xilinx.SynthesizeDesign.Section`s.
+		"""
 		return self._sections
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Section):
+			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._sections
+
 	def __getitem__(self, key: Type[Section]) -> Section:
-		return self._sections[key]
+		try:
+			return self._sections[key]
+		except KeyError as ex:
+			raise SectionNotPresentException(F"Section '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 
 @export
 class CommandWithTasks(Command):
+	"""
+	A Vivado command writing tasks into the output log.
+
+	.. rubric:: Example
+
+	.. code-block::
+
+     [...]
+     Starting Cache Timing Information Task
+     INFO: [Timing 38-35] 79-Done setting XDC timing constraints.
+     [...]
+     [...]
+     Ending Cache Timing Information Task | Checksum: 19fe8cb97
+     [...]
+	"""
+	# _PARSERS: Tuple[Type[Task], ...]
+
 	_tasks: Dict[Type[Task], Task]
 
 	def __init__(self, processor: "Processor") -> None:
 		super().__init__(processor)
 
-		self._tasks = {t: t(self) for t in self._PARSERS}
+		self._tasks = {p: p(self) for p in self._PARSERS}
 
 	@readonly
 	def Tasks(self) -> Dict[Type[Task], Task]:
+		"""
+		Read-only property to access a dictionary of found tasks within the TCL command's output.
+
+		:returns: A dictionary of found :class:`~pyEDAA.OutputFilter.Xilinx.Common2.Task`s.
+		"""
 		return self._tasks
 
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, Task):
+			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._tasks
+
 	def __getitem__(self, key: Type[Task]) -> Task:
-		return self._tasks[key]
+		try:
+			return self._tasks[key]
+		except KeyError as ex:
+			raise SectionNotPresentException(F"Task '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
 
 
 @export
 class SynthesizeDesign(CommandWithSections):
+	"""
+	A Vivado command output parser for ``synth_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
 	_PARSERS:     ClassVar[Tuple[Type[Section], ...]] = (
 		RTLElaboration,
@@ -211,32 +322,84 @@ class SynthesizeDesign(CommandWithSections):
 
 	@readonly
 	def HasLatches(self) -> bool:
+		"""
+		Read-only property returning if synthesis inferred latches into the design.
+
+		Latch detection is based on:
+
+		* Vivado message ``synth 8-327``
+		* Cells of lind ``LD`` listed in the *Cell Usage* report.
+
+		:returns: True, if the design contains latches.
+		"""
 		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
 			return True
 
 		return "LD" in self._sections[WritingSynthesisReport]._cells
 
 	@readonly
-	def Latches(self) -> Iterator[VivadoMessage]:
-		try:
-			yield from iter(self._messagesByID[8][327])
-		except KeyError:
-			yield from ()
+	def Latches(self) -> List[VivadoMessage]:
+		"""
+		Read-only property to access a list of Vivado output messages for inferred latches.
+
+		:returns: A list of Vivado messages for interred latches.
+
+		.. note::
+
+		   This returns ``[Synth 8-327]`` messages.
+
+		   .. code-block::
+
+          WARNING: [Synth 8-327] inferring latch for variable 'Q_reg'
+		"""
+		if 8 in self._messagesByID:
+			if 327 in (synthMessages := self._messagesByID[8]):
+				return [message for message in synthMessages[327]]
+
+		return []
 
 	@readonly
 	def HasBlackboxes(self) -> bool:
+		"""
+		Read-only property returning if the design contains black-boxes.
+
+		:returns: True, if the design contains black-boxes.
+		"""
 		return len(self._sections[WritingSynthesisReport]._blackboxes) > 0
 
 	@readonly
 	def Blackboxes(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of found blackbox statistics.
+
+		:returns: The dictionary of found blackbox statistics.
+		"""
 		return self._sections[WritingSynthesisReport]._blackboxes
 
 	@readonly
 	def Cells(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the dictionary of synthesized cell statistics.
+
+		:returns: The dictionary of used cell statistics.
+		"""
 		return self._sections[WritingSynthesisReport]._cells
 
 	@readonly
 	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
+		"""
+		Read-only property to access a list of Vivado output messages generated by VHDL report statement.
+
+		:returns: A list of VHDL report statement outputs.
+
+		.. note::
+
+		   This returns ``[Synth 8-6031]`` messages.
+
+		   .. code-block::
+
+          INFO: [Synth 8-6031] RTL report: "TimingToCycles(time, freq): period=10.000000 ns -- 0.000000 fs" [C:/[...]/StopWatch/src/Utilities.pkg.vhdl:118]
+		"""
 		if 8 in self._messagesByID:
 			if 6031 in (synthMessages := self._messagesByID[8]):
 				return [message for message in synthMessages[6031]]
@@ -245,23 +408,30 @@ class SynthesizeDesign(CommandWithSections):
 
 	@readonly
 	def VHDLAssertMessages(self) -> List[VHDLReportMessage]:
+		"""
+		Read-only property to access a list of Vivado output messages generated by VHDL assert statement.
+
+		:returns: A list of VHDL assert statement outputs.
+
+		.. note::
+
+		   This returns ``[Synth 8-63]`` messages.
+
+		   .. code-block::
+
+          INFO: [Synth 8-63] RTL assertion: "CLOCK_FREQ:           100.000000 ns" [C:/[...]/StopWatch/src/Debouncer.vhdl:28]
+		"""
 		if 8 in self._messagesByID:
 			if 63 in (synthMessages := self._messagesByID[8]):
 				return [message for message in synthMessages[63]]
 
 		return []
 
-	def __getitem__(self, item: Type[Parser]) -> Union[_PARSERS]:
-		try:
-			return self._sections[item]
-		except KeyError as ex:
-			raise SectionNotPresentException(F"Section '{item._NAME}' not present in '{self._parent.logfile}'.") from ex
-
-	def SectionDetector(self, line: Line) -> Generator[Union[Line, ProcessorException], Line, None]:
+	def SectionDetector(self, line: Line) -> Generator[Line, Line, None]:
 		if not (isinstance(line, VivadoTclCommand) and line._command == self._TCL_COMMAND):
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
-		activeParsers: List[Parser] = list(self._sections.values())
+		activeParsers: List[Section] = list(self._sections.values())
 
 		rtlElaboration = self._sections[RTLElaboration]
 		# constraintValidation = self._sections[ConstraintValidation]
@@ -270,7 +440,7 @@ class SynthesizeDesign(CommandWithSections):
 		if line == "Starting synth_design":
 			line._kind = LineKind.Verbose
 		else:
-			raise ProcessorException()
+			raise ProcessorException()  # FIXME: add exception message
 
 		line = yield line
 		while True:
@@ -278,6 +448,8 @@ class SynthesizeDesign(CommandWithSections):
 				if line._kind is LineKind.Empty:
 					line = yield line
 					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 				elif line.StartsWith("Start "):
 					for parser in activeParsers:  # type: Section
 						if line.StartsWith(parser._START):
@@ -287,8 +459,8 @@ class SynthesizeDesign(CommandWithSections):
 					else:
 						WarningCollector.Raise(UnknownSection(f"Unknown section: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown section: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith("Starting "):
@@ -311,9 +483,6 @@ class SynthesizeDesign(CommandWithSections):
 				elif line.StartsWith("----"):
 					if LineKind.Phase in line._previousLine._kind:
 						line._kind = LineKind.PhaseEnd | LineKind.PhaseDelimiter
-				elif not isinstance(line, VivadoMessage):
-					pass
-					# line._kind = LineKind.Unprocessed
 
 				line = yield line
 
@@ -338,6 +507,9 @@ class SynthesizeDesign(CommandWithSections):
 
 @export
 class LinkDesign(Command):
+	"""
+	A Vivado command output parser for ``link_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "link_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
@@ -435,6 +607,9 @@ class LinkDesign(Command):
 
 @export
 class OptimizeDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``opt_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -467,8 +642,8 @@ class OptimizeDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -510,6 +685,9 @@ class OptimizeDesign(CommandWithTasks):
 
 @export
 class PlaceDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``place_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "place_design"
 	_TIME:        ClassVar[str] = None
 
@@ -537,8 +715,8 @@ class PlaceDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -580,6 +758,9 @@ class PlaceDesign(CommandWithTasks):
 
 @export
 class PhysicalOptimizeDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``phy_opt_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "phys_opt_design"
 	_TIME:        ClassVar[str] = None
 
@@ -608,8 +789,8 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -651,6 +832,9 @@ class PhysicalOptimizeDesign(CommandWithTasks):
 
 @export
 class RouteDesign(CommandWithTasks):
+	"""
+	A Vivado command output parser for ``route_design``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "route_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
@@ -678,8 +862,8 @@ class RouteDesign(CommandWithTasks):
 					else:
 						WarningCollector.Raise(UnknownTask(f"Unknown task: '{line!r}'", line))
 						ex = Exception(f"How to recover from here? Unknown task: '{line!r}'")
-						ex.add_note(f"Current task: start pattern='{self._task}'")
-						ex.add_note(f"Current cmd:  {self._task._command}")
+						# ex.add_note(f"Current task: start pattern='{self._task}'")
+						ex.add_note(f"Current cmd:  {self}")
 						raise ex
 					break
 				elif line.StartsWith(self._TCL_COMMAND):
@@ -721,23 +905,35 @@ class RouteDesign(CommandWithTasks):
 
 @export
 class WriteBitstream(Command):
+	"""
+	A Vivado command output parser for ``write_bitstream``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "write_bitstream"
 	_TIME:        ClassVar[str] = "Time (s):"
 
 
 @export
 class ReportDRC(Command):
+	"""
+	A Vivado command output parser for ``report_drc``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_drc"
-	_TIME:        ClassVar[str] = None
+	_TIME:        ClassVar[str] = "Time (s):"
 
 
 @export
 class ReportMethodology(Command):
+	"""
+	A Vivado command output parser for ``report_methodology``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_methodology"
 	_TIME:        ClassVar[str] = None
 
 
 @export
 class ReportPower(Command):
+	"""
+	A Vivado command output parser for ``report_power``.
+	"""
 	_TCL_COMMAND: ClassVar[str] = "report_power"
 	_TIME:        ClassVar[str] = None
