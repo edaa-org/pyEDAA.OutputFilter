@@ -34,7 +34,7 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases
+from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, NestedPhase, NestedTaskWithPhases, SubSubSubPhaseWithTasks
 from pyEDAA.OutputFilter.Xilinx.Common2 import Phase, SubPhase, SubSubPhase, SubSubSubPhase
 from pyEDAA.OutputFilter.Xilinx.Common2 import PhaseWithChildren, SubPhaseWithChildren, SubSubPhaseWithChildren
 from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
@@ -446,10 +446,32 @@ class Phase_DetailPlacement(PhaseWithChildren):
 
 
 @export
-class SubSubSubPhase_BUFGInsertion(SubSubSubPhase):
+class NestedPhase_PhysicalSynthesisInitialization(NestedPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+
+
+@export
+class NestedTask_PhysicalSynthesis(NestedTaskWithPhases):
+	_START:  ClassVar[str] = "Starting Physical Synthesis Task"
+	_FINISH: ClassVar[str] = "Ending Physical Synthesis Task | Checksum:"
+	_TIME:   ClassVar[str] = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[NestedPhase], ...]] = (
+		NestedPhase_PhysicalSynthesisInitialization,
+	)
+
+
+@export
+class SubSubSubPhase_BUFGInsertion(SubSubSubPhaseWithTasks):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR_MICRO_NANO} BUFG Insertion")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex}.{subSubPhaseIndex}.{subSubSubPhaseIndex} BUFG Insertion | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+
+	_PARSERS: ClassVar[Tuple[Type[NestedTaskWithPhases], ...]] = (
+		NestedTask_PhysicalSynthesis,
+	)
 
 
 @export

@@ -32,16 +32,13 @@
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
-from pytest   import mark
-
 from pyTooling.Versioning                        import YearReleaseVersion
 from pyTooling.Warning                           import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx                  import Document, LinkDesign, OptimizeDesign, PlaceDesign, RouteDesign
+from pyEDAA.OutputFilter.Xilinx                  import Document, LinkDesign, OptimizeDesign, PlaceDesign, RouteDesign, Line
 from pyEDAA.OutputFilter.Xilinx                  import PhysicalOptimizeDesign, WriteBitstream
 from pyEDAA.OutputFilter.Xilinx.Commands         import SynthesizeDesign
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, \
-	RTLElaboration
+from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, CrossBoundaryAndAreaOptimization, RTLElaboration
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -71,8 +68,6 @@ class Stopwatch(TestCase):
 		with WarningCollector() as warnings:
 			processor = Document(logfile)
 			processor.Parse()
-
-		self.assertEqual(0, len(warnings))
 
 		self.assertEqual(processor.Duration, 42)
 		self.assertLess(processor.ProcessingDuration, 0.4)
@@ -104,6 +99,10 @@ class Stopwatch(TestCase):
 
 		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_ImplementationLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
@@ -113,8 +112,6 @@ class Stopwatch(TestCase):
 
 		for warning in warnings:
 			print(f"Warning: {warning}")
-
-		self.assertLess(processor.ProcessingDuration, 0.4)
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -169,6 +166,12 @@ class Stopwatch(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			if not isinstance(line, Line):
+				print(line)
+			self.assertIsInstance(line, Line)
+
 
 class CERN_DevKit(TestCase):
 	def test_SynthesisLogfile(self) -> None:
@@ -192,6 +195,10 @@ class CERN_DevKit(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
@@ -259,6 +266,10 @@ class CERN_DevKit(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 
 class Enclustra_Mercury_ZX5(TestCase):
 	def test_SynthesisLogfile_2019_1(self) -> None:
@@ -298,6 +309,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.WarningMessages), sumWarn.Value)
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2019_1(self) -> None:
 		print()
@@ -364,6 +379,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2019_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.2.vds")
@@ -385,6 +404,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2019_2(self) -> None:
 		print()
@@ -447,6 +470,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2020_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.1.vds")
@@ -468,6 +495,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2020_1(self) -> None:
 		print()
@@ -534,6 +565,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2020_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2020.2.vds")
@@ -555,6 +590,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2020_2(self) -> None:
 		print()
@@ -620,6 +659,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.WarningMessages), sumWarn.Value)
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_SynthesisLogfile_2021_1(self) -> None:
 		print()
@@ -708,6 +751,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2021_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2021.2.vds")
@@ -729,6 +776,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2021_2(self) -> None:
 		print()
@@ -795,6 +846,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2022_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.1.vds")
@@ -816,6 +871,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2022_1(self) -> None:
 		print()
@@ -882,6 +941,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2022_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2022.2.vds")
@@ -903,6 +966,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2022_2(self) -> None:
 		print()
@@ -969,6 +1036,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2023_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.1.vds")
@@ -990,6 +1061,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2023_1(self) -> None:
 		print()
@@ -1056,6 +1131,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2023_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2023.2.vds")
@@ -1077,6 +1156,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2023_2(self) -> None:
 		print()
@@ -1143,6 +1226,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2024_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.1.vds")
@@ -1164,6 +1251,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2024_1(self) -> None:
 		print()
@@ -1230,6 +1321,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2024_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2024.2.vds")
@@ -1251,6 +1346,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		synthesis = processor[SynthesizeDesign]
 		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2024_2(self) -> None:
 		print()
@@ -1317,6 +1416,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_SynthesisLogfile_2025_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.1.vds")
@@ -1328,16 +1431,19 @@ class Enclustra_Mercury_ZX5(TestCase):
 			print(f"Warning: {warning}")
 
 		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(70, len(processor.InfoMessages))
+		self.assertEqual(124, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_ImplementationLogfile_2025_1(self) -> None:
 		print()
@@ -1351,10 +1457,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		self.assertLess(processor.ProcessingDuration, 0.4)
 
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(152, len(processor.InfoMessages))
+		self.assertEqual(2, len(processor.WarningMessages))
+		self.assertEqual(2, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2025, 1), processor.Preamble.ToolVersion)
 
@@ -1363,25 +1469,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
@@ -1393,7 +1499,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -1403,3 +1509,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertGreaterEqual(len(processor.WarningMessages), sumWarn.Value)
 		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)

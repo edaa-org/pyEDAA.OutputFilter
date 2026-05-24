@@ -31,12 +31,13 @@
 """Unit tests for Vivado implementation log files."""
 from datetime import datetime
 from textwrap import dedent
-from typing import ClassVar
+from typing   import ClassVar
 from unittest import TestCase as TestCase
 
 from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, LinkDesign as xil_LinkDesign, OptimizeDesign as xil_OptimizeDesign
+from pyEDAA.OutputFilter.Xilinx import Processor, LinkDesign as xil_LinkDesign, OptimizeDesign as xil_OptimizeDesign, Line
 from pyEDAA.OutputFilter.Xilinx import PlaceDesign as xil_PlaceDesign, RouteDesign as xil_RouteDesign
 from pyEDAA.OutputFilter.Xilinx import ReportDRC
 from pyEDAA.OutputFilter.Xilinx.OptimizeDesign import DRCTask, CacheTimingInformationTask, LogicOptimizationTask, \
@@ -98,10 +99,11 @@ class LinkDesign(TestCase):
 {self._LINKDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDatetime)
@@ -119,6 +121,10 @@ class LinkDesign(TestCase):
 		self.assertEqual(0, len(linkDesign.ErrorMessages))
 
 		# TODO: check collected XDC files.
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 
 class OptimizeDesign(TestCase):
@@ -171,10 +177,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(9, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -195,6 +202,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(reportDRC.CriticalWarningMessages))
 		self.assertEqual(0, len(reportDRC.ErrorMessages))
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_DRCTask(self) -> None:
 		print()
 		report = dedent(f"""{self._PREAMBLE}
@@ -210,10 +221,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		optimizeDesign = processor[xil_OptimizeDesign]
 
@@ -223,6 +235,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(drcTask.WarningMessages))
 		self.assertEqual(0, len(drcTask.CriticalWarningMessages))
 		self.assertEqual(0, len(drcTask.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_CacheTimingInformationTask(self) -> None:
 		print()
@@ -238,10 +254,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		optimizeDesign = processor[xil_OptimizeDesign]
 
@@ -251,6 +268,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(cacheTimingInformationTask.WarningMessages))
 		self.assertEqual(0, len(cacheTimingInformationTask.CriticalWarningMessages))
 		self.assertEqual(0, len(cacheTimingInformationTask.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_LogicOptimizationTask(self) -> None:
 		print()
@@ -326,10 +347,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(20, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -344,8 +366,6 @@ class OptimizeDesign(TestCase):
 
 		self.assertIn(LogicOptimizationTask, optimizeDesign)
 		logicOptimizationTask = optimizeDesign[LogicOptimizationTask]
-		for msg in logicOptimizationTask.InfoMessages:
-			print(msg)
 		self.assertEqual(11, len(logicOptimizationTask.InfoMessages))
 		self.assertEqual(0, len(logicOptimizationTask.WarningMessages))
 		self.assertEqual(0, len(logicOptimizationTask.CriticalWarningMessages))
@@ -393,6 +413,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(postProcessingNetlist.CriticalWarningMessages))
 		self.assertEqual(0, len(postProcessingNetlist.ErrorMessages))
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_PowerOptimizationTask(self) -> None:
 		print()
 		report = dedent(f"""{self._PREAMBLE}
@@ -423,10 +447,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		optimizeDesign = processor[xil_OptimizeDesign]
 
@@ -444,6 +469,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(powerOptPatchEnablesTask.CriticalWarningMessages))
 		self.assertEqual(0, len(powerOptPatchEnablesTask.ErrorMessages))
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_FinalCleanupTask(self) -> None:
 		print()
 		report = dedent(f"""{self._PREAMBLE}
@@ -457,10 +486,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		optimizeDesign = processor[xil_OptimizeDesign]
 
@@ -470,6 +500,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(finalCleanupTask.WarningMessages))
 		self.assertEqual(0, len(finalCleanupTask.CriticalWarningMessages))
 		self.assertEqual(0, len(finalCleanupTask.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_NetlistObfuscationTask(self) -> None:
 		print()
@@ -485,10 +519,11 @@ class OptimizeDesign(TestCase):
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		optimizeDesign = processor[xil_OptimizeDesign]
 
@@ -498,6 +533,10 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(netlistObfuscationTask.WarningMessages))
 		self.assertEqual(0, len(netlistObfuscationTask.CriticalWarningMessages))
 		self.assertEqual(0, len(netlistObfuscationTask.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 
 class PlaceDesign(TestCase):
@@ -551,10 +590,11 @@ class PlaceDesign(TestCase):
 {self._PLACEDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(11, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -567,6 +607,14 @@ class PlaceDesign(TestCase):
 		self.assertEqual(0, len(placeDesign.WarningMessages))
 		self.assertEqual(0, len(placeDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(placeDesign.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
+
+# class PhysicalOptimizeDesign(TestCase):
+# 	pass
 
 
 class RouteDesign(TestCase):
@@ -646,10 +694,11 @@ class RouteDesign(TestCase):
 {self._ROUTEDESIGN_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(27, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -662,3 +711,11 @@ class RouteDesign(TestCase):
 		self.assertEqual(0, len(routeDesign.WarningMessages))
 		self.assertEqual(0, len(routeDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(routeDesign.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
+
+# class WriteBitstream(TestCase):
+# 	pass

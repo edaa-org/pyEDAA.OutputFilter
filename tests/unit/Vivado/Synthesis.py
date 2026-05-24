@@ -31,12 +31,13 @@
 """Unit tests for Vivado synthesis log files."""
 from datetime import datetime
 from textwrap import dedent
-from typing import ClassVar
+from typing   import ClassVar
 from unittest import TestCase as TestCase
 
 from pyTooling.Versioning import YearReleaseVersion
+from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, SynthesizeDesign
+from pyEDAA.OutputFilter.Xilinx                  import Processor, SynthesizeDesign, Line
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLElaboration, LoadingPart, RTLComponentStatistics
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import IOInsertion, FlatteningBeforeIOInsertion, FinalNetlistCleanup
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
@@ -80,10 +81,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
@@ -99,6 +101,10 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_RTLElaboration(self) -> None:
 		print()
@@ -121,10 +127,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(9, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -147,6 +154,10 @@ class SynthDesign(TestCase):
 		# TODO: check duration / elapsed time
 		# TODO: check memory consumption
 
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
+
 	def test_LoadingPart(self) -> None:
 		print()
 		report = dedent(f"""{self._PREAMBLE}
@@ -167,10 +178,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -179,8 +191,6 @@ class SynthDesign(TestCase):
 
 		self.assertIn(SynthesizeDesign, processor)
 		synthDesign = processor[SynthesizeDesign]
-		for msg in synthDesign.InfoMessages:
-			print(f"{msg}")
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
@@ -193,6 +203,10 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(loadingPart.CriticalWarningMessages))
 		self.assertEqual(0, len(loadingPart.ErrorMessages))
 		self.assertEqual("xc7z015clg485-2", loadingPart.Part)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_RTLComponentStatistics(self) -> None:
 		print()
@@ -216,10 +230,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -228,8 +243,6 @@ class SynthDesign(TestCase):
 
 		self.assertIn(SynthesizeDesign, processor)
 		synthDesign = processor[SynthesizeDesign]
-		for msg in synthDesign.InfoMessages:
-			print(f"{msg}")
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
@@ -242,6 +255,10 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(rtlComponentStatistics.CriticalWarningMessages))
 		self.assertEqual(0, len(rtlComponentStatistics.ErrorMessages))
 		# TODO: nested checks?
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_IOInsertion(self) -> None:
 		print()
@@ -274,10 +291,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -286,8 +304,6 @@ class SynthDesign(TestCase):
 
 		self.assertIn(SynthesizeDesign, processor)
 		synthDesign = processor[SynthesizeDesign]
-		for msg in synthDesign.InfoMessages:
-			print(f"{msg}")
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
@@ -313,6 +329,10 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(finalNetlistCleanup.WarningMessages))
 		self.assertEqual(0, len(finalNetlistCleanup.CriticalWarningMessages))
 		self.assertEqual(0, len(finalNetlistCleanup.ErrorMessages))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
 
 	def test_WritingSynthesisReport(self) -> None:
 		print()
@@ -393,10 +413,11 @@ class SynthDesign(TestCase):
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
 
-		processor = Processor()
-		next(generator := processor.LineClassification())
-		for rawLine in report.splitlines():
-			generator.send(rawLine)
+		with WarningCollector() as warnings:
+			processor = Processor()
+			next(generator := processor.LineClassification())
+			for rawLine in report.splitlines():
+				generator.send(rawLine)
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -405,8 +426,6 @@ class SynthDesign(TestCase):
 
 		self.assertIn(SynthesizeDesign, processor)
 		synthDesign = processor[SynthesizeDesign]
-		for msg in synthDesign.InfoMessages:
-			print(f"{msg}")
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
@@ -422,3 +441,7 @@ class SynthDesign(TestCase):
 		self.assertEqual(14, len(writingSynthesisReport.Blackboxes))
 
 		self.assertEqual(21, len(writingSynthesisReport.Cells))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, Line)
