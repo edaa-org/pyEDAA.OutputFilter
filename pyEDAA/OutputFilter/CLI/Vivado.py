@@ -235,6 +235,12 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			"subsubsubphaseStart":  "DARK_CYAN",
 			"subsubsubphaseEnd":    "DARK_CYAN",
 			"subsubsubphaseTime":   "DARK_GREEN",
+			"nestedTaskStart":      "DARK_CYAN",
+			"nestedTaskEnd":        "DARK_CYAN",
+			"nestedTaskTime":       "DARK_GREEN",
+			"nestedPhaseStart":     "DARK_CYAN",
+			"nestedPhaseEnd":       "DARK_CYAN",
+			"nestedPhaseTime":      "DARK_GREEN",
 			"paragraphHeadline":    "DARK_YELLOW",
 			"hierarchyStart":       "DARK_CYAN",
 			"hierarchyEnd":         "DARK_GRAY",
@@ -281,6 +287,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["sectionStart"]
 			elif LineKind.SubSection in line.Kind:
 				return colorDict["subsectionStart"]
+			elif LineKind.NestedTask in line.Kind:
+				return colorDict["nestedTaskStart"]
+			elif LineKind.NestedPhase in line.Kind:
+				return colorDict["nestedPhaseStart"]
 			else:
 				raise Exception(f"Unknown LineKind.****Start '{line._kind}' for line {line._lineNumber}.")
 		elif LineKind.End in line.Kind:
@@ -298,6 +308,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				return colorDict["sectionEnd"]
 			elif LineKind.SubSection in line.Kind:
 				return colorDict["subsectionEnd"]
+			elif LineKind.NestedTask in line.Kind:
+				return colorDict["nestedTaskEnd"]
+			elif LineKind.NestedPhase in line.Kind:
+				return colorDict["nestedPhaseEnd"]
 			else:
 				raise Exception(f"Unknown LineKind.****End '{line._kind}' for line {line._lineNumber}.")
 		elif LineKind.Time in line.Kind:
