@@ -52,9 +52,6 @@ from pyEDAA.OutputFilter.Xilinx.Common2   import Preamble, VivadoMessagesMixin, 
 from pyEDAA.OutputFilter.Xilinx.Exception import ProcessorException, ClassificationException
 
 
-ProcessedLine = Union[Line, ProcessorException]
-
-
 @export
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	"""
@@ -66,7 +63,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
 	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
 
-	_lines:                   List[ProcessedLine]           #: A list of processed log message lines.
+	_lines:                   List[Line]                    #: A list of processed log message lines.
 	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
 	_postamble:               Postamble                     #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
@@ -86,7 +83,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		self._commands =                {}
 
 	@readonly
-	def Lines(self) -> List[ProcessedLine]:
+	def Lines(self) -> List[Line]:
 		"""
 		Read-only property to access the list of processed and classified log lines (messages).
 
@@ -122,16 +119,22 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return self._commands
 
 	@readonly
+	def StartDateTime(self) -> datetime:
+		return self._preamble.StartDatetime
+
+	@readonly
+	def ExitDateTime(self) -> datetime:
+		return self._postamble.ExitDatetime
+
+	@readonly
 	def Duration(self) -> float:
 		"""
 		 Duration of the observed process (e.g. start to end of synthesis).
 
 		:returns: The observed process' execution duration in seconds.
 		"""
-		if (startTime := self._preamble._startDatetime) is None:
-			raise ProcessorException("No start timestamp extracted from preamble.")
-		if (exitTime := self._postamble._exitDatetime) is None:
-			raise ProcessorException("No exit timestamp extracted from postamble.")
+		startTime = self._preamble.StartDatetime
+		exitTime =  self._postamble.ExitDatetime
 
 		return (exitTime - startTime).total_seconds()
 
@@ -191,7 +194,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
-	def LineClassification(self) -> Generator[ProcessedLine, str, None]:
+	def LineClassification(self) -> Generator[Line, str, None]:
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
@@ -241,6 +244,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 					line._kind = LineKind.Verbose
 
 			if line is None:
+				# TODO: what to do with this line? attache to exception?
 				line = Line(lineNumber, LineKind.ProcessorError, rawMessageLine, previousLine=lastLine)
 
 				raise ClassificationException(errorMessage, lineNumber, rawMessageLine)

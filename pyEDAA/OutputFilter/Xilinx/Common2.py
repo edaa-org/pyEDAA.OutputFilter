@@ -279,8 +279,12 @@ class Preamble(Parser):
 		"""
 		Read-only property to access the date and time when the Vivado session was started.
 
-		:returns: Datatime when the session was started.
+		:returns:                   Datatime when the session was started.
+		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
 		"""
+		if self._startDatetime is None:
+			raise ProcessorException("No start timestamp extracted from preamble.")
+
 		return self._startDatetime
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
@@ -357,8 +361,12 @@ class Postamble(Parser, VivadoMessagesMixin):
 		"""
 		Read-only property to access the date and time when the Vivado session was exited.
 
-		:returns: Datatime when the session was exited.
+		:returns:                   Datatime when the session was exited.
+		:raises ProcessorException: When exit timestamp wasn't extracted from postamble.
 		"""
+		if self._exitDatetime is None:
+			raise ProcessorException("No exit timestamp extracted from postamble.")
+
 		return self._exitDatetime
 
 	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
