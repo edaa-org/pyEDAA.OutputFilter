@@ -33,7 +33,7 @@ Param(
 )
 
 $PackageName = "pyEDAA.OutputFilter"
-$PackageVersion = "0.7.1"
+$PackageVersion = "0.8.0"
 
 # set default values
 $EnableDebug =        [bool]$PSCmdlet.MyInvocation.BoundParameters["Debug"]

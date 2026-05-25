@@ -29,6 +29,7 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
+from datetime import datetime
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
@@ -69,7 +70,10 @@ class Stopwatch(TestCase):
 			processor = Document(logfile)
 			processor.Parse()
 
-		self.assertEqual(processor.Duration, 42)
+		self.assertEqual(42, processor.Duration)
+		self.assertEqual(datetime(2025, 6, 12, 18, 38, 16), processor.StartDateTime)
+		self.assertEqual(datetime(2025, 6, 12, 18, 38, 58), processor.ExitDateTime)
+		self.assertEqual(358, len(processor.Lines))
 		self.assertLess(processor.ProcessingDuration, 0.4)
 
 		self.assertEqual(69, len(processor.InfoMessages))
@@ -97,11 +101,23 @@ class Stopwatch(TestCase):
 		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.CriticalWarningMessages))
 		self.assertEqual(0, len(crossBoundaryAndAreaOptimization.ErrorMessages))
 
-		self.assertEqual(0, len(synthesis[WritingSynthesisReport].Blackboxes))
+		writingSynthesisReport = synthesis[WritingSynthesisReport]
+		self.assertEqual(0, len(writingSynthesisReport.Blackboxes))
+		self.assertEqual(14, len(writingSynthesisReport.Cells))
 
 		self.assertEqual(0, len(warnings))
-		for line in processor.Lines:
+		lineCount = len(processor.Lines)
+		previousLine = None
+		for i, line in enumerate(processor.Lines, start=1):
 			self.assertIsInstance(line, Line)
+			self.assertEqual(i, line.LineNumber)
+			self.assertIs(previousLine, line.PreviousLine)
+			if i < lineCount:
+				self.assertIs(processor.Lines[i], line.NextLine)
+			else:
+				self.assertIsNone(line.NextLine)
+
+			previousLine = line
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
@@ -169,10 +185,18 @@ class Stopwatch(TestCase):
 		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
 
 		self.assertEqual(0, len(warnings))
-		for line in processor.Lines:
-			if not isinstance(line, Line):
-				print(line)
+		lineCount = len(processor.Lines)
+		previousLine = None
+		for i, line in enumerate(processor.Lines, start=1):
 			self.assertIsInstance(line, Line)
+			self.assertEqual(i, line.LineNumber)
+			self.assertIs(previousLine, line.PreviousLine)
+			if i < lineCount:
+				self.assertIs(processor.Lines[i], line.NextLine)
+			else:
+				self.assertIsNone(line.NextLine)
+
+			previousLine = line
 
 
 class CERN_DevKit(TestCase):

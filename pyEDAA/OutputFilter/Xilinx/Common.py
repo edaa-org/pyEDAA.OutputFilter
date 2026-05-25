@@ -32,10 +32,11 @@
 from enum    import Flag
 from pathlib import Path
 from re      import Pattern, compile as re_compile
-from typing  import Optional as Nullable, Self, ClassVar, Tuple, Union, Any
+from typing  import Optional as Nullable, Self, ClassVar, Tuple, Union, Any, Iterator, Generator, Callable
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType
+from pyTooling.Common      import getFullyQualifiedName
 
 
 @export
@@ -193,6 +194,130 @@ class Line(metaclass=ExtendedType, slots=True):
 
 	def StartsWith(self, prefix: Union[str, Tuple[str, ...]]):
 		return self._message.startswith(prefix)
+
+	def __iter__(self) -> Generator["Line", None, None]:
+		"""
+		Forward iteration from the successor of this node.
+
+		.. hint::
+
+		   Delegates to :meth:`GetIterator` with all defaults.
+
+		:returns: A generator yielding each successive :class:`Line` node.
+		"""
+		return self.GetIterator()
+
+	def GetIterator(
+		self,
+		stopPredicate: Nullable[Callable[["Line"], bool]] = None,
+		*,
+		reverse:   bool = False,
+		inclusive: bool = True,
+		maxLines:  Nullable[int] = None,
+	) -> Generator["Line", None, None]:
+		"""
+		Iterate consecutive lines starting from next line towards the end of the log.
+
+		If the order is reversed, iterate starting at the previous line towards the beginning of the log. The iteration ends
+		either at the bounds of the log, by specifying a stop predicate or a maximum number of lines to return. When stopped
+		this line is usually included in the iteration, but can be excluded.
+
+		:param stopPredicate: Optional, a callable receiving a :class:`Line` and returning ``True`` when iteration should
+		                      stop at that line.
+		:param reverse:       Optional, reverse the iteration from previous line to the beginning of the log.
+		:param inclusive:     Optional, when ``True`` the line where ``stopPredicate`` or ``maxLines`` triggers, is
+		                      included in the iteration, otherwise it's excluded.
+		:param maxLines:      Optional, maximum number of lines to yield.
+ 		:returns:             A generator yielding :class:`Line` in the requested direction, stopping at the log boundary,
+ 		                      the predicate match, or the line limit — whichever comes first.
+		:raises TypeError:    When ``stopPredicate`` is not callable.
+		:raises ValueError:   When ``maxLines`` is not a positive integer.
+		"""
+		if stopPredicate is not None and not callable(stopPredicate):
+			ex = TypeError("Parameter 'stopPredicate' is not a callable.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(stopPredicate)}'.")
+			raise ex
+		if not isinstance(reverse, bool):
+			ex = TypeError("Parameter 'reverse' is not a boolean.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(reverse)}'.")
+			raise ex
+		if not isinstance(inclusive, bool):
+			ex = TypeError("Parameter 'inclusive' is not a boolean.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(inclusive)}'.")
+			raise ex
+		if maxLines is not None:
+			if not isinstance(maxLines, int):
+				ex = TypeError("Parameter 'maxLines' is not a integer.")
+				ex.add_note(f"Got type '{getFullyQualifiedName(maxLines)}'.")
+				raise ex
+			elif maxLines <= 0:
+				ex = ValueError("Parameter 'maxLines' must be a positive integer.")
+				ex.add_note(f"Got {maxLines!r}.")
+				raise ex
+
+		current = self._previousLine if reverse else self._nextLine
+
+		if maxLines is None:
+			if stopPredicate is None:
+				if reverse:
+					while current is not None:
+						yield current
+						current = current._previousLine
+				else:
+					while current is not None:
+						yield current
+						current = current._nextLine
+			else:
+				if reverse:
+					while current is not None:
+						if stopPredicate(current):
+							if inclusive:
+								yield current
+							return
+						yield current
+						current = current._previousLine
+				else:
+					while current is not None:
+						if stopPredicate(current):
+							if inclusive:
+								yield current
+							return
+						yield current
+						current = current._nextLine
+
+		elif stopPredicate is None:
+			remaining = maxLines
+			if reverse:
+				while current is not None and remaining > 0:
+					yield current
+					current = current._previousLine
+					remaining -= 1
+			else:
+				while current is not None and remaining > 0:
+					yield current
+					current = current._nextLine
+					remaining -= 1
+
+		else:
+			remaining = maxLines
+			if reverse:
+				while current is not None and remaining > 0:
+					if stopPredicate(current):
+						if inclusive:
+							yield current
+						return
+					yield current
+					current = current._previousLine
+					remaining -= 1
+			else:
+				while current is not None and remaining > 0:
+					if stopPredicate(current):
+						if inclusive:
+							yield current
+						return
+					yield current
+					current = current._nextLine
+					remaining -= 1
 
 	def __getitem__(self, item: slice) -> str:
 		return self._message[item]
@@ -551,7 +676,7 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 
 	.. code-block::
 
-	   WARNING: Some message text
+	   WARNING: set_property ASYNC_REG could not find object (constraint file  /path/to/sync_Bits_Xilinx.xdc, line 5).
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -560,7 +685,7 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[Line] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], previousLine)
+			return cls(lineNumber, LineKind.WarningMessage, match[1], previousLine=previousLine)
 
 		return None
 
@@ -637,7 +762,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 	@classmethod
 	def Convert(cls, line: VivadoInfoMessage) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(line._message)) is not None:
-			return cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, match[1], Path(match[2]), int(match[3]))
+			return cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, match[1], Path(match[2]), int(match[3]), previousLine=line._previousLine)
 
 		return None
 
@@ -683,7 +808,7 @@ class TclCommand(Line):
 	def FromLine(cls, line: Line) -> Nullable[Self]:
 		args = line._message.split()
 
-		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message)
+		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message, previousLine=line._previousLine)
 
 	def __str__(self) -> str:
 		return f"{self._command} {' '.join(self._arguments)}"

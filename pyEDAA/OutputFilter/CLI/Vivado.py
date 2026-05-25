@@ -97,16 +97,15 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		else:
 			writeOutput = self._WriteOutput
 
-		with Stopwatch() as sw:
-			with WarningCollector() as warnings:
-				next(generator := processor.LineClassification())
-				for rawLine in inputFile.readlines():
-					line = generator.send(rawLine.rstrip("\r\n"))
+		with WarningCollector() as warnings:
+			next(generator := processor.LineClassification())
+			for rawLine in inputFile.readlines():
+				line = generator.send(rawLine.rstrip("\r\n"))
 
-					writeOutput(line)
+				writeOutput(line)
 
-			for warning in warnings:
-				print(warning)
+		for warning in warnings:
+			print(warning)
 
 	def _WriteOutput(self, line: Line):
 		self.WriteNormal(f"{line.LineNumber:4}: {line}")
