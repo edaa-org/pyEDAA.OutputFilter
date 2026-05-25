@@ -113,6 +113,11 @@ class PhaseNotPresentException(NotPresentException):
 
 
 @export
+class NestedTaskNotPresentException(NotPresentException):
+	pass
+
+
+@export
 class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
 	_infoMessages:            List[VivadoInfoMessage]
 	_warningMessages:         List[VivadoWarningMessage]
@@ -220,17 +225,28 @@ class Preamble(Parser):
 	.. code-block::
 
 	   #-----------------------------------------------------------
-	   # Vivado v2019.1 (64-bit)
-	   # SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
-	   # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-	   # Start of session at: Tue Sep  2 08:44:13 2025
-	   # Process ID: 35680
-	   # Current directory: C:/[...]/MercuryZX5_PE1.runs/synth_1
-	   # Command line: vivado.exe -log system_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source system_top.tcl
-	   # Log file: C:/[...]/MercuryZX5_PE1.runs/synth_1/system_top.vds
-	   # Journal file: C:/[...]/MercuryZX5_PE1.runs/synth_1/vivado.jou
+	   # Vivado v2025.1 (64-bit)
+	   # SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+	   # IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+	   # SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+	   # Start of session at: Thu Jun 12 18:39:05 2025
+	   # Process ID         : 28856
+	   # Current directory  : C:/Git/.../StopWatch/project/4_WithTiming.runs/impl_1
+	   # Command line       : vivado.exe -log toplevel.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source toplevel.tcl -notrace
+	   # Log file           : C:/Git/.../StopWatch/project/4_WithTiming.runs/impl_1/toplevel.vdi
+	   # Journal file       : C:/Git/.../StopWatch/project/4_WithTiming.runs/impl_1\vivado.jou
+	   # Running On         : Paebbels
+	   # Platform           : Windows Server 2016 or Windows 10
+	   # Operating System   : 26100
+	   # Processor Detail   : 11th Gen Intel(R) Core(TM) i9-11950H @ 2.60GHz
+	   # CPU Frequency      : 2611 MHz
+	   # CPU Physical cores : 8
+	   # CPU Logical cores  : 16
+	   # Host memory        : 34048 MB
+	   # Swap memory        : 28991 MB
+	   # Total Virtual      : 63039 MB
+	   # Available Virtual  : 29246 MB
 	   #-----------------------------------------------------------
-
 	"""
 	_VERSION:   ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME: ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
@@ -281,8 +297,8 @@ class Preamble(Parser):
 
 		line = yield line
 
-		# a normal preamble has 11 lines including both delimiter lines.
-		for _ in range(15):
+		# a normal preamble has up to 23 lines including both delimiter lines.
+		for _ in range(30):
 			if (match := self._VERSION.match(line._message)) is not None:
 				self._toolVersion = YearReleaseVersion.Parse(match[1])
 				line._kind = LineKind.Normal
@@ -733,7 +749,7 @@ class TaskWithPhases(Task):
 				line = yield line
 
 			while True:
-				isFinish = line.StartsWith("Ending")
+				isFinish = False  #line.StartsWith("Ending")
 
 				try:
 					processedLine = phase.send(line)
@@ -1059,7 +1075,7 @@ class SubPhaseWithChildren(SubPhase):
 				line = yield line
 
 			while True:
-				isFinish = line.StartsWith("Ending")
+				isFinish = False  # line.StartsWith("Ending")
 
 				try:
 					processedLine = phase.send(line)
@@ -1214,7 +1230,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 				line = yield line
 
 			while True:
-				isFinish = line.StartsWith("Ending")
+				isFinish = False  # line.StartsWith("Ending")
 
 				try:
 					processedLine = phase.send(line)
@@ -1306,6 +1322,353 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin):
 			line = yield line
 
 		nextLine = yield from self._SubSubSubPhaseFinish(line)
+		return nextLine
+
+	def __str__(self) -> str:
+		return f"{self.__class__.__name__}: {self._START.pattern}"
+
+
+@export
+class SubSubSubPhaseWithTasks(SubSubSubPhase):
+	_nestedTasks: Dict[Type["NestedTask"], "NestedTask"]
+
+	def __init__(self, subsubphase: SubSubPhase) -> None:
+		super().__init__(subsubphase)
+
+		self._nestedTasks = {p: p(self) for p in self._PARSERS}
+
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, NestedTask):
+			ex = TypeError(f"Parameter 'key' is not a NestedTask.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._nestedTasks
+
+	def __getitem__(self, key: Type["NestedTask"]) -> "NestedTask":
+		try:
+			return self._nestedTasks[key]
+		except KeyError as ex:
+			raise NestedTaskNotPresentException(F"NestedTask '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._SubSubSubPhaseStart(line)
+
+		activeParsers: List["NestedTask"] = list(self._nestedTasks.values())
+
+		# START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Starting "):
+					for parser in activeParsers:  # type: NestedTask
+						if line.StartsWith(parser._START):
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown NestedTask: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown NestedTask: '{line!r}'")
+						ex.add_note(f"Current subsubsubphase: start pattern='{self}'")
+						ex.add_note(f"Current subsubphase: start pattern='{self._subsubphase}'")
+						ex.add_note(f"Current subphase: start pattern='{self._subsubphase._subphase}'")
+						ex.add_note(f"Current phase: start pattern='{self._subsubphase._subphase._phase}'")
+						ex.add_note(f"Current task: start pattern='{self._subsubphase._subphase._phase._task}'")
+						ex.add_note(f"Current cmd:  {self._subsubphase._subphase._phase._task._command}")
+						raise ex
+					break
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.SubSubSubPhaseTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while True:
+				isFinish = False  # line.StartsWith("Ending")
+
+				try:
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
+					if isFinish:
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
+						break
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+				line = yield processedLine
+
+
+@export
+class NestedTask(BaseParser, VivadoMessagesMixin):
+	# _NAME:     ClassVar[str]
+	# _START:    ClassVar[str]
+	# _FINISH:   ClassVar[str]
+	_TIME:     ClassVar[str] = "Time (s):"
+
+	_subsubsubphase: SubSubSubPhaseWithTasks
+	_duration:       float
+
+	def __init__(self, subsubsubphase: SubSubSubPhaseWithTasks) -> None:
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._subsubsubphase = subsubsubphase
+
+	@readonly
+	def SubSubSubPhase(self) -> SubSubSubPhaseWithTasks:
+		return self._subsubsubphase
+
+	def _NestedTaskStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._START):
+			raise ProcessorException(f"{self.__class__.__name__}._TaskStart(): Expected '{self._START}' at line {line._lineNumber}.")
+
+		line._kind = LineKind.NestedTaskStart
+		nextLine = yield line
+		return nextLine
+
+	def _NestedTaskFinish(self, line: Line) -> Generator[Line, Line, Line]:
+		if not line.StartsWith(self._FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._TaskFinish(): Expected '{self._FINISH}' at line {line._lineNumber}.")
+
+		line._kind = LineKind.NestedTaskEnd
+		line = yield line
+
+		if self._TIME is not None:
+			while True:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.TaskTime
+					line = yield line
+					break
+
+				line = yield line
+
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._NestedTaskStart(line)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif self._FINISH is not None and line.StartsWith("Ending"):
+				break
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(self._TIME):
+				line._kind = LineKind.TaskTime
+				nextLine = yield line
+				return nextLine
+
+			line = yield line
+
+		nextLine = yield from self._NestedTaskFinish(line)
+		return nextLine
+
+	def __str__(self) -> str:
+		return self._NAME
+
+
+@export
+class NestedTaskWithPhases(NestedTask):
+	"""
+	A task's output emitted by a Vivado command.
+
+	.. rubric:: Extracted information
+
+	* Vivado messages (info, warning, critical warning, error).
+	* Nested phases
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   Phase 4.1.1.1 BUFG Insertion
+
+	   Starting Physical Synthesis Task
+
+	   Phase 1 Physical Synthesis Initialization
+	   INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+	   INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.733 | TNS=-0.936 |
+	   Phase 1 Physical Synthesis Initialization | Checksum: 1818afcc0
+
+	   Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 1865.645 ; gain = 0.000
+	   INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+	   Ending Physical Synthesis Task | Checksum: 22839c186
+
+	   Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.016 . Memory (MB): peak = 1865.645 ; gain = 0.000
+	   Phase 4.1.1.1 BUFG Insertion | Checksum: 1a8cbaaf2
+	"""
+	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
+
+	_nestedPhases: Dict[Type["NestedPhase"], "NestedPhase"]
+
+	def __init__(self, subsubsubPhase: SubSubSubPhaseWithTasks) -> None:
+		super().__init__(subsubsubPhase)
+
+		self._nestedPhases =  {p: p(self) for p in self._PARSERS}
+
+	@readonly
+	def NestedPhases(self) -> Dict[Type["NestedPhase"], "NestedPhase"]:
+		return self._nestedPhases
+
+	def __contains__(self, key: Any) -> bool:
+		if not issubclass(key, NestedPhase):
+			ex = TypeError(f"Parameter 'key' is not a NestedPhase.")
+			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
+			raise ex
+
+		return key in self._nestedPhases
+
+	def __getitem__(self, key: Type["NestedPhase"]) -> "NestedPhase":
+		try:
+			return self._nestedPhases[key]
+		except KeyError as ex:
+			raise SubTaskNotPresentException(F"NestedPhase '{key._NAME}' not present in '{self._parent.logfile}'.") from ex
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._NestedTaskStart(line)
+
+		activeParsers: List[Phase] = list(self._nestedPhases.values())
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+				elif line.StartsWith("Phase "):
+					for parser in activeParsers:  # type: NestedPhase
+						if (match := parser._START.match(line._message)) is not None:
+							line = yield next(phase := parser.Generator(line))
+							break
+					else:
+						WarningCollector.Raise(UnknownSubPhase(f"Unknown NestedPhase: '{line!r}'", line))
+						ex = Exception(f"How to recover from here? Unknown NestedPhase: '{line!r}'")
+						ex.add_note(f"Current nestedtask: start pattern='{self}'")
+						ex.add_note(f"Current subsubsubphase: start pattern='{self._subsubsubphase}'")
+						ex.add_note(f"Current subsubphase: start pattern='{self._subsubsubphase._subsubphase}'")
+						ex.add_note(f"Current subphase: start pattern='{self._subsubsubphase._subsubphase._subphase}'")
+						ex.add_note(f"Current phase: start pattern='{self._subsubsubphase._subsubphase._subphase._phase}'")
+						ex.add_note(f"Current task: start pattern='{self._subsubsubphase._subsubphase._subphase._phase._task}'")
+						ex.add_note(f"Current cmd:  {self._subsubsubphase._subsubphase._subphase._phase._task._command}")
+						raise ex
+					break
+				elif line.StartsWith("Ending"):
+					nextLine = yield from self._NestedTaskFinish(line)
+					return nextLine
+				elif line.StartsWith(self._TIME):
+					line._kind = LineKind.TaskTime
+					nextLine = yield line
+					return nextLine
+
+				line = yield line
+
+			while True:
+				isFinish = False  # line.StartsWith("Ending") # FIXME: detect end, but time might come later
+
+				try:
+					processedLine = phase.send(line)
+
+					if isinstance(processedLine, VivadoMessage):
+						self._AddMessage(processedLine)
+
+					if isFinish:
+						WarningCollector.Raise(UndetectedEnd(f"Didn't detect finish: '{processedLine!r}'", processedLine))
+						line = yield processedLine
+						break
+				except StopIteration as ex:
+					activeParsers.remove(parser)
+					line = ex.value
+					break
+
+				line = yield processedLine
+
+
+@export
+class NestedPhase(BaseParser, VivadoMessagesMixin):
+	# _NAME:   ClassVar[str]
+	# _START:  ClassVar[str]
+	# _FINISH: ClassVar[str]
+	_TIME:   ClassVar[str] = "Time (s):"
+	_FINAL:  ClassVar[Nullable[str]] = None
+
+	_nestedTask: NestedTaskWithPhases
+	_phaseIndex: int
+	_duration:   float
+
+	def __init__(self, nestedTask: TaskWithPhases) -> None:
+		super().__init__()
+		VivadoMessagesMixin.__init__(self)
+
+		self._nestedTask = nestedTask
+		self._phaseIndex = None
+
+	@readonly
+	def NestedTask(self) -> NestedTaskWithPhases:
+		return self._nestedTask
+
+	def _NestedPhaseStart(self, line: Line) -> Generator[Line, Line, Line]:
+		if (match := self._START.match(line._message)) is None:
+			raise ProcessorException(f"{self.__class__.__name__}._PhaseStart(): Expected '{self._START}' at line {line._lineNumber}.")
+
+		self._phaseIndex = int(match["major"])
+
+		line._kind = LineKind.NestedPhaseStart
+		nextLine = yield line
+		return nextLine
+
+	def _NestedPhaseFinish(self, line: Line) -> Generator[Line, Line, None]:
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+		if not line.StartsWith(FINISH):
+			raise ProcessorException(f"{self.__class__.__name__}._PhaseFinish(): Expected '{FINISH}' at line {line._lineNumber}.")
+
+		line._kind = LineKind.NestedPhaseEnd
+		line = yield line
+
+		if self._TIME is not None:
+			while True:
+				if line.StartsWith(self._TIME):
+					line._kind = LineKind.PhaseTime
+					break
+				elif isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				line = yield line
+
+			line = yield line
+
+		return line
+
+	def Generator(self, line: Line) -> Generator[Line, Line, Line]:
+		line = yield from self._NestedPhaseStart(line)
+
+		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex)
+
+		while True:
+			if line._kind is LineKind.Empty:
+				line = yield line
+				continue
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith(FINISH):
+				break
+
+			line = yield line
+
+		nextLine = yield from self._NestedPhaseFinish(line)
 		return nextLine
 
 	def __str__(self) -> str:

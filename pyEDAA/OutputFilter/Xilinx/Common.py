@@ -101,34 +101,42 @@ class LineKind(Flag):
 	SubSubSubPhaseEnd =      SubSubSubPhase | End
 	SubSubSubPhaseTime =     SubSubSubPhase | Time
 
-	Section =                2**36
+	NestedTask =             2**36
+	NestedTaskStart =        NestedTask | Start
+	NestedTaskEnd =          NestedTask | End
+
+	NestedPhase =            2**37
+	NestedPhaseStart =       NestedPhase | Start
+	NestedPhaseEnd =         NestedPhase | End
+
+	Section =                2**38
 	SectionDelimiter =       Section | Delimiter
 	SectionStart =           Section | Start
 	SectionEnd =             Section | End
 
-	SubSection =             2**37
+	SubSection =             2**39
 	SubSectionDelimiter =    SubSection | Delimiter
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Paragraph =              2**38
+	Paragraph =              2**40
 	ParagraphHeadline =      Paragraph | Header
 
-	Hierarchy =              2**39
+	Hierarchy =              2**41
 	HierarchyStart =         Hierarchy | Start
 	HierarchyEnd =           Hierarchy | End
 
-	XDC =                    2**40
+	XDC =                    2**42
 	XDCStart =               XDC | Start
 	XDCEnd =                 XDC | End
 
-	Table =                  2**41
+	Table =                  2**43
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	TclCommand =             2**42
+	TclCommand =             2**44
 	GenericTclCommand =      TclCommand | 2**0
 	VivadoTclCommand =       TclCommand | 2**1
 

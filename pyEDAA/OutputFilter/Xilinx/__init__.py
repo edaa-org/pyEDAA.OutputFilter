@@ -291,10 +291,6 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
-					elif line._command == OptimizeDesign._TCL_COMMAND:
-						self._commands[OptimizeDesign] = (cmd := OptimizeDesign(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
 					elif line._command == PlaceDesign._TCL_COMMAND:
 						self._commands[PlaceDesign] = (cmd := PlaceDesign(self))
 						line = yield next(gen := cmd.SectionDetector(line))
