@@ -349,11 +349,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
-		# physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(12, sumInfo.sum(len(physOptDesign.InfoMessages)))
-		# self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
-		# self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
-		# self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
+		self.assertNotIn(PhysicalOptimizeDesign, processor)
 
 		routeDesign = processor[RouteDesign]
 		self.assertEqual(12, sumInfo.sum(len(routeDesign.InfoMessages)))
@@ -361,11 +357,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
-		# writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
-		# self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
-		# self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
-		# self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
+		self.assertNotIn(WriteBitstream, processor)
 
 		# compare sum of sections with total numbers
 		self.assertGreaterEqual(len(processor.InfoMessages), sumInfo.Value)
