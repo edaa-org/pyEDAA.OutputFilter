@@ -113,6 +113,8 @@ class Stopwatch(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
+		self.assertLess(processor.ProcessingDuration, 0.4)
+
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
 		self.assertEqual(2, len(processor.CriticalWarningMessages))
@@ -184,8 +186,6 @@ class CERN_DevKit(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
 		self.assertEqual(70, len(processor.InfoMessages))
 		self.assertEqual(124, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
@@ -210,10 +210,8 @@ class CERN_DevKit(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
 		self.assertEqual(305, len(processor.InfoMessages))
-		# self.assertEqual(126, len(processor.WarningMessages))
+		self.assertEqual(125, len(processor.WarningMessages))
 		self.assertEqual(1, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
@@ -226,19 +224,19 @@ class CERN_DevKit(TestCase):
 
 		linkDesign = processor[LinkDesign]
 		self.assertEqual(30, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(117, sumWarn.sum(len(linkDesign.WarningMessages)))  # -14
+		self.assertEqual(117, sumWarn.sum(len(linkDesign.WarningMessages)))  # -14
 		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
 		self.assertEqual(145, sumInfo.sum(len(optDesign.InfoMessages)))
-		# self.assertEqual(6,  sumWarn.sum(len(optDesign.WarningMessages)))
+		self.assertEqual(6,  sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0,  sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0,  sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
 		self.assertEqual(59, sumInfo.sum(len(placeDesign.InfoMessages)))
-		# self.assertEqual(1,  sumWarn.sum(len(placeDesign.WarningMessages)))
+		self.assertEqual(0,  sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(1,  sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0,  sumErro.sum(len(placeDesign.ErrorMessages)))
 
@@ -282,9 +280,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(69, len(processor.InfoMessages))       # -1
+		self.assertEqual(71, len(processor.InfoMessages))       # -1
 		self.assertEqual(112, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
@@ -297,8 +293,8 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumErro = Aggregator()
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(63, sumInfo.sum(len(synthesis.InfoMessages)))      # -12
-		# self.assertEqual(111, sumWarn.sum(len(synthesis.WarningMessages)))  # -2
+		self.assertEqual(65, sumInfo.sum(len(synthesis.InfoMessages)))      # -12
+		self.assertEqual(111, sumWarn.sum(len(synthesis.WarningMessages)))  # -2
 		self.assertEqual(0, sumCrit.sum(len(synthesis.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(synthesis.ErrorMessages)))
 
@@ -324,9 +320,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(115, len(processor.InfoMessages))   # -12
+		self.assertEqual(115, len(processor.InfoMessages))   # -12
 		self.assertEqual(0, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
@@ -393,17 +387,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(66, len(processor.InfoMessages))
+		self.assertEqual(112, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2019, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(14, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -419,12 +411,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(131, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2019, 2), processor.Preamble.ToolVersion)
 
@@ -484,17 +474,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(41, len(processor.InfoMessages))
+		self.assertEqual(5, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2020, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -510,12 +498,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(151, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2020, 1), processor.Preamble.ToolVersion)
 
@@ -524,13 +510,13 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(14, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(26, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
@@ -579,17 +565,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(41, len(processor.InfoMessages))
+		self.assertEqual(2, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2020, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -605,12 +589,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(152, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2020, 2), processor.Preamble.ToolVersion)
 
@@ -619,13 +601,13 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(26, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
@@ -674,17 +656,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(41, len(processor.InfoMessages))
+		self.assertEqual(2, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2021, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 	def test_ImplementationLogfile_2021_1(self) -> None:
 		print()
@@ -696,12 +676,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(153, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2021, 1), processor.Preamble.ToolVersion)
 
@@ -710,13 +688,13 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(26, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
@@ -765,17 +743,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(42, len(processor.InfoMessages))
+		self.assertEqual(105, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2021, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -791,12 +767,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(157, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2021, 2), processor.Preamble.ToolVersion)
 
@@ -805,13 +779,13 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(30, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
@@ -860,17 +834,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(47, len(processor.InfoMessages))
+		self.assertEqual(106, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2022, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -886,12 +858,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(155, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2022, 1), processor.Preamble.ToolVersion)
 
@@ -900,37 +870,37 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		# self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -955,17 +925,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(55, len(processor.InfoMessages))
+		self.assertEqual(106, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2022, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -981,12 +949,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(155, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(3, len(processor.CriticalWarningMessages))
+		self.assertEqual(1, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2022, 2), processor.Preamble.ToolVersion)
 
@@ -995,13 +961,13 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
@@ -1050,17 +1016,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(53, len(processor.InfoMessages))
+		self.assertEqual(106, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2023, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -1076,12 +1040,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(154, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2023, 1), processor.Preamble.ToolVersion)
 
@@ -1090,37 +1052,37 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(27, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		# self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -1147,15 +1109,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		self.assertLess(processor.ProcessingDuration, 0.4)
 
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(52, len(processor.InfoMessages))
+		self.assertEqual(106, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2023, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -1171,12 +1133,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(158, len(processor.InfoMessages))
+		self.assertEqual(201, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2023, 2), processor.Preamble.ToolVersion)
 
@@ -1185,37 +1145,37 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(18, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(101, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
-		# self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
+		self.assertEqual(29, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(100, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(4, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		# self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(13, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -1240,17 +1200,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(53, len(processor.InfoMessages))
+		self.assertEqual(105, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2024, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -1266,12 +1224,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(161, len(processor.InfoMessages))
+		self.assertEqual(103, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2024, 1), processor.Preamble.ToolVersion)
 
@@ -1280,37 +1236,37 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(19, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(101, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(28, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
 
 		routeDesign = processor[RouteDesign]
-		# self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(12, sumInfo.sum(len(routeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -1335,17 +1291,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(70, len(processor.InfoMessages))
-		# self.assertEqual(124, len(processor.WarningMessages))
-		# self.assertEqual(0, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(51, len(processor.InfoMessages))
+		self.assertEqual(105, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		# self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -1361,12 +1315,10 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		# self.assertEqual(152, len(processor.InfoMessages))
-		# self.assertEqual(2, len(processor.WarningMessages))
-		# self.assertEqual(2, len(processor.CriticalWarningMessages))
-		# self.assertEqual(0, len(processor.ErrorMessages))
+		self.assertEqual(158, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
 
@@ -1375,25 +1327,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		# self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		# self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		# self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(15, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		# self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(31, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		# self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		# self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
@@ -1405,7 +1357,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		# self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
@@ -1430,16 +1382,15 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-		self.assertEqual(70, len(processor.InfoMessages))
-		self.assertEqual(124, len(processor.WarningMessages))
+		self.assertEqual(57, len(processor.InfoMessages))
+		self.assertEqual(106, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2025, 1), processor._preamble.ToolVersion)
 
 		synthesis = processor[SynthesizeDesign]
-		self.assertEqual(13, len(synthesis[WritingSynthesisReport].Blackboxes))
+		self.assertEqual(7, len(synthesis[WritingSynthesisReport].Blackboxes))
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
@@ -1455,11 +1406,9 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
-
-		self.assertEqual(152, len(processor.InfoMessages))
-		self.assertEqual(2, len(processor.WarningMessages))
-		self.assertEqual(2, len(processor.CriticalWarningMessages))
+		self.assertEqual(159, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
 		self.assertEqual(YearReleaseVersion(2025, 1), processor.Preamble.ToolVersion)
@@ -1469,25 +1418,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[LinkDesign]
-		self.assertEqual(9, sumInfo.sum(len(linkDesign.InfoMessages)))
-		self.assertEqual(2, sumWarn.sum(len(linkDesign.WarningMessages)))
-		self.assertEqual(2, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(16, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[OptimizeDesign]
-		self.assertEqual(25, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(31, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[PlaceDesign]
-		self.assertEqual(37, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhysicalOptimizeDesign]
-		self.assertEqual(22, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
@@ -1499,7 +1448,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
 
 		writeBitstream = processor[WriteBitstream]
-		self.assertEqual(9, sumInfo.sum(len(writeBitstream.InfoMessages)))
+		self.assertEqual(8, sumInfo.sum(len(writeBitstream.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(writeBitstream.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(writeBitstream.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(writeBitstream.ErrorMessages)))
