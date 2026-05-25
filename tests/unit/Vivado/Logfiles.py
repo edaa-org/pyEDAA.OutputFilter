@@ -189,6 +189,14 @@ class Stopwatch(TestCase):
 		previousLine = None
 		for i, line in enumerate(processor.Lines, start=1):
 			self.assertIsInstance(line, Line)
+			self.assertEqual(i, line.LineNumber)
+			self.assertIs(previousLine, line.PreviousLine)
+			if i < lineCount:
+				self.assertIs(processor.Lines[i], line.NextLine)
+			else:
+				self.assertIsNone(line.NextLine)
+
+			previousLine = line
 
 
 class CERN_DevKit(TestCase):

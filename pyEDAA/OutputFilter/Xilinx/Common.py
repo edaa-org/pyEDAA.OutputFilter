@@ -676,7 +676,7 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 
 	.. code-block::
 
-	   WARNING: Some message text
+	   WARNING: set_property ASYNC_REG could not find object (constraint file  /path/to/sync_Bits_Xilinx.xdc, line 5).
 	"""
 
 	_MESSAGE_KIND: ClassVar[str] =     "WARNING"
@@ -685,7 +685,7 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[Line] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], previousLine)
+			return cls(lineNumber, LineKind.WarningMessage, match[1], previousLine=previousLine)
 
 		return None
 
