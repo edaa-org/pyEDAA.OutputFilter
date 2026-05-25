@@ -2,7 +2,6 @@
 
 # Enforce latest version on ReadTheDocs
 sphinx ~= 9.1
-docutils ~= 0.22.0
 docutils_stubs ~= 0.0.22
 
 # ReadTheDocs Theme
@@ -15,4 +14,4 @@ autoapi >= 2.0.1
 sphinx_design ~= 0.7.0
 sphinx-copybutton >= 0.5.2
 sphinx_autodoc_typehints ~= 3.10
-sphinx_reports ~= 0.10.0
+sphinx_reports ~= 0.11.0
