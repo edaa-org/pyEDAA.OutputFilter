@@ -34,9 +34,9 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators  import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, TaskWithSubTasks, SubTask
-from pyEDAA.OutputFilter.Xilinx.Common2 import Phase, SubPhase, PhaseWithChildren
-from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR
+from pyEDAA.OutputFilter.Xilinx import Task, TaskWithPhases, TaskWithSubTasks, SubTask
+from pyEDAA.OutputFilter.Xilinx import Phase, SubPhase, PhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx import MAJOR, MAJOR_MINOR
 
 
 @export

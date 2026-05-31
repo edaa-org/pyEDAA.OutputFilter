@@ -31,8 +31,6 @@
 """Unit tests for Vivado messages."""
 from unittest  import TestCase as TestCase
 
-from pytest    import mark
-
 from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoCriticalWarningMessage, VivadoErrorMessage

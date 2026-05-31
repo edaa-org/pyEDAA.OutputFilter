@@ -29,11 +29,3 @@
 # ==================================================================================================================== #
 #
 """Package containing unit tests."""
-from unittest             import TestCase
-
-from pyEDAA.OutputFilter  import Filter
-
-
-class CommonOptions(TestCase):
-	def test_Filter(self) -> None:
-		_ = Filter()

@@ -30,6 +30,7 @@
 #
 from argparse import Namespace
 from pathlib  import Path
+from re       import compile as re_compile
 from sys      import stdin as sys_stdin
 from typing   import NoReturn, Iterable
 
@@ -38,12 +39,10 @@ from pyTooling.MetaClasses                       import ExtendedType
 from pyTooling.Attributes.ArgParse               import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag          import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag    import LongValuedFlag
-from pyTooling.Stopwatch                         import Stopwatch
 from pyTooling.Warning                           import WarningCollector
 
 from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException, SynthesizeDesign, Processor
-from pyEDAA.OutputFilter.Xilinx.Common           import LineKind, Line
-from pyEDAA.OutputFilter.Xilinx.Common2          import Preamble
+from pyEDAA.OutputFilter.Xilinx                  import LineKind, VivadoLine, Preamble
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, LoadingPart
 
 
@@ -107,10 +106,10 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		for warning in warnings:
 			print(warning)
 
-	def _WriteOutput(self, line: Line):
+	def _WriteOutput(self, line: VivadoLine):
 		self.WriteNormal(f"{line.LineNumber:4}: {line}")
 
-	def _WriteColoredOutput(self, line: Line):
+	def _WriteColoredOutput(self, line: VivadoLine):
 		color = self.GetColorOfLine(line)
 		message = str(line).replace("{", "{{").replace("}", "}}")
 		self.WriteNormal(f"{line.LineNumber:4}: {{{color}}}{message}{{NOCOLOR}}".format(**self.Foreground))
@@ -199,7 +198,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 		self.ExitOnPreviousErrors()
 
-	def GetColorOfLine(self, line: Line) -> str:
+	def GetColorOfLine(self, line: VivadoLine) -> str:
 		colorDict = {
 			"normal":               "WHITE",
 			"info":                 "GRAY", # "DARK_BLUE",

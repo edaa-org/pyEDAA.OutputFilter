@@ -37,13 +37,9 @@ from unittest import TestCase as TestCase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, LinkDesign as xil_LinkDesign, OptimizeDesign as xil_OptimizeDesign, Line
-from pyEDAA.OutputFilter.Xilinx import PlaceDesign as xil_PlaceDesign, RouteDesign as xil_RouteDesign
-from pyEDAA.OutputFilter.Xilinx import ReportDRC
-from pyEDAA.OutputFilter.Xilinx.OptimizeDesign import DRCTask, CacheTimingInformationTask, LogicOptimizationTask, \
-	PowerOptimizationTask, PowerOptPatchEnablesTask, FinalCleanupTask, NetlistObfuscationTask, Phase_Retarget, \
-	Phase_ConstantPropagation, Phase_Sweep, Phase_BUFGOptimization, Phase_ShiftRegisterOptimization, \
-	Phase_PostProcessingNetlist
+from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor
+from pyEDAA.OutputFilter.Xilinx import Link_Design, Opt_Design, Place_Design, Route_Design, Report_DRC
+from pyEDAA.OutputFilter.Xilinx import OptimizeDesign as _OptDesign
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -113,8 +109,8 @@ class LinkDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(xil_LinkDesign, processor)
-		linkDesign = processor[xil_LinkDesign]
+		self.assertIn(Link_Design, processor)
+		linkDesign = processor[Link_Design]
 		self.assertEqual(4, len(linkDesign.InfoMessages))
 		self.assertEqual(0, len(linkDesign.WarningMessages))
 		self.assertEqual(0, len(linkDesign.CriticalWarningMessages))
@@ -124,7 +120,7 @@ class LinkDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 
 class OptimizeDesign(TestCase):
@@ -188,15 +184,15 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(xil_OptimizeDesign, processor)
-		optimizeDesign = processor[xil_OptimizeDesign]
+		self.assertIn(Opt_Design, processor)
+		optimizeDesign = processor[Opt_Design]
 		self.assertEqual(2, len(optimizeDesign.InfoMessages))
 		self.assertEqual(0, len(optimizeDesign.WarningMessages))
 		self.assertEqual(0, len(optimizeDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(optimizeDesign.ErrorMessages))
 
-		self.assertIn(ReportDRC, processor)
-		reportDRC = processor[ReportDRC]
+		self.assertIn(Report_DRC, processor)
+		reportDRC = processor[Report_DRC]
 		self.assertEqual(3, len(reportDRC.InfoMessages))
 		self.assertEqual(0, len(reportDRC.WarningMessages))
 		self.assertEqual(0, len(reportDRC.CriticalWarningMessages))
@@ -204,7 +200,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_DRCTask(self) -> None:
 		print()
@@ -227,10 +223,10 @@ class OptimizeDesign(TestCase):
 			for rawLine in report.splitlines():
 				generator.send(rawLine)
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 
-		self.assertIn(DRCTask, optimizeDesign)
-		drcTask = optimizeDesign[DRCTask]
+		self.assertIn(_OptDesign.DRCTask, optimizeDesign)
+		drcTask = optimizeDesign[_OptDesign.DRCTask]
 		self.assertEqual(3, len(drcTask.InfoMessages))
 		self.assertEqual(0, len(drcTask.WarningMessages))
 		self.assertEqual(0, len(drcTask.CriticalWarningMessages))
@@ -238,7 +234,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_CacheTimingInformationTask(self) -> None:
 		print()
@@ -260,10 +256,10 @@ class OptimizeDesign(TestCase):
 			for rawLine in report.splitlines():
 				generator.send(rawLine)
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 
-		self.assertIn(CacheTimingInformationTask, optimizeDesign)
-		cacheTimingInformationTask = optimizeDesign[CacheTimingInformationTask]
+		self.assertIn(_OptDesign.CacheTimingInformationTask, optimizeDesign)
+		cacheTimingInformationTask = optimizeDesign[_OptDesign.CacheTimingInformationTask]
 		self.assertEqual(1, len(cacheTimingInformationTask.InfoMessages))
 		self.assertEqual(0, len(cacheTimingInformationTask.WarningMessages))
 		self.assertEqual(0, len(cacheTimingInformationTask.CriticalWarningMessages))
@@ -271,7 +267,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_LogicOptimizationTask(self) -> None:
 		print()
@@ -358,56 +354,56 @@ class OptimizeDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 		self.assertEqual(13, len(optimizeDesign.InfoMessages))
 		self.assertEqual(0, len(optimizeDesign.WarningMessages))
 		self.assertEqual(0, len(optimizeDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(optimizeDesign.ErrorMessages))
 
-		self.assertIn(LogicOptimizationTask, optimizeDesign)
-		logicOptimizationTask = optimizeDesign[LogicOptimizationTask]
+		self.assertIn(_OptDesign.LogicOptimizationTask, optimizeDesign)
+		logicOptimizationTask = optimizeDesign[_OptDesign.LogicOptimizationTask]
 		self.assertEqual(11, len(logicOptimizationTask.InfoMessages))
 		self.assertEqual(0, len(logicOptimizationTask.WarningMessages))
 		self.assertEqual(0, len(logicOptimizationTask.CriticalWarningMessages))
 		self.assertEqual(0, len(logicOptimizationTask.ErrorMessages))
 
-		self.assertIn(Phase_Retarget, logicOptimizationTask)
-		retarget = logicOptimizationTask[Phase_Retarget]
+		self.assertIn(_OptDesign.Phase_Retarget, logicOptimizationTask)
+		retarget = logicOptimizationTask[_OptDesign.Phase_Retarget]
 		self.assertEqual(2, len(retarget.InfoMessages))
 		self.assertEqual(0, len(retarget.WarningMessages))
 		self.assertEqual(0, len(retarget.CriticalWarningMessages))
 		self.assertEqual(0, len(retarget.ErrorMessages))
 
-		self.assertIn(Phase_ConstantPropagation, logicOptimizationTask)
-		constantPropagation = logicOptimizationTask[Phase_ConstantPropagation]
+		self.assertIn(_OptDesign.Phase_ConstantPropagation, logicOptimizationTask)
+		constantPropagation = logicOptimizationTask[_OptDesign.Phase_ConstantPropagation]
 		self.assertEqual(1, len(constantPropagation.InfoMessages))
 		self.assertEqual(0, len(constantPropagation.WarningMessages))
 		self.assertEqual(0, len(constantPropagation.CriticalWarningMessages))
 		self.assertEqual(0, len(constantPropagation.ErrorMessages))
 
-		self.assertIn(Phase_Sweep, logicOptimizationTask)
-		sweep = logicOptimizationTask[Phase_Sweep]
+		self.assertIn(_OptDesign.Phase_Sweep, logicOptimizationTask)
+		sweep = logicOptimizationTask[_OptDesign.Phase_Sweep]
 		self.assertEqual(0, len(sweep.InfoMessages))
 		self.assertEqual(0, len(sweep.WarningMessages))
 		self.assertEqual(0, len(sweep.CriticalWarningMessages))
 		self.assertEqual(0, len(sweep.ErrorMessages))
 
-		self.assertIn(Phase_BUFGOptimization, logicOptimizationTask)
-		bufgOptimization = logicOptimizationTask[Phase_BUFGOptimization]
+		self.assertIn(_OptDesign.Phase_BUFGOptimization, logicOptimizationTask)
+		bufgOptimization = logicOptimizationTask[_OptDesign.Phase_BUFGOptimization]
 		self.assertEqual(0, len(bufgOptimization.InfoMessages))
 		self.assertEqual(0, len(bufgOptimization.WarningMessages))
 		self.assertEqual(0, len(bufgOptimization.CriticalWarningMessages))
 		self.assertEqual(0, len(bufgOptimization.ErrorMessages))
 
-		self.assertIn(Phase_ShiftRegisterOptimization, logicOptimizationTask)
-		shiftRegisterOptimization = logicOptimizationTask[Phase_ShiftRegisterOptimization]
+		self.assertIn(_OptDesign.Phase_ShiftRegisterOptimization, logicOptimizationTask)
+		shiftRegisterOptimization = logicOptimizationTask[_OptDesign.Phase_ShiftRegisterOptimization]
 		self.assertEqual(1, len(shiftRegisterOptimization.InfoMessages))
 		self.assertEqual(0, len(shiftRegisterOptimization.WarningMessages))
 		self.assertEqual(0, len(shiftRegisterOptimization.CriticalWarningMessages))
 		self.assertEqual(0, len(shiftRegisterOptimization.ErrorMessages))
 
-		self.assertIn(Phase_PostProcessingNetlist, logicOptimizationTask)
-		postProcessingNetlist = logicOptimizationTask[Phase_PostProcessingNetlist]
+		self.assertIn(_OptDesign.Phase_PostProcessingNetlist, logicOptimizationTask)
+		postProcessingNetlist = logicOptimizationTask[_OptDesign.Phase_PostProcessingNetlist]
 		self.assertEqual(0, len(postProcessingNetlist.InfoMessages))
 		self.assertEqual(0, len(postProcessingNetlist.WarningMessages))
 		self.assertEqual(0, len(postProcessingNetlist.CriticalWarningMessages))
@@ -415,7 +411,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_PowerOptimizationTask(self) -> None:
 		print()
@@ -453,17 +449,17 @@ class OptimizeDesign(TestCase):
 			for rawLine in report.splitlines():
 				generator.send(rawLine)
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 
-		self.assertIn(PowerOptimizationTask, optimizeDesign)
-		powerOptimizationTask = optimizeDesign[PowerOptimizationTask]
+		self.assertIn(_OptDesign.PowerOptimizationTask, optimizeDesign)
+		powerOptimizationTask = optimizeDesign[_OptDesign.PowerOptimizationTask]
 		self.assertEqual(7, len(powerOptimizationTask.InfoMessages))
 		self.assertEqual(0, len(powerOptimizationTask.WarningMessages))
 		self.assertEqual(0, len(powerOptimizationTask.CriticalWarningMessages))
 		self.assertEqual(0, len(powerOptimizationTask.ErrorMessages))
 
-		self.assertIn(PowerOptPatchEnablesTask, powerOptimizationTask)
-		powerOptPatchEnablesTask = powerOptimizationTask[PowerOptPatchEnablesTask]
+		self.assertIn(_OptDesign.PowerOptPatchEnablesTask, powerOptimizationTask)
+		powerOptPatchEnablesTask = powerOptimizationTask[_OptDesign.PowerOptPatchEnablesTask]
 		self.assertEqual(2, len(powerOptPatchEnablesTask.InfoMessages))
 		self.assertEqual(0, len(powerOptPatchEnablesTask.WarningMessages))
 		self.assertEqual(0, len(powerOptPatchEnablesTask.CriticalWarningMessages))
@@ -471,7 +467,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_FinalCleanupTask(self) -> None:
 		print()
@@ -492,10 +488,10 @@ class OptimizeDesign(TestCase):
 			for rawLine in report.splitlines():
 				generator.send(rawLine)
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 
-		self.assertIn(FinalCleanupTask, optimizeDesign)
-		finalCleanupTask = optimizeDesign[FinalCleanupTask]
+		self.assertIn(_OptDesign.FinalCleanupTask, optimizeDesign)
+		finalCleanupTask = optimizeDesign[_OptDesign.FinalCleanupTask]
 		self.assertEqual(0, len(finalCleanupTask.InfoMessages))
 		self.assertEqual(0, len(finalCleanupTask.WarningMessages))
 		self.assertEqual(0, len(finalCleanupTask.CriticalWarningMessages))
@@ -503,7 +499,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_NetlistObfuscationTask(self) -> None:
 		print()
@@ -525,10 +521,10 @@ class OptimizeDesign(TestCase):
 			for rawLine in report.splitlines():
 				generator.send(rawLine)
 
-		optimizeDesign = processor[xil_OptimizeDesign]
+		optimizeDesign = processor[Opt_Design]
 
-		self.assertIn(NetlistObfuscationTask, optimizeDesign)
-		netlistObfuscationTask = optimizeDesign[NetlistObfuscationTask]
+		self.assertIn(_OptDesign.NetlistObfuscationTask, optimizeDesign)
+		netlistObfuscationTask = optimizeDesign[_OptDesign.NetlistObfuscationTask]
 		self.assertEqual(0, len(netlistObfuscationTask.InfoMessages))
 		self.assertEqual(0, len(netlistObfuscationTask.WarningMessages))
 		self.assertEqual(0, len(netlistObfuscationTask.CriticalWarningMessages))
@@ -536,7 +532,7 @@ class OptimizeDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 
 class PlaceDesign(TestCase):
@@ -601,8 +597,8 @@ class PlaceDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(xil_PlaceDesign, processor)
-		placeDesign = processor[xil_PlaceDesign]
+		self.assertIn(Place_Design, processor)
+		placeDesign = processor[Place_Design]
 		self.assertEqual(5, len(placeDesign.InfoMessages))
 		self.assertEqual(0, len(placeDesign.WarningMessages))
 		self.assertEqual(0, len(placeDesign.CriticalWarningMessages))
@@ -610,10 +606,10 @@ class PlaceDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 
-# class PhysicalOptimizeDesign(TestCase):
+# class PhysicalOpt_Design(TestCase):
 # 	pass
 
 
@@ -705,8 +701,8 @@ class RouteDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(xil_RouteDesign, processor)
-		routeDesign = processor[xil_RouteDesign]
+		self.assertIn(Route_Design, processor)
+		routeDesign = processor[Route_Design]
 		self.assertEqual(4, len(routeDesign.InfoMessages))
 		self.assertEqual(0, len(routeDesign.WarningMessages))
 		self.assertEqual(0, len(routeDesign.CriticalWarningMessages))
@@ -714,7 +710,7 @@ class RouteDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 
 # class WriteBitstream(TestCase):
