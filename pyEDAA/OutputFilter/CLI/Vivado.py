@@ -29,28 +29,307 @@
 # ==================================================================================================================== #
 #
 from argparse import Namespace
+from enum     import Flag
 from pathlib  import Path
 from re       import compile as re_compile
 from sys      import stdin as sys_stdin
-from typing   import NoReturn, Iterable
+from typing   import NoReturn, Optional as Nullable, Dict, List
 
-from pyTooling.Decorators                        import readonly
-from pyTooling.MetaClasses                       import ExtendedType
+from pyTooling.Decorators                        import readonly, export
+from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Attributes.ArgParse               import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag          import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag    import LongValuedFlag
-from pyTooling.Warning                           import WarningCollector
+from pyTooling.Stopwatch                         import Stopwatch
+from pyTooling.TerminalUI                        import TerminalBaseApplication
+from pyTooling.Warning                           import WarningCollector, Warning
+from ruamel.yaml                                 import YAML, CommentedMap, CommentedSeq
 
-from pyEDAA.OutputFilter.Xilinx                  import Document, ProcessorException, SynthesizeDesign, Processor
-from pyEDAA.OutputFilter.Xilinx                  import LineKind, VivadoLine, Preamble
+from pyEDAA.OutputFilter                         import OutputFilterException
+from pyEDAA.OutputFilter.Xilinx import Document, ProcessorException, Processor, Command, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx                  import LineKind, VivadoLine, Preamble, Synth_Design
 from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, LoadingPart
 
 
+@export
+class ConfigurationException(OutputFilterException):
+	pass
 
+
+@export
+class ConfigurationWarning(Warning):
+	pass
+
+
+@export
+class Format(Flag):
+	Plain =    0
+	JSONLine = 1
+	JSON =     2
+
+
+@export
+class Action(Flag):
+	Unknown = 0
+	Remove =  1
+	Error =   2
+
+
+@export
+class Level(Flag):
+	Unknown =         0
+	Info =            1
+	Warning =         2
+	CriticalWarning = 3
+	Error =           4
+
+
+@export
+class Rule(metaclass=ExtendedType, slots=True):
+	_optional: bool
+	_action:   Nullable[Action]
+	_level:    Nullable[Level]
+
+# todo: justification (whitelist/ blacklist / message)
+
+	def __init__(self, action: Nullable[Action], level: Nullable[Level]) -> None:
+		self._action = action
+		self._level =  level
+
+	@abstractmethod
+	def Match(self, line: VivadoLine) -> bool:
+		pass
+
+
+@export
+class ClassificationRule(Rule):
+	_lineKind: LineKind
+
+	def __init__(self, lineKind: LineKind, action: Nullable[Action], level: Nullable[Level]) -> None:
+		super().__init__(action, level)
+
+		self._lineKind = lineKind
+
+	def Match(self, line: VivadoLine) -> bool:
+		return self._lineKind == line._kind
+
+
+@export
+class VivadoMessageRule(Rule):
+	_toolID:    int
+	_messageID: int
+
+	def __init__(self, toolID: int, messageID: int, action: Nullable[Action], level: Nullable[Level]) -> None:
+		super().__init__(action, level)
+
+		self._toolID = toolID
+		self._messageID = messageID
+
+	def Match(self, line: VivadoLine) -> bool:
+		if isinstance(line, VivadoMessage) and line._kind =:
+
+@export
+class Target(metaclass=ExtendedType, slots=True):
+	# _file:     Any  # todo: find type
+	_format:   Format
+	_commands: List[Command]
+	_rules:    List[Rule]
+
+
+@export
+class ProcessingPipeline(metaclass=ExtendedType, slots=True):
+	_preprocessing: Nullable[List[Rule]]
+	_targets:       Dict[str, Target]
+
+	def __init__(self) -> None:
+		self._preprocessing = None
+		self._targets = {}
+
+
+@export
+class Tool(metaclass=ExtendedType, slots=True):
+	pass
+
+
+@export
+class Vivado(Tool):
+	_parent:      "Configuration"
+	_colors:      Dict[str, str]
+	_ruleSets:    Dict[str, List[Rule]]
+	_hasLatches:  Action
+
+	def __init__(self, parent: "Configuration") -> None:
+		self._parent =   parent
+		self._colors =   {}
+		self._ruleSets = {}
+
+		self._hasLatches = Action.Unknown
+
+		self._InitializeColors()
+
+	def _InitializeColors(self) -> None:
+		self._colors = {
+			"normal":               "WHITE",
+			"info":                 "GRAY", # "DARK_BLUE",
+			"warning":              "YELLOW",
+			"critical":             "MAGENTA",
+			"error":                "RED",
+			"tcl":                  "CYAN",
+			"success":              "GREEN",
+			"failed":               "RED",
+			"verbose":              "GRAY",
+			"unprocessed":          "DARK_GRAY",
+			"empty":                "NOCOLOR",
+			"sectionDelimiter":     "DARK_GRAY",
+			"sectionStart":         "DARK_CYAN",
+			"sectionEnd":           "DARK_CYAN",
+			"sectionTime":          "DARK_GREEN",
+			"subsectionStart":      "DARK_CYAN",
+			"subsectionEnd":        "DARK_CYAN",
+			"subsectionTime":       "DARK_GREEN",
+			"taskStart":            "YELLOW",
+			"taskEnd":              "YELLOW",
+			"taskTime":             "DARK_GREEN",
+			"phaseStart":           "BLUE",
+			"phaseEnd":             "BLUE",
+			"phaseTime":            "DARK_GREEN",
+			"subphaseStart":        "DARK_CYAN",
+			"subphaseEnd":          "DARK_CYAN",
+			"subphaseTime":         "DARK_GREEN",
+			"subsubphaseStart":     "DARK_CYAN",
+			"subsubphaseEnd":       "DARK_CYAN",
+			"subsubphaseTime":      "DARK_GREEN",
+			"subsubsubphaseStart":  "DARK_CYAN",
+			"subsubsubphaseEnd":    "DARK_CYAN",
+			"subsubsubphaseTime":   "DARK_GREEN",
+			"nestedTaskStart":      "DARK_CYAN",
+			"nestedTaskEnd":        "DARK_CYAN",
+			"nestedTaskTime":       "DARK_GREEN",
+			"nestedPhaseStart":     "DARK_CYAN",
+			"nestedPhaseEnd":       "DARK_CYAN",
+			"nestedPhaseTime":      "DARK_GREEN",
+			"paragraphHeadline":    "DARK_YELLOW",
+			"hierarchyStart":       "DARK_CYAN",
+			"hierarchyEnd":         "DARK_GRAY",
+			"xdcStart":             "DARK_CYAN",
+			"xdcEnd":               "DARK_GRAY",
+			"table":                "GRAY",
+		}
+
+	def Parse(self, toolConfig: CommentedMap) -> None:
+		if "colors" in toolConfig:
+			self._ParseColors(toolConfig["colors"])
+
+		if "rule-sets" in toolConfig:
+			for ruleSetName, ruleSetConfig in toolConfig["rule-sets"].items():
+				if len(ruleSetConfig) > 0:
+					self._ParseRuleSet(ruleSetName, ruleSetConfig)
+
+		if "outputs" in toolConfig:
+			for outputName, outputConfig in toolConfig["outputs"].items():
+				if outputName == "stdout":
+					pass
+					# self._ParseStdOutOutput(outputConfig)
+				elif outputName == "stderr":
+					pass
+					# self._ParseStdErrOutput(outputConfig)
+				else:
+					pass
+					# self._ParseOutput(outputName, outputConfig)
+
+		if "exports" in toolConfig:
+			if "cellUsage" in (exportConfig := toolConfig["exports"]):
+				pass
+				# self._ParseCellUsage(exportConfig["cellUsage"])
+
+		if "policies" in toolConfig:
+			policies = toolConfig["policies"]
+			if "hasLatches" in policies:
+				if policies["hasLatches"] == "error":
+					self._hasLatches = Action.Error
+				else:
+					WarningCollector.Raise(ConfigurationWarning(f"Unknown value '{policies["hasLatches"]}' for policy 'hasLatches'."))
+
+	def _ParseColors(self, colors: CommentedMap) -> None:
+		allowedColors = set(TerminalBaseApplication.Foreground.keys())
+
+		for lineKind, color in colors.items():
+			if lineKind not in self._colors:
+				WarningCollector.Raise(ConfigurationWarning(f"Item '{lineKind}' not supported for coloring."))
+				continue
+			elif (col := color.upper()) not in allowedColors:
+				WarningCollector.Raise(ConfigurationWarning(f"Color '{color}' is not supported."))
+				continue
+
+			self._colors[lineKind] = col
+
+	def _ParseRuleSet(self, ruleSetName: str, ruleSetConfig: CommentedMap) -> None:
+		self._ruleSets[ruleSetName] = (ruleSet := {})
+
+		pattern = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
+
+		for ruleName, ruleConfig in ruleSetConfig.items():
+			if ruleName == "info":
+				ruleSet[ruleName] = ClassificationRule(LineKind.InfoMessage, None, None)
+			elif ruleName == "criticalWarning":
+				ruleSet[ruleName] = ClassificationRule(LineKind.WarningMessage, None, None)
+			elif ruleName == "warning":
+				ruleSet[ruleName] = ClassificationRule(LineKind.CriticalWarningMessage, None, None)
+			elif ruleName == "error":
+				ruleSet[ruleName] = ClassificationRule(LineKind.ErrorMessage, None, None)
+			elif (match := pattern.match(ruleName)) is not None:
+					toolID =    int(match.group("toolID"))
+					messageID = int(match.group("messageID"))
+					ruleSet[ruleName] = VivadoMessageRule(toolID, messageID, None, None)
+			else:
+				WarningCollector.Raise(ConfigurationWarning(f"Unknown rule '{ruleName}' for rule-set '{ruleSetName}'."))
+
+
+@export
+class Configuration(metaclass=ExtendedType, slots=True):
+	_file:         Path
+	_yamlDocument: YAML
+	_yamlLoadTime: float
+
+	_tools:        Dict[str, Tool]
+
+	def __init__(self, file: Path) -> None:
+		self._file =  file
+		self._tools = {}
+
+		with Stopwatch() as sw:
+			try:
+				yamlReader = YAML()
+				self._yamlDocument = yamlReader.load(self._file)
+			except Exception as ex:
+				raise ConfigurationException(f"Couldn't open '{self._file}'.") from ex
+
+		self._yamlLoadTime = sw.Duration
+
+		self.Parse()
+
+	def Parse(self) ->None:
+		if (version := self._yamlDocument["version"]) != "0.1":
+			ex = ConfigurationException(f"Configuration file version {version} is not supported.")
+			ex.add_note("Supported versions: 0.1")
+			raise ex
+
+		self._Parse_v0_1()
+
+	def _Parse_v0_1(self) -> None:
+		for toolName, toolConfig in self._yamlDocument["tools"].items():
+			if toolName == "vivado":
+				self._tools["vivado"] = (vivado := Vivado(self))
+				vivado.Parse(toolConfig)
+
+
+
+@export
 class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	@CommandHandler("vivado", help="Parse AMD/Xilinx Vivado log files.", description="Parse AMD/Xilinx Vivado log files.")
 	@LongFlag("--stdin", dest="stdin", help="Read log from STDIN.")
 	@LongValuedFlag("--file", dest="logfile", metaName='Log file', optional=True, help="Read from log file (*.vds|*.vdi).")
+	@LongValuedFlag("--config", dest="configfile", metaName='Config file', optional=True, help="Configuration file (*.yaml).")
 	@LongFlag("--colored", dest="colored", help="Render logfile with colored lines.")
 	@LongFlag("--summary", dest="summary", help="Print a summary.")
 	@LongFlag("--info", dest="info", help="Print info messages.")
@@ -62,6 +341,17 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	def HandleVivado(self, args: Namespace) -> None:
 		"""Handle program calls with command ``vivado``."""
 		self._PrintHeadline()
+
+		if args.configfile is not None:
+			configFile = Path(args.configfile)
+			if not configFile.exists():
+				self.WriteError(f"Configuration file '{configFile}' doesn't exist.")
+				self.Exit(3)
+			else:
+				with WarningCollector() as warnings:
+					config = Configuration(configFile)
+				for warning in warnings:
+					self.WriteWarning(warning)
 
 		if args.stdin is True:
 			if args.logfile is not None:
@@ -77,15 +367,15 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			self.WriteVerbose("Reading lines from STDIN ...")
 			inputFile = sys_stdin
 		else:
-			logfile = Path(args.logfile)
-			if not logfile.exists():
-				self.WriteError(f"Vivado log file '{logfile}' doesn't exist.")
+			logFile = Path(args.logfile)
+			if not logFile.exists():
+				self.WriteError(f"Vivado log file '{logFile}' doesn't exist.")
 				self.Exit(3)
 
 			try:
-				inputFile = logfile.open("r")
+				inputFile = logFile.open("r")
 			except OSError as ex:
-				self.WriteError(f"Vivado log file '{logfile}' cannot be opened.")
+				self.WriteError(f"Vivado log file '{logFile}' cannot be opened.")
 				self.WriteError(f"  {ex}")
 				self.Exit(4)
 
