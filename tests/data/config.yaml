@@ -51,35 +51,51 @@ tools:
 
     rule-sets:
       prefilter:
+        all:
+          action: remove
         8-7129:
           action: error
           level: error
 
       common:
-        info:
-          action: remove
+        warning:
+          action: keep
+        12-24828:
+          action: default
 
       problems:
-        warning:
+        all:
           action: remove
+        warning:
+          action: keep
+        critical warning:
+          action: keep
+        error:
+          action: keep
 
     outputs:
       preprocessing: prefilter
 
       stdout:
-        rules:
+        format:      plain
+        coloring:    true
+        linenumbers: on
+        timestamp:   yes
+        commands:
+        rule-sets:
           - common
-        coloring: true
 
       synthesis:
-        path: "synthesis.log"
+        path:   "synthesis.log"
+        format: plain
         commands:
           - synth_design
         rule-sets:
           - common
 
       implementation:
-        path: "implementation.log"
+        path:   "implementation.log"
+        format: jsonl
         commands:
           - link_design
           - opt_design
@@ -90,15 +106,22 @@ tools:
           - common
 
       problem:
-        path: "problems.log"
+        path:   "problems.log"
+        format: json
         rule-sets:
           - common
           - problems
 
     exports:
       cellUsage:
-        json: cellUsage.json
-        yaml: cellUsage.yaml
+        json: CellUsage.json
+#        yaml: cellUsage.yaml
+      blackBoxes:
+        json: BlackBoxes.json
+      readXDCFiles:
+        json: XDCfiles.json
+      hierarchy:
+        json: Hierarchy.json
 
     policies:
       hasLatches: error

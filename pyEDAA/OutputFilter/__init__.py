@@ -43,7 +43,7 @@ from typing                import Any, Generator, Callable, Tuple, Union, Option
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.Exceptions  import ExceptionBase
-from pyTooling.MetaClasses import ExtendedType
+from pyTooling.MetaClasses import ExtendedType, mustoverride
 
 
 @export
@@ -51,10 +51,11 @@ class OutputFilterException(ExceptionBase):
 	"""Base-class for all pyEDAA.OutputFilter specific exceptions."""
 
 
-LineClassification = TypeVar("LineClassification", bound=Flag)
+LineClassification =   TypeVar("LineClassification",   bound=Flag)
+LineProcessingAction = TypeVar("LineProcessingAction", bound=Flag)
 
 @export
-class Line(Generic[LineClassification], metaclass=ExtendedType, slots=True):
+class Line(Generic[LineClassification, LineProcessingAction], metaclass=ExtendedType, slots=True):
 	"""
 	This class represents any line in a log file.
 
@@ -65,6 +66,7 @@ class Line(Generic[LineClassification], metaclass=ExtendedType, slots=True):
 	_lineNumber:    int
 	_document:      "Document"
 	_kind:          LineClassification
+	_action:        LineProcessingAction
 	_message:       str
 	_previousLine:  Nullable["Line"]
 	_nextLine:      Nullable["Line"]
@@ -73,17 +75,22 @@ class Line(Generic[LineClassification], metaclass=ExtendedType, slots=True):
 		self,
 		lineNumber:   int,
 		kind:         LineClassification,
+		action:       LineProcessingAction,
 		message:      str,
 		previousLine: Nullable["Line"] = None
 	) -> None:
 		self._lineNumber =   lineNumber
 		self._kind =         kind
+		self._action =       action
 		self._message =      message
 		self._previousLine = previousLine
 		self._nextLine =     None
 
 		if previousLine is not None:
 			previousLine._nextLine = self
+
+		if not isinstance(message, str):
+			pass
 
 	@readonly
 	def LineNumber(self) -> int:
@@ -92,6 +99,10 @@ class Line(Generic[LineClassification], metaclass=ExtendedType, slots=True):
 	@readonly
 	def Kind(self) -> LineClassification:
 		return self._kind
+
+	@readonly
+	def Action(self) -> LineProcessingAction:
+		return self._action
 
 	@readonly
 	def Message(self) -> str:

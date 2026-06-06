@@ -35,10 +35,10 @@ from datetime import datetime
 from enum     import Flag
 from pathlib  import Path
 from re       import Pattern, compile as re_compile
-from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any
+from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator
 
 from pyTooling.Decorators  import export, readonly
-from pyTooling.MetaClasses import ExtendedType, abstractmethod
+from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
 from pyTooling.Warning     import WarningCollector, CriticalWarning
@@ -285,7 +285,13 @@ class LineKind(Flag):
 
 
 @export
-class VivadoLine(Line[LineKind]):
+class LineAction(Flag):
+	Default = 0
+	Remove =  1
+
+
+@export
+class VivadoLine(Line[LineKind, LineAction]):
 	"""
 	This class represents any line in a log file.
 
@@ -300,10 +306,11 @@ class VivadoLine(Line[LineKind]):
 		self,
 		lineNumber:   int,
 		kind:         LineKind,
+		action:       LineAction,
 		message:      str,
 		previousLine: Nullable["VivadoLine"] = None
 	) -> None:
-		super().__init__(lineNumber, kind, message, previousLine)
+		super().__init__(lineNumber, kind, action, message, previousLine)
 
 		self._processor = None
 		self._command =   None
@@ -361,13 +368,14 @@ class VivadoMessage(VivadoLine):
 		self,
 		lineNumber:    int,
 		kind:          LineKind,
+		action:        LineAction,
 		message:       str,
 		toolName:      Nullable[str] = None,
 		toolID:        Nullable[int] = None,
 		messageKindID: Nullable[int] = None,
 		previousLine:  Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, kind, message, previousLine)
+		super().__init__(lineNumber, kind, action, message, previousLine)
 		self._toolName =      toolName
 		self._toolID =        toolID
 		self._messageKindID = messageKindID
@@ -387,7 +395,7 @@ class VivadoMessage(VivadoLine):
 	@classmethod
 	def Parse(cls, lineNumber: int, kind: LineKind, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, kind, match[4], match[1], int(match[2]), int(match[3]), previousLine)
+			return cls(lineNumber, kind, LineAction.Default, match[4], match[1], int(match[2]), int(match[3]), previousLine)
 
 		return None
 
@@ -451,6 +459,7 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 		self,
 		lineNumber:    int,
 		kind:          LineKind,
+		action:        LineAction,
 		drcRuleName:   str,
 		message:       str,
 		toolName:      Nullable[str] = None,
@@ -458,7 +467,7 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 		messageKindID: Nullable[int] = None,
 		previousLine:  Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID, previousLine)
+		super().__init__(lineNumber, kind, action, message, toolName, toolID, messageKindID, previousLine)
 
 		self._drcRuleName = drcRuleName
 
@@ -496,7 +505,7 @@ class VivadoIrregularInfoMessage(VivadoMessage, InfoMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.InfoMessage, match[3], toolName=match[1], messageKindID=int(match[2]), previousLine=previousLine)
+			return cls(lineNumber, LineKind.InfoMessage, LineAction.Default, match[3], toolName=match[1], messageKindID=int(match[2]), previousLine=previousLine)
 
 		return None
 
@@ -522,7 +531,7 @@ class VivadoStuntedInfoMessage(VivadoMessage, InfoMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.InfoMessage, match[1], previousLine=previousLine)
+			return cls(lineNumber, LineKind.InfoMessage, LineAction.Default, match[1], previousLine=previousLine)
 
 		return None
 
@@ -586,6 +595,7 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 		self,
 		lineNumber:    int,
 		kind:          LineKind,
+		action:        LineAction,
 		drcRuleName:   str,
 		message:       str,
 		toolName:      Nullable[str] = None,
@@ -593,7 +603,7 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 		messageKindID: Nullable[int] = None,
 		previousLine:  Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID, previousLine)
+		super().__init__(lineNumber, kind, action, message, toolName, toolID, messageKindID, previousLine)
 
 		self._drcRuleName = drcRuleName
 
@@ -604,7 +614,7 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], match[3], toolName="DRC", toolID=None, messageKindID=int(match[2]), previousLine=previousLine)
+			return cls(lineNumber, LineKind.WarningMessage, LineAction.Default, match[1], match[3], toolName="DRC", toolID=None, messageKindID=int(match[2]), previousLine=previousLine)
 
 		return None
 
@@ -633,6 +643,7 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 		self,
 		lineNumber:    int,
 		kind:          LineKind,
+		action:        LineAction,
 		xpmName:      str,
 		message:       str,
 		toolName:      Nullable[str] = None,
@@ -640,7 +651,7 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 		messageKindID: Nullable[int] = None,
 		previousLine:  Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, kind, message, toolName, toolID, messageKindID, previousLine)
+		super().__init__(lineNumber, kind, action, message, toolName, toolID, messageKindID, previousLine)
 
 		self._xpmName = xpmName
 
@@ -651,7 +662,7 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], match[4], toolName=match[2], toolID=None, messageKindID=int(match[3]), previousLine=previousLine)
+			return cls(lineNumber, LineKind.WarningMessage, LineAction.Default, match[1], match[4], toolName=match[2], toolID=None, messageKindID=int(match[3]), previousLine=previousLine)
 
 		return None
 
@@ -677,7 +688,7 @@ class VivadoStuntedWarningMessage(VivadoMessage, WarningMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], previousLine=previousLine)
+			return cls(lineNumber, LineKind.WarningMessage, LineAction.Default, match[1], previousLine=previousLine)
 
 		return None
 
@@ -702,7 +713,7 @@ class VivadoCriticalWarningMessage(VivadoMessage, CriticalWarningMessage):
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
-		return super().Parse(lineNumber, LineKind.CriticalWarningMessage, rawMessage, previousLine)
+		return super().Parse(lineNumber, LineKind.CriticalWarningMessage, LineAction.Default, rawMessage, previousLine)
 
 	@classmethod
 	def FromMessage(cls, line: VivadoMessage) -> Self:
@@ -737,7 +748,7 @@ class VivadoErrorMessage(VivadoMessage, ErrorMessage):
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
-		return super().Parse(lineNumber, LineKind.ErrorMessage, rawMessage, previousLine)
+		return super().Parse(lineNumber, LineKind.ErrorMessage, LineAction.Default, rawMessage, previousLine)
 
 	@classmethod
 	def FromMessage(cls, line: VivadoMessage) -> Self:
@@ -775,7 +786,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 		sourceLineNumber: int,
 		previousLine:     Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, LineKind.InfoMessage, rawMessage, toolName, toolID, messageKindID, previousLine)
+		super().__init__(lineNumber, LineKind.InfoMessage, LineAction.Default, rawMessage, toolName, toolID, messageKindID, previousLine)
 
 		self._reportMessage = reportMessage
 		self._sourceFile = sourceFile
@@ -820,7 +831,7 @@ class TclCommand(VivadoLine):
 		rawMessage:   str,
 		previousLine: Nullable[VivadoLine] = None
 	) -> None:
-		super().__init__(lineNumber, LineKind.GenericTclCommand, rawMessage, previousLine)
+		super().__init__(lineNumber, LineKind.GenericTclCommand, LineAction.Default, rawMessage, previousLine)
 
 		self._tclCommand = tclCommand
 		self._arguments =  arguments
@@ -3772,23 +3783,22 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
-	def LineClassification(self) -> Generator[VivadoLine, str, None]:
+	def LineClassification(self, inputStream: Iterator[str]) -> Generator[VivadoLine, None, None]:
+
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
-		# wait for first line
 		lastLine = None
-		rawMessageLine = yield
 		lineNumber = 0
 		_errorMessage = "Unknown processing error"
 
-		while rawMessageLine is not None:
+		while (rawMessageLine := next(inputStream)) is not None:
 			lineNumber += 1
 			rawMessageLine = rawMessageLine.rstrip()
 			errorMessage = _errorMessage
 
 			if len(rawMessageLine) == 0:
-				line = VivadoLine(lineNumber, LineKind.Empty, rawMessageLine, previousLine=lastLine)
+				line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
 			elif rawMessageLine.startswith("INFO"):
 				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
 					if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
@@ -3816,7 +3826,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
 			else:
-				line = VivadoLine(lineNumber, LineKind.Unprocessed, rawMessageLine, previousLine=lastLine)
+				line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
 				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
 					line._kind = LineKind.Verbose
@@ -3838,7 +3848,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			self._lines.append(line)
 
 			lastLine = line
-			rawMessageLine = yield line
+			yield line
 
 	def CommandFinder(self) -> Generator[VivadoLine, VivadoLine, None]:
 		self._preamble =  Preamble(self)
@@ -3848,6 +3858,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		# wait for first line
 		line = yield
+
 		# process preamble
 		line = yield from self._preamble.Generator(line)
 

@@ -28,300 +28,22 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from argparse import Namespace
-from enum     import Flag
-from pathlib  import Path
-from re       import compile as re_compile
-from sys      import stdin as sys_stdin
-from typing   import NoReturn, Optional as Nullable, Dict, List
+from argparse  import Namespace
+from itertools import tee, zip_longest
+from pathlib   import Path
+from re        import compile as re_compile
+from sys       import stdin as sys_stdin
+from typing    import NoReturn, Optional as Nullable, Dict, List, Generator, Tuple
 
 from pyTooling.Decorators                        import readonly, export
-from pyTooling.MetaClasses import ExtendedType, abstractmethod
+from pyTooling.MetaClasses                       import ExtendedType
 from pyTooling.Attributes.ArgParse               import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag          import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag    import LongValuedFlag
-from pyTooling.Stopwatch                         import Stopwatch
-from pyTooling.TerminalUI                        import TerminalBaseApplication
 from pyTooling.Warning                           import WarningCollector, Warning
-from ruamel.yaml                                 import YAML, CommentedMap, CommentedSeq
 
-from pyEDAA.OutputFilter                         import OutputFilterException
-from pyEDAA.OutputFilter.Xilinx import Document, ProcessorException, Processor, Command, VivadoMessage
-from pyEDAA.OutputFilter.Xilinx                  import LineKind, VivadoLine, Preamble, Synth_Design
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport, LoadingPart
-
-
-@export
-class ConfigurationException(OutputFilterException):
-	pass
-
-
-@export
-class ConfigurationWarning(Warning):
-	pass
-
-
-@export
-class Format(Flag):
-	Plain =    0
-	JSONLine = 1
-	JSON =     2
-
-
-@export
-class Action(Flag):
-	Unknown = 0
-	Remove =  1
-	Error =   2
-
-
-@export
-class Level(Flag):
-	Unknown =         0
-	Info =            1
-	Warning =         2
-	CriticalWarning = 3
-	Error =           4
-
-
-@export
-class Rule(metaclass=ExtendedType, slots=True):
-	_optional: bool
-	_action:   Nullable[Action]
-	_level:    Nullable[Level]
-
-# todo: justification (whitelist/ blacklist / message)
-
-	def __init__(self, action: Nullable[Action], level: Nullable[Level]) -> None:
-		self._action = action
-		self._level =  level
-
-	@abstractmethod
-	def Match(self, line: VivadoLine) -> bool:
-		pass
-
-
-@export
-class ClassificationRule(Rule):
-	_lineKind: LineKind
-
-	def __init__(self, lineKind: LineKind, action: Nullable[Action], level: Nullable[Level]) -> None:
-		super().__init__(action, level)
-
-		self._lineKind = lineKind
-
-	def Match(self, line: VivadoLine) -> bool:
-		return self._lineKind == line._kind
-
-
-@export
-class VivadoMessageRule(Rule):
-	_toolID:    int
-	_messageID: int
-
-	def __init__(self, toolID: int, messageID: int, action: Nullable[Action], level: Nullable[Level]) -> None:
-		super().__init__(action, level)
-
-		self._toolID = toolID
-		self._messageID = messageID
-
-	def Match(self, line: VivadoLine) -> bool:
-		if isinstance(line, VivadoMessage) and line._kind =:
-
-@export
-class Target(metaclass=ExtendedType, slots=True):
-	# _file:     Any  # todo: find type
-	_format:   Format
-	_commands: List[Command]
-	_rules:    List[Rule]
-
-
-@export
-class ProcessingPipeline(metaclass=ExtendedType, slots=True):
-	_preprocessing: Nullable[List[Rule]]
-	_targets:       Dict[str, Target]
-
-	def __init__(self) -> None:
-		self._preprocessing = None
-		self._targets = {}
-
-
-@export
-class Tool(metaclass=ExtendedType, slots=True):
-	pass
-
-
-@export
-class Vivado(Tool):
-	_parent:      "Configuration"
-	_colors:      Dict[str, str]
-	_ruleSets:    Dict[str, List[Rule]]
-	_hasLatches:  Action
-
-	def __init__(self, parent: "Configuration") -> None:
-		self._parent =   parent
-		self._colors =   {}
-		self._ruleSets = {}
-
-		self._hasLatches = Action.Unknown
-
-		self._InitializeColors()
-
-	def _InitializeColors(self) -> None:
-		self._colors = {
-			"normal":               "WHITE",
-			"info":                 "GRAY", # "DARK_BLUE",
-			"warning":              "YELLOW",
-			"critical":             "MAGENTA",
-			"error":                "RED",
-			"tcl":                  "CYAN",
-			"success":              "GREEN",
-			"failed":               "RED",
-			"verbose":              "GRAY",
-			"unprocessed":          "DARK_GRAY",
-			"empty":                "NOCOLOR",
-			"sectionDelimiter":     "DARK_GRAY",
-			"sectionStart":         "DARK_CYAN",
-			"sectionEnd":           "DARK_CYAN",
-			"sectionTime":          "DARK_GREEN",
-			"subsectionStart":      "DARK_CYAN",
-			"subsectionEnd":        "DARK_CYAN",
-			"subsectionTime":       "DARK_GREEN",
-			"taskStart":            "YELLOW",
-			"taskEnd":              "YELLOW",
-			"taskTime":             "DARK_GREEN",
-			"phaseStart":           "BLUE",
-			"phaseEnd":             "BLUE",
-			"phaseTime":            "DARK_GREEN",
-			"subphaseStart":        "DARK_CYAN",
-			"subphaseEnd":          "DARK_CYAN",
-			"subphaseTime":         "DARK_GREEN",
-			"subsubphaseStart":     "DARK_CYAN",
-			"subsubphaseEnd":       "DARK_CYAN",
-			"subsubphaseTime":      "DARK_GREEN",
-			"subsubsubphaseStart":  "DARK_CYAN",
-			"subsubsubphaseEnd":    "DARK_CYAN",
-			"subsubsubphaseTime":   "DARK_GREEN",
-			"nestedTaskStart":      "DARK_CYAN",
-			"nestedTaskEnd":        "DARK_CYAN",
-			"nestedTaskTime":       "DARK_GREEN",
-			"nestedPhaseStart":     "DARK_CYAN",
-			"nestedPhaseEnd":       "DARK_CYAN",
-			"nestedPhaseTime":      "DARK_GREEN",
-			"paragraphHeadline":    "DARK_YELLOW",
-			"hierarchyStart":       "DARK_CYAN",
-			"hierarchyEnd":         "DARK_GRAY",
-			"xdcStart":             "DARK_CYAN",
-			"xdcEnd":               "DARK_GRAY",
-			"table":                "GRAY",
-		}
-
-	def Parse(self, toolConfig: CommentedMap) -> None:
-		if "colors" in toolConfig:
-			self._ParseColors(toolConfig["colors"])
-
-		if "rule-sets" in toolConfig:
-			for ruleSetName, ruleSetConfig in toolConfig["rule-sets"].items():
-				if len(ruleSetConfig) > 0:
-					self._ParseRuleSet(ruleSetName, ruleSetConfig)
-
-		if "outputs" in toolConfig:
-			for outputName, outputConfig in toolConfig["outputs"].items():
-				if outputName == "stdout":
-					pass
-					# self._ParseStdOutOutput(outputConfig)
-				elif outputName == "stderr":
-					pass
-					# self._ParseStdErrOutput(outputConfig)
-				else:
-					pass
-					# self._ParseOutput(outputName, outputConfig)
-
-		if "exports" in toolConfig:
-			if "cellUsage" in (exportConfig := toolConfig["exports"]):
-				pass
-				# self._ParseCellUsage(exportConfig["cellUsage"])
-
-		if "policies" in toolConfig:
-			policies = toolConfig["policies"]
-			if "hasLatches" in policies:
-				if policies["hasLatches"] == "error":
-					self._hasLatches = Action.Error
-				else:
-					WarningCollector.Raise(ConfigurationWarning(f"Unknown value '{policies["hasLatches"]}' for policy 'hasLatches'."))
-
-	def _ParseColors(self, colors: CommentedMap) -> None:
-		allowedColors = set(TerminalBaseApplication.Foreground.keys())
-
-		for lineKind, color in colors.items():
-			if lineKind not in self._colors:
-				WarningCollector.Raise(ConfigurationWarning(f"Item '{lineKind}' not supported for coloring."))
-				continue
-			elif (col := color.upper()) not in allowedColors:
-				WarningCollector.Raise(ConfigurationWarning(f"Color '{color}' is not supported."))
-				continue
-
-			self._colors[lineKind] = col
-
-	def _ParseRuleSet(self, ruleSetName: str, ruleSetConfig: CommentedMap) -> None:
-		self._ruleSets[ruleSetName] = (ruleSet := {})
-
-		pattern = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
-
-		for ruleName, ruleConfig in ruleSetConfig.items():
-			if ruleName == "info":
-				ruleSet[ruleName] = ClassificationRule(LineKind.InfoMessage, None, None)
-			elif ruleName == "criticalWarning":
-				ruleSet[ruleName] = ClassificationRule(LineKind.WarningMessage, None, None)
-			elif ruleName == "warning":
-				ruleSet[ruleName] = ClassificationRule(LineKind.CriticalWarningMessage, None, None)
-			elif ruleName == "error":
-				ruleSet[ruleName] = ClassificationRule(LineKind.ErrorMessage, None, None)
-			elif (match := pattern.match(ruleName)) is not None:
-					toolID =    int(match.group("toolID"))
-					messageID = int(match.group("messageID"))
-					ruleSet[ruleName] = VivadoMessageRule(toolID, messageID, None, None)
-			else:
-				WarningCollector.Raise(ConfigurationWarning(f"Unknown rule '{ruleName}' for rule-set '{ruleSetName}'."))
-
-
-@export
-class Configuration(metaclass=ExtendedType, slots=True):
-	_file:         Path
-	_yamlDocument: YAML
-	_yamlLoadTime: float
-
-	_tools:        Dict[str, Tool]
-
-	def __init__(self, file: Path) -> None:
-		self._file =  file
-		self._tools = {}
-
-		with Stopwatch() as sw:
-			try:
-				yamlReader = YAML()
-				self._yamlDocument = yamlReader.load(self._file)
-			except Exception as ex:
-				raise ConfigurationException(f"Couldn't open '{self._file}'.") from ex
-
-		self._yamlLoadTime = sw.Duration
-
-		self.Parse()
-
-	def Parse(self) ->None:
-		if (version := self._yamlDocument["version"]) != "0.1":
-			ex = ConfigurationException(f"Configuration file version {version} is not supported.")
-			ex.add_note("Supported versions: 0.1")
-			raise ex
-
-		self._Parse_v0_1()
-
-	def _Parse_v0_1(self) -> None:
-		for toolName, toolConfig in self._yamlDocument["tools"].items():
-			if toolName == "vivado":
-				self._tools["vivado"] = (vivado := Vivado(self))
-				vivado.Parse(toolConfig)
-
+from pyEDAA.OutputFilter.CLI.Configuration       import Configuration, Rule, Vivado, ProcessingPipeline, Target
+from pyEDAA.OutputFilter.Xilinx                  import Processor, LineKind, VivadoLine
 
 
 @export
@@ -379,48 +101,80 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				self.WriteError(f"  {ex}")
 				self.Exit(4)
 
-		processor = Processor()
+		vivadoConfig: Vivado =             config._tools["vivado"]
+		pipeline:     ProcessingPipeline = vivadoConfig._processingPipeline
 
-		if args.colored:
-			writeOutput = self._WriteColoredOutput
+		pipeline._targets["stdout"]._coloring = args.colored
+
+		targets: List[Target] = list(pipeline._targets.values())
+		for target in targets:
+			target.Open()
+
+		def preprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+			if rules is None:
+				return gen
+
+			def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+				for line in gen:
+					for rule in rules:
+						if rule.Match(line):
+							rule.Process(line)
+
+					yield line
+
+			return filter(gen)
+
+		def doublyLinkedList(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+			previousLine: VivadoLine = None
+			for line in gen:
+				previousLine = (newLine := line.FromItem(line, previousLine))
+				yield newLine
+
+		def mirror(gen: Generator[VivadoLine, None, None], count: int) -> Tuple[Generator[VivadoLine, None, None], ...]:
+			if count == 1:
+				return gen,
+			else:
+				return tuple(doublyLinkedList(source) for source in tee(gen, count))
+
+		def postprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+			if rules is None:
+				return gen
+
+			def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+				try:
+					for line in gen:
+						for rule in rules:
+							if rule.Match(line):
+								rule.Process(line)
+
+						yield line
+				except RuntimeError:
+					pass
+
+			return filter(gen)
+
+		lineIterator = iter(inputFile)
+
+		processor = Processor()
+		generator = processor.LineClassification(lineIterator)
+		if pipeline._preprocessing is None:
+			preprocessed = generator
 		else:
-			writeOutput = self._WriteOutput
+			preprocessed = preprocessing(generator, pipeline._preprocessing)
+		mirrored = mirror(preprocessed, len(targets))
+		postProcessed = tuple(postprocessing(mirror, target._rules) for mirror, target in zip(mirrored, targets))
 
 		with WarningCollector() as warnings:
-			next(generator := processor.LineClassification())
-			for rawLine in inputFile.readlines():
-				line = generator.send(rawLine.rstrip("\r\n"))
-
-				writeOutput(line)
+			for lines in zip(*postProcessed):  # zip_longest(*postProcessed, fillvalue=None):
+				for target, line in zip(targets, lines):
+					target.Write(line, self.GetColorOfLine)
 
 		for warning in warnings:
 			print(warning)
 
-	def _WriteOutput(self, line: VivadoLine):
-		self.WriteNormal(f"{line.LineNumber:4}: {line}")
+		for target in targets:
+			target.Close()
 
-	def _WriteColoredOutput(self, line: VivadoLine):
-		color = self.GetColorOfLine(line)
-		message = str(line).replace("{", "{{").replace("}", "}}")
-		self.WriteNormal(f"{line.LineNumber:4}: {{{color}}}{message}{{NOCOLOR}}".format(**self.Foreground))
-
-
-		# if args.info:
-		# 	self.WriteNormal(f"INFO messages: {len(processor.InfoMessages)}")
-		# 	for message in processor.InfoMessages:
-		# 		self.WriteNormal(f"  {message}")
-		# if args.warning:
-		# 	self.WriteNormal(f"WARNING messages: {len(processor.WarningMessages)}")
-		# 	for message in processor.WarningMessages:
-		# 		self.WriteNormal(f"  {message}")
-		# if args.critical:
-		# 	self.WriteNormal(f"CRITICAL WARNING: messages {len(processor.CriticalWarningMessages)}")
-		# 	for message in processor.CriticalWarningMessages:
-		# 		self.WriteNormal(f"  {message}")
-		# if args.error:
-		# 	self.WriteNormal(f"ERROR messages: {len(processor.ErrorMessages)}")
-		# 	for message in processor.ErrorMessages:
-		# 		self.WriteNormal(f"  {message}")
 		#
 		# if args.influxdb:
 		# 	synthesizeDesign = processor[SynthesizeDesign]
@@ -488,55 +242,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 		self.ExitOnPreviousErrors()
 
-	def GetColorOfLine(self, line: VivadoLine) -> str:
-		colorDict = {
-			"normal":               "WHITE",
-			"info":                 "GRAY", # "DARK_BLUE",
-			"warning":              "YELLOW",
-			"critical":             "MAGENTA",
-			"error":                "RED",
-			"tcl":                  "CYAN",
-			"success":              "GREEN",
-			"failed":               "RED",
-			"verbose":              "GRAY",
-			"unprocessed":          "DARK_GRAY",
-			"empty":                "NOCOLOR",
-			"sectionDelimiter":     "DARK_GRAY",
-			"sectionStart":         "DARK_CYAN",
-			"sectionEnd":           "DARK_CYAN",
-			"sectionTime":          "DARK_GREEN",
-			"subsectionStart":      "DARK_CYAN",
-			"subsectionEnd":        "DARK_CYAN",
-			"subsectionTime":       "DARK_GREEN",
-			"taskStart":            "YELLOW",
-			"taskEnd":              "YELLOW",
-			"taskTime":             "DARK_GREEN",
-			"phaseStart":           "BLUE",
-			"phaseEnd":             "BLUE",
-			"phaseTime":            "DARK_GREEN",
-			"subphaseStart":        "DARK_CYAN",
-			"subphaseEnd":          "DARK_CYAN",
-			"subphaseTime":         "DARK_GREEN",
-			"subsubphaseStart":     "DARK_CYAN",
-			"subsubphaseEnd":       "DARK_CYAN",
-			"subsubphaseTime":      "DARK_GREEN",
-			"subsubsubphaseStart":  "DARK_CYAN",
-			"subsubsubphaseEnd":    "DARK_CYAN",
-			"subsubsubphaseTime":   "DARK_GREEN",
-			"nestedTaskStart":      "DARK_CYAN",
-			"nestedTaskEnd":        "DARK_CYAN",
-			"nestedTaskTime":       "DARK_GREEN",
-			"nestedPhaseStart":     "DARK_CYAN",
-			"nestedPhaseEnd":       "DARK_CYAN",
-			"nestedPhaseTime":      "DARK_GREEN",
-			"paragraphHeadline":    "DARK_YELLOW",
-			"hierarchyStart":       "DARK_CYAN",
-			"hierarchyEnd":         "DARK_GRAY",
-			"xdcStart":             "DARK_CYAN",
-			"xdcEnd":               "DARK_GRAY",
-			"table":                "GRAY",
-		}
-
+	def GetColorOfLine(self, line: VivadoLine, colorDict: Dict[str, str]) -> str:
 		if line._kind is LineKind.Normal:
 			return colorDict["normal"]
 		elif LineKind.Message in line.Kind:
