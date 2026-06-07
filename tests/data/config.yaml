@@ -60,8 +60,12 @@ tools:
       common:
         warning:
           action: keep
-        12-24828:
-          action: default
+        criticalWarning:
+          action: keep
+        error:
+          action: keep
+#        12-24828:
+#          action: default
 
       problems:
         all:

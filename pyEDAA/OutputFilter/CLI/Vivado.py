@@ -29,21 +29,24 @@
 # ==================================================================================================================== #
 #
 from argparse  import Namespace
-from itertools import tee, zip_longest
 from pathlib   import Path
 from re        import compile as re_compile
-from sys       import stdin as sys_stdin
-from typing    import NoReturn, Optional as Nullable, Dict, List, Generator, Tuple
+from sys       import stdin as sys_stdin, stdout as sys_stdout
+from typing    import NoReturn, Optional as Nullable, Dict, List, TextIO, Callable
 
+from pyTooling.Common                            import getFullyQualifiedName
 from pyTooling.Decorators                        import readonly, export
-from pyTooling.MetaClasses                       import ExtendedType
+from pyTooling.MetaClasses                       import ExtendedType, abstractmethod
 from pyTooling.Attributes.ArgParse               import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag          import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag    import LongValuedFlag
+from pyTooling.TerminalUI                        import TerminalApplication
 from pyTooling.Warning                           import WarningCollector, Warning
 
-from pyEDAA.OutputFilter.CLI.Configuration       import Configuration, Rule, Vivado, ProcessingPipeline, Target
-from pyEDAA.OutputFilter.Xilinx                  import Processor, LineKind, VivadoLine
+from pyEDAA.OutputFilter                   import OutputFilterException
+from pyEDAA.OutputFilter.CLI.Configuration import Configuration, Vivado, ProcessingPipeline, Output, Format, Rule, StdOutOutput, FileOutput
+from pyEDAA.OutputFilter.CLI.Filter        import preprocessing, mirror, postprocessing
+from pyEDAA.OutputFilter.Xilinx            import Processor, LineKind, VivadoLine, Command, LineAction
 
 
 @export
@@ -104,63 +107,36 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		vivadoConfig: Vivado =             config._tools["vivado"]
 		pipeline:     ProcessingPipeline = vivadoConfig._processingPipeline
 
-		pipeline._targets["stdout"]._coloring = args.colored
+		pipeline._outputs["stdout"]._coloring = args.colored
 
-		targets: List[Target] = list(pipeline._targets.values())
-		for target in targets:
-			target.Open()
-
-		def preprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
-			if rules is None:
-				return gen
-
-			def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
-				for line in gen:
-					for rule in rules:
-						if rule.Match(line):
-							rule.Process(line)
-
-					yield line
-
-			return filter(gen)
-
-		def doublyLinkedList(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
-			previousLine: VivadoLine = None
-			for line in gen:
-				previousLine = (newLine := line.FromItem(line, previousLine))
-				yield newLine
-
-		def mirror(gen: Generator[VivadoLine, None, None], count: int) -> Tuple[Generator[VivadoLine, None, None], ...]:
-			if count == 1:
-				return gen,
+		targets: List[Target] = []
+		for output in pipeline._outputs.values():
+			if isinstance(output, StdOutOutput):
+				targets.append(target := StdOutTarget(
+					args.colored,
+					vivadoConfig._colors,
+					output._format,
+					output._commands,
+					output._rules
+				))
+			elif isinstance(output, FileOutput):
+				targets.append(target := FileTarget(
+					output._format,
+					output._commands,
+					output._rules
+				))
 			else:
-				return tuple(doublyLinkedList(source) for source in tee(gen, count))
+				ex = OutputFilterException(f"Unknown Output kind.")
+				ex.add_note(f"Got '{getFullyQualifiedName(output)}'.")
+				raise ex
 
-		def postprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
-			if rules is None:
-				return gen
-
-			def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
-				try:
-					for line in gen:
-						for rule in rules:
-							if rule.Match(line):
-								rule.Process(line)
-
-						yield line
-				except RuntimeError:
-					pass
-
-			return filter(gen)
+			target.Open()
 
 		lineIterator = iter(inputFile)
 
 		processor = Processor()
 		generator = processor.LineClassification(lineIterator)
-		if pipeline._preprocessing is None:
-			preprocessed = generator
-		else:
-			preprocessed = preprocessing(generator, pipeline._preprocessing)
+		preprocessed = preprocessing(generator, pipeline._preprocessing)
 		mirrored = mirror(preprocessed, len(targets))
 		postProcessed = tuple(postprocessing(mirror, target._rules) for mirror, target in zip(mirrored, targets))
 
@@ -344,3 +320,91 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 			raise Exception()
 		else:
 			raise Exception(f"Unknown LineKind '{line._kind}' for line {line._lineNumber}.")
+
+
+@export
+class Target(metaclass=ExtendedType, slots=True):
+	_file:     TextIO
+	_format:   Format
+	_commands: Nullable[List[Command]]
+	_rules:    Nullable[List[Rule]]
+
+	def __init__(self, format: Format, commands: Nullable[List[Command]], rules: Nullable[List[Rule]]) -> None:
+		self._format =   format
+		self._commands = commands
+		self._rules =    rules
+
+	@abstractmethod
+	def Open(self) -> TextIO:
+		pass
+
+	def Write(self, line: VivadoLine, colorFunc: Callable[[VivadoLine], str]) -> None:
+		if line is None:
+			return
+		elif line._action is LineAction.Remove:
+			return
+
+		self._file.write(f"{line}\n")
+
+	@abstractmethod
+	def Close(self) -> None:
+		pass
+
+
+@export
+class StdOutTarget(Target):
+	_coloring:    bool
+	_colors:      Dict[str, str]
+	_lineNumbers: bool
+	_timeStamp:   bool
+
+	def __init__(self, coloring: bool, colors: Dict[str, str], format: Format, commands: Nullable[List[Command]], rules: Nullable[List[Rule]]) -> None:
+		super().__init__(format, commands, rules)
+
+		self._coloring =    coloring
+		self._colors =      colors
+		self._lineNumbers = False
+		self._timeStamp =   False
+
+	def Open(self) -> TextIO:
+		self._file = sys_stdout
+
+		return self._file
+
+	def Write(self, line: VivadoLine, colorFunc: Callable[[VivadoLine, Dict[str, str]], str]) -> None:
+		if line is None:
+			return
+		elif line._action is LineAction.Remove:
+			return
+
+		lineNumber = f"{line.LineNumber:4}: " if self._lineNumbers else ""
+
+		if self._coloring:
+			color = colorFunc(line, self._colors)
+			message = str(line).replace("{", "{{").replace("}", "}}")
+			self._file.write(f"{lineNumber}{{{color}}}{message}{{NOCOLOR}}\n".format(**TerminalApplication.Foreground))
+		else:
+			self._file.write(f"{lineNumber}{line}\n")
+
+		self._file.flush()
+
+	def Close(self) -> None:
+		self._file.flush()
+
+
+@export
+class FileTarget(Target):
+	_path: Path
+
+	def __init__(self, file: Path, format: Format, commands: List[Command], rules: List[Rule]) -> None:
+		super().__init__(format, commands, rules)
+		self._path = file
+
+	def Open(self) -> TextIO:
+		self._file = self._path.open("w", encoding="utf-8")
+
+		return self._file
+
+	def Close(self) -> None:
+		self._file.flush()
+		self._file.close()

@@ -190,7 +190,7 @@ class VivadoMessageRule(Rule):
 
 
 @export
-class Target(metaclass=ExtendedType, slots=True):
+class Output(metaclass=ExtendedType, slots=True):
 	_file:     TextIO
 	_format:   Format
 	_commands: Nullable[List[Command]]
@@ -201,25 +201,9 @@ class Target(metaclass=ExtendedType, slots=True):
 		self._commands = commands
 		self._rules =    rules
 
-	@abstractmethod
-	def Open(self) -> TextIO:
-		pass
-
-	def Write(self, line: VivadoLine, colorFunc: Callable[[VivadoLine], str]) -> None:
-		if line is None:
-			return
-		elif line._action is LineAction.Remove:
-			return
-
-		self._file.write(f"{line}\n")
-
-	@abstractmethod
-	def Close(self) -> None:
-		pass
-
 
 @export
-class StdOutTarget(Target):
+class StdOutOutput(Output):
 	_coloring:    bool
 	_colors:      Dict[str, str]
 	_lineNumbers: bool
@@ -233,48 +217,14 @@ class StdOutTarget(Target):
 		self._lineNumbers = False
 		self._timeStamp =   False
 
-	def Open(self) -> TextIO:
-		self._file = sys_stdout
-
-		return self._file
-
-	def Write(self, line: VivadoLine, colorFunc: Callable[[VivadoLine, Dict[str, str]], str]) -> None:
-		if line is None:
-			return
-		elif line._action is LineAction.Remove:
-			return
-
-		lineNumber = f"{line.LineNumber:4}: " if self._lineNumbers else ""
-
-		if self._coloring:
-			color = colorFunc(line, self._colors)
-			message = str(line).replace("{", "{{").replace("}", "}}")
-			self._file.write(f"{lineNumber}{{{color}}}{message}{{NOCOLOR}}\n".format(**TerminalApplication.Foreground))
-		else:
-			self._file.write(f"{lineNumber}{line}\n")
-
-		self._file.flush()
-
-	def Close(self) -> None:
-		self._file.flush()
-
 
 @export
-class FileTarget(Target):
+class FileOutput(Output):
 	_path: Path
 
 	def __init__(self, file: Path, format: Format, commands: List[Command], rules: List[Rule]) -> None:
 		super().__init__(format, commands, rules)
 		self._path = file
-
-	def Open(self) -> TextIO:
-		self._file = self._path.open("w", encoding="utf-8")
-
-		return self._file
-
-	def Close(self) -> None:
-		self._file.flush()
-		self._file.close()
 
 
 @export
@@ -299,13 +249,13 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 
 	_parent:        "Vivado"
 	_preprocessing: Nullable[List[Rule]]
-	_targets:       Dict[str, Target]
+	_outputs:       Dict[str, Output]
 
 	def __init__(self, parent: "Vivado") -> None:
 		self._parent =        parent
 		self._preprocessing = None
-		self._targets =       {
-			"stdout": StdOutTarget(self, True, Format.Plain, None, [])
+		self._outputs =       {
+			"stdout": StdOutOutput(self, True, Format.Plain, None, [])
 		}
 
 	def Parse(self, outputsConfig: CommentedMap) -> None:
@@ -328,7 +278,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		# self._ParseOutput(outputName, outputConfig)
 
 	def _ParseStdOutOutput(self, outputConfig: CommentedMap) -> None:
-		stdout = self._targets["stdout"]
+		stdout = self._outputs["stdout"]
 
 		stdout._coloring = self._ParseColoring(outputConfig["coloring"])  if "coloring"  in outputConfig else False
 		stdout._commands = self._ParseCommands(outputConfig["commands"])  if "commands"  in outputConfig else None
@@ -383,7 +333,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		return None
 
 	def __len__(self) -> int:
-		return len(self._targets)
+		return len(self._outputs)
 
 
 @export

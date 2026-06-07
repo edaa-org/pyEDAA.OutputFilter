@@ -713,7 +713,7 @@ class VivadoCriticalWarningMessage(VivadoMessage, CriticalWarningMessage):
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
-		return super().Parse(lineNumber, LineKind.CriticalWarningMessage, LineAction.Default, rawMessage, previousLine)
+		return super().Parse(lineNumber, LineKind.CriticalWarningMessage, rawMessage, previousLine)
 
 	@classmethod
 	def FromMessage(cls, line: VivadoMessage) -> Self:
@@ -748,7 +748,7 @@ class VivadoErrorMessage(VivadoMessage, ErrorMessage):
 
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
-		return super().Parse(lineNumber, LineKind.ErrorMessage, LineAction.Default, rawMessage, previousLine)
+		return super().Parse(lineNumber, LineKind.ErrorMessage, rawMessage, previousLine)
 
 	@classmethod
 	def FromMessage(cls, line: VivadoMessage) -> Self:
