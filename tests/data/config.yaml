@@ -51,13 +51,15 @@ tools:
 
     rule-sets:
       prefilter:
-        all:
-          action: remove
+#        all:
+#          action: remove
         8-7129:
           action: error
           level: error
 
       common:
+#        info:
+#          action: keep
         warning:
           action: keep
         criticalWarning:
@@ -83,8 +85,8 @@ tools:
       stdout:
         format:      plain
         coloring:    true
-        linenumbers: on
-        timestamp:   yes
+        lineNumbers: on
+        timestamps:  datetime
         commands:
         rule-sets:
           - common
@@ -95,26 +97,26 @@ tools:
         commands:
           - synth_design
         rule-sets:
-          - common
-
-      implementation:
-        path:   "implementation.log"
-        format: jsonl
-        commands:
-          - link_design
-          - opt_design
-          - place_design
-          - phyopt_design
-          - route_design
-        rule-sets:
-          - common
-
-      problem:
-        path:   "problems.log"
-        format: json
-        rule-sets:
-          - common
           - problems
+
+#      implementation:
+#        path:   "implementation.log"
+#        format: jsonl
+#        commands:
+#          - link_design
+#          - opt_design
+#          - place_design
+#          - phyopt_design
+#          - route_design
+#        rule-sets:
+#          - common
+#
+#      problem:
+#        path:   "problems.log"
+#        format: json
+#        rule-sets:
+#          - common
+#          - problems
 
     exports:
       cellUsage:

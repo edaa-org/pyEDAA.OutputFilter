@@ -57,12 +57,12 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	@LongValuedFlag("--file", dest="logfile", metaName='Log file', optional=True, help="Read from log file (*.vds|*.vdi).")
 	@LongValuedFlag("--config", dest="configfile", metaName='Config file', optional=True, help="Configuration file (*.yaml).")
 	@LongFlag("--colored", dest="colored", help="Render logfile with colored lines.")
-	@LongFlag("--summary", dest="summary", help="Print a summary.")
-	@LongFlag("--info", dest="info", help="Print info messages.")
-	@LongFlag("--warning", dest="warning", help="Print warning messages.")
-	@LongFlag("--critical", dest="critical", help="Print critical warning messages.")
-	@LongFlag("--error", dest="error", help="Print error messages.")
-	@LongFlag("--influxdb", dest="influxdb", help="Write statistics as InfluxDB line protocol file (*.line).")
+	# @LongFlag("--summary", dest="summary", help="Print a summary.")
+	# @LongFlag("--info", dest="info", help="Print info messages.")
+	# @LongFlag("--warning", dest="warning", help="Print warning messages.")
+	# @LongFlag("--critical", dest="critical", help="Print critical warning messages.")
+	# @LongFlag("--error", dest="error", help="Print error messages.")
+	# @LongFlag("--influxdb", dest="influxdb", help="Write statistics as InfluxDB line protocol file (*.line).")
 	# @LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
 	def HandleVivado(self, args: Namespace) -> None:
 		"""Handle program calls with command ``vivado``."""
@@ -124,6 +124,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				))
 			elif isinstance(output, FileOutput):
 				targets.append(target := FileTarget(
+					output._path,
 					output._format,
 					output._commands,
 					output._rules

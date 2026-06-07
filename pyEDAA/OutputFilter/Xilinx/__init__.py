@@ -329,6 +329,12 @@ class VivadoLine(Line[LineKind, LineAction]):
 	def Command(self) -> "Nullable[Command]":
 		return self._command
 
+	@classmethod
+	def Copy(cls, line: "VivadoLine", previousLine: "VivadoLine") -> "VivadoLine":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._message, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
+
 
 @export
 class VivadoMessage(VivadoLine):
@@ -855,6 +861,12 @@ class TclCommand(VivadoLine):
 		args = line._message.split()
 
 		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message, previousLine=line._previousLine)
+
+	@classmethod
+	def Copy(cls, line: "TclCommand", previousLine: VivadoLine) -> "TclCommand":
+		newLine = cls(line._lineNumber, line._tclCommand, line._arguments, line._message, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
 
 	def __str__(self) -> str:
 		return f"{self._tclCommand} {' '.join(self._arguments)}"

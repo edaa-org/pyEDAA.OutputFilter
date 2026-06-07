@@ -57,7 +57,7 @@ def preprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[R
 def doublyLinkedList(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
 	previousLine: VivadoLine = None
 	for line in gen:
-		previousLine = (newLine := line.FromItem(line, previousLine))
+		previousLine = (newLine := line.Copy(line, previousLine))
 		yield newLine
 
 

@@ -207,6 +207,7 @@ class VivadoMessageRule(Rule):
 
 @export
 class Output(metaclass=ExtendedType, slots=True):
+	_parent:   "ProcessingPipeline"
 	_file:     TextIO
 	_format:   OutputFormat
 	_commands: Nullable[List[Command]]
@@ -214,10 +215,12 @@ class Output(metaclass=ExtendedType, slots=True):
 
 	def __init__(
 		self,
+		parent:   "ProcessingPipeline",
 		format:   OutputFormat,
 		commands: Nullable[List[Command]],
 		rules:    Nullable[List[Rule]]
 	) -> None:
+		self._parent =   parent
 		self._format =   format
 		self._commands = commands
 		self._rules =    rules
@@ -238,7 +241,7 @@ class StdOutOutput(Output):
 		commands: Nullable[List[Command]],
 		rules:    Nullable[List[Rule]]
 	) -> None:
-		super().__init__(format, commands, rules)
+		super().__init__(parent, format, commands, rules)
 
 		self._coloring =        coloring
 		self._colors =          parent._parent._colors
@@ -252,12 +255,14 @@ class FileOutput(Output):
 
 	def __init__(
 		self,
+		parent:   "ProcessingPipeline",
 		file:     Path,
 		format:   OutputFormat,
 		commands: List[Command],
 		rules:    List[Rule]
 	) -> None:
-		super().__init__(format, commands, rules)
+		super().__init__(parent, format, commands, rules)
+
 		self._path = file
 
 
@@ -302,29 +307,44 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 				WarningCollector.Raise(warn)
 
 		for outputName, outputConfig in outputsConfig.items():
-			if outputName == "stdout":
+			if outputName == "preprocessing":
+				continue
+			elif outputName == "stdout":
 				self._ParseStdOutOutput(outputConfig)
 			elif outputName == "stderr":
 				pass
 			# self._ParseStdErrOutput(outputConfig)
 			else:
-				pass
-		# self._ParseOutput(outputName, outputConfig)
+				self._ParseOutput(outputName, outputConfig)
 
 	def _ParseStdOutOutput(self, outputConfig: CommentedMap) -> None:
 		stdout: StdOutOutput = self._outputs["stdout"]
 
 		stdout._coloring =        self._ParseBoolean(outputConfig,    "coloring",    False, "tools.vivado.outputs.stdout.coloring")
 		stdout._lineNumbers =     self._ParseBoolean(outputConfig,    "lineNumbers", False, "tools.vivado.outputs.stdout.lineNumbers")
-		stdout._timestampFormat = self._ParseTimestamps(outputConfig, "timestamps", "tools.vivado.outputs.stdout.timestamps")
+		stdout._timestampFormat = self._ParseTimestampFormat(outputConfig, "timestamps", "tools.vivado.outputs.stdout.timestamps")
 		stdout._commands =        self._ParseCommands(outputConfig,   "commands",   "tools.vivado.outputs.stdout.commands")
 		stdout._rules =           self._ParseRuleSets(outputConfig,   "rule-sets",  "tools.vivado.outputs.stdout.rule-sets")
+
+	def _ParseOutput(self, outputName: str, outputConfig: CommentedMap) -> None:
+		try:
+			path = self._ParsePath(outputConfig, "path", f"tools.vivado.outputs.{outputName}.path")
+		except ConfigurationException as ex:
+			WarningCollector.Raise(ConfigurationWarning(str(ex)))
+			return
+
+		self._outputs[outputName] = FileOutput(
+			self,
+			path,
+			self._ParseOutputFormat(outputConfig, "format", f"tools.vivado.outputs.{outputName}.format"),
+			self._ParseCommands(outputConfig,"commands",   f"tools.vivado.outputs.{outputName}.commands"),
+			self._ParseRuleSets(outputConfig,"rule-sets",  f"tools.vivado.outputs.{outputName}.rule-sets")
+		)
 
 	def _ParseBoolean(self, config: CommentedMap, key: str, default: Nullable[bool], configPath: str) -> Nullable[bool]:
 		if key not in config:
 			return default
-
-		if isinstance((value := config[key]), bool):
+		elif isinstance((value := config[key]), bool):
 			return value
 
 		try:
@@ -332,7 +352,31 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		except KeyError:
 			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown value '{value}'."))
 
-	def _ParseTimestamps(self, config: CommentedMap, key: str, configPath: str) -> TimestampFormat:
+	def _ParsePath(self, config: CommentedMap, key: str, configPath: str) -> Path:
+		if key not in config:
+			raise ConfigurationException(f"{configPath}: Doesn't exist. A filename is required.")
+		elif (pathConfig := config[key]) is None:
+			raise ConfigurationException(f"{configPath}: Is empty. A filename is required.")
+		elif not isinstance(pathConfig, str):
+			raise ConfigurationException(f"{configPath}: Unknown value '{pathConfig}'.")
+
+		try:
+			return Path(pathConfig)
+		except ValueError as ex:
+			raise ConfigurationException(f"{configPath}: Value '{pathConfig}' is not a path.") from ex
+
+	def _ParseOutputFormat(self, config: CommentedMap, key: str, configPath: str) -> OutputFormat:
+		if key not in config:
+			return OutputFormat.Plain
+		elif (formatConfig := config[key]) is None:
+			return OutputFormat.Plain
+		elif not isinstance(formatConfig, str):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
+			return OutputFormat.Plain
+
+		return OutputFormat.parse(formatConfig)
+
+	def _ParseTimestampFormat(self, config: CommentedMap, key: str, configPath: str) -> TimestampFormat:
 		if key not in config:
 			return TimestampFormat.Undefined
 		elif (formatConfig := config[key]) is None:
