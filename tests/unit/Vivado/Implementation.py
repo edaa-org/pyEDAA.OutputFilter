@@ -30,6 +30,7 @@
 #
 """Unit tests for Vivado implementation log files."""
 from datetime import datetime
+from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
 from unittest import TestCase as TestCase
@@ -89,17 +90,18 @@ class LinkDesign(TestCase):
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._LINKDESIGN_START}
 {self._LINKDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDatetime)
@@ -167,17 +169,18 @@ class OptimizeDesign(TestCase):
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(9, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -204,7 +207,7 @@ class OptimizeDesign(TestCase):
 
 	def test_DRCTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting DRC Task
@@ -216,12 +219,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		optimizeDesign = processor[Opt_Design]
 
@@ -238,7 +242,7 @@ class OptimizeDesign(TestCase):
 
 	def test_CacheTimingInformationTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting Cache Timing Information Task
@@ -249,12 +253,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		optimizeDesign = processor[Opt_Design]
 
@@ -271,7 +276,7 @@ class OptimizeDesign(TestCase):
 
 	def test_LogicOptimizationTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting Logic Optimization Task
@@ -342,12 +347,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(20, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -415,7 +421,7 @@ class OptimizeDesign(TestCase):
 
 	def test_PowerOptimizationTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting Power Optimization Task
@@ -442,12 +448,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		optimizeDesign = processor[Opt_Design]
 
@@ -471,7 +478,7 @@ class OptimizeDesign(TestCase):
 
 	def test_FinalCleanupTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting Final Cleanup Task
@@ -481,12 +488,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		optimizeDesign = processor[Opt_Design]
 
@@ -503,7 +511,7 @@ class OptimizeDesign(TestCase):
 
 	def test_NetlistObfuscationTask(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._OPTDESIGN_START}
 			Starting Netlist Obfuscation Task
@@ -514,12 +522,13 @@ class OptimizeDesign(TestCase):
 
 {self._OPTDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		optimizeDesign = processor[Opt_Design]
 
@@ -580,17 +589,18 @@ class PlaceDesign(TestCase):
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._PLACEDESIGN_START}
 {self._PLACEDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(11, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
@@ -684,17 +694,18 @@ class RouteDesign(TestCase):
 
 	def test_ImplementationLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._ROUTEDESIGN_START}
 {self._ROUTEDESIGN_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(27, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))

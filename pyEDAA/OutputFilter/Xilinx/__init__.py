@@ -478,7 +478,7 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 	@classmethod
 	def Parse(cls, lineNumber: int, rawMessage: str, previousLine: Nullable[VivadoLine] = None) -> Nullable[Self]:
 		if (match := cls._REGEXP.match(rawMessage)) is not None:
-			return cls(lineNumber, LineKind.WarningMessage, match[1], match[3], toolName="DRC", toolID=None,
+			return cls(lineNumber, LineKind.WarningMessage, LineAction.Default, match[1], match[3], toolName="DRC", toolID=None,
 			           messageKindID=int(match[2]), previousLine=previousLine)
 
 		return None
@@ -3792,63 +3792,67 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		lineNumber = 0
 		_errorMessage = "Unknown processing error"
 
-		while (rawMessageLine := next(inputStream)) is not None:
-			lineNumber += 1
-			rawMessageLine = rawMessageLine.rstrip()
-			errorMessage = _errorMessage
+		try:
+			while (rawMessageLine := next(inputStream)) is not None:
+				lineNumber += 1
+				rawMessageLine = rawMessageLine.rstrip()
+				errorMessage = _errorMessage
 
-			if len(rawMessageLine) == 0:
-				line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
-			elif rawMessageLine.startswith("INFO"):
-				if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-					if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+				if len(rawMessageLine) == 0:
+					line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
+				elif rawMessageLine.startswith("INFO"):
+					if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-				errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
-			elif rawMessageLine.startswith("WARNING"):
-				if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-					if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
+				elif rawMessageLine.startswith("WARNING"):
+					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-				errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
-			elif rawMessageLine.startswith("CRITICAL WARNING"):
-				line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
+				elif rawMessageLine.startswith("CRITICAL WARNING"):
+					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-				errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-			elif rawMessageLine.startswith("ERROR"):
-				line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+				elif rawMessageLine.startswith("ERROR"):
+					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-				errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
-			elif rawMessageLine.startswith("Command: "):
-				line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
+				elif rawMessageLine.startswith("Command: "):
+					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-				errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
-			else:
-				line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
+					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+				else:
+					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
-				if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
-					line._kind = LineKind.Verbose
+					if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+						line._kind = LineKind.Verbose
 
-			if line is None:
-				# TODO: what to do with this line? attache to exception?
-				line = VivadoLine(lineNumber, LineKind.ProcessorError, rawMessageLine, previousLine=lastLine)
+				if line is None:
+					# TODO: what to do with this line? attache to exception?
+					line = VivadoLine(lineNumber, LineKind.ProcessorError, rawMessageLine, previousLine=lastLine)
 
-				raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
+					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-			if isinstance(line, VivadoMessage):
-				self._AddMessage(line)
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
 
-			line = cmdFinder.send(line)
+				line = cmdFinder.send(line)
 
-			if line._kind is LineKind.ProcessorError:
-				line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+				if line._kind is LineKind.ProcessorError:
+					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-			self._lines.append(line)
+				self._lines.append(line)
 
-			lastLine = line
-			yield line
+				lastLine = line
+				yield line
+
+		except StopIteration:
+			pass
 
 	def CommandFinder(self) -> Generator[VivadoLine, VivadoLine, None]:
 		self._preamble =  Preamble(self)
@@ -3970,11 +3974,8 @@ class Document(Processor):
 
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
-			with self._logfile.open("r", encoding="utf-8") as f:
-				content = f.read()
-
-			next(generator := self.LineClassification())
-			for rawLine in content.splitlines():
-				generator.send(rawLine)
+			with self._logfile.open("r", encoding="utf-8") as file:
+				for line in self.LineClassification(file):
+					pass
 
 		self._processingDuration = sw.Duration

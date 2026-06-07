@@ -30,6 +30,7 @@
 #
 """Unit tests for Vivado synthesis log files."""
 from datetime import datetime
+from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
 from unittest import TestCase as TestCase
@@ -73,17 +74,18 @@ class SynthDesign(TestCase):
 
 	def test_SynthesisLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
@@ -106,7 +108,7 @@ class SynthDesign(TestCase):
 
 	def test_RTLElaboration(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -124,12 +126,13 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(9, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -158,7 +161,7 @@ class SynthDesign(TestCase):
 
 	def test_LoadingPart(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -175,12 +178,13 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -208,7 +212,7 @@ class SynthDesign(TestCase):
 
 	def test_RTLComponentStatistics(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -227,12 +231,13 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -260,7 +265,7 @@ class SynthDesign(TestCase):
 
 	def test_IOInsertion(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -288,12 +293,13 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
@@ -334,7 +340,7 @@ class SynthDesign(TestCase):
 
 	def test_WritingSynthesisReport(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -410,12 +416,13 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(report)
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))

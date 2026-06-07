@@ -31,7 +31,7 @@
 """Unit tests for Vivado messages."""
 from unittest  import TestCase as TestCase
 
-from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage
+from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage, LineAction, VivadoDRCInfoMessage, VivadoDRCWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoCriticalWarningMessage, VivadoErrorMessage
 
@@ -43,78 +43,111 @@ if __name__ == "__main__": # pragma: no cover
 
 class Instantiation(TestCase):
 	def test_Info(self) -> None:
-		message = VivadoInfoMessage(1, LineKind.InfoMessage, "some message", "synth", 8, 25)
+		message = VivadoInfoMessage(1, LineKind.InfoMessage, LineAction.Default, "some message", "synth", 8, 25)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
 		self.assertEqual(8, message.ToolID)
 		self.assertEqual(25, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("INFO: [synth 8-25] some message", str(message))
 
+	def test_DRCInfo(self) -> None:
+		message = VivadoDRCInfoMessage(1, LineKind.InfoMessage, LineAction.Default, "PDRC", "some message", "DRC", messageKindID=63)
+
+		self.assertEqual(1, message.LineNumber)
+		self.assertEqual("PDRC", message.DRCRuleName)
+		self.assertEqual("DRC", message.ToolName)
+		self.assertIsNone(message.ToolID)
+		self.assertEqual(63, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
+		self.assertEqual("some message", message.Message)
+
+		self.assertEqual("INFO: [DRC PDRC-63] some message", str(message))
+
 	def test_IrregularInfo(self) -> None:
-		message = VivadoIrregularInfoMessage(1, LineKind.InfoMessage, "some message", "runtcl", messageKindID=4)
+		message = VivadoIrregularInfoMessage(1, LineKind.InfoMessage, LineAction.Default, "some message", "runtcl", messageKindID=4)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("runtcl", message.ToolName)
 		self.assertIsNone(message.ToolID)
 		self.assertEqual(4, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("INFO: [runtcl-4] some message", str(message))
 
 	def test_StuntedInfo(self) -> None:
-		message = VivadoStuntedInfoMessage(1, LineKind.InfoMessage, "some message")
+		message = VivadoStuntedInfoMessage(1, LineKind.InfoMessage, LineAction.Default, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertIsNone(message.ToolName)
 		self.assertIsNone(message.ToolID)
 		self.assertIsNone(message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("INFO: some message", str(message))
 
 	def test_Warning(self) -> None:
-		message = VivadoWarningMessage(1, LineKind.WarningMessage, "some message", "synth", 8, 25)
+		message = VivadoWarningMessage(1, LineKind.WarningMessage, LineAction.Default, "some message", "synth", 8, 25)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
 		self.assertEqual(8, message.ToolID)
 		self.assertEqual(25, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("WARNING: [synth 8-25] some message", str(message))
 
+	def test_DRCWarning(self) -> None:
+		message = VivadoDRCWarningMessage(1, LineKind.InfoMessage, LineAction.Default, "PDRC", "some message", "DRC", messageKindID=63)
+
+		self.assertEqual(1, message.LineNumber)
+		self.assertEqual("PDRC", message.DRCRuleName)
+		self.assertEqual("DRC", message.ToolName)
+		self.assertIsNone(message.ToolID)
+		self.assertEqual(63, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
+		self.assertEqual("some message", message.Message)
+
+		self.assertEqual("WARNING: [DRC PDRC-63] some message", str(message))
+
 	def test_StuntedWarning(self) -> None:
-		message = VivadoStuntedWarningMessage(1, LineKind.WarningMessage, "some message")
+		message = VivadoStuntedWarningMessage(1, LineKind.WarningMessage, LineAction.Default, "some message")
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertIsNone(message.ToolName)
 		self.assertIsNone(message.ToolID)
 		self.assertIsNone(message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("WARNING: some message", str(message))
 
 	def test_CriticalWarning(self) -> None:
-		message = VivadoCriticalWarningMessage(1, LineKind.CriticalWarningMessage, "some message", "synth", 8, 25)
+		message = VivadoCriticalWarningMessage(1, LineKind.CriticalWarningMessage, LineAction.Default, "some message", "synth", 8, 25)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
 		self.assertEqual(8, message.ToolID)
 		self.assertEqual(25, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("CRITICAL WARNING: [synth 8-25] some message", str(message))
 
 	def test_Error(self) -> None:
-		message = VivadoErrorMessage(1, LineKind.ErrorMessage, "some message", "synth", 8, 25)
+		message = VivadoErrorMessage(1, LineKind.ErrorMessage, LineAction.Default, "some message", "synth", 8, 25)
 
 		self.assertEqual(1, message.LineNumber)
 		self.assertEqual("synth", message.ToolName)
 		self.assertEqual(8, message.ToolID)
 		self.assertEqual(25, message.MessageKindID)
+		self.assertEqual(LineAction.Default, message.Action)
 		self.assertEqual("some message", message.Message)
 
 		self.assertEqual("ERROR: [synth 8-25] some message", str(message))
