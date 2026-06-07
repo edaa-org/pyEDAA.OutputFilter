@@ -49,8 +49,9 @@ from textwrap import dedent
 
 from pyTooling.Decorators                     import export
 from pyTooling.Attributes.ArgParse            import ArgParseHelperMixin, DefaultHandler, CommandHandler
+from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
-from pyTooling.TerminalUI                     import TerminalApplication
+from pyTooling.TerminalUI                     import TerminalApplication, Mode, Severity
 
 from pyEDAA.OutputFilter                      import __version__, __copyright__, __license__
 from pyEDAA.OutputFilter                      import OutputFilterException
@@ -65,7 +66,7 @@ class ProgramBase(TerminalApplication):
 
 	programTitle: str
 
-	def _PrintHeadline(self) -> None:
+	def _PrintHeadline(self, width: int = 80) -> None:
 		"""Print the program's headline."""
 		print("{line}".format(line="=" * 120))
 		print("{headline: ^120s}".format(headline=self.programTitle))
@@ -80,7 +81,7 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 	ISSUE_TRACKER_URL = "https://github.com/edaa-org/pyEDAA.OutputFilter/issues"
 
 	def __init__(self) -> None:
-		super().__init__()
+		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
 
 		# Call the constructor of the ArgParseMixin
 		ArgParseHelperMixin.__init__(
@@ -98,13 +99,13 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 		  add_help=False
 		)
 
-#	@CommonSwitchArgumentAttribute("-q", "--quiet",   dest="quiet",   help="Reduce messages to a minimum.")
-#	@CommonSwitchArgumentAttribute("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
-#	@CommonSwitchArgumentAttribute("-d", "--debug",   dest="debug",   help="Enable debug mode.")
+	# @CommonSwitchArgumentAttribute("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
+	# @CommonSwitchArgumentAttribute("-d", "--debug",   dest="debug",   help="Enable debug mode.")
 	def Run(self) -> None:
 		ArgParseHelperMixin.Run(self)
 
 	@DefaultHandler()
+	@FlagArgument("-q", "--quiet", dest="quiet", help="Reduce messages to a minimum.")
 	def HandleDefault(self, _: Namespace) -> None:
 		"""Handle program calls without any command."""
 		self._PrintHeadline()
@@ -166,6 +167,8 @@ def main() -> NoReturn:
 		debug=("-d" in argv or "--debug" in argv),
 		quiet=("-q" in argv or "--quiet" in argv)
 	)
+	program.LogLevel = Severity.Warning
+
 	try:
 		program.Run()
 	except OutputFilterException as ex:

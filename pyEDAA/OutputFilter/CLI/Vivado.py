@@ -65,7 +65,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 	# @LongValuedFlag("--file", dest="logfile", metaName='Synthesis Log', help="Synthesis log file (*.vds).")
 	def HandleVivado(self, args: Namespace) -> None:
 		"""Handle program calls with command ``vivado``."""
-		self._PrintHeadline()
+		if not args.quiet:
+			self._PrintHeadline()
 
 		if args.configfile is not None:
 			configFile = Path(args.configfile)

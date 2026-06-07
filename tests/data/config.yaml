@@ -72,7 +72,7 @@ tools:
           action: remove
         warning:
           action: keep
-        critical warning:
+        criticalWarning:
           action: keep
         error:
           action: keep
