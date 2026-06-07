@@ -31,13 +31,12 @@
 from enum     import StrEnum
 from pathlib  import Path
 from re       import compile as re_compile
-from sys      import stdout as sys_stdout
 from typing   import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
 
 from pyTooling.Decorators       import export
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
 from pyTooling.Stopwatch        import Stopwatch
-from pyTooling.TerminalUI       import TerminalBaseApplication, TerminalApplication
+from pyTooling.TerminalUI       import TerminalBaseApplication
 from pyTooling.Warning          import WarningCollector, Warning
 from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
 
@@ -58,7 +57,7 @@ class ConfigurationWarning(Warning):
 
 
 @export
-class Format(StrEnum):
+class OutputFormat(StrEnum):
 	Plain =    "plain"
 	JSON =     "json"
 	JSONLine = "jsonl"
@@ -66,7 +65,24 @@ class Format(StrEnum):
 	@classmethod
 	def parse(cls, value: str) -> Self:
 		if value not in cls._value2member_map_:
-			ex = ValueError(f"'{value}' is not a valid Format.")
+			ex = ValueError(f"'{value}' is not a valid OutputFormat.")
+			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
+			raise ex
+
+		return cls(value)
+
+
+@export
+class TimestampFormat(StrEnum):
+	Undefined = "undefined"
+	DateTime =  "datetime"
+	TimeOnly =  "timeonly"
+	Runtime = "deltatime"
+
+	@classmethod
+	def parse(cls, value: str) -> Self:
+		if value not in cls._value2member_map_:
+			ex = ValueError(f"'{value}' is not a valid TimestampFormat.")
 			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
 			raise ex
 
@@ -192,11 +208,16 @@ class VivadoMessageRule(Rule):
 @export
 class Output(metaclass=ExtendedType, slots=True):
 	_file:     TextIO
-	_format:   Format
+	_format:   OutputFormat
 	_commands: Nullable[List[Command]]
 	_rules:    Nullable[List[Rule]]
 
-	def __init__(self, format: Format, commands: Nullable[List[Command]], rules: Nullable[List[Rule]]) -> None:
+	def __init__(
+		self,
+		format:   OutputFormat,
+		commands: Nullable[List[Command]],
+		rules:    Nullable[List[Rule]]
+	) -> None:
 		self._format =   format
 		self._commands = commands
 		self._rules =    rules
@@ -204,25 +225,38 @@ class Output(metaclass=ExtendedType, slots=True):
 
 @export
 class StdOutOutput(Output):
-	_coloring:    bool
-	_colors:      Dict[str, str]
-	_lineNumbers: bool
-	_timeStamp:   bool
+	_coloring:        bool
+	_colors:          Dict[str, str]
+	_lineNumbers:     bool
+	_timestampFormat: TimestampFormat
 
-	def __init__(self, parent: "ProcessingPipeline", coloring: bool, format: Format, commands: Nullable[List[Command]], rules: Nullable[List[Rule]]) -> None:
+	def __init__(
+		self,
+		parent:   "ProcessingPipeline",
+		coloring: bool,
+		format:   OutputFormat,
+		commands: Nullable[List[Command]],
+		rules:    Nullable[List[Rule]]
+	) -> None:
 		super().__init__(format, commands, rules)
 
-		self._coloring =    coloring
-		self._colors =      parent._parent._colors
-		self._lineNumbers = False
-		self._timeStamp =   False
+		self._coloring =        coloring
+		self._colors =          parent._parent._colors
+		self._lineNumbers =     False
+		self._timestampFormat = TimestampFormat.Undefined
 
 
 @export
 class FileOutput(Output):
 	_path: Path
 
-	def __init__(self, file: Path, format: Format, commands: List[Command], rules: List[Rule]) -> None:
+	def __init__(
+		self,
+		file:     Path,
+		format:   OutputFormat,
+		commands: List[Command],
+		rules:    List[Rule]
+	) -> None:
 		super().__init__(format, commands, rules)
 		self._path = file
 
@@ -255,7 +289,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		self._parent =        parent
 		self._preprocessing = None
 		self._outputs =       {
-			"stdout": StdOutOutput(self, True, Format.Plain, None, [])
+			"stdout": StdOutOutput(self, True, OutputFormat.Plain, None, [])
 		}
 
 	def Parse(self, outputsConfig: CommentedMap) -> None:
@@ -278,25 +312,44 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		# self._ParseOutput(outputName, outputConfig)
 
 	def _ParseStdOutOutput(self, outputConfig: CommentedMap) -> None:
-		stdout = self._outputs["stdout"]
+		stdout: StdOutOutput = self._outputs["stdout"]
 
-		stdout._coloring = self._ParseColoring(outputConfig["coloring"])  if "coloring"  in outputConfig else False
-		stdout._commands = self._ParseCommands(outputConfig["commands"])  if "commands"  in outputConfig else None
-		stdout._rules =    self._ParseRuleSets(outputConfig["rule-sets"]) if "rule-sets" in outputConfig else None
+		stdout._coloring =        self._ParseBoolean(outputConfig,    "coloring",    False, "tools.vivado.outputs.stdout.coloring")
+		stdout._lineNumbers =     self._ParseBoolean(outputConfig,    "lineNumbers", False, "tools.vivado.outputs.stdout.lineNumbers")
+		stdout._timestampFormat = self._ParseTimestamps(outputConfig, "timestamps", "tools.vivado.outputs.stdout.timestamps")
+		stdout._commands =        self._ParseCommands(outputConfig,   "commands",   "tools.vivado.outputs.stdout.commands")
+		stdout._rules =           self._ParseRuleSets(outputConfig,   "rule-sets",  "tools.vivado.outputs.stdout.rule-sets")
 
-	def _ParseColoring(self, coloringConfig: Any) -> bool:
-		if isinstance(coloringConfig, bool):
-			return coloringConfig
+	def _ParseBoolean(self, config: CommentedMap, key: str, default: Nullable[bool], configPath: str) -> Nullable[bool]:
+		if key not in config:
+			return default
+
+		if isinstance((value := config[key]), bool):
+			return value
+
 		try:
-			return self._ALLOWED_BOOL_VALUES[coloringConfig]
+			return self._ALLOWED_BOOL_VALUES[value]
 		except KeyError:
-			WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.outputs.stdout.coloring: Unknown value '{coloringConfig}'."))
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown value '{value}'."))
 
-	def _ParseCommands(self, commandsConfig: CommentedMap) -> Nullable[List[Command]]:
-		if commandsConfig is None:
+	def _ParseTimestamps(self, config: CommentedMap, key: str, configPath: str) -> TimestampFormat:
+		if key not in config:
+			return TimestampFormat.Undefined
+		elif (formatConfig := config[key]) is None:
+			return TimestampFormat.Undefined
+		elif not isinstance(formatConfig, str):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
+			return TimestampFormat.Undefined
+
+		return TimestampFormat.parse(formatConfig)
+
+	def _ParseCommands(self, config: CommentedMap, key: str, configPath: str) -> Nullable[List[Command]]:
+		if key not in config:
+			return None
+		elif (commandsConfig := config[key]) is None:
 			return None
 		elif not isinstance(commandsConfig, CommentedMap):
-			WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.outputs.stdout.commands: Unknown settings."))
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
 			return None
 
 		commands: List[Command] = []
@@ -304,18 +357,20 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 			try:
 				commands.append(self._ALLOWED_COMMANDS[commandName])
 			except KeyError:
-				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.outputs.stdout.commands: Unknown Vivado TCL command '{commandName}'."))
+				WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown Vivado TCL command '{commandName}'."))
 
 		if len(commands) > 0:
 			return commands
 
 		return None
 
-	def _ParseRuleSets(self, ruleSetsConfig: CommentedSeq) -> Nullable[List[Rule]]:
-		if ruleSetsConfig is None:
+	def _ParseRuleSets(self, config: CommentedMap, key: str, configPath: str) -> Nullable[List[Rule]]:
+		if key not in config:
+			return None
+		elif (ruleSetsConfig := config[key]) is None:
 			return None
 		elif not isinstance(ruleSetsConfig, CommentedSeq):
-			WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.outputs.stdout.rule-sets: Unknown settings."))
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
 			return None
 
 		rules: List[Rule] = []
@@ -323,7 +378,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 			try:
 				rules.extend(self._parent._ruleSets[ruleSetName].values())
 			except KeyError:
-				warn = ConfigurationWarning(f"tools.vivado.outputs.stdout.rule-sets: Unknown rule set '{ruleSetName}'.")
+				warn = ConfigurationWarning(f"{configPath}: Unknown rule set '{ruleSetName}'.")
 				warn.add_note(f"Rule set '{ruleSetName}' not found in tools.vivado.rule-sets.")
 				WarningCollector.Raise(warn)
 

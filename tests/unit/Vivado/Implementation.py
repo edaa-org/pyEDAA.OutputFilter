@@ -38,9 +38,10 @@ from unittest import TestCase as TestCase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor
+from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor, timestampIterator
 from pyEDAA.OutputFilter.Xilinx import Link_Design, Opt_Design, Place_Design, Route_Design, Report_DRC
 from pyEDAA.OutputFilter.Xilinx import OptimizeDesign as _OptDesign
+
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -98,7 +99,7 @@ class LinkDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -177,7 +178,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -222,7 +223,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -256,7 +257,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -350,7 +351,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -451,7 +452,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -491,7 +492,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -525,7 +526,7 @@ class OptimizeDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -597,7 +598,7 @@ class PlaceDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -702,7 +703,7 @@ class RouteDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass

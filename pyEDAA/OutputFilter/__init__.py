@@ -37,13 +37,14 @@ __license__ =   "Apache License, Version 2.0"
 __version__ =   "0.8.0"
 __keywords__ =  ["cli", "abstraction layer", "eda", "filter", "classification"]
 
+from datetime              import datetime
 from enum                  import Flag
 from typing                import Any, Generator, Callable, Tuple, Union, Optional as Nullable, Generic, TypeVar
 
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Decorators  import export, readonly
 from pyTooling.Exceptions  import ExceptionBase
-from pyTooling.MetaClasses import ExtendedType, mustoverride
+from pyTooling.MetaClasses import ExtendedType
 
 
 @export
@@ -64,6 +65,7 @@ class Line(Generic[LineClassification, LineProcessingAction], metaclass=Extended
 	linked list.
 	"""
 	_lineNumber:    int
+	_timestamp:     Nullable[datetime]
 	_document:      "Document"
 	_kind:          LineClassification
 	_action:        LineProcessingAction

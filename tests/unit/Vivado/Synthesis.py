@@ -38,8 +38,9 @@ from unittest import TestCase as TestCase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, Synth_Design, VivadoLine
+from pyEDAA.OutputFilter.Xilinx import Processor, Synth_Design, VivadoLine, timestampIterator
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -82,7 +83,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -129,7 +130,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -181,7 +182,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -234,7 +235,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -296,7 +297,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
@@ -419,7 +420,7 @@ class SynthDesign(TestCase):
 		)
 
 		processor = Processor()
-		generator = processor.LineClassification(report)
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass

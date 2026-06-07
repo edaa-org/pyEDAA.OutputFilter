@@ -28,8 +28,6 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from pyTooling.Versioning import YearReleaseVersion
-
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from datetime import datetime
 from enum     import Flag
@@ -38,9 +36,10 @@ from re       import Pattern, compile as re_compile
 from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator
 
 from pyTooling.Decorators  import export, readonly
-from pyTooling.MetaClasses import ExtendedType, abstractmethod, mustoverride
+from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
+from pyTooling.Versioning  import YearReleaseVersion
 from pyTooling.Warning     import WarningCollector, CriticalWarning
 
 from pyEDAA.OutputFilter   import Line, OutputFilterException
@@ -53,6 +52,13 @@ MAJOR =                  r"(?P<major>\d+)"
 MAJOR_MINOR =            r"(?P<major>\d+)\.(?P<minor>\d+)"
 MAJOR_MINOR_MICRO =      r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)"
 MAJOR_MINOR_MICRO_NANO = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<micro>\d+)\.(?P<nano>\d+)"
+
+
+@export
+def timestampIterator(iterator: Iterator[str], timestamp: datetime) -> Iterator[Tuple[datetime, str]]:
+	for line in iterator:
+		yield timestamp, line
+
 
 @export
 class ProcessorException(OutputFilterException):
@@ -3783,7 +3789,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
-	def LineClassification(self, inputStream: Iterator[str]) -> Generator[VivadoLine, None, None]:
+	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
 
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
@@ -3793,7 +3799,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		_errorMessage = "Unknown processing error"
 
 		try:
-			while (rawMessageLine := next(inputStream)) is not None:
+			while (tup := next(inputStream)) is not None:
+				timestamp, rawMessageLine = tup
 				lineNumber += 1
 				rawMessageLine = rawMessageLine.rstrip()
 				errorMessage = _errorMessage
@@ -3845,6 +3852,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				if line._kind is LineKind.ProcessorError:
 					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
+				# TODO: find a better solution/location to assign the timestamp.
+				line._timestamp = timestamp
 
 				self._lines.append(line)
 
@@ -3974,8 +3984,9 @@ class Document(Processor):
 
 	def Parse(self) -> None:
 		with Stopwatch() as sw:
+			timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
 			with self._logfile.open("r", encoding="utf-8") as file:
-				for line in self.LineClassification(file):
+				for line in self.LineClassification(timestampIterator(file, timestamp)):
 					pass
 
 		self._processingDuration = sw.Duration
