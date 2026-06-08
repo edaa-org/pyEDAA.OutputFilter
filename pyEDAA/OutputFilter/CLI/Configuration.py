@@ -548,9 +548,9 @@ class Vivado(Tool):
 				ruleSet[ruleName] = AllRule(self._ParseRuleSetAction(ruleConfig["action"]))
 			elif ruleName == "info":
 				ruleSet[ruleName] = ClassificationRule(LineKind.InfoMessage, self._ParseRuleSetAction(ruleConfig["action"]))
-			elif ruleName == "criticalWarning":
-				ruleSet[ruleName] = ClassificationRule(LineKind.WarningMessage, self._ParseRuleSetAction(ruleConfig["action"]))
 			elif ruleName == "warning":
+				ruleSet[ruleName] = ClassificationRule(LineKind.WarningMessage, self._ParseRuleSetAction(ruleConfig["action"]))
+			elif ruleName == "criticalWarning":
 				ruleSet[ruleName] = ClassificationRule(LineKind.CriticalWarningMessage, self._ParseRuleSetAction(ruleConfig["action"]))
 			elif ruleName == "error":
 				ruleSet[ruleName] = ClassificationRule(LineKind.ErrorMessage, self._ParseRuleSetAction(ruleConfig["action"]))
