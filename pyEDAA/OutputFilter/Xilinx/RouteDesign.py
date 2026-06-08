@@ -34,8 +34,8 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2     import TaskWithPhases, Phase, SubPhase, PhaseWithChildren, SubPhaseWithChildren
-from pyEDAA.OutputFilter.Xilinx.Common2     import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO
+from pyEDAA.OutputFilter.Xilinx     import TaskWithPhases, Phase, SubPhase, PhaseWithChildren, SubPhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx     import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO
 from pyEDAA.OutputFilter.Xilinx.PlaceDesign import SubSubPhase
 
 
@@ -49,6 +49,7 @@ class Phase_BuildRTDesign(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Build RT Design")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Build RT Design | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -175,6 +176,7 @@ class Phase_RouterInitialization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Router Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Router Initialization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_CreateTimer,
@@ -226,6 +228,7 @@ class Phase_Initial_Routing(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_GlobalRouting,
@@ -243,6 +246,7 @@ class Phase_GlobalRouting(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Global Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Global Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -310,6 +314,7 @@ class Phase_RipUpAndReroute(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Rip-up And Reroute")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Rip-up And Reroute | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_GlobalIteration0,
@@ -347,6 +352,7 @@ class Phase_InitialRouting(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Initial Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Initial Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_InitialNetRoutingPass,
@@ -394,6 +400,7 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_DelayCleanUp,
@@ -423,6 +430,7 @@ class Phase_PostHoldFix(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_HoldFixIter,
@@ -444,6 +452,7 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Delay and Skew Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Delay and Skew Optimization | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_DelayCleanUp,
@@ -452,7 +461,7 @@ class Phase_DelayAndSkewOptimization(PhaseWithChildren):
 
 
 @export
-class Phase_RouteFinalize_1(Phase):
+class Phase_RouteFinalize_1(Phase):  # todo: remove duplicates
 	"""
 	*Route finalize* phase.
 
@@ -461,10 +470,11 @@ class Phase_RouteFinalize_1(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
-class Phase_RouteFinalize_2(Phase):
+class Phase_RouteFinalize_2(Phase):  # todo: remove duplicates
 	"""
 	*Route finalize* phase.
 
@@ -473,6 +483,7 @@ class Phase_RouteFinalize_2(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Route finalize")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Route finalize | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -485,6 +496,7 @@ class Phase_PostHoldFix(PhaseWithChildren):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Hold Fix")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Hold Fix | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
 		SubPhase_HoldFixIter,
@@ -501,6 +513,7 @@ class Phase_VerifyingRoutedNets(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -513,6 +526,7 @@ class Phase_DepositingRoutes(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -525,6 +539,7 @@ class Phase_VerifyingRoutedNets(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Verifying routed nets")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Verifying routed nets | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -537,6 +552,7 @@ class Phase_ResolveXTalk(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Resolve XTalk")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Resolve XTalk | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -549,6 +565,7 @@ class Phase_DepositingRoutes(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Depositing Routes")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Depositing Routes | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -561,6 +578,7 @@ class Phase_PostProcessRouting(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Process Routing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Process Routing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -573,6 +591,7 @@ class Phase_PostRouterTiming(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post Router Timing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post Router Timing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -585,6 +604,7 @@ class Phase_PostRouteEventProcessing(Phase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Post-Route Event Processing")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Post-Route Event Processing | Checksum:"
 	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export

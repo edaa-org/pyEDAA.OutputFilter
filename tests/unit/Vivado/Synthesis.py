@@ -30,6 +30,7 @@
 #
 """Unit tests for Vivado synthesis log files."""
 from datetime import datetime
+from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
 from unittest import TestCase as TestCase
@@ -37,10 +38,9 @@ from unittest import TestCase as TestCase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx                  import Processor, SynthesizeDesign, Line
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import RTLElaboration, LoadingPart, RTLComponentStatistics
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import IOInsertion, FlatteningBeforeIOInsertion, FinalNetlistCleanup
-from pyEDAA.OutputFilter.Xilinx.SynthesizeDesign import WritingSynthesisReport
+from pyEDAA.OutputFilter.Xilinx import Processor, Synth_Design, VivadoLine, timestampIterator
+from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -75,17 +75,18 @@ class SynthDesign(TestCase):
 
 	def test_SynthesisLogfile(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
@@ -95,8 +96,8 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(0, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
@@ -104,11 +105,11 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_RTLElaboration(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -126,27 +127,28 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(9, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(6, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
 
-		self.assertIn(RTLElaboration, synthDesign)
-		rtlElaboration = synthDesign[RTLElaboration]
+		self.assertIn(_SynthDesign.RTLElaboration, synthDesign)
+		rtlElaboration = synthDesign[_SynthDesign.RTLElaboration]
 		self.assertEqual(2, len(rtlElaboration.InfoMessages))
 		self.assertEqual(0, len(rtlElaboration.WarningMessages))
 		self.assertEqual(0, len(rtlElaboration.CriticalWarningMessages))
@@ -156,11 +158,11 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_LoadingPart(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -177,27 +179,28 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
 
-		self.assertIn(LoadingPart, synthDesign)
-		loadingPart = synthDesign[LoadingPart]
+		self.assertIn(_SynthDesign.LoadingPart, synthDesign)
+		loadingPart = synthDesign[_SynthDesign.LoadingPart]
 		self.assertEqual(0, len(loadingPart.InfoMessages))
 		self.assertEqual(0, len(loadingPart.WarningMessages))
 		self.assertEqual(0, len(loadingPart.CriticalWarningMessages))
@@ -206,11 +209,11 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_RTLComponentStatistics(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -229,27 +232,28 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
 
-		self.assertIn(RTLComponentStatistics, synthDesign)
-		rtlComponentStatistics = synthDesign[RTLComponentStatistics]
+		self.assertIn(_SynthDesign.RTLComponentStatistics, synthDesign)
+		rtlComponentStatistics = synthDesign[_SynthDesign.RTLComponentStatistics]
 		self.assertEqual(0, len(rtlComponentStatistics.InfoMessages))
 		self.assertEqual(0, len(rtlComponentStatistics.WarningMessages))
 		self.assertEqual(0, len(rtlComponentStatistics.CriticalWarningMessages))
@@ -258,11 +262,11 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_IOInsertion(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -290,41 +294,42 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
 
-		self.assertIn(IOInsertion, synthDesign)
-		ioInsertion = synthDesign[IOInsertion]
+		self.assertIn(_SynthDesign.IOInsertion, synthDesign)
+		ioInsertion = synthDesign[_SynthDesign.IOInsertion]
 		self.assertEqual(0, len(ioInsertion.InfoMessages))
 		self.assertEqual(0, len(ioInsertion.WarningMessages))
 		self.assertEqual(0, len(ioInsertion.CriticalWarningMessages))
 		self.assertEqual(0, len(ioInsertion.ErrorMessages))
 
-		self.assertIn(FlatteningBeforeIOInsertion, ioInsertion)
-		flatteningBeforeIOInsertion = synthDesign[FlatteningBeforeIOInsertion]
+		self.assertIn(_SynthDesign.FlatteningBeforeIOInsertion, ioInsertion)
+		flatteningBeforeIOInsertion = ioInsertion[_SynthDesign.FlatteningBeforeIOInsertion]
 		self.assertEqual(0, len(flatteningBeforeIOInsertion.InfoMessages))
 		self.assertEqual(0, len(flatteningBeforeIOInsertion.WarningMessages))
 		self.assertEqual(0, len(flatteningBeforeIOInsertion.CriticalWarningMessages))
 		self.assertEqual(0, len(flatteningBeforeIOInsertion.ErrorMessages))
 
-		self.assertIn(FinalNetlistCleanup, ioInsertion)
-		finalNetlistCleanup = synthDesign[FinalNetlistCleanup]
+		self.assertIn(_SynthDesign.FinalNetlistCleanup, ioInsertion)
+		finalNetlistCleanup = ioInsertion[_SynthDesign.FinalNetlistCleanup]
 		self.assertEqual(0, len(finalNetlistCleanup.InfoMessages))
 		self.assertEqual(0, len(finalNetlistCleanup.WarningMessages))
 		self.assertEqual(0, len(finalNetlistCleanup.CriticalWarningMessages))
@@ -332,11 +337,11 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)
 
 	def test_WritingSynthesisReport(self) -> None:
 		print()
-		report = dedent(f"""{self._PREAMBLE}
+		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
 {self._SYNTHESIS_START}
 			Attempting to get a license for feature 'Synthesis' and/or device 'xc7z015'
@@ -412,27 +417,28 @@ class SynthDesign(TestCase):
 			---------------------------------------------------------------------------------
 {self._SYNTHESIS_FINISH}
 {self._POSTAMBLE}""")
+		)
 
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
-			processor = Processor()
-			next(generator := processor.LineClassification())
-			for rawLine in report.splitlines():
-				generator.send(rawLine)
+			for line in generator:
+				pass
 
 		self.assertEqual(7, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertIn(SynthesizeDesign, processor)
-		synthDesign = processor[SynthesizeDesign]
+		self.assertIn(Synth_Design, processor)
+		synthDesign = processor[Synth_Design]
 		self.assertEqual(4, len(synthDesign.InfoMessages))
 		self.assertEqual(0, len(synthDesign.WarningMessages))
 		self.assertEqual(0, len(synthDesign.CriticalWarningMessages))
 		self.assertEqual(0, len(synthDesign.ErrorMessages))
 
-		self.assertIn(WritingSynthesisReport, synthDesign)
-		writingSynthesisReport = synthDesign[WritingSynthesisReport]
+		self.assertIn(_SynthDesign.WritingSynthesisReport, synthDesign)
+		writingSynthesisReport = synthDesign[_SynthDesign.WritingSynthesisReport]
 		self.assertEqual(0, len(writingSynthesisReport.InfoMessages))
 		self.assertEqual(0, len(writingSynthesisReport.WarningMessages))
 		self.assertEqual(0, len(writingSynthesisReport.CriticalWarningMessages))
@@ -444,4 +450,4 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
-			self.assertIsInstance(line, Line)
+			self.assertIsInstance(line, VivadoLine)

@@ -28,51 +28,61 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-"""Basic classes for outputs from AMD/Xilinx Vivado."""
-from pyTooling.Decorators import export
+from itertools import tee
+from typing    import Optional as Nullable, List, Generator, Tuple
 
-from pyEDAA.OutputFilter  import OutputFilterException
+from pyTooling.Decorators                  import export
 
-
-@export
-class ProcessorException(OutputFilterException):
-	"""
-	Base-class for exceptions raised by processors parsing log outputs.
-	"""
+from pyEDAA.OutputFilter.CLI.Configuration import Rule
+from pyEDAA.OutputFilter.Xilinx            import VivadoLine
 
 
 @export
-class ClassificationException(ProcessorException):
-	"""
-	Raised if a log output line couldn't be classified.
-	"""
-	_lineNumber: int  #: Line number of the unclassified line.
-	_rawMessage: str  #: Raw message of the unclassified line.
+def preprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+	if rules is None:
+		return gen
 
-	def __init__(self, errorMessage: str, lineNumber: int, rawMessageLine: str) -> None:
-		"""
-		Initializes a classification exception.
+	def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+		for line in gen:
+			for rule in rules:
+				if rule.Match(line):
+					rule.Process(line)
 
-		:param errorMessage:   Error message why the line couldn't be classified.
-		:param lineNumber:     Line number of the unclassified line.
-		:param rawMessageLine: Raw message of the unclassified line.
-		"""
-		super().__init__(errorMessage)
+			yield line
 
-		self._lineNumber = lineNumber
-		self._rawMessage = rawMessageLine
-
-	def __str__(self) -> str:
-		return f"{self.message}: {self._rawMessage} (at line {self._lineNumber})"
+	return filter(gen)
 
 
 @export
-class ParserStateException(ProcessorException):
-	"""
-	Raised if a log output parser has a broken state.
-	"""
+def doublyLinkedList(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+	previousLine: VivadoLine = None
+	for line in gen:
+		previousLine = (newLine := line.Copy(line, previousLine))
+		yield newLine
 
 
 @export
-class NotPresentException(ProcessorException):
-	pass
+def mirror(gen: Generator[VivadoLine, None, None], count: int) -> Tuple[Generator[VivadoLine, None, None], ...]:
+	if count == 1:
+		return gen,
+	else:
+		return tuple(doublyLinkedList(source) for source in tee(gen, count))
+
+
+@export
+def postprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+	if rules is None:
+		return gen
+
+	def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+		try:
+			for line in gen:
+				for rule in rules:
+					if rule.Match(line):
+						rule.Process(line)
+
+				yield line
+		except RuntimeError:
+			pass
+
+	return filter(gen)

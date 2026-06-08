@@ -34,10 +34,10 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2 import TaskWithPhases, NestedPhase, NestedTaskWithPhases, SubSubSubPhaseWithTasks
-from pyEDAA.OutputFilter.Xilinx.Common2 import Phase, SubPhase, SubSubPhase, SubSubSubPhase
-from pyEDAA.OutputFilter.Xilinx.Common2 import PhaseWithChildren, SubPhaseWithChildren, SubSubPhaseWithChildren
-from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
+from pyEDAA.OutputFilter.Xilinx import TaskWithPhases, NestedPhase, NestedTaskWithPhases, SubSubSubPhaseWithTasks
+from pyEDAA.OutputFilter.Xilinx import Phase, SubPhase, SubSubPhase, SubSubSubPhase
+from pyEDAA.OutputFilter.Xilinx import PhaseWithChildren, SubPhaseWithChildren, SubSubPhaseWithChildren
+from pyEDAA.OutputFilter.Xilinx import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 
 @export

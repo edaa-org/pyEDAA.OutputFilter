@@ -34,8 +34,8 @@ from typing import ClassVar, Type, Tuple
 
 from pyTooling.Decorators import export
 
-from pyEDAA.OutputFilter.Xilinx.Common2 import Task, TaskWithPhases, Phase
-from pyEDAA.OutputFilter.Xilinx.Common2 import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
+from pyEDAA.OutputFilter.Xilinx import Task, TaskWithPhases, Phase
+from pyEDAA.OutputFilter.Xilinx import MAJOR, MAJOR_MINOR, MAJOR_MINOR_MICRO, MAJOR_MINOR_MICRO_NANO
 
 
 @export
@@ -54,6 +54,8 @@ class Phase_PlacerInitialization(Phase):
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Physical Synthesis Initialization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Physical Synthesis Initialization | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -65,10 +67,12 @@ class Phase_DSPRegisterOptimization(Phase):
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} DSP Register Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} DSP Register Optimization | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
-class Phase_CriticalPathOptimization_1(Phase):
+class Phase_CriticalPathOptimization_1(Phase):  # todo: check for duplicates
 	"""
 	*Critical Path Optimization* phase.
 
@@ -76,6 +80,8 @@ class Phase_CriticalPathOptimization_1(Phase):
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
@@ -87,6 +93,8 @@ class Phase_CriticalPathOptimization_2(Phase):
 	"""
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR} Critical Path Optimization")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex} Critical Path Optimization | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+	_FINAL:  ClassVar[str]     = None
 
 
 @export
