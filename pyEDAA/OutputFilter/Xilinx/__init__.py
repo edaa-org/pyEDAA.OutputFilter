@@ -411,6 +411,12 @@ class VivadoMessage(VivadoLine):
 
 		return None
 
+	@classmethod
+	def Copy(cls, line: "VivadoMessage", previousLine: "VivadoLine") -> "VivadoMessage":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
+
 	def __str__(self) -> str:
 		return f"{self._MESSAGE_KIND}: [{self._toolName} {self._toolID}-{self._messageKindID}] {self._message}"
 
@@ -494,6 +500,12 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 			           messageKindID=int(match[2]), previousLine=previousLine)
 
 		return None
+
+	@classmethod
+	def Copy(cls, line: "VivadoDRCInfoMessage", previousLine: "VivadoLine") -> "VivadoDRCInfoMessage":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
 
 	def __str__(self) -> str:
 		return f"{self._MESSAGE_KIND}: [DRC {self._drcRuleName}-{self._messageKindID}] {self._message}"
@@ -630,6 +642,12 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 
 		return None
 
+	@classmethod
+	def Copy(cls, line: "VivadoDRCWarningMessage", previousLine: "VivadoLine") -> "VivadoDRCWarningMessage":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
+
 	def __str__(self) -> str:
 		return f"{self._MESSAGE_KIND}: [DRC {self._drcRuleName}-{self._messageKindID}] {self._message}"
 
@@ -677,6 +695,12 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 			return cls(lineNumber, LineKind.WarningMessage, LineAction.Default, match[1], match[4], toolName=match[2], toolID=None, messageKindID=int(match[3]), previousLine=previousLine)
 
 		return None
+
+	@classmethod
+	def Copy(cls, line: "VivadoXPMWarningMessage", previousLine: "VivadoLine") -> "VivadoXPMWarningMessage":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._xpmName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
 
 	def __str__(self) -> str:
 		return f"{self._MESSAGE_KIND}: [{self._xpmName}: {self._toolName}-{self._messageKindID}] {self._message}"
@@ -811,6 +835,11 @@ class VHDLReportMessage(VivadoInfoMessage):
 
 		return None
 
+	@classmethod
+	def Copy(cls, line: "VHDLReportMessage", previousLine: "VivadoLine") -> "VHDLReportMessage":
+		newLine = cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, line._reportMessage, line._sourceFile, line._sourceLineNumber, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
 
 @export
 class VHDLAssertionMessage(VHDLReportMessage):
