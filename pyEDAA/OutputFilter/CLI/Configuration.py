@@ -30,10 +30,11 @@
 #
 from enum     import StrEnum
 from pathlib  import Path
-from re       import compile as re_compile
+from re       import compile as re_compile, Pattern
 from typing   import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
 
 from pyTooling.Decorators       import export
+from pyTooling.Exceptions       import addNoteWithItemList
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
 from pyTooling.Stopwatch        import Stopwatch
 from pyTooling.TerminalUI       import TerminalBaseApplication
@@ -437,12 +438,17 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 
 @export
 class Tool(metaclass=ExtendedType, slots=True):
-	pass
+	@abstractmethod
+	def Parse(self, config: CommentedMap, key: str, configPath: str) -> None:
+		pass
 
 
 @export
 class Vivado(Tool):
-	_ALLOWED_COLORS:   ClassVar[Set[str]] = set(TerminalBaseApplication.Foreground.keys())
+	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.Foreground.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
+	_SECTIONS:               ClassVar[Set[str]] = {"colors", "rule-sets", "outputs", "exports", "policies"}
+
+	_VIVADO_MESSAGE_PATTERN: ClassVar[Pattern] = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
 
 	_parent:             "Configuration"
 	_colors:             Dict[str, str]
@@ -507,14 +513,24 @@ class Vivado(Tool):
 			"table":                "GRAY",
 		}
 
-	def Parse(self, toolConfig: CommentedMap) -> None:
-		if "colors" in toolConfig:
-			self._ParseColors(toolConfig["colors"])
+	def Parse(self, config: CommentedMap, key: str, configPath: str) -> None:
+		if config is None:
+			return
+		elif key not in config:
+			return
+		elif (toolConfig := config[key]) is None:
+			return
+		elif not isinstance(toolConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
 
-		if "rule-sets" in toolConfig:
-			for ruleSetName, ruleSetConfig in toolConfig["rule-sets"].items():
-				if len(ruleSetConfig) > 0:
-					self._ParseRuleSet(ruleSetName, ruleSetConfig)
+		for name in toolConfig:
+			if name not in self._SECTIONS:
+				warn = ConfigurationWarning(f"{configPath}.{key}: Unknown configuration section '{name}'.")
+				addNoteWithItemList(warn, "Supported configuration sections: ", self._SECTIONS)
+				WarningCollector.Raise(warn)
+
+		self._ParseColors(toolConfig, "colors", f"{configPath}.{key}")
+		self._ParseRuleSets(toolConfig, "rule-sets", f"{configPath}.{key}")
 
 		if "outputs" in toolConfig:
 			self._processingPipeline.Parse(toolConfig["outputs"])
@@ -527,19 +543,54 @@ class Vivado(Tool):
 		if "policies" in toolConfig:
 			self._ParsePolicies(toolConfig["policies"])
 
-	def _ParseColors(self, colors: CommentedMap) -> None:
-		for lineKind, color in colors.items():
-			if lineKind not in self._colors:
-				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.colors: Item '{lineKind}' not supported for coloring."))
-				continue
+	def _ParseColors(self, config: CommentedMap, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (colorsConfig := config[key]) is None:
+			return
+		elif not isinstance(colorsConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
+		for lineKind, color in colorsConfig.items():
+			if not isinstance(lineKind, str):
+				WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: LineKind '{lineKind}' is not a string.'."))
+			elif lineKind not in self._colors:
+				warn = ConfigurationWarning(f"{configPath}.{key}: LineKind '{lineKind}' not supported for coloring.")
+				addNoteWithItemList(warn, "Supported LineKinds for coloring: ", self._colors)
+				WarningCollector.Raise(warn)
+			elif not isinstance(color, str):
+				WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}.{lineKind}: Color '{color}' is not a string.'."))
 			elif (col := color.upper()) not in self._ALLOWED_COLORS:
-				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.colors.{lineKind}: Color '{color}' is not supported."))
-				continue
+				WarningCollector.Raise(
+					ConfigurationWarning(f"{configPath}.{key}.{lineKind}: Color '{color}' is not supported."),
+					notes=f"Supported colors: {', '.join(self._ALLOWED_COLORS)}"
+				)
+			else:
+				self._colors[lineKind] = col
 
-			self._colors[lineKind] = col
+	def _ParseRuleSets(self, config: CommentedMap, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleSetsConfig := config[key]) is None:
+			return
+		elif not isinstance(ruleSetsConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
 
-	def _ParseRuleSet(self, ruleSetName: str, ruleSetConfig: CommentedMap) -> None:
-		self._ruleSets[ruleSetName] = (ruleSet := {})
+		for ruleSetName in ruleSetsConfig:
+			self._ParseRuleSet(ruleSetsConfig, ruleSetName, f"{configPath}.{key}")
+
+	def _ParseRuleSet(self, config: CommentedMap, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleSetConfig := config[key]) is None:
+			return
+		elif not isinstance(ruleSetConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
+		self._ruleSets[key] = (ruleSet := {})
 
 		pattern = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
 
@@ -559,7 +610,7 @@ class Vivado(Tool):
 					messageID = int(match.group("messageID"))
 					ruleSet[ruleName] = VivadoMessageRule(toolID, messageID, self._ParseRuleSetAction(ruleConfig["action"]))
 			else:
-				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.rule-sets.{ruleSetName}: Unknown rule '{ruleName}'."))
+				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.rule-sets.{key}: Unknown rule '{ruleName}'."))
 
 	def _ParsePolicies(self, policies: CommentedMap) -> None:
 		if "hasLatches" in policies:
@@ -589,7 +640,9 @@ class Configuration(metaclass=ExtendedType, slots=True):
 
 	def __init__(self, file: Path) -> None:
 		self._file =  file
-		self._tools = {}
+		self._tools = {
+			"vivado": Vivado(self)
+		}
 
 		with Stopwatch() as sw:
 			try:
@@ -611,7 +664,27 @@ class Configuration(metaclass=ExtendedType, slots=True):
 		self._Parse_v0_1()
 
 	def _Parse_v0_1(self) -> None:
-		for toolName, toolConfig in self._yamlDocument["tools"].items():
-			if toolName == "vivado":
-				self._tools["vivado"] = (vivado := Vivado(self))
-				vivado.Parse(toolConfig)
+		if "tools" not in self._yamlDocument:
+			WarningCollector.Raise(ConfigurationWarning(f"Configuration doesn't contain tool configurations."))
+			return
+		elif (toolsConfig := self._yamlDocument["tools"]) is None:
+			WarningCollector.Raise(
+				ConfigurationWarning(f"tools: Configuration doesn't contain tool specific configurations."),
+				notes=f"Supported keys: vivado"
+			)
+			return
+		elif not isinstance(toolsConfig, CommentedMap):
+			WarningCollector.Raise(
+				ConfigurationWarning(f"tools: Is not a dictionary."),
+				notes=f"Supported keys: vivado"
+			)
+			return
+
+		for toolName in toolsConfig:
+			try:
+				tool = self._tools[toolName]
+			except KeyError:
+				WarningCollector.Raise(ConfigurationWarning(f"tools: Unknown tool '{toolName}'."))
+				continue
+
+			tool.Parse(toolsConfig, "vivado", "tools")
