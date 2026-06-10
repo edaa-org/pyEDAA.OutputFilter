@@ -64,7 +64,7 @@ class OutputFormat(StrEnum):
 	JSONLine = "jsonl"
 
 	@classmethod
-	def parse(cls, value: str) -> Self:
+	def Parse(cls, value: str) -> Self:
 		if value not in cls._value2member_map_:
 			ex = ValueError(f"'{value}' is not a valid OutputFormat.")
 			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
@@ -81,7 +81,7 @@ class TimestampFormat(StrEnum):
 	Runtime = "deltatime"
 
 	@classmethod
-	def parse(cls, value: str) -> Self:
+	def Parse(cls, value: str) -> Self:
 		if value not in cls._value2member_map_:
 			ex = ValueError(f"'{value}' is not a valid TimestampFormat.")
 			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
@@ -98,7 +98,7 @@ class Action(StrEnum):
 	Error =   "error"
 
 	@classmethod
-	def parse(cls, value: str) -> Self:
+	def Parse(cls, value: str) -> Self:
 		if value not in cls._value2member_map_:
 			ex = ValueError(f"'{value}' is not a valid Action.")
 			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
@@ -116,7 +116,7 @@ class Level(StrEnum):
 	Error =           "error"
 
 	@classmethod
-	def parse(cls, value: str) -> Self:
+	def Parse(cls, value: str) -> Self:
 		if value not in cls._value2member_map_:
 			ex = ValueError(f"'{value}' is not a valid Level.")
 			ex.add_note(f"Allowed values: {', '.join([item.value for item in cls])}")
@@ -298,27 +298,34 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 			"stdout": StdOutOutput(self, True, OutputFormat.Plain, None, [])
 		}
 
-	def Parse(self, outputsConfig: CommentedMap) -> None:
-		if "preprocessing" in outputsConfig and (preprocessing := outputsConfig["preprocessing"]) is not None:
-			try:
-				self._preprocessing = list(self._parent._ruleSets[preprocessing].values())
-			except KeyError:
-				warn = ConfigurationWarning(f"tools.vivado.outputs.preprocessing: Unknown rule set '{preprocessing}'.")
-				warn.add_note(f"Rule set '{preprocessing}' not found in tools.vivado.rule-sets.")
-				WarningCollector.Raise(warn)
+	def Parse(self, config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleConfig := config[key]) is None:
+			return
+		elif not isinstance(ruleConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
 
-		for outputName, outputConfig in outputsConfig.items():
-			if outputName == "preprocessing":
-				continue
-			elif outputName == "stdout":
-				self._ParseStdOutOutput(outputConfig)
+		# todo: preprocessing
+
+		for outputName in ruleConfig:
+			if outputName == "stdout":
+				self._ParseStdOutOutput(ruleConfig, "stdout", f"{configPath}.{key}")
 			elif outputName == "stderr":
 				pass
-			# self._ParseStdErrOutput(outputConfig)
 			else:
-				self._ParseOutput(outputName, outputConfig)
+				self._ParseOutput(ruleConfig, outputName, f"{configPath}.{key}")
 
-	def _ParseStdOutOutput(self, outputConfig: CommentedMap) -> None:
+	def _ParseStdOutOutput(self, config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (outputConfig := config[key]) is None:
+			return
+		elif not isinstance(outputConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
 		stdout: StdOutOutput = self._outputs["stdout"]
 
 		stdout._coloring =        self._ParseBoolean(outputConfig,    "coloring",    False, "tools.vivado.outputs.stdout.coloring")
@@ -327,19 +334,27 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		stdout._commands =        self._ParseCommands(outputConfig,   "commands",   "tools.vivado.outputs.stdout.commands")
 		stdout._rules =           self._ParseRuleSets(outputConfig,   "rule-sets",  "tools.vivado.outputs.stdout.rule-sets")
 
-	def _ParseOutput(self, outputName: str, outputConfig: CommentedMap) -> None:
+	def _ParseOutput(self, config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (outputConfig := config[key]) is None:
+			return
+		elif not isinstance(outputConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
 		try:
-			path = self._ParsePath(outputConfig, "path", f"tools.vivado.outputs.{outputName}.path")
+			path = self._ParsePath(outputConfig, "path", f"{configPath}.{key}")
 		except ConfigurationException as ex:
 			WarningCollector.Raise(ConfigurationWarning(str(ex)))
 			return
 
-		self._outputs[outputName] = FileOutput(
+		self._outputs[key] = FileOutput(
 			self,
 			path,
-			self._ParseOutputFormat(outputConfig, "format", f"tools.vivado.outputs.{outputName}.format"),
-			self._ParseCommands(outputConfig,"commands",   f"tools.vivado.outputs.{outputName}.commands"),
-			self._ParseRuleSets(outputConfig,"rule-sets",  f"tools.vivado.outputs.{outputName}.rule-sets")
+			self._ParseOutputFormat(outputConfig, "format", f"{configPath}.{key}"),
+			self._ParseCommands(outputConfig,"commands",   f"{configPath}.{key}"),
+			self._ParseRuleSets(outputConfig,"rule-sets",  f"{configPath}.{key}")
 		)
 
 	def _ParseBoolean(self, config: CommentedMap, key: str, default: Nullable[bool], configPath: str) -> Nullable[bool]:
@@ -375,7 +390,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
 			return OutputFormat.Plain
 
-		return OutputFormat.parse(formatConfig)
+		return OutputFormat.Parse(formatConfig)
 
 	def _ParseTimestampFormat(self, config: CommentedMap, key: str, configPath: str) -> TimestampFormat:
 		if key not in config:
@@ -386,7 +401,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 			WarningCollector.Raise(ConfigurationWarning(f"{configPath}: Unknown settings."))
 			return TimestampFormat.Undefined
 
-		return TimestampFormat.parse(formatConfig)
+		return TimestampFormat.Parse(formatConfig)
 
 	def _ParseCommands(self, config: CommentedMap, key: str, configPath: str) -> Nullable[List[Command]]:
 		if key not in config:
@@ -531,9 +546,7 @@ class Vivado(Tool):
 
 		self._ParseColors(toolConfig, "colors", f"{configPath}.{key}")
 		self._ParseRuleSets(toolConfig, "rule-sets", f"{configPath}.{key}")
-
-		if "outputs" in toolConfig:
-			self._processingPipeline.Parse(toolConfig["outputs"])
+		self._processingPipeline.Parse(toolConfig, "outputs", f"{configPath}.{key}")
 
 		if "exports" in toolConfig:
 			if "cellUsage" in (exportConfig := toolConfig["exports"]):
@@ -592,25 +605,88 @@ class Vivado(Tool):
 
 		self._ruleSets[key] = (ruleSet := {})
 
-		pattern = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
-
-		for ruleName, ruleConfig in ruleSetConfig.items():
+		for ruleName in ruleSetConfig:
 			if ruleName == "all":
-				ruleSet[ruleName] = AllRule(self._ParseRuleSetAction(ruleConfig["action"]))
-			elif ruleName == "info":
-				ruleSet[ruleName] = ClassificationRule(LineKind.InfoMessage, self._ParseRuleSetAction(ruleConfig["action"]))
-			elif ruleName == "warning":
-				ruleSet[ruleName] = ClassificationRule(LineKind.WarningMessage, self._ParseRuleSetAction(ruleConfig["action"]))
-			elif ruleName == "criticalWarning":
-				ruleSet[ruleName] = ClassificationRule(LineKind.CriticalWarningMessage, self._ParseRuleSetAction(ruleConfig["action"]))
-			elif ruleName == "error":
-				ruleSet[ruleName] = ClassificationRule(LineKind.ErrorMessage, self._ParseRuleSetAction(ruleConfig["action"]))
-			elif (match := pattern.match(ruleName)) is not None:
-					toolID =    int(match.group("toolID"))
-					messageID = int(match.group("messageID"))
-					ruleSet[ruleName] = VivadoMessageRule(toolID, messageID, self._ParseRuleSetAction(ruleConfig["action"]))
+				self._ParseAllRule(ruleSet, ruleSetConfig, "all", f"{configPath}.{key}")
+			elif ruleName in ("info", "warning", "criticalWarning", "error"):
+				self._ParseVivadoMessageClassRule(ruleSet, ruleSetConfig, ruleName, f"{configPath}.{key}")
+			elif (match := self._VIVADO_MESSAGE_PATTERN.match(ruleName)) is not None:
+				toolID =    int(match.group("toolID"))
+				messageID = int(match.group("messageID"))
+				self._ParseVivadoMessageRule(ruleSet, toolID, messageID, ruleSetConfig, ruleName, f"{configPath}.{key}")
 			else:
 				WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.rule-sets.{key}: Unknown rule '{ruleName}'."))
+
+	def _ParseAllRule(self, ruleSet: Dict[str, Rule], config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleConfig := config[key]) is None:
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Catch-all rule without action."))
+			return
+		elif not isinstance(ruleConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
+		action = self._ParseAction(ruleConfig, "action", f"{configPath}.{key}")
+
+		ruleSet[key] = AllRule(action)
+
+	def _ParseVivadoMessageClassRule(self, ruleSet: Dict[str, Rule], config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleConfig := config[key]) is None:
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Vivado message class rule without action."))
+			return
+		elif not isinstance(ruleConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
+		if key == "info":
+			lineKind = LineKind.InfoMessage
+		elif key == "warning":
+			lineKind = LineKind.WarningMessage
+		elif key == "criticalWarning":
+			lineKind = LineKind.CriticalWarning
+		elif key == "error":
+			lineKind = LineKind.ErrorMessage
+
+		action = self._ParseAction(ruleConfig, "action", f"{configPath}.{key}")
+
+		ruleSet[key] = ClassificationRule(lineKind, action)
+
+	def _ParseVivadoMessageRule(self, ruleSet: Dict[str, Rule], toolID: int, messageID: int, config: Any, key: str, configPath: str) -> None:
+		if key not in config:
+			return
+		elif (ruleConfig := config[key]) is None:
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Vivado message rule without action."))
+			return
+		elif not isinstance(ruleConfig, CommentedMap):
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
+
+		action = self._ParseAction(ruleConfig, "action", f"{configPath}.{key}")
+
+		ruleSet[key] = VivadoMessageRule(toolID, messageID, action)
+
+	def _ParseAction(self, config: Any, key: str, configPath: str) -> Action:
+		if key not in config:
+			return Action.Default
+		elif (actionConfig := config[key]) is None:
+			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: No defined action."))
+			return Action.Default
+		elif not isinstance(actionConfig, str):
+			warn = ConfigurationWarning(f"{configPath}.{key}: Is not an Action.")
+			addNoteWithItemList(warn, "Supported actions: ", Action)
+			WarningCollector.Raise(warn)
+			return Action.Default
+
+		try:
+			return Action.Parse(actionConfig)
+		except ValueError as ex:
+			warn = ConfigurationWarning(f"{configPath}.{key}: Unknown Action '{actionConfig}'.")
+			addNoteWithItemList(warn, "Supported actions: ", Action)
+			WarningCollector.Raise(warn, ex)
+			return Action.Default
 
 	def _ParsePolicies(self, policies: CommentedMap) -> None:
 		if "hasLatches" in policies:
