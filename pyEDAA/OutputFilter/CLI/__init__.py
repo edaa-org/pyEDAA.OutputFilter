@@ -55,6 +55,7 @@ from pyTooling.TerminalUI                     import TerminalApplication, Mode, 
 
 from pyEDAA.OutputFilter                      import __version__, __copyright__, __license__
 from pyEDAA.OutputFilter                      import OutputFilterException
+from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
@@ -170,6 +171,12 @@ def main() -> NoReturn:
 
 	try:
 		program.Run()
+	except ConfigurationException as ex:
+		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
+		if ex.__notes__ is not None:
+			for note in ex.__notes__:
+				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.Foreground))
+
 	except OutputFilterException as ex:
 		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
 		if ex.__cause__ is not None:
