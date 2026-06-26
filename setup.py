@@ -52,7 +52,7 @@ setup(
 			"Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 			"Topic :: Utilities"
 		],
-		developmentStatus="alpha",
+		developmentStatus="beta",
 		pythonVersions=("3.11", "3.12", "3.13", "3.14"),
 		consoleScripts={
 			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"

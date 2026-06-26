@@ -165,9 +165,8 @@ def main() -> NoReturn:
 	program.Configure(
 		verbose=("-v" in argv or "--verbose" in argv),
 		debug=("-d" in argv or "--debug" in argv),
-		quiet=("-q" in argv or "--quiet" in argv)
+		silent=("-q" in argv or "--quiet" in argv)
 	)
-	program.LogLevel = Severity.Warning
 
 	try:
 		program.Run()

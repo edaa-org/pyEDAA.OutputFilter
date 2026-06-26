@@ -79,6 +79,8 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 					config = Configuration(configFile)
 				for warning in warnings:
 					self.WriteWarning(warning)
+					for note in warning.Notes:
+						self.WriteWarningNote(note)
 
 		if args.stdin is True:
 			if args.logfile is not None:
