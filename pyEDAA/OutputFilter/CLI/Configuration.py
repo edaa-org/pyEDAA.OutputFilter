@@ -708,36 +708,59 @@ class Vivado(Tool):
 
 @export
 class Configuration(metaclass=ExtendedType, slots=True):
-	_file:         Path
-	_yamlDocument: YAML
-	_yamlLoadTime: float
+	_file:         Nullable[Path]
+	_yamlDocument: Nullable[YAML]
+	_yamlLoadTime: Nullable[float]
 
 	_tools:        Dict[str, Tool]
 
-	def __init__(self, file: Path) -> None:
-		self._file =  file
+	def __init__(self, file: Nullable[Path] = None) -> None:
+		self._file =  None
+		self._yamlDocument = None
+		self._yamlLoadTime = None
 		self._tools = {
 			"vivado": Vivado(self)
 		}
 
+		if file is not None:
+			self.Load(file)
+
+	def Load(self, file: Path) -> None:
+		self._file = file
+
 		with Stopwatch() as sw:
 			try:
 				yamlReader = YAML()
-				self._yamlDocument = yamlReader.load(self._file)
+				self._yamlDocument = yamlReader.load(file)
 			except Exception as ex:
-				raise ConfigurationException(f"Couldn't open '{self._file}'.") from ex
+				raise ConfigurationException(f"Couldn't open '{file}'.") from ex
 
 		self._yamlLoadTime = sw.Duration
+
+		if self._yamlDocument is None:
+			ex = ConfigurationException(f"Configuration file is empty.")
+			raise ex
+		elif not isinstance(self._yamlDocument, CommentedMap):
+			ex = ConfigurationException(f"Configuration file is not a dictionary.")
+			raise ex
 
 		self.Parse()
 
 	def Parse(self) ->None:
-		if (version := self._yamlDocument["version"]) != "0.1":
-			ex = ConfigurationException(f"Configuration file version {version} is not supported.")
-			ex.add_note("Supported versions: 0.1")
+		if "version" not in self._yamlDocument:
+			ex = ConfigurationException(f"Configuration file has no 'version'.")
+			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
+			raise ex
+		elif not isinstance(version := self._yamlDocument["version"], str):
+			ex = ConfigurationException(f"version: is not a string.")
+			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
+			raise ex
+		elif version not in self._VERSIONS:
+			ex = ConfigurationException(f"Configuration file version '{version}' is not supported.")
+			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 
-		self._Parse_v0_1()
+		self._VERSIONS[version](self)
 
 	def _Parse_v0_1(self) -> None:
 		if "tools" not in self._yamlDocument:
@@ -764,3 +787,7 @@ class Configuration(metaclass=ExtendedType, slots=True):
 				continue
 
 			tool.Parse(toolsConfig, "vivado", "tools")
+
+	_VERSIONS: ClassVar[Dict[str, Callable[[Self], None]]] = {
+		"0.1": _Parse_v0_1
+	}

@@ -69,6 +69,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		if not args.quiet:
 			self._PrintHeadline()
 
+		config = Configuration()
 		if args.configfile is not None:
 			configFile = Path(args.configfile)
 			if not configFile.exists():
@@ -76,7 +77,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 				self.Exit(3)
 			else:
 				with WarningCollector() as warnings:
-					config = Configuration(configFile)
+					config.Load(configFile)
 				for warning in warnings:
 					self.WriteWarning(warning)
 					for note in warning.Notes:
