@@ -1015,7 +1015,55 @@ class Parser(BaseParser):
 
 
 @export
-class Preamble(Parser):  # todo: uses parser, which has vivado messages
+class Preamble(Parser):
+	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
+	_startDatetime: Nullable[datetime]            #: Session start timestamp.
+
+	def __init__(self, processor: "BaseProcessor") -> None:
+		"""
+		Initializes a Vivado preamble parser.
+
+		:param processor: Reference to the Vivado log processor.
+		"""
+		super().__init__(processor)
+
+		self._toolVersion =   None
+		self._startDatetime = None
+
+	@readonly
+	def ToolVersion(self) -> YearReleaseVersion:
+		"""
+		Read-only property to access the extracted Vivado tool version.
+
+		:returns: The used Vivado version as reported in the Vivado log messages.
+		"""
+		return self._toolVersion
+
+	@readonly
+	def StartDatetime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when the Vivado session was started.
+
+		:returns:                   Datatime when the session was started.
+		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
+		"""
+		if self._startDatetime is None:
+			raise ProcessorException("No start timestamp extracted from preamble.")
+
+		return self._startDatetime
+
+	@abstractmethod
+	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		"""
+		A generator for processing the Vivado session preamble line-by-line.
+
+		:param line: First line to process.
+		:returns:    A generator processing log messages.
+		"""
+
+
+@export
+class LogFilePreamble(Preamble):
 	"""
 	A parser for the preamble emitted by Vivado at session start.
 
@@ -1057,42 +1105,6 @@ class Preamble(Parser):  # todo: uses parser, which has vivado messages
 	_VERSION:       ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
-	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
-	_startDatetime: Nullable[datetime]            #: Session start timestamp.
-
-	def __init__(self, processor: "BaseProcessor") -> None:
-		"""
-		Initializes a Vivado preamble parser.
-
-		:param processor: Reference to the Vivado log processor.
-		"""
-		super().__init__(processor)
-
-		self._toolVersion =   None
-		self._startDatetime = None
-
-	@readonly
-	def ToolVersion(self) -> YearReleaseVersion:
-		"""
-		Read-only property to access the extracted Vivado tool version.
-
-		:returns: The used Vivado version as reported in the Vivado log messages.
-		"""
-		return self._toolVersion
-
-	@readonly
-	def StartDatetime(self) -> datetime:
-		"""
-		Read-only property to access the date and time when the Vivado session was started.
-
-		:returns:                   Datatime when the session was started.
-		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
-		"""
-		if self._startDatetime is None:
-			raise ProcessorException("No start timestamp extracted from preamble.")
-
-		return self._startDatetime
-
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		"""
 		A generator for processing the Vivado session preamble line-by-line.
@@ -1116,6 +1128,70 @@ class Preamble(Parser):  # todo: uses parser, which has vivado messages
 				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 				line._kind = LineKind.Normal
 			elif line.StartsWith("#----"):
+				line._kind = LineKind.SectionDelimiter
+				break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+		else:
+			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
+
+		nextLine = yield line
+		return nextLine
+
+
+@export
+class VivadoPipedPreamble(Preamble):
+	"""
+	A parser for the preamble emitted by Vivado at session start.
+
+	.. rubric:: Extracted information
+
+	* Vivado tool version. |br|
+	  See :data:`ToolVersion`
+	* Session start timestamp (date and time). |br|
+	  See :data:`StartDatetime`
+
+	.. rubric:: Example
+
+	.. code-block::
+
+	   ****** Vivado v2024.2 (64-bit)
+	     **** SW Build 5239630 on Fri Nov 08 22:35:27 MST 2024
+	     **** IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+	     **** SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+	     **** Start of session at: Wed Jul  1 23:50:26 2026
+	       ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+	       ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+	"""
+	_VERSION:       ClassVar[Pattern] = re_compile(r"""\*\*\*\*\*\* Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
+	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""  \*\*\*\* Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+
+	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		"""
+		A generator for processing the Vivado session preamble line-by-line.
+
+		:param line: First line to process.
+		:returns:    A generator processing log messages.
+		"""
+		if line._message == "":
+			line._kind = LineKind.Empty
+		else:
+			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
+
+		line = yield line
+
+		# a normal preamble has up to 23 lines including both delimiter lines.
+		for _ in range(30):
+			if (match := self._VERSION.match(line._message)) is not None:
+				self._toolVersion = YearReleaseVersion.Parse(match[1])
+				line._kind = LineKind.Normal
+			elif (match := self._STARTTIME.match(line._message)) is not None:
+				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+				line._kind = LineKind.Normal
+			elif line._message == "":
 				line._kind = LineKind.SectionDelimiter
 				break
 			else:
@@ -3906,13 +3982,17 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 			pass
 
 	def CommandFinder(self) -> Generator[VivadoLine, VivadoLine, None]:
-		self._preamble =  Preamble(self)
-		self._postamble = Postamble(self)
-
 		tclProcedures = {"source"}
 
 		# wait for first line
 		line = yield
+
+		if line.StartsWith("#------"):
+			self._preamble = LogFilePreamble(self)
+		else:
+			self._preamble = VivadoPipedPreamble(self)
+
+		self._postamble = Postamble(self)
 
 		# process preamble
 		line = yield from self._preamble.Generator(line)
