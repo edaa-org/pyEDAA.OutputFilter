@@ -30,12 +30,15 @@
 # ==================================================================================================================== #
 #
 """An abstraction layer of EDA tool output filters."""
-__author__ =    "Patrick Lehmann"
-__email__ =     "Paebbels@gmail.com"
-__copyright__ = "2014-2026, Patrick Lehmann"
-__license__ =   "Apache License, Version 2.0"
-__version__ =   "0.11.0"
-__keywords__ =  ["cli", "abstraction layer", "eda", "filter", "classification"]
+__author__ =            "Patrick Lehmann"
+__email__ =             "Paebbels@gmail.com"
+__copyright__ =         "2014-2026, Patrick Lehmann"
+__license__ =           "Apache License, Version 2.0"
+__version__ =           "0.11.0"
+__keywords__ =          ["cli", "abstraction layer", "eda", "filter", "classification"]
+__project_url__ =       "https://github.com/edaa-org/pyEDAA.OutputFilter"
+__documentation_url__ = "https://edaa-org.github.io/pyEDAA.OutputFilter"
+__issue_tracker_url__ = "https://GitHub.com/edaa-org/pyEDAA.OutputFilter/issues"
 
 from datetime              import datetime
 from enum                  import Flag
