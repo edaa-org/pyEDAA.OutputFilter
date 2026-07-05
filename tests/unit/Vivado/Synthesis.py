@@ -35,6 +35,7 @@ from textwrap import dedent
 from typing   import ClassVar
 from unittest import TestCase as TestCase
 
+from pytest               import mark
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
@@ -49,6 +50,7 @@ if __name__ == "__main__": # pragma: no cover
 
 
 class Preambles(TestCase):
+	_LICENSE_INFO:   ClassVar[str] = "INFO: [Common 17-3922] A valid Vivado Design Suite ENTERPRISE license has been detected. Your current license is active and will expire on Permanent."
 	_PIPED_PREAMBLE: ClassVar[str] = ("""\
 
 		****** Vivado v2024.2 (64-bit)
@@ -94,6 +96,24 @@ class Preambles(TestCase):
 	def test_LogfilePreamble(self) -> None:
 		print()
 		report = StringIO(dedent(f"""{self._LOGFILE_PREAMBLE}
+{self._SOURCE_TCL}
+{self._POSTAMBLE}""")
+		)
+
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+		with WarningCollector() as warnings:
+			for line in generator:
+				pass
+
+		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
+
+	@mark.xfail(reason="Not yet supported. Needs handling of VivadoInfoMessage in preamble.")
+	def test_LogfilePreambleWithLicense(self) -> None:
+		print()
+		report = StringIO(dedent(f"""{self._LICENSE_INFO}
+{self._LOGFILE_PREAMBLE}
 {self._SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)

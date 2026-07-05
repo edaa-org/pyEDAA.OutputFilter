@@ -3987,7 +3987,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		# wait for first line
 		line = yield
 
-		if line.StartsWith("#------"):
+		if isinstance(line, VivadoInfoMessage):
+			self._preamble = LogFilePreamble(self)
+		elif line.StartsWith("#------"):
 			self._preamble = LogFilePreamble(self)
 		else:
 			self._preamble = VivadoPipedPreamble(self)

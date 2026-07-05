@@ -1580,7 +1580,6 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for line in processor.Lines:
 			self.assertIsInstance(line, VivadoLine)
 
-	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
 	def test_SynthesisLogfile_2025_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vds")
@@ -1591,7 +1590,20 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
+		self.assertEqual(45, len(processor.InfoMessages))
+		self.assertEqual(102, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 2), processor._preamble.ToolVersion)
+
+		synthesis = processor[Synth_Design]
+		self.assertEqual(4, len(synthesis[_SynthDesign.WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, VivadoLine)
+
 	def test_ImplementationLogfile_2025_2(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vdi")
@@ -1601,6 +1613,57 @@ class Enclustra_Mercury_ZX5(TestCase):
 
 		for warning in warnings:
 			print(f"Warning: {warning}")
+
+		self.assertEqual(124, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2025, 2), processor.Preamble.ToolVersion)
+
+		sumInfo = Aggregator()
+		sumWarn = Aggregator()
+		sumCrit = Aggregator()
+		sumErro = Aggregator()
+		linkDesign = processor[Link_Design]
+		self.assertEqual(13, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
+
+		optDesign = processor[Opt_Design]
+		# self.assertEqual(29, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
+
+		placeDesign = processor[Place_Design]
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
+
+		physOptDesign = processor[PhyOpt_Design]
+		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
+
+		routeDesign = processor[Route_Design]
+		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
+
+		# compare sum of sections with total numbers
+		self.assertGreaterEqual(len(processor.InfoMessages), sumInfo.Value)
+		self.assertGreaterEqual(len(processor.WarningMessages), sumWarn.Value)
+		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
+		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, VivadoLine)
 
 	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
 	def test_SynthesisLogfile_2026_1(self) -> None:
@@ -1613,6 +1676,20 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
+		self.assertEqual(48, len(processor.InfoMessages))
+		self.assertEqual(102, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2026, 1), processor._preamble.ToolVersion)
+
+		synthesis = processor[Synth_Design]
+		self.assertEqual(4, len(synthesis[_SynthDesign.WritingSynthesisReport].Blackboxes))
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, VivadoLine)
+
 	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
 	def test_ImplementationLogfile_2026_1(self) -> None:
 		print()
@@ -1624,3 +1701,53 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
+		self.assertEqual(159, len(processor.InfoMessages))
+		self.assertEqual(0, len(processor.WarningMessages))
+		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2026, 1), processor.Preamble.ToolVersion)
+
+		sumInfo = Aggregator()
+		sumWarn = Aggregator()
+		sumCrit = Aggregator()
+		sumErro = Aggregator()
+		linkDesign = processor[Link_Design]
+		self.assertEqual(16, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
+
+		optDesign = processor[Opt_Design]
+		self.assertEqual(31, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
+
+		placeDesign = processor[Place_Design]
+		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
+
+		physOptDesign = processor[PhyOpt_Design]
+		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
+
+		routeDesign = processor[Route_Design]
+		self.assertEqual(10, sumInfo.sum(len(routeDesign.InfoMessages)))
+		self.assertEqual(0, sumWarn.sum(len(routeDesign.WarningMessages)))
+		self.assertEqual(0, sumCrit.sum(len(routeDesign.CriticalWarningMessages)))
+		self.assertEqual(0, sumErro.sum(len(routeDesign.ErrorMessages)))
+
+		# compare sum of sections with total numbers
+		self.assertGreaterEqual(len(processor.InfoMessages), sumInfo.Value)
+		self.assertGreaterEqual(len(processor.WarningMessages), sumWarn.Value)
+		self.assertGreaterEqual(len(processor.CriticalWarningMessages), sumCrit.Value)
+		self.assertGreaterEqual(len(processor.ErrorMessages), sumErro.Value)
+
+		self.assertEqual(0, len(warnings))
+		for line in processor.Lines:
+			self.assertIsInstance(line, VivadoLine)
