@@ -98,6 +98,13 @@ class Phase_ConstantPropagation(Phase):
 
 
 @export
+class SubPhase_DetectIfminReqCacheNeeded(SubPhase):
+	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Detect if minReqCache needed")
+	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Detect if minReqCache needed | Checksum:"
+	_TIME:   ClassVar[str]     = "Time (s):"
+
+
+@export
 class SubPhase_TimerUpdate(SubPhase):
 	_START:  ClassVar[Pattern] = compile(f"^Phase {MAJOR_MINOR} Timer Update")
 	_FINISH: ClassVar[str]     = "Phase {phaseIndex}.{subPhaseIndex} Timer Update | Checksum:"
@@ -124,6 +131,7 @@ class Phase_TimerUpdateAndTimingDataCollection(PhaseWithChildren):
 	_FINAL:  ClassVar[str] = None
 
 	_PARSERS: ClassVar[Tuple[Type[SubPhase], ...]] = (
+		SubPhase_DetectIfminReqCacheNeeded,
 		SubPhase_TimerUpdate,
 		SubPhase_TimingDataCollection
 	)
