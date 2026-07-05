@@ -33,6 +33,7 @@ from datetime import datetime
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
+from pytest                     import mark
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
@@ -1578,3 +1579,48 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
 			self.assertIsInstance(line, VivadoLine)
+
+	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
+	def test_SynthesisLogfile_2025_2(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
+	def test_ImplementationLogfile_2025_2(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vdi")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
+	def test_SynthesisLogfile_2026_1(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2026.1.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+	@mark.xfail(reason="Not yet supported. Maybe unknown sections.")
+	def test_ImplementationLogfile_2026_1(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2026.1.vdi")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
