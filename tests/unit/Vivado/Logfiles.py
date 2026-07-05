@@ -1578,3 +1578,46 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
 			self.assertIsInstance(line, VivadoLine)
+
+	def test_SynthesisLogfile_2025_2(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+
+	def test_ImplementationLogfile_2025_2(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2025.2.vdi")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+
+	def test_SynthesisLogfile_2026_1(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2026.1.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+	def test_ImplementationLogfile_2026_1(self) -> None:
+		print()
+		logfile = Path("tests/data/Enclustra_Mercury_ZX5/Mercury_ZX5_ST1.2026.1.vdi")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
