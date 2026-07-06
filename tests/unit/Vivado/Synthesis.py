@@ -39,7 +39,7 @@ from pytest               import mark
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, Synth_Design, VivadoLine, timestampIterator
+from pyEDAA.OutputFilter.Xilinx import Processor, VivadoPipedPreamble, LogFilePreamble, Synth_Design, VivadoLine, timestampIterator
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
 
@@ -50,7 +50,8 @@ if __name__ == "__main__": # pragma: no cover
 
 
 class Preambles(TestCase):
-	_LICENSE_INFO:   ClassVar[str] = "INFO: [Common 17-3922] A valid Vivado Design Suite ENTERPRISE license has been detected. Your current license is active and will expire on Permanent."
+	_LICENSE_INFO:   ClassVar[str] = ("""\
+		INFO: [Common 17-3922] A valid Vivado Design Suite ENTERPRISE license has been detected. Your current license is active and will expire on Permanent.""")
 	_PIPED_PREAMBLE: ClassVar[str] = ("""\
 
 		****** Vivado v2024.2 (64-bit)
@@ -62,16 +63,16 @@ class Preambles(TestCase):
 		    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 		""")
 	_LOGFILE_PREAMBLE: ClassVar[str] = ("""\
-			#-----------------------------------------------------------
-			# Vivado v2019.1 (64-bit)
-			# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
-			# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-			# Start of session at: Tue Sep  2 08:44:13 2025
-			#-----------------------------------------------------------""")
+		#-----------------------------------------------------------
+		# Vivado v2019.1 (64-bit)
+		# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+		# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+		# Start of session at: Tue Sep  2 08:44:13 2025
+		#-----------------------------------------------------------""")
 	_POSTAMBLE: ClassVar[str] = ("""\
-			INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
+		INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
 	_SOURCE_TCL: ClassVar[str] = ("""\
-			source system_top.tcl -notrace""")
+		source system_top.tcl -notrace""")
 
 	def test_VivadoPipedPreamble(self) -> None:
 		print()
@@ -90,15 +91,25 @@ class Preambles(TestCase):
 			for line in generator:
 				pass
 
-		self.assertEqual(YearReleaseVersion(2024, 2), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), processor.Preamble.StartDatetime)
+		preamble = processor.Preamble
+		self.assertIsInstance(preamble, VivadoPipedPreamble)
+		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDatetime)
+		self.assertEqual(0, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
 
 	def test_LogfilePreamble(self) -> None:
 		print()
-		report = StringIO(dedent(f"""{self._LOGFILE_PREAMBLE}
+		report = StringIO(rpt := dedent(f"""{self._LOGFILE_PREAMBLE}
 {self._SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)
+
+		print("%" * 80)
+		print(rpt)
+		print("%" * 80)
 
 		processor = Processor()
 		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
@@ -106,26 +117,44 @@ class Preambles(TestCase):
 			for line in generator:
 				pass
 
-		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
+		preamble = processor.Preamble
+		self.assertIsInstance(preamble, LogFilePreamble)
+		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(0, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
 
 	@mark.xfail(reason="Not yet supported. Needs handling of VivadoInfoMessage in preamble.")
 	def test_LogfilePreambleWithLicense(self) -> None:
 		print()
-		report = StringIO(dedent(f"""{self._LICENSE_INFO}
+		report = StringIO(rpt := dedent(f"""{self._LICENSE_INFO}
 {self._LOGFILE_PREAMBLE}
 {self._SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)
 
+		print("%" * 80)
+		print(rpt)
+		print("%" * 80)
+
 		processor = Processor()
 		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
 		with WarningCollector() as warnings:
 			for line in generator:
 				pass
 
-		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
+		preamble = processor.Preamble
+		self.assertIsInstance(preamble, LogFilePreamble)
+		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+		self.assertIn(17, preamble.MessagesByID)
+		self.assertIn(3922, preamble.MessagesByID[17])
 
 
 class SynthDesign(TestCase):

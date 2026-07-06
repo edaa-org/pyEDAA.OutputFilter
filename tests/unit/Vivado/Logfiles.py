@@ -37,7 +37,7 @@ from pytest                     import mark
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine
+from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
@@ -1681,7 +1681,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2026, 1), processor._preamble.ToolVersion)
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2026, 1), preamble.ToolVersion)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+		self.assertIn(17, preamble.MessagesByID)
+		self.assertIn(3922, preamble.MessagesByID[17])
 
 		synthesis = processor[Synth_Design]
 		self.assertEqual(4, len(synthesis[_SynthDesign.WritingSynthesisReport].Blackboxes))
@@ -1706,7 +1713,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(4, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2026, 1), processor.Preamble.ToolVersion)
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2026, 1), preamble.ToolVersion)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+		self.assertIn(17, preamble.MessagesByID)
+		self.assertIn(3922, preamble.MessagesByID[17])
 
 		sumInfo = Aggregator()
 		sumWarn = Aggregator()
