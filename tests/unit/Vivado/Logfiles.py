@@ -37,7 +37,7 @@ from pytest                     import mark
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine
+from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, VivadoMessagesMixin
 from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
@@ -1681,7 +1681,14 @@ class Enclustra_Mercury_ZX5(TestCase):
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2026, 1), processor._preamble.ToolVersion)
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2026, 1), preamble.ToolVersion)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+		self.assertIn(17, preamble.MessagesByID)
+		self.assertIn(3922, preamble.MessagesByID[17])
 
 		synthesis = processor[Synth_Design]
 		self.assertEqual(4, len(synthesis[_SynthDesign.WritingSynthesisReport].Blackboxes))
@@ -1701,37 +1708,44 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertEqual(159, len(processor.InfoMessages))
-		self.assertEqual(0, len(processor.WarningMessages))
-		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(124, len(processor.InfoMessages))
+		self.assertEqual(1, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
-		self.assertEqual(YearReleaseVersion(2026, 1), processor.Preamble.ToolVersion)
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2026, 1), preamble.ToolVersion)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+		self.assertIn(17, preamble.MessagesByID)
+		self.assertIn(3922, preamble.MessagesByID[17])
 
 		sumInfo = Aggregator()
 		sumWarn = Aggregator()
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[Link_Design]
-		self.assertEqual(16, sumInfo.sum(len(linkDesign.InfoMessages)))
-		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(14, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(1, sumWarn.sum(len(linkDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[Opt_Design]
-		self.assertEqual(31, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(24, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[Place_Design]
-		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(27, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhyOpt_Design]
-		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(6, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))

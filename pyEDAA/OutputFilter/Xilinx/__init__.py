@@ -1015,7 +1015,7 @@ class Parser(BaseParser):
 
 
 @export
-class Preamble(Parser):
+class Preamble(Parser, VivadoMessagesMixin):
 	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
 	_startDatetime: Nullable[datetime]            #: Session start timestamp.
 
@@ -1026,6 +1026,7 @@ class Preamble(Parser):
 		:param processor: Reference to the Vivado log processor.
 		"""
 		super().__init__(processor)
+		VivadoMessagesMixin.__init__(self)
 
 		self._toolVersion =   None
 		self._startDatetime = None
@@ -1052,7 +1053,6 @@ class Preamble(Parser):
 
 		return self._startDatetime
 
-	@abstractmethod
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		"""
 		A generator for processing the Vivado session preamble line-by-line.
@@ -1060,6 +1060,39 @@ class Preamble(Parser):
 		:param line: First line to process.
 		:returns:    A generator processing log messages.
 		"""
+		delimiterCount = 0
+
+		# a normal preamble has up to 23 lines including both delimiter lines.
+		for _ in range(30):
+			if (match := self._VERSION.match(line._message)) is not None:
+				self._toolVersion = YearReleaseVersion.Parse(match[1])
+				line._kind = LineKind.Normal
+			elif (match := self._STARTTIME.match(line._message)) is not None:
+				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+				line._kind = LineKind.Normal
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif self._IsPreambleDelimiter(line):
+				line._kind = LineKind.SectionDelimiter
+				if (delimiterCount := delimiterCount + 1) == 2:
+					break
+			else:
+				line._kind = LineKind.Verbose
+
+			line = yield line
+		else:
+			raise OutputFilterException(f"Preamble is longer than 30 lines or delimiter was not detected.")
+
+		if self._toolVersion is None:
+			raise OutputFilterException(f"Tool version not found in preamble.")
+		elif self._startDatetime is None:
+			raise OutputFilterException(f"Session start time and date not found in preamble.")
+
+		nextLine = yield line
+		return nextLine
+
+	def __str__(self) -> str:
+		return f"Vivado {self._toolVersion}: started at {self._startDatetime}"
 
 
 @export
@@ -1078,6 +1111,7 @@ class LogFilePreamble(Preamble):
 
 	.. code-block::
 
+	   INFO: [Common 17-3922] A valid Vivado Design Suite ENTERPRISE license has been detected. Your current license is active and will expire on Permanent.
 	   #-----------------------------------------------------------
 	   # Vivado v2025.1 (64-bit)
 	   # SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
@@ -1105,40 +1139,8 @@ class LogFilePreamble(Preamble):
 	_VERSION:       ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
-	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
-		"""
-		A generator for processing the Vivado session preamble line-by-line.
-
-		:param line: First line to process.
-		:returns:    A generator processing log messages.
-		"""
-		if line.StartsWith("#----"):
-			line._kind = LineKind.SectionDelimiter
-		else:
-			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
-
-		line = yield line
-
-		# a normal preamble has up to 23 lines including both delimiter lines.
-		for _ in range(30):
-			if (match := self._VERSION.match(line._message)) is not None:
-				self._toolVersion = YearReleaseVersion.Parse(match[1])
-				line._kind = LineKind.Normal
-			elif (match := self._STARTTIME.match(line._message)) is not None:
-				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
-				line._kind = LineKind.Normal
-			elif line.StartsWith("#----"):
-				line._kind = LineKind.SectionDelimiter
-				break
-			else:
-				line._kind = LineKind.Verbose
-
-			line = yield line
-		else:
-			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
-
-		nextLine = yield line
-		return nextLine
+	def _IsPreambleDelimiter(self, line: VivadoLine):
+		return line.StartsWith("#----------")
 
 
 @export
@@ -1169,40 +1171,8 @@ class VivadoPipedPreamble(Preamble):
 	_VERSION:       ClassVar[Pattern] = re_compile(r"""\*\*\*\*\*\* Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
 	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""  \*\*\*\* Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
-	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
-		"""
-		A generator for processing the Vivado session preamble line-by-line.
-
-		:param line: First line to process.
-		:returns:    A generator processing log messages.
-		"""
-		if line._message == "":
-			line._kind = LineKind.Empty
-		else:
-			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
-
-		line = yield line
-
-		# a normal preamble has up to 23 lines including both delimiter lines.
-		for _ in range(30):
-			if (match := self._VERSION.match(line._message)) is not None:
-				self._toolVersion = YearReleaseVersion.Parse(match[1])
-				line._kind = LineKind.Normal
-			elif (match := self._STARTTIME.match(line._message)) is not None:
-				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
-				line._kind = LineKind.Normal
-			elif line._message == "":
-				line._kind = LineKind.SectionDelimiter
-				break
-			else:
-				line._kind = LineKind.Verbose
-
-			line = yield line
-		else:
-			line._kind |= LineKind.ProcessorError  # TODO: throw / return error
-
-		nextLine = yield line
-		return nextLine
+	def _IsPreambleDelimiter(self, line: VivadoLine):
+		return line._kind is LineKind.Empty
 
 
 @export
