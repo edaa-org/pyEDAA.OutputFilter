@@ -48,6 +48,7 @@ from argparse import RawDescriptionHelpFormatter, Namespace
 from textwrap import dedent
 
 from pyTooling.Decorators                     import export
+from pyTooling.Exceptions                     import ExceptionBase
 from pyTooling.Attributes.ArgParse            import ArgParseHelperMixin, DefaultHandler, CommandHandler
 from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
@@ -85,6 +86,14 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
 
 		# Call the constructor of the ArgParseMixin
+		textWidth = min(self.Width, 160)
+
+		class HelpFormatter(RawDescriptionHelpFormatter):
+			def __init__(self, *args, **kwargs):
+				kwargs['max_help_position'] = 30
+				kwargs['width'] = textWidth
+				super().__init__(*args, **kwargs)
+
 		ArgParseHelperMixin.__init__(
 			self,
 			prog="pyedaa-outputfilter",
@@ -96,17 +105,17 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 		  #    * JUnit XML (unit test reports - Java oriented format)
 		  #    * Cobertura XML (branch/statement coverage - Java oriented format)
 		  # """),
-		  formatter_class=RawDescriptionHelpFormatter,
+		  formatter_class=HelpFormatter,
 		  add_help=False
 		)
 
-	# @CommonSwitchArgumentAttribute("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
-	# @CommonSwitchArgumentAttribute("-d", "--debug",   dest="debug",   help="Enable debug mode.")
 	def Run(self) -> None:
 		ArgParseHelperMixin.Run(self)
 
 	@DefaultHandler()
 	@FlagArgument("-q", "--quiet", dest="quiet", help="Reduce messages to a minimum.")
+	# @FlagArgument("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
+	# @FlagArgument("-d", "--debug",   dest="debug",   help="Enable debug mode.")
 	def HandleDefault(self, _: Namespace) -> None:
 		"""Handle program calls without any command."""
 		self._PrintHeadline()
@@ -122,30 +131,10 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 	@CommandHandler("version", help="Display version information.", description="Display version information.")
 	def HandleVersion(self, _: Namespace) -> None:
 		"""Handle program calls with command ``version``."""
+		import pyEDAA.OutputFilter as DunderModule
+
 		self._PrintHeadline()
-		self._PrintVersion()
-
-
-	def _PrintVersion(self) -> None:
-		"""Helper function to print the version information."""
-		print(dedent(f"""\
-			Copyright: {__copyright__}
-			License:   {__license__}
-			Version:   v{__version__}
-			""")
-		)
-
-	def _PrintHelp(self, command: Nullable[str] = None) -> None:
-		"""Helper function to print the command line parsers help page(s)."""
-		if command is None:
-			self.MainParser.print_help()
-		elif command == "help":
-			print("This is a recursion ...")
-		else:
-			try:
-				self.SubParsers[command].print_help()
-			except KeyError:
-				print(f"Command {command} is unknown.")
+		super()._PrintVersion(DunderModule, DunderModule.__name__)
 
 
 @export
@@ -154,10 +143,10 @@ def main() -> NoReturn:
 	Entrypoint to start program execution.
 
 	This function should be called either from:
-	 * ``if __name__ == "__main__":`` or
+	 * :pycode:`if __name__ == "__main__":` or
 	 * ``console_scripts`` entry point configured via ``setuptools`` in ``setup.py``.
 
-	This function creates an instance of :class:`Program` in a ``try ... except`` environment. Any exception caught is
+	This function creates an instance of :class:`Application` in a ``try ... except`` environment. Any exception caught is
 	formatted and printed before the program returns with a non-zero exit code.
 	"""
 	from sys import argv
@@ -165,8 +154,8 @@ def main() -> NoReturn:
 	program = Application()
 	program.Configure(
 		verbose=("-v" in argv or "--verbose" in argv),
-		debug=("-d" in argv or "--debug" in argv),
-		silent=("-q" in argv or "--quiet" in argv)
+		debug=(  "-d" in argv or "--debug"   in argv),
+		silent=( "-q" in argv or "--quiet"   in argv)
 	)
 
 	try:
@@ -182,6 +171,8 @@ def main() -> NoReturn:
 		if ex.__cause__ is not None:
 			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.Foreground))
 
+	except ExceptionBase as ex:
+		program.printExceptionBase(ex)
 	except NotImplementedError as ex:
 		program.PrintNotImplementedError(ex)
 	except Exception as ex:
