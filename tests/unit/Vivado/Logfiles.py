@@ -1708,9 +1708,9 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertEqual(159, len(processor.InfoMessages))
-		self.assertEqual(0, len(processor.WarningMessages))
-		self.assertEqual(4, len(processor.CriticalWarningMessages))
+		self.assertEqual(124, len(processor.InfoMessages))
+		self.assertEqual(1, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
 		self.assertEqual(0, len(processor.ErrorMessages))
 
 		preamble = processor.Preamble
@@ -1727,25 +1727,25 @@ class Enclustra_Mercury_ZX5(TestCase):
 		sumCrit = Aggregator()
 		sumErro = Aggregator()
 		linkDesign = processor[Link_Design]
-		self.assertEqual(16, sumInfo.sum(len(linkDesign.InfoMessages)))
-		self.assertEqual(0, sumWarn.sum(len(linkDesign.WarningMessages)))
+		self.assertEqual(14, sumInfo.sum(len(linkDesign.InfoMessages)))
+		self.assertEqual(1, sumWarn.sum(len(linkDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(linkDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(linkDesign.ErrorMessages)))
 
 		optDesign = processor[Opt_Design]
-		self.assertEqual(31, sumInfo.sum(len(optDesign.InfoMessages)))
+		self.assertEqual(24, sumInfo.sum(len(optDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(optDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(optDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(optDesign.ErrorMessages)))
 
 		placeDesign = processor[Place_Design]
-		self.assertEqual(29, sumInfo.sum(len(placeDesign.InfoMessages)))
+		self.assertEqual(27, sumInfo.sum(len(placeDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(placeDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(placeDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(placeDesign.ErrorMessages)))
 
 		physOptDesign = processor[PhyOpt_Design]
-		self.assertEqual(5, sumInfo.sum(len(physOptDesign.InfoMessages)))
+		self.assertEqual(6, sumInfo.sum(len(physOptDesign.InfoMessages)))
 		self.assertEqual(0, sumWarn.sum(len(physOptDesign.WarningMessages)))
 		self.assertEqual(0, sumCrit.sum(len(physOptDesign.CriticalWarningMessages)))
 		self.assertEqual(0, sumErro.sum(len(physOptDesign.ErrorMessages)))
