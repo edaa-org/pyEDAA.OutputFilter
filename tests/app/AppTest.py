@@ -28,14 +28,12 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from importlib.metadata import version as get_version
-from json               import loads as json_loads, JSONDecodeError
-from re                 import IGNORECASE, MULTILINE
+from pathlib            import Path
+from re                 import compile as re_compile
 from shutil             import which
-from subprocess import CompletedProcess, run as subprocess_run, TimeoutExpired
+from subprocess         import CompletedProcess, run as subprocess_run
 from sys                import executable as PYTHON_EXECUTABLE
-from tempfile           import TemporaryDirectory
-from typing             import ClassVar
+from typing             import ClassVar, Optional as Nullable
 from unittest           import TestCase
 
 RUNABLE_MODULE: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
@@ -47,7 +45,7 @@ class Testcase(TestCase):
 	subprocess-invocation helper.
 	"""
 
-	executable: str
+	_executable: str
 
 	@classmethod
 	def setUpClass(cls) -> None:
@@ -56,36 +54,47 @@ class Testcase(TestCase):
 				f"'{CONSOLE_SCRIPT}' not found on PATH. Verify the wheel was installed in this environment and that setup.py's "
 				f"entry_points {{'console_scripts': ['{CONSOLE_SCRIPT}={RUNABLE_MODULE}:main']}} was picked up correctly."
 			)
-		cls.executable = resolved
+		print(f"Found {CONSOLE_SCRIPT} at '{resolved}'.")
+		cls._executable = resolved
 
 	def RunEntrypoint(
 		self,
-		*args: str,
-		timeout: float = 10.0,
-		input_text: str | None = None,
-		env: dict | None = None,
-		cwd: str | None = None,
+		*arguments:       str,
+		timeout:          float = 10.0,
+		stdInput:         Nullable[str] = None,
+		environment:      Nullable[dict[str, str]] = None,
+		workingDirectory: Nullable[Path] = None,
 	) -> CompletedProcess:
 		return subprocess_run(
-			[self.executable, *args],
+			[self._executable, *arguments],
 			capture_output=True,
 			text=True,
 			timeout=timeout,
-			input=input_text,
-			env=env,
-			cwd=cwd,
+			input=stdInput,
+			env=environment,
+			cwd=workingDirectory
 		)
 
-	def RunModule(self, *args: str, timeout: float = 10.0) -> CompletedProcess:
+	def RunModule(
+		self,
+		*arguments:       str,
+		timeout:          float = 10.0,
+		stdInput:         Nullable[str] = None,
+		environment:      Nullable[dict[str, str]] = None,
+		workingDirectory: Nullable[Path] = None,
+	) -> CompletedProcess:
 		"""
 		Invokes `python -m myPackage.CLI` directly, bypassing the console_scripts shim. Use to isolate whether a failure
 		originates in the entry-point wiring vs. the CLI logic itself.
 		"""
 		return subprocess_run(
-			[PYTHON_EXECUTABLE, "-m", RUNABLE_MODULE, *args],
+			[PYTHON_EXECUTABLE, "-m", RUNABLE_MODULE, *arguments],
 			capture_output=True,
 			text=True,
 			timeout=timeout,
+			input=stdInput,
+			env=environment,
+			cwd=workingDirectory
 		)
 
 	def assertExitCode(self, result: CompletedProcess, expected: int) -> None:
@@ -100,23 +109,91 @@ class Testcase(TestCase):
 		)
 
 
-class Basic(Testcase):
+
+
+_ANSI_COLOR_CODES = re_compile(r"\x1B\[[0-9;]*m")
+
+def stripANSIColorCodes(text: str) -> str:
+	return _ANSI_COLOR_CODES.sub('', text)
+
+def escape(input: str) -> str:
+	return input.replace("{", "{{").replace("}", "}}")
+
+
+class Commands(Testcase):
 	def test_NoArguments(self) -> None:
-		result = self.RunEntrypoint()
-		self.assertExitCode(result, 0)
+		print()
+		completedProcess = self.RunEntrypoint()
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_WrongCommand(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("dummy")
+		print(completedProcess.stdout)
+		print("STDERR: " + "-" * 112)
+		print(completedProcess.stderr)
+
+		self.assertExitCode(completedProcess, 1)
+		self.assertEqual("", completedProcess.stdout)
 
 	def test_HelpCommand(self) -> None:
-		result = self.RunEntrypoint("help")
-		self.assertExitCode(result, 0)
+		print()
+		completedProcess = self.RunEntrypoint("help")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
 
 	def test_ShortHelpOption(self) -> None:
-		result = self.RunEntrypoint("-h")
-		self.assertExitCode(result, 0)
+		print()
+		completedProcess = self.RunEntrypoint("-h")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
 
 	def test_LongHelpOption(self) -> None:
-		result = self.RunEntrypoint("--help")
-		self.assertExitCode(result, 0)
+		print()
+		completedProcess = self.RunEntrypoint("--help")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
 
 	def test_VersionCommand(self) -> None:
-		result = self.RunEntrypoint("version")
-		self.assertExitCode(result, 0)
+		print()
+		completedProcess = self.RunEntrypoint("version")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_HelpCommand_VersionCommand(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("help", "version")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_LongHelpOption_VersionCommand(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("--help", "version")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_VivadoCommand(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("vivado")
+		print(completedProcess.stdout)
+		print("STDERR: " + "-" * 112)
+		print(completedProcess.stderr)
+
+		stderr = stripANSIColorCodes(completedProcess.stderr)
+		self.assertExitCode(completedProcess, 2)
+		self.assertStartsWith(stderr, "[ERROR]")
