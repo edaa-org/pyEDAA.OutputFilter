@@ -197,3 +197,32 @@ class Commands(Testcase):
 		stderr = stripANSIColorCodes(completedProcess.stderr)
 		self.assertExitCode(completedProcess, 2)
 		self.assertStartsWith(stderr, "[ERROR]")
+
+
+class Vivado(Testcase):
+	def test_Help(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("help", "vivado")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_StdIn(self) -> None:
+		print()
+		with Path("tests/data/Stopwatch/toplevel.vds").open("r") as file:
+			content = file.read()
+
+		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--stdin", stdInput=content)
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_LogFile(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Stopwatch/toplevel.vds")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
