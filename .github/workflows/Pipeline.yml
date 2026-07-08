@@ -15,12 +15,13 @@ permissions:
 
 jobs:
   Pipeline:
-    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@r7
+    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@dev
     with:
       package_namespace: 'pyEDAA'
       package_name:      'OutputFilter'
       unittest_python_version_list: '3.11 3.12 3.13 3.14 pypy-3.11'
       unittest_disable_list:        'macos:* windows-arm:pypy-3.11'
+      apptest:           'true'
       bandit:            'true'
       pylint:            'false'
       codecov:           'true'

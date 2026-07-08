@@ -3928,7 +3928,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 				if line is None:
 					# TODO: what to do with this line? attache to exception?
-					line = VivadoLine(lineNumber, LineKind.ProcessorError, rawMessageLine, previousLine=lastLine)
+					line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
 					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
