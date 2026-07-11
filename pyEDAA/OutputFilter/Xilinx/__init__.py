@@ -3730,6 +3730,15 @@ class Report_Power(Command):
 
 
 @export
+class Open_Checkpoint(Command):
+	"""
+	A Vivado command output parser for ``open_checkpoint``.
+	"""
+	_TCL_COMMAND: ClassVar[str] = "open_checkpoint"
+	_TIME:        ClassVar[str] = "Time (s):"
+
+
+@export
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	"""
 	A processor for Vivado log outputs.
