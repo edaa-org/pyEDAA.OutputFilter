@@ -39,7 +39,7 @@ from pytest               import mark
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, VivadoPipedPreamble, LogFilePreamble, Synth_Design, VivadoLine, timestampIterator
+from pyEDAA.OutputFilter.Xilinx import Processor, Preamble, Synth_Design, VivadoLine, timestampIterator
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
 
@@ -171,7 +171,6 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
 		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
@@ -179,7 +178,6 @@ class Preambles(TestCase):
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
 		self.assertEqual(0, len(preamble.ErrorMessages))
 
-	@mark.xfail(reason="Not yet supported. Needs proper preamble detection.")
 	def test_VivadoPipedPreambleWithLicense(self) -> None:
 		print()
 		report = StringIO(rpt := dedent(f"""{self._LICENSE_INFO}
@@ -199,10 +197,9 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
 		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
-		self.assertEqual(0, len(preamble.InfoMessages))
+		self.assertEqual(1, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
 		self.assertEqual(0, len(preamble.ErrorMessages))
@@ -236,7 +233,6 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
 		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
@@ -266,7 +262,6 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
@@ -293,7 +288,6 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(1, len(preamble.InfoMessages))
