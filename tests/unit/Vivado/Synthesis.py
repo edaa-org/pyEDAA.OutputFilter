@@ -173,7 +173,7 @@ class Preambles(TestCase):
 		preamble = processor.Preamble
 		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
-		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDatetime)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -201,7 +201,7 @@ class Preambles(TestCase):
 		preamble = processor.Preamble
 		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
-		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDatetime)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -214,6 +214,7 @@ class Preambles(TestCase):
 {self._LAUNCH_SYNTH_1}
 {self._PIPED_PREAMBLE}
 {self._INNER_SOURCE_TCL}
+{self._POSTAMBLE}
 {self._WAIT_ON_SYNTH_1}
 {self._BETWEEN_STEPS}
 {self._LAUNCH_IMPL_1}
@@ -237,7 +238,7 @@ class Preambles(TestCase):
 		preamble = processor.Preamble
 		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
-		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDatetime)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -263,7 +264,7 @@ class Preambles(TestCase):
 		preamble = processor.Preamble
 		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -290,7 +291,7 @@ class Preambles(TestCase):
 		preamble = processor.Preamble
 		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(1, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -340,7 +341,7 @@ class SynthDesign(TestCase):
 				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDateTime)
 		self.assertEqual(32, processor.Duration)
 		self.assertEqual(3, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))

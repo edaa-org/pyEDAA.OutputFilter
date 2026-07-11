@@ -1017,7 +1017,7 @@ class Parser(BaseParser):
 @export
 class Preamble(Parser, VivadoMessagesMixin):
 	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
-	_startDatetime: Nullable[datetime]            #: Session start timestamp.
+	_startDateTime: Nullable[datetime]            #: Session start timestamp.
 
 	def __init__(self, processor: "BaseProcessor") -> None:
 		"""
@@ -1029,7 +1029,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 		VivadoMessagesMixin.__init__(self)
 
 		self._toolVersion =   None
-		self._startDatetime = None
+		self._startDateTime = None
 
 	@readonly
 	def ToolVersion(self) -> YearReleaseVersion:
@@ -1041,17 +1041,17 @@ class Preamble(Parser, VivadoMessagesMixin):
 		return self._toolVersion
 
 	@readonly
-	def StartDatetime(self) -> datetime:
+	def StartDateTime(self) -> datetime:
 		"""
 		Read-only property to access the date and time when the Vivado session was started.
 
 		:returns:                   Datatime when the session was started.
 		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
 		"""
-		if self._startDatetime is None:
+		if self._startDateTime is None:
 			raise ProcessorException("No start timestamp extracted from preamble.")
 
-		return self._startDatetime
+		return self._startDateTime
 
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		"""
@@ -1068,7 +1068,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 				self._toolVersion = YearReleaseVersion.Parse(match[1])
 				line._kind = LineKind.Normal
 			elif (match := self._STARTTIME.match(line._message)) is not None:
-				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+				self._startDateTime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 				line._kind = LineKind.Normal
 			elif isinstance(line, VivadoMessage):
 				self._AddMessage(line)
@@ -1085,14 +1085,14 @@ class Preamble(Parser, VivadoMessagesMixin):
 
 		if self._toolVersion is None:
 			raise OutputFilterException(f"Tool version not found in preamble.")
-		elif self._startDatetime is None:
+		elif self._startDateTime is None:
 			raise OutputFilterException(f"Session start time and date not found in preamble.")
 
 		nextLine = yield line
 		return nextLine
 
 	def __str__(self) -> str:
-		return f"Vivado {self._toolVersion}: started at {self._startDatetime}"
+		return f"Vivado {self._toolVersion}: started at {self._startDateTime}"
 
 
 @export
@@ -1105,7 +1105,7 @@ class LogFilePreamble(Preamble):
 	* Vivado tool version. |br|
 	  See :data:`ToolVersion`
 	* Session start timestamp (date and time). |br|
-	  See :data:`StartDatetime`
+	  See :data:`StartDateTime`
 
 	.. rubric:: Example
 
@@ -1153,7 +1153,7 @@ class VivadoPipedPreamble(Preamble):
 	* Vivado tool version. |br|
 	  See :data:`ToolVersion`
 	* Session start timestamp (date and time). |br|
-	  See :data:`StartDatetime`
+	  See :data:`StartDateTime`
 
 	.. rubric:: Example
 
@@ -1183,7 +1183,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 	.. rubric:: Extracted information
 
 	* Session exit timestamp (date and time). |br|
-	  See :data:`ExitDatetime`
+	  See :data:`ExitDateTime`
 
 	.. rubric:: Example
 
@@ -1195,7 +1195,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 	_INFO:    Tuple[int, int]   = (17, 206)
 	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
-	_exitDatetime: Nullable[datetime]            #: Session exit timestamp.
+	_exitDateTime: Nullable[datetime]            #: Session exit timestamp.
 
 	def __init__(self, processor: "BaseProcessor") -> None:
 		"""
@@ -1206,20 +1206,20 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 		super().__init__(processor)
 		VivadoMessagesMixin.__init__(self)
 
-		self._exitDatetime = None
+		self._exitDateTime = None
 
 	@readonly
-	def ExitDatetime(self) -> Nullable[datetime]:
+	def ExitDateTime(self) -> Nullable[datetime]:
 		"""
 		Read-only property to access the date and time when the Vivado session was exited.
 
 		:returns:                   Datatime when the session was exited.
 		:raises ProcessorException: When exit timestamp wasn't extracted from postamble.
 		"""
-		if self._exitDatetime is None:
+		if self._exitDateTime is None:
 			raise ProcessorException("No exit timestamp extracted from postamble.")
 
-		return self._exitDatetime
+		return self._exitDateTime
 
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		"""
@@ -1235,7 +1235,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 				raise ProcessorException(f"{self.__class__.__name__}.Generator(): Expected '{self._ENDTIME}' at line {line._lineNumber}.")
 
 		if (match := self._ENDTIME.match(line._message)) is not None:
-			self._exitDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+			self._exitDateTime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 		else:
 			pass
 
@@ -3741,8 +3741,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
-	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
-	_postamble:               Postamble                     #: Reference to the Vivado postamble written after tool startup.
+	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
+	_postamble:               Nullable[Postamble]           #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
 	def __init__(self) -> None:
@@ -3769,20 +3769,20 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return self._lines
 
 	@readonly
-	def Preamble(self) -> Preamble:
+	def Preamble(self) -> Nullable[Preamble]:
 		"""
 		Read-only property to access the parsed preamble information.
 
-		:returns: The log output preamble.
+		:returns: The log's output preamble.
 		"""
 		return self._preamble
 
 	@readonly
-	def Postamble(self) -> Postamble:
+	def Postamble(self) -> Nullable[Postamble]:
 		"""
 		Read-only property to access the parsed postamble information.
 
-		:returns: The log output postamble.
+		:returns: The log's output postamble.
 		"""
 		return self._postamble
 
@@ -3797,11 +3797,17 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	@readonly
 	def StartDateTime(self) -> datetime:
-		return self._preamble.StartDatetime
+		if self._preamble is None:
+			raise ValueError(f"Preamble was not found when parsing the Vivado log outputs.")
+
+		return self._preamble.StartDateTime
 
 	@readonly
 	def ExitDateTime(self) -> datetime:
-		return self._postamble.ExitDatetime
+		if self._postamble is None:
+			raise ValueError(f"Postamble was not found when parsing the Vivado log outputs.")
+
+		return self._postamble.ExitDateTime
 
 	@readonly
 	def Duration(self) -> float:
@@ -3810,10 +3816,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		:returns: The observed process' execution duration in seconds.
 		"""
-		startTime = self._preamble.StartDatetime
-		exitTime =  self._postamble.ExitDatetime
-
-		return (exitTime - startTime).total_seconds()
+		return (self.ExitDateTime - self.StartDateTime).total_seconds()
 
 	@readonly
 	def ProcessingDuration(self) -> float:
