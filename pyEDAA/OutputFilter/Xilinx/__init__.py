@@ -3739,6 +3739,36 @@ class Open_Checkpoint(Command):
 
 
 @export
+class Launch(Parser):
+	_LAUNCHED: ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] Launched (\w+)\.\.\.")
+	_LOGFILE:  ClassVar[Pattern] = re_compile(r"^Run output will be captured here: (.+)$")
+	_WAITING:  ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] Waiting for (\w+) to finish \(timeout in (\d+) minutes\)\.\.\.$")
+	_FINISHED: ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] (\w+) finished$")
+	_TIME:     ClassVar[str] = "wait_on_runs: Time (s):"
+
+	_timeout:        int        #: Timeout in minutes
+	_startDateTime:  datetime
+	_finishDateTime: datetime
+
+	def __init__(self, parent: "Processor") -> None:
+		super().__init__(parent)
+
+		self._timeout =        0
+		self._startDateTime =  None
+		self._finishDateTime = None
+
+
+@export
+class SynthesisLaunch(Launch):
+	pass
+
+
+@export
+class ImplementationLaunch(Launch):
+	pass
+
+
+@export
 class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	"""
 	A processor for Vivado log outputs.
@@ -3751,6 +3781,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
+	_nestedLaunches:          List[Launch]                  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 	_postamble:               Nullable[Postamble]           #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
@@ -3765,6 +3796,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		self._lines =                   []
 		self._preamble =                None
+		self._nestedLaunches =          []
 		self._postamble =               None
 		self._commands =                {}
 
@@ -3785,6 +3817,39 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		:returns: The log's output preamble.
 		"""
 		return self._preamble
+
+	@readonly
+	def HasNestedLaunches(self) -> bool:
+		"""
+		Read-only property returnning true, if this processor encountered nested launches.
+
+		:returns: True, if nested launches were found.
+
+		.. seealso::
+
+		   :data:`NestedLaunches`
+		     Access the list of nested launches.
+		"""
+		return len(self._nestedLaunches) > 0
+
+	@readonly
+	def NestedLaunches(self) -> List[Launch]:
+		"""
+		Read-only property to access nested launches.
+
+		.. hint::
+
+		   A nested launch gets created when the outer Vivado instance starts another nested Vivado instance and waits on
+		   its completion. Examples are typically ``synth_1`` and ``impl_1``.
+
+		:returns: The list of nested launches.
+
+		.. seealso::
+
+		   :data:`HasNestedLaunches`
+		     Check if nested launches have been found.
+		"""
+		return self._nestedLaunches
 
 	@readonly
 	def Postamble(self) -> Nullable[Postamble]:

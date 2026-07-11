@@ -244,6 +244,10 @@ class Preambles(TestCase):
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
 		self.assertEqual(0, len(preamble.ErrorMessages))
 
+		self.assertTrue(processor.HasNestedLaunches)
+		self.assertEqual(2, len(processor.NestedLaunches))
+
+
 	def test_LogfilePreamble(self) -> None:
 		print()
 		report = StringIO(rpt := dedent(f"""{self._LOGFILE_PREAMBLE}

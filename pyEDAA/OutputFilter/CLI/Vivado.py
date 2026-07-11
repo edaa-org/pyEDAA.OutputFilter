@@ -186,7 +186,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		# 	synthesizeDesign : SynthesizeDesign = processor[SynthesizeDesign]
 		# 	self.WriteNormal("Summary:")
 		# 	self.WriteNormal(f"  Tool version:        {processor.Preamble.ToolVersion}")
-		# 	self.WriteNormal(f"  Started at:          {processor.Preamble.StartDatetime}")
+		# 	self.WriteNormal(f"  Started at:          {processor.Preamble.StartDateTime}")
 		# 	self.WriteNormal(f"  Duration:            {processor.Duration:.3f} s")
 		# 	self.WriteNormal(f"  Processing duration: {processor.ProcessingDuration:.3f} s")
 		# 	self.WriteNormal(f"  Info:                {len(processor.InfoMessages)}")
