@@ -219,9 +219,27 @@ class Vivado(Testcase):
 		self.assertExitCode(completedProcess, 0)
 		self.assertEqual("", completedProcess.stderr)
 
-	def test_LogFile(self) -> None:
+	def test_SynthesisLogFile(self) -> None:
 		print()
 		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Stopwatch/toplevel.vds")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+	def test_ImplementationLogFile(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Stopwatch/toplevel.vdi")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		self.assertEqual("", completedProcess.stderr)
+
+
+class Issues(Testcase):
+	def test_Issue_87(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Issues/87/vivado.log")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
