@@ -40,7 +40,7 @@ from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
 from pyTooling.Versioning  import YearReleaseVersion
-from pyTooling.Warning     import WarningCollector, CriticalWarning
+from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 
 from pyEDAA.OutputFilter   import Line, OutputFilterException
 from pyEDAA.OutputFilter   import InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
@@ -64,6 +64,20 @@ def timestampIterator(iterator: Iterator[str], timestamp: datetime) -> Iterator[
 class ProcessorException(OutputFilterException):
 	"""
 	Base-class for exceptions raised by processors parsing log outputs.
+	"""
+
+
+@export
+class ProcessorWarnings(Warning):
+	"""
+	Base-class for warnings raised by processors parsing log outputs.
+	"""
+
+
+@export
+class ProcessorCriticalWarning(CriticalWarning):
+	"""
+	Base-class for critical warning raised by processors parsing log outputs.
 	"""
 
 
@@ -135,7 +149,7 @@ class NestedTaskNotPresentException(NotPresentException):
 
 
 @export
-class UndetectedEnd(CriticalWarning):
+class UndetectedEnd(ProcessorCriticalWarning):
 	_line: "VivadoLine"
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
@@ -149,7 +163,7 @@ class UndetectedEnd(CriticalWarning):
 
 
 @export
-class UnknownLine(Warning):
+class UnknownLine(ProcessorWarnings):
 	_line: "VivadoLine"
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
@@ -215,7 +229,9 @@ class LineKind(Flag):
 	Time =                   2**24
 	Footer =                 2**25
 
-	Last =                   2**29
+	Last =                   2**28
+
+	DataTimeLine =           2**29
 
 	Message =                2**30
 	InfoMessage =            Message | Info
@@ -334,6 +350,33 @@ class VivadoLine(Line[LineKind, LineAction]):
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
+
+
+@export
+class DataTimeLine(VivadoLine):
+	_PREFIX: ClassVar[Pattern] = re_compile(r"\[(?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})\] (?P<message>.*)")
+
+	_dateTime: datetime
+
+	def __init__(
+		self,
+		lineNumber:   int,
+		kind:         LineKind,
+		action:       LineAction,
+		dataTime:     datetime,
+		message:      str,
+		previousLine: Nullable[VivadoLine] = None
+	) -> None:
+		super().__init__(lineNumber, kind, action, message, previousLine)
+
+		self._dateTime = dataTime
+
+	@readonly
+	def DataTime(self) -> datetime:
+		return self._dateTime
+
+	def __str__(self) -> str:
+		return f"[{self._dateTime:%a %b} {self._dateTime.day:2d} {self._dateTime:%H:%M:%S %Y}] {self._message}"
 
 
 @export
@@ -1086,7 +1129,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 	   #-----------------------------------------------------------
 	"""
 	_VERSION:       ClassVar[Pattern] = re_compile(r"""(?P<prefix>#|\*\*\*\*\*\*) Vivado v(?P<version>\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""(?P<prefix>#|  \*\*\*\*) Start of session at: (?P<datetime>\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""(?P<prefix>#|  \*\*\*\*) Start of session at: (?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})""")
 
 	_preambleFormat: PreambleFormat                #: Format of the preamble
 	_toolVersion:    Nullable[YearReleaseVersion]  #: Used Vivado version.
@@ -3315,9 +3358,9 @@ class Link_Design(Command):
 	_TCL_COMMAND: ClassVar[str] = "link_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
-	_ParsingXDCFile_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\]$""")
-	_FinishedParsingXDCFile_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
-	_ParsingXDCFileForCell_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\] for cell '(.*)'$""")
+	_ParsingXDCFile_Pattern =                re_compile(r"""^Parsing XDC File \[(.*)\]$""")
+	_FinishedParsingXDCFile_Pattern =        re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
+	_ParsingXDCFileForCell_Pattern =         re_compile(r"""^Parsing XDC File \[(.*)\] for cell '(.*)'$""")
 	_FinishedParsingXDCFileForCell_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\] for cell '(.*)'$""")
 
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
@@ -3759,37 +3802,7 @@ class Open_Checkpoint(Command):
 
 
 @export
-class Launch(Parser):
-	_LAUNCHED: ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] Launched (\w+)\.\.\.")
-	_LOGFILE:  ClassVar[Pattern] = re_compile(r"^Run output will be captured here: (.+)$")
-	_WAITING:  ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] Waiting for (\w+) to finish \(timeout in (\d+) minutes\)\.\.\.$")
-	_FINISHED: ClassVar[Pattern] = re_compile(r"^\[(\w+) (\w+)  ?(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}) (\d{4})\] (\w+) finished$")
-	_TIME:     ClassVar[str] = "wait_on_runs: Time (s):"
-
-	_timeout:        int        #: Timeout in minutes
-	_startDateTime:  datetime
-	_finishDateTime: datetime
-
-	def __init__(self, parent: "Processor") -> None:
-		super().__init__(parent)
-
-		self._timeout =        0
-		self._startDateTime =  None
-		self._finishDateTime = None
-
-
-@export
-class SynthesisLaunch(Launch):
-	pass
-
-
-@export
-class ImplementationLaunch(Launch):
-	pass
-
-
-@export
-class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	"""
 	A processor for Vivado log outputs.
 
@@ -3801,7 +3814,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
-	_nestedLaunches:          List[Launch]                  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
+	_nestedLaunches:          List["Launch"]                #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 	_postamble:               Nullable[Postamble]           #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
@@ -3853,7 +3866,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return len(self._nestedLaunches) > 0
 
 	@readonly
-	def NestedLaunches(self) -> List[Launch]:
+	def NestedLaunches(self) -> List["Launch"]:
 		"""
 		Read-only property to access nested launches.
 
@@ -3973,6 +3986,109 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
+	def CommandFinder(self, line: Nullable[VivadoLine] = None) -> Generator[VivadoLine, VivadoLine, None]:
+		tclProcedures = {"source"}
+
+		self._preamble =  Preamble(self)
+		self._postamble = Postamble(self)
+
+		# wait for first line
+		if line is None:
+			line = yield
+
+		# process preamble
+		line = yield from self._preamble.Generator(line)
+
+		while True:
+			while True:
+				if line._kind is LineKind.Empty:
+					line = yield line
+					continue
+				elif isinstance(line, VivadoInfoMessage):
+					if line.ToolID == 17 and line.MessageKindID == 206:
+						lastLine = yield from self._postamble.Generator(line)
+						return lastLine
+				elif isinstance(line, VivadoTclCommand):
+					if line._tclCommand == Synth_Design._TCL_COMMAND:
+						self._commands[Synth_Design] = (cmd := Synth_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Link_Design._TCL_COMMAND:
+						self._commands[Link_Design] = (cmd := Link_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Opt_Design._TCL_COMMAND:
+						self._commands[Opt_Design] = (cmd := Opt_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Place_Design._TCL_COMMAND:
+						self._commands[Place_Design] = (cmd := Place_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == PhyOpt_Design._TCL_COMMAND:
+						self._commands[PhyOpt_Design] = (cmd := PhyOpt_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Route_Design._TCL_COMMAND:
+						self._commands[Route_Design] = (cmd := Route_Design(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Write_Bitstream._TCL_COMMAND:
+						self._commands[Write_Bitstream] = (cmd := Write_Bitstream(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Open_Checkpoint._TCL_COMMAND:
+						self._commands[Open_Checkpoint] = (cmd := Open_Checkpoint(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Report_DRC._TCL_COMMAND:
+						self._commands[Report_DRC] = (cmd := Report_DRC(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Report_Methodology._TCL_COMMAND:
+						self._commands[Report_Methodology] = (cmd := Report_Methodology(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+					elif line._tclCommand == Report_Power._TCL_COMMAND:
+						self._commands[Report_Power] = (cmd := Report_Power(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
+				elif isinstance(line, DataTimeLine):
+					if (match := Launch._LAUNCHED.match(line._message)) is not None:
+						launchName = match["launchName"]
+						self._nestedLaunches.append(launch := Launch(launchName, parent=self))
+
+						line = yield next(gen := launch.Parser(line))
+						break
+					else:
+						pass
+
+				firstWord = line.Partition(" ")[0]
+				if firstWord in tclProcedures:
+					line = TclCommand.FromLine(line)
+
+				line = yield line
+
+			# end = f"{cmd._TCL_COMMAND} completed successfully"
+
+			while True:
+				# if line.StartsWith(end):
+				# 	# line._kind |= LineKind.Success
+				# 	lastLine = gen.send(line)
+				# 	if LineKind.Last in line._kind:
+				# 		line._kind ^= LineKind.Last
+				# 	line = yield lastLine
+				# 	break
+
+				try:
+					line = yield gen.send(line)
+				except StopIteration as ex:
+					line = ex.value
+					break
+
+
+@export
+class Processor(VivadoProcessor):
 	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
 
 		# Instantiate and initialize CommandFinder
@@ -4017,6 +4133,9 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+				elif (match := DataTimeLine._PREFIX.match(rawMessageLine)) is not None:
+					dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
+					line = DataTimeLine(lineNumber, LineKind.DataTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
 				else:
 					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
@@ -4047,91 +4166,6 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		except StopIteration:
 			pass
-
-	def CommandFinder(self) -> Generator[VivadoLine, VivadoLine, None]:
-		tclProcedures = {"source"}
-
-		self._preamble =  Preamble(self)
-		self._postamble = Postamble(self)
-
-		# wait for first line
-		line = yield
-		# process preamble
-		line = yield from self._preamble.Generator(line)
-
-		while True:
-			while True:
-				if line._kind is LineKind.Empty:
-					line = yield line
-					continue
-				elif isinstance(line, VivadoInfoMessage):
-					if line.ToolID == 17 and line.MessageKindID == 206:
-						lastLine = yield from self._postamble.Generator(line)
-						return lastLine
-				elif isinstance(line, VivadoTclCommand):
-					if line._tclCommand == Synth_Design._TCL_COMMAND:
-						self._commands[Synth_Design] = (cmd := Synth_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Link_Design._TCL_COMMAND:
-						self._commands[Link_Design] = (cmd := Link_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Opt_Design._TCL_COMMAND:
-						self._commands[Opt_Design] = (cmd := Opt_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Place_Design._TCL_COMMAND:
-						self._commands[Place_Design] = (cmd := Place_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == PhyOpt_Design._TCL_COMMAND:
-						self._commands[PhyOpt_Design] = (cmd := PhyOpt_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Route_Design._TCL_COMMAND:
-						self._commands[Route_Design] = (cmd := Route_Design(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Write_Bitstream._TCL_COMMAND:
-						self._commands[Write_Bitstream] = (cmd := Write_Bitstream(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Report_DRC._TCL_COMMAND:
-						self._commands[Report_DRC] = (cmd := Report_DRC(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Report_Methodology._TCL_COMMAND:
-						self._commands[Report_Methodology] = (cmd := Report_Methodology(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-					elif line._tclCommand == Report_Power._TCL_COMMAND:
-						self._commands[Report_Power] = (cmd := Report_Power(self))
-						line = yield next(gen := cmd.SectionDetector(line))
-						break
-
-				firstWord = line.Partition(" ")[0]
-				if firstWord in tclProcedures:
-					line = TclCommand.FromLine(line)
-
-				line = yield line
-
-			# end = f"{cmd._TCL_COMMAND} completed successfully"
-
-			while True:
-				# if line.StartsWith(end):
-				# 	# line._kind |= LineKind.Success
-				# 	lastLine = gen.send(line)
-				# 	if LineKind.Last in line._kind:
-				# 		line._kind ^= LineKind.Last
-				# 	line = yield lastLine
-				# 	break
-
-				try:
-					line = yield gen.send(line)
-				except StopIteration as ex:
-					line = ex.value
-					break
 
 
 @export
@@ -4173,3 +4207,110 @@ class Document(Processor):
 					pass
 
 		self._processingDuration = sw.Duration
+
+
+@export
+class Launch(Parser, VivadoProcessor):
+	_LAUNCHED:  ClassVar[Pattern] = re_compile(r"^Launched (?P<launchName>\w+)\.\.\.")
+	_LOGFILE:   ClassVar[Pattern] = re_compile(r"^Run output will be captured here: (?P<logfile>.+)")
+	_WAITING:   ClassVar[Pattern] = re_compile(r"^Waiting for (?P<launchName>\w+) to finish \(timeout in (?P<timeout>\d+) minutes\)\.\.\.")
+	_RUNNING:   ClassVar[Pattern] = re_compile(r"^\*\*\*+\s+Running vivado")
+	_WITH_ARGS: ClassVar[Pattern] = re_compile(r"^\s+with args (?P<arguments>.+)")
+	_FINISHED:  ClassVar[Pattern] = re_compile(r"^(?P<launchName>\w+) finished")
+	_TIME:      ClassVar[str] =                 "wait_on_runs: Time (s):"
+
+	_name:            str                  #: Name of the launch.
+	_logfile:         Nullable[Path]       #: Logfile used by nested Vivado instance.
+	_vivadoArguments: Nullable[List[str]]  #: Launch parameters passed to nested Vivado instance.
+	_timeout:         int                  #: Timeout in minutes.
+	_startDateTime:   datetime             #: Date and time when the nested Vivado instance was started.
+	_finishDateTime:  datetime             #: Date and time when the nested Vivado instance finished.
+
+	def __init__(self, name: str, parent: VivadoProcessor) -> None:
+		super().__init__(parent)
+		VivadoProcessor.__init__(self)
+
+		self._name =            name
+		self._logfile =         None
+		self._vivadoArguments = None
+		self._timeout =         0
+		self._startDateTime =   None
+		self._finishDateTime =  None
+
+	@readonly
+	def Logfile(self) -> Path:
+		return self._logfile
+
+	@readonly
+	def VivadoArguments(self) -> List[str]:
+		return self._vivadoArguments
+
+	@readonly
+	def Timeout(self) -> int:
+		return self._timeout
+
+	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		if isinstance(line, DataTimeLine):
+			self._startDateTime = line._dateTime
+		else:
+			raise TypeError(f"Expected type DateTimeLine for first line.")
+
+		if self._LAUNCHED.match(line._message) is None:
+			raise ValueError(f"Expected a 'Launched xxx...' line, but git '{line._message}'.")
+
+		while True:
+			line = yield line
+
+			if isinstance(line, DataTimeLine):
+				if (match := self._WAITING.match(line._message)) is not None:
+					launchName = match["launchName"]
+					self._timeout = int(match["timeout"])
+
+					if launchName != self._name:
+						WarningCollector.Raise(ProcessorCriticalWarning(f"Detected launch name '{launchName}' doesn't match current's launch's name '{self._name}'."))
+						return line
+				else:
+					pass
+			elif (match := self._LOGFILE.match(line._message)) is not None:
+				self._logfile = Path(match["logfile"])
+			elif (match := self._RUNNING.match(line._message)) is not None:
+				pass
+			elif (match := self._WITH_ARGS.match(line._message)) is not None:
+				self._vivadoArguments = match["arguments"].split(" ")
+				break
+
+		# Consume 3 empty lines
+		line = yield line
+		line = yield line
+		line = yield line
+
+		line = yield from self.CommandFinder(line)
+
+		# Check for 'finished' line
+		if isinstance(line, DataTimeLine):
+			if (match := self._FINISHED.match(line._message)) is not None:
+				self._finishDateTime = line._dateTime
+
+				# TODO: check launchName
+			else:
+				pass  # FIXME: raise error
+		else:
+			pass  # FIXME: raise error
+
+		line = yield line
+
+		# Check for 'wait_on_runs' line
+		if line.StartsWith(self._TIME):
+			pass
+
+		line = yield line
+
+		if isinstance(line, VivadoMessage):
+			self._AddMessage(line)
+
+			line = yield line
+
+		return line
+
+	def __str__(self) -> str:
+		return f"Launch: {self._name} (timeout: {self._timeout} minutes)"
