@@ -36,9 +36,8 @@ from unittest import TestCase as TestCase
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, Launch, Postamble, Open_Checkpoint
-from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
-from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+from pyEDAA.OutputFilter.Xilinx import Document, Launch, Open_Checkpoint
+from pyEDAA.OutputFilter.Xilinx import Synth_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -96,8 +95,8 @@ class Issue87(TestCase):
 		self.assertEqual("impl_1", impl1.Name)
 		self.assertEqual(datetime(2026, 7, 7, 10, 0, 11), impl1.LaunchDateTime)  # launch
 		self.assertEqual(datetime(2026, 7, 7, 10, 0, 20), impl1.StartDateTime)   #   preamble
-		# self.assertEqual(datetime(2026, 7, 7, 10, 1, 35), impl1.ExitDateTime)     #   postamble
-		# self.assertEqual(datetime(2026, 7, 7, 10, 1, 37), impl1.FinishDateTime)   # finished
+		self.assertEqual(datetime(2026, 7, 7, 10, 1, 35), impl1.ExitDateTime)     #   postamble
+		self.assertEqual(datetime(2026, 7, 7, 10, 1, 37), impl1.FinishDateTime)   # finished
 
 		# self.assertEqual(80, len(impl1.InfoMessages))
 		# self.assertEqual(3, len(impl1.WarningMessages))
@@ -105,7 +104,7 @@ class Issue87(TestCase):
 		self.assertEqual(0, len(impl1.ErrorMessages))
 
 		self.assertIn(Open_Checkpoint, impl1)
-		# self.assertIn(Opt_Design, impl1)
-		# self.assertIn(Place_Design, impl1)
-		# self.assertIn(PhyOpt_Design, impl1)
-		# self.assertIn(Route_Design, impl1)
+		self.assertIn(Opt_Design, impl1)
+		self.assertIn(Place_Design, impl1)
+		self.assertIn(PhyOpt_Design, impl1)
+		self.assertIn(Route_Design, impl1)

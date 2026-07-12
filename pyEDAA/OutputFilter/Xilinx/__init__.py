@@ -1393,7 +1393,7 @@ class Command(Parser):
 	def SectionDetector(self, line: VivadoLine) -> Generator[Union[VivadoLine, ProcessorException], VivadoLine, None]:
 		line = yield from self._CommandStart(line)
 
-		end = f"{self._TCL_COMMAND} "
+		end = f"{self._TCL_COMMAND}"
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
@@ -3807,6 +3807,16 @@ class Open_Checkpoint(Command):
 	_TCL_COMMAND: ClassVar[str] = "open_checkpoint"
 	_TIME:        ClassVar[str] = "Time (s):"
 
+	def _CommandFinish(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		end = f"{self._TCL_COMMAND}: {self._TIME}"
+
+		if line.StartsWith(end):
+			line._kind = LineKind.TaskTime
+			line = yield line
+		else:
+			pass  # FIXME: error
+
+		return line
 
 @export
 class VivadoProcessor(VivadoMessagesMixin, mixin=True):
