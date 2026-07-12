@@ -480,9 +480,13 @@ class Vivado(Tool):
 		self._hasLatches =         Action.Default
 
 	def _InitializeColors(self) -> Dict[str, str]:
+		# FIXME: more colors
+		#  - vivado exit -> dark green
+		#  - datetimeline + finished -> green
+
 		return {
 			"normal":               "WHITE",
-			"info":                 "GRAY", # "DARK_BLUE",
+			"info":                 "DARK_BLUE",  # GRAY
 			"warning":              "YELLOW",
 			"critical":             "MAGENTA",
 			"error":                "RED",
@@ -525,7 +529,8 @@ class Vivado(Tool):
 			"hierarchyEnd":         "DARK_GRAY",
 			"xdcStart":             "DARK_CYAN",
 			"xdcEnd":               "DARK_GRAY",
-			"table":                "GRAY",
+			"dateTimeLine":         "CYAN",
+			"table":                "WHITE",
 		}
 
 	def Parse(self, config: CommentedMap, key: str, configPath: str) -> None:

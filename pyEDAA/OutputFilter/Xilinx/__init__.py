@@ -231,7 +231,7 @@ class LineKind(Flag):
 
 	Last =                   2**28
 
-	DataTimeLine =           2**29
+	DateTimeLine =           2**29
 
 	Message =                2**30
 	InfoMessage =            Message | Info
@@ -353,7 +353,7 @@ class VivadoLine(Line[LineKind, LineAction]):
 
 
 @export
-class DataTimeLine(VivadoLine):
+class DateTimeLine(VivadoLine):
 	_PREFIX: ClassVar[Pattern] = re_compile(r"\[(?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})\] (?P<message>.*)")
 
 	_dateTime: datetime
@@ -363,17 +363,23 @@ class DataTimeLine(VivadoLine):
 		lineNumber:   int,
 		kind:         LineKind,
 		action:       LineAction,
-		dataTime:     datetime,
+		dateTime:     datetime,
 		message:      str,
 		previousLine: Nullable[VivadoLine] = None
 	) -> None:
 		super().__init__(lineNumber, kind, action, message, previousLine)
 
-		self._dateTime = dataTime
+		self._dateTime = dateTime
 
 	@readonly
-	def DataTime(self) -> datetime:
+	def DateTime(self) -> datetime:
 		return self._dateTime
+
+	@classmethod
+	def Copy(cls, line: "DateTimeLine", previousLine: "VivadoLine") -> "VivadoLine":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._dateTime, line._message, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
 
 	def __str__(self) -> str:
 		return f"[{self._dateTime:%a %b} {self._dateTime.day:2d} {self._dateTime:%H:%M:%S %Y}] {self._message}"
@@ -1174,7 +1180,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 		"""
 		Read-only property to access the date and time when the Vivado session was started.
 
-		:returns:                   Datatime when the session was started.
+		:returns:                   Datetime when the session was started.
 		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
 		"""
 		if self._startDateTime is None:
@@ -1276,7 +1282,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 		"""
 		Read-only property to access the date and time when the Vivado session was exited.
 
-		:returns:                   Datatime when the session was exited.
+		:returns:                   Datetime when the session was exited.
 		:raises ProcessorException: When exit timestamp wasn't extracted from postamble.
 		"""
 		if self._exitDateTime is None:
@@ -1586,6 +1592,7 @@ class Section(BaseParser, BaseSection):
 			yield section
 
 	def _SectionStart(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 		line._kind = LineKind.SectionStart
 
 		line = yield line
@@ -4018,7 +4025,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 						self._commands[Report_Power] = (cmd := Report_Power(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
-				elif isinstance(line, DataTimeLine):
+				elif isinstance(line, DateTimeLine):
 					if (match := Launch._LAUNCHED.match(line._message)) is not None:
 						launchName = match["launchName"]
 						self._nestedLaunches.append(launch := Launch(launchName, parent=self))
@@ -4140,9 +4147,9 @@ class Processor(VivadoProcessor):
 					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
 					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
-				elif (match := DataTimeLine._PREFIX.match(rawMessageLine)) is not None:
+				elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
 					dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
-					line = DataTimeLine(lineNumber, LineKind.DataTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
+					line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
 				else:
 					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
@@ -4278,7 +4285,7 @@ class Launch(Parser, VivadoProcessor):
 		return (self.FinishDateTime - self.LaunchDateTime).total_seconds()
 
 	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
-		if isinstance(line, DataTimeLine):
+		if isinstance(line, DateTimeLine):
 			self._startDateTime = line._dateTime
 		else:
 			raise TypeError(f"Expected type DateTimeLine for first line.")
@@ -4289,7 +4296,7 @@ class Launch(Parser, VivadoProcessor):
 		while True:
 			line = yield line
 
-			if isinstance(line, DataTimeLine):
+			if isinstance(line, DateTimeLine):
 				if (match := self._WAITING.match(line._message)) is not None:
 					launchName = match["launchName"]
 					self._timeout = int(match["timeout"])
@@ -4315,7 +4322,7 @@ class Launch(Parser, VivadoProcessor):
 		line = yield from self.CommandFinder(line)
 
 		# Check for 'finished' line
-		if isinstance(line, DataTimeLine):
+		if isinstance(line, DateTimeLine):
 			if (match := self._FINISHED.match(line._message)) is not None:
 				self._finishDateTime = line._dateTime
 
