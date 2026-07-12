@@ -3814,7 +3814,6 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
-	_nestedLaunches:          List["Launch"]                #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 	_postamble:               Nullable[Postamble]           #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
@@ -3829,7 +3828,6 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 		self._lines =                   []
 		self._preamble =                None
-		self._nestedLaunches =          []
 		self._postamble =               None
 		self._commands =                {}
 
@@ -3850,39 +3848,6 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		:returns: The log's output preamble.
 		"""
 		return self._preamble
-
-	@readonly
-	def HasNestedLaunches(self) -> bool:
-		"""
-		Read-only property returnning true, if this processor encountered nested launches.
-
-		:returns: True, if nested launches were found.
-
-		.. seealso::
-
-		   :data:`NestedLaunches`
-		     Access the list of nested launches.
-		"""
-		return len(self._nestedLaunches) > 0
-
-	@readonly
-	def NestedLaunches(self) -> List["Launch"]:
-		"""
-		Read-only property to access nested launches.
-
-		.. hint::
-
-		   A nested launch gets created when the outer Vivado instance starts another nested Vivado instance and waits on
-		   its completion. Examples are typically ``synth_1`` and ``impl_1``.
-
-		:returns: The list of nested launches.
-
-		.. seealso::
-
-		   :data:`HasNestedLaunches`
-		     Check if nested launches have been found.
-		"""
-		return self._nestedLaunches
 
 	@readonly
 	def Postamble(self) -> Nullable[Postamble]:
@@ -4089,8 +4054,50 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 @export
 class Processor(VivadoProcessor):
-	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+	_nestedLaunches: List["Launch"]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 
+	def __init__(self) -> None:
+		"""
+		Initializes a Vivado log output processor (toplevel processor).
+		"""
+		super().__init__()
+
+		self._nestedLaunches = []
+
+	@readonly
+	def HasNestedLaunches(self) -> bool:
+		"""
+		Read-only property returnning true, if this processor encountered nested launches.
+
+		:returns: True, if nested launches were found.
+
+		.. seealso::
+
+		   :data:`NestedLaunches`
+		     Access the list of nested launches.
+		"""
+		return len(self._nestedLaunches) > 0
+
+	@readonly
+	def NestedLaunches(self) -> List["Launch"]:
+		"""
+		Read-only property to access nested launches.
+
+		.. hint::
+
+		   A nested launch gets created when the outer Vivado instance starts another nested Vivado instance and waits on
+		   its completion. Examples are typically ``synth_1`` and ``impl_1``.
+
+		:returns: The list of nested launches.
+
+		.. seealso::
+
+		   :data:`HasNestedLaunches`
+		     Check if nested launches have been found.
+		"""
+		return self._nestedLaunches
+
+	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
@@ -4238,6 +4245,10 @@ class Launch(Parser, VivadoProcessor):
 		self._finishDateTime =  None
 
 	@readonly
+	def Name(self) -> str:
+		return self._name
+
+	@readonly
 	def Logfile(self) -> Path:
 		return self._logfile
 
@@ -4248,6 +4259,23 @@ class Launch(Parser, VivadoProcessor):
 	@readonly
 	def Timeout(self) -> int:
 		return self._timeout
+
+	@readonly
+	def LaunchDateTime(self) -> datetime:
+		return self._startDateTime
+
+	@readonly
+	def FinishDateTime(self) -> datetime:
+		return self._finishDateTime
+
+	@readonly
+	def Duration(self) -> float:
+		"""
+		 Duration of the observed nested Vivado instance.
+
+		:returns: The observed nested Vivado instance's execution duration in seconds.
+		"""
+		return (self.FinishDateTime - self.LaunchDateTime).total_seconds()
 
 	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		if isinstance(line, DataTimeLine):
