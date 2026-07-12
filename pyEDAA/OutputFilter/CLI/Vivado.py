@@ -186,7 +186,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 		# 	synthesizeDesign : SynthesizeDesign = processor[SynthesizeDesign]
 		# 	self.WriteNormal("Summary:")
 		# 	self.WriteNormal(f"  Tool version:        {processor.Preamble.ToolVersion}")
-		# 	self.WriteNormal(f"  Started at:          {processor.Preamble.StartDatetime}")
+		# 	self.WriteNormal(f"  Started at:          {processor.Preamble.StartDateTime}")
 		# 	self.WriteNormal(f"  Duration:            {processor.Duration:.3f} s")
 		# 	self.WriteNormal(f"  Processing duration: {processor.ProcessingDuration:.3f} s")
 		# 	self.WriteNormal(f"  Info:                {len(processor.InfoMessages)}")
@@ -513,6 +513,8 @@ class StdOutTarget(Target):
 			return self._colors["verbose"]
 		elif line.Kind is LineKind.ParagraphHeadline:
 			return self._colors["paragraphHeadline"]
+		elif line.Kind is LineKind.DateTimeLine:
+			return self._colors["dateTimeLine"]
 		elif line.Kind is LineKind.ProcessorError:
 			raise OutputFilterException(f"Erroneous line {line._lineNumber} '{line._kind}' should have been wrapped in an exception.")
 		elif LineKind.Table in line.Kind:

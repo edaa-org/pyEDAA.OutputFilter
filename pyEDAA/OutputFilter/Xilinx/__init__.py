@@ -30,17 +30,17 @@
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from datetime import datetime
-from enum     import Flag
+from enum     import Flag, Enum
 from pathlib  import Path
 from re       import Pattern, compile as re_compile
-from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator
+from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
 from pyTooling.Versioning  import YearReleaseVersion
-from pyTooling.Warning     import WarningCollector, CriticalWarning
+from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 
 from pyEDAA.OutputFilter   import Line, OutputFilterException
 from pyEDAA.OutputFilter   import InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
@@ -64,6 +64,20 @@ def timestampIterator(iterator: Iterator[str], timestamp: datetime) -> Iterator[
 class ProcessorException(OutputFilterException):
 	"""
 	Base-class for exceptions raised by processors parsing log outputs.
+	"""
+
+
+@export
+class ProcessorWarnings(Warning):
+	"""
+	Base-class for warnings raised by processors parsing log outputs.
+	"""
+
+
+@export
+class ProcessorCriticalWarning(CriticalWarning):
+	"""
+	Base-class for critical warning raised by processors parsing log outputs.
 	"""
 
 
@@ -135,7 +149,7 @@ class NestedTaskNotPresentException(NotPresentException):
 
 
 @export
-class UndetectedEnd(CriticalWarning):
+class UndetectedEnd(ProcessorCriticalWarning):
 	_line: "VivadoLine"
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
@@ -149,7 +163,7 @@ class UndetectedEnd(CriticalWarning):
 
 
 @export
-class UnknownLine(Warning):
+class UnknownLine(ProcessorWarnings):
 	_line: "VivadoLine"
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
@@ -215,7 +229,9 @@ class LineKind(Flag):
 	Time =                   2**24
 	Footer =                 2**25
 
-	Last =                   2**29
+	Last =                   2**28
+
+	DateTimeLine =           2**29
 
 	Message =                2**30
 	InfoMessage =            Message | Info
@@ -334,6 +350,39 @@ class VivadoLine(Line[LineKind, LineAction]):
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
+
+
+@export
+class DateTimeLine(VivadoLine):
+	_PREFIX: ClassVar[Pattern] = re_compile(r"\[(?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})\] (?P<message>.*)")
+
+	_dateTime: datetime
+
+	def __init__(
+		self,
+		lineNumber:   int,
+		kind:         LineKind,
+		action:       LineAction,
+		dateTime:     datetime,
+		message:      str,
+		previousLine: Nullable[VivadoLine] = None
+	) -> None:
+		super().__init__(lineNumber, kind, action, message, previousLine)
+
+		self._dateTime = dateTime
+
+	@readonly
+	def DateTime(self) -> datetime:
+		return self._dateTime
+
+	@classmethod
+	def Copy(cls, line: "DateTimeLine", previousLine: "VivadoLine") -> "VivadoLine":
+		newLine = cls(line._lineNumber, line._kind, line._action, line._dateTime, line._message, previousLine)
+		newLine._timestamp = line._timestamp
+		return newLine
+
+	def __str__(self) -> str:
+		return f"[{self._dateTime:%a %b} {self._dateTime.day:2d} {self._dateTime:%H:%M:%S %Y}] {self._message}"
 
 
 @export
@@ -1015,88 +1064,26 @@ class Parser(BaseParser):
 
 
 @export
-class Preamble(Parser, VivadoMessagesMixin):
-	_toolVersion:   Nullable[YearReleaseVersion]  #: Used Vivado version.
-	_startDatetime: Nullable[datetime]            #: Session start timestamp.
+class PreambleFormat(Enum):
+	"""
+	An enumeration representing the preamble format (``Unknown``, ``Console`` or ``Logfile``).
+	"""
 
-	def __init__(self, processor: "BaseProcessor") -> None:
-		"""
-		Initializes a Vivado preamble parser.
-
-		:param processor: Reference to the Vivado log processor.
-		"""
-		super().__init__(processor)
-		VivadoMessagesMixin.__init__(self)
-
-		self._toolVersion =   None
-		self._startDatetime = None
-
-	@readonly
-	def ToolVersion(self) -> YearReleaseVersion:
-		"""
-		Read-only property to access the extracted Vivado tool version.
-
-		:returns: The used Vivado version as reported in the Vivado log messages.
-		"""
-		return self._toolVersion
-
-	@readonly
-	def StartDatetime(self) -> datetime:
-		"""
-		Read-only property to access the date and time when the Vivado session was started.
-
-		:returns:                   Datatime when the session was started.
-		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
-		"""
-		if self._startDatetime is None:
-			raise ProcessorException("No start timestamp extracted from preamble.")
-
-		return self._startDatetime
-
-	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
-		"""
-		A generator for processing the Vivado session preamble line-by-line.
-
-		:param line: First line to process.
-		:returns:    A generator processing log messages.
-		"""
-		delimiterCount = 0
-
-		# a normal preamble has up to 23 lines including both delimiter lines.
-		for _ in range(30):
-			if (match := self._VERSION.match(line._message)) is not None:
-				self._toolVersion = YearReleaseVersion.Parse(match[1])
-				line._kind = LineKind.Normal
-			elif (match := self._STARTTIME.match(line._message)) is not None:
-				self._startDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
-				line._kind = LineKind.Normal
-			elif isinstance(line, VivadoMessage):
-				self._AddMessage(line)
-			elif self._IsPreambleDelimiter(line):
-				line._kind = LineKind.SectionDelimiter
-				if (delimiterCount := delimiterCount + 1) == 2:
-					break
-			else:
-				line._kind = LineKind.Verbose
-
-			line = yield line
-		else:
-			raise OutputFilterException(f"Preamble is longer than 30 lines or delimiter was not detected.")
-
-		if self._toolVersion is None:
-			raise OutputFilterException(f"Tool version not found in preamble.")
-		elif self._startDatetime is None:
-			raise OutputFilterException(f"Session start time and date not found in preamble.")
-
-		nextLine = yield line
-		return nextLine
+	Unknown = 0  #: Vivado was called on console in batch or interactive mode.
+	Console = 1  #: Vivado was called on console in batch or interactive mode.
+	Logfile = 2  #: Vivado writes a logfile.
 
 	def __str__(self) -> str:
-		return f"Vivado {self._toolVersion}: started at {self._startDatetime}"
+		"""
+		Formats the preamble format to ``console`` or ``logfile``.
+
+		:returns: Formatted preamble format.
+		"""
+		return ("unknown", "console", "logfile")[cast(int, self.value)]       # TODO: check performance
 
 
 @export
-class LogFilePreamble(Preamble):
+class Preamble(Parser, VivadoMessagesMixin):
 	"""
 	A parser for the preamble emitted by Vivado at session start.
 
@@ -1105,9 +1092,20 @@ class LogFilePreamble(Preamble):
 	* Vivado tool version. |br|
 	  See :data:`ToolVersion`
 	* Session start timestamp (date and time). |br|
-	  See :data:`StartDatetime`
+	  See :data:`StartDateTime`
 
-	.. rubric:: Example
+	.. rubric:: Examples
+
+	.. code-block::
+
+	   ****** Vivado v2024.2 (64-bit)
+	     **** SW Build 5239630 on Fri Nov 08 22:35:27 MST 2024
+	     **** IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+	     **** SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+	     **** Start of session at: Wed Jul  1 23:50:26 2026
+	       ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+	       ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
 
 	.. code-block::
 
@@ -1136,43 +1134,114 @@ class LogFilePreamble(Preamble):
 	   # Available Virtual  : 29246 MB
 	   #-----------------------------------------------------------
 	"""
-	_VERSION:       ClassVar[Pattern] = re_compile(r"""# Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""# Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+	_VERSION:       ClassVar[Pattern] = re_compile(r"""(?P<prefix>#|\*\*\*\*\*\*) Vivado v(?P<version>\d+\.\d(\.\d)?) \(64-bit\)""")
+	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""(?P<prefix>#|  \*\*\*\*) Start of session at: (?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})""")
 
-	def _IsPreambleDelimiter(self, line: VivadoLine):
-		return line.StartsWith("#----------")
+	_preambleFormat: PreambleFormat                #: Format of the preamble
+	_toolVersion:    Nullable[YearReleaseVersion]  #: Used Vivado version.
+	_startDateTime:  Nullable[datetime]            #: Session start timestamp.
 
+	def __init__(self, processor: "BaseProcessor") -> None:
+		"""
+		Initializes a Vivado preamble parser.
 
-@export
-class VivadoPipedPreamble(Preamble):
-	"""
-	A parser for the preamble emitted by Vivado at session start.
+		:param processor: Reference to the Vivado log processor.
+		"""
+		super().__init__(processor)
+		VivadoMessagesMixin.__init__(self)
 
-	.. rubric:: Extracted information
+		self._preambleFormat = PreambleFormat.Unknown
+		self._toolVersion =    None
+		self._startDateTime =  None
 
-	* Vivado tool version. |br|
-	  See :data:`ToolVersion`
-	* Session start timestamp (date and time). |br|
-	  See :data:`StartDatetime`
+	@readonly
+	def PreambleFormat(self) -> PreambleFormat:
+		"""
+		Read-only property to access the preamble format.
 
-	.. rubric:: Example
+		:returns: The detected format of the preamble.
+		"""
+		return self._preambleFormat
 
-	.. code-block::
+	@readonly
+	def ToolVersion(self) -> YearReleaseVersion:
+		"""
+		Read-only property to access the extracted Vivado tool version.
 
-	   ****** Vivado v2024.2 (64-bit)
-	     **** SW Build 5239630 on Fri Nov 08 22:35:27 MST 2024
-	     **** IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
-	     **** SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
-	     **** Start of session at: Wed Jul  1 23:50:26 2026
-	       ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-	       ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+		:returns: The used Vivado version as reported in the Vivado log messages.
+		"""
+		if self._toolVersion is None:
+			raise ProcessorException("No tool version extracted from preamble.")
 
-	"""
-	_VERSION:       ClassVar[Pattern] = re_compile(r"""\*\*\*\*\*\* Vivado v(\d+\.\d(\.\d)?) \(64-bit\)""")
-	_STARTTIME:     ClassVar[Pattern] = re_compile(r"""  \*\*\*\* Start of session at: (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+		return self._toolVersion
 
-	def _IsPreambleDelimiter(self, line: VivadoLine):
-		return line._kind is LineKind.Empty
+	@readonly
+	def StartDateTime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when the Vivado session was started.
+
+		:returns:                   Datetime when the session was started.
+		:raises ProcessorException: When start timestamp wasn't extracted from preamble.
+		"""
+		if self._startDateTime is None:
+			raise ProcessorException("No start timestamp extracted from preamble.")
+
+		return self._startDateTime
+
+	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		"""
+		A generator for processing the Vivado session preamble line-by-line.
+
+		:param line: First line to process.
+		:returns:    A generator processing log messages.
+		"""
+		delimiterCount = 0
+		preambleFormat = PreambleFormat.Unknown
+
+		# a normal preamble has up to 23 lines including both delimiter lines.
+		for _ in range(30):
+			if (match := self._VERSION.match(line._message)) is not None:
+				preambleFormat = PreambleFormat.Logfile if match["prefix"] == "#" else PreambleFormat.Console
+				self._toolVersion = YearReleaseVersion.Parse(match["version"])
+				line._kind = LineKind.Normal
+			elif (match := self._STARTTIME.match(line._message)) is not None:
+				preambleFormat = PreambleFormat.Logfile if match["prefix"] == "#" else PreambleFormat.Console
+				self._startDateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
+				line._kind = LineKind.Normal
+			elif isinstance(line, VivadoMessage):
+				self._AddMessage(line)
+			elif line.StartsWith("#-----"):
+				preambleFormat = PreambleFormat.Logfile
+				line._kind = LineKind.SectionDelimiter
+				if (delimiterCount := delimiterCount + 1) == 2:
+					break
+			elif line == "":
+				preambleFormat = PreambleFormat.Console
+				line._kind = LineKind.SectionDelimiter
+				if (delimiterCount := delimiterCount + 1) == 2:
+					break
+			else:
+				line._kind = LineKind.Verbose
+
+			if self._preambleFormat is PreambleFormat.Unknown:
+				self._preambleFormat = preambleFormat
+			elif self._preambleFormat is not preambleFormat:
+				raise ProcessorException(f"Preamble format is not consistent.")
+
+			line = yield line
+		else:
+			raise OutputFilterException(f"Preamble is longer than 30 lines or delimiter was not detected.")
+
+		if self._toolVersion is None:
+			raise OutputFilterException(f"Tool version not found in preamble.")
+		elif self._startDateTime is None:
+			raise OutputFilterException(f"Session start time and date not found in preamble.")
+
+		nextLine = yield line
+		return nextLine
+
+	def __str__(self) -> str:
+		return f"Vivado {self._toolVersion}: started at {self._startDateTime}"
 
 
 @export
@@ -1183,7 +1252,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 	.. rubric:: Extracted information
 
 	* Session exit timestamp (date and time). |br|
-	  See :data:`ExitDatetime`
+	  See :data:`ExitDateTime`
 
 	.. rubric:: Example
 
@@ -1195,7 +1264,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 	_INFO:    Tuple[int, int]   = (17, 206)
 	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
 
-	_exitDatetime: Nullable[datetime]            #: Session exit timestamp.
+	_exitDateTime: Nullable[datetime]            #: Session exit timestamp.
 
 	def __init__(self, processor: "BaseProcessor") -> None:
 		"""
@@ -1206,20 +1275,20 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 		super().__init__(processor)
 		VivadoMessagesMixin.__init__(self)
 
-		self._exitDatetime = None
+		self._exitDateTime = None
 
 	@readonly
-	def ExitDatetime(self) -> Nullable[datetime]:
+	def ExitDateTime(self) -> Nullable[datetime]:
 		"""
 		Read-only property to access the date and time when the Vivado session was exited.
 
-		:returns:                   Datatime when the session was exited.
+		:returns:                   Datetime when the session was exited.
 		:raises ProcessorException: When exit timestamp wasn't extracted from postamble.
 		"""
-		if self._exitDatetime is None:
+		if self._exitDateTime is None:
 			raise ProcessorException("No exit timestamp extracted from postamble.")
 
-		return self._exitDatetime
+		return self._exitDateTime
 
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		"""
@@ -1235,7 +1304,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 				raise ProcessorException(f"{self.__class__.__name__}.Generator(): Expected '{self._ENDTIME}' at line {line._lineNumber}.")
 
 		if (match := self._ENDTIME.match(line._message)) is not None:
-			self._exitDatetime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+			self._exitDateTime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
 		else:
 			pass
 
@@ -1324,7 +1393,7 @@ class Command(Parser):
 	def SectionDetector(self, line: VivadoLine) -> Generator[Union[VivadoLine, ProcessorException], VivadoLine, None]:
 		line = yield from self._CommandStart(line)
 
-		end = f"{self._TCL_COMMAND} "
+		end = f"{self._TCL_COMMAND}"
 		while True:
 			if line._kind is LineKind.Empty:
 				line = yield line
@@ -1523,6 +1592,7 @@ class Section(BaseParser, BaseSection):
 			yield section
 
 	def _SectionStart(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		line._previousLine._kind = LineKind.SectionStart | LineKind.SectionDelimiter
 		line._kind = LineKind.SectionStart
 
 		line = yield line
@@ -3295,9 +3365,9 @@ class Link_Design(Command):
 	_TCL_COMMAND: ClassVar[str] = "link_design"
 	_TIME:        ClassVar[str] = "Time (s):"
 
-	_ParsingXDCFile_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\]$""")
-	_FinishedParsingXDCFile_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
-	_ParsingXDCFileForCell_Pattern = re_compile(r"""^Parsing XDC File \[(.*)\] for cell '(.*)'$""")
+	_ParsingXDCFile_Pattern =                re_compile(r"""^Parsing XDC File \[(.*)\]$""")
+	_FinishedParsingXDCFile_Pattern =        re_compile(r"""^Finished Parsing XDC File \[(.*)\]$""")
+	_ParsingXDCFileForCell_Pattern =         re_compile(r"""^Parsing XDC File \[(.*)\] for cell '(.*)'$""")
 	_FinishedParsingXDCFileForCell_Pattern = re_compile(r"""^Finished Parsing XDC File \[(.*)\] for cell '(.*)'$""")
 
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
@@ -3730,7 +3800,26 @@ class Report_Power(Command):
 
 
 @export
-class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
+class Open_Checkpoint(Command):
+	"""
+	A Vivado command output parser for ``open_checkpoint``.
+	"""
+	_TCL_COMMAND: ClassVar[str] = "open_checkpoint"
+	_TIME:        ClassVar[str] = "Time (s):"
+
+	def _CommandFinish(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		end = f"{self._TCL_COMMAND}: {self._TIME}"
+
+		if line.StartsWith(end):
+			line._kind = LineKind.TaskTime
+			line = yield line
+		else:
+			pass  # FIXME: error
+
+		return line
+
+@export
+class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	"""
 	A processor for Vivado log outputs.
 
@@ -3741,8 +3830,8 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
-	_preamble:                Preamble                      #: Reference to the Vivado preamble written after tool startup.
-	_postamble:               Postamble                     #: Reference to the Vivado postamble written after tool startup.
+	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
+	_postamble:               Nullable[Postamble]           #: Reference to the Vivado postamble written after tool startup.
 	_commands:                Dict[Type[Command], Command]  #: A dictionary of processed Vivado commands.
 
 	def __init__(self) -> None:
@@ -3769,20 +3858,20 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		return self._lines
 
 	@readonly
-	def Preamble(self) -> Preamble:
+	def Preamble(self) -> Nullable[Preamble]:
 		"""
 		Read-only property to access the parsed preamble information.
 
-		:returns: The log output preamble.
+		:returns: The log's output preamble.
 		"""
 		return self._preamble
 
 	@readonly
-	def Postamble(self) -> Postamble:
+	def Postamble(self) -> Nullable[Postamble]:
 		"""
 		Read-only property to access the parsed postamble information.
 
-		:returns: The log output postamble.
+		:returns: The log's output postamble.
 		"""
 		return self._postamble
 
@@ -3797,11 +3886,17 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 	@readonly
 	def StartDateTime(self) -> datetime:
-		return self._preamble.StartDatetime
+		if self._preamble is None:
+			raise ValueError(f"Preamble was not found when parsing the Vivado log outputs.")
+
+		return self._preamble.StartDateTime
 
 	@readonly
 	def ExitDateTime(self) -> datetime:
-		return self._postamble.ExitDatetime
+		if self._postamble is None:
+			raise ValueError(f"Postamble was not found when parsing the Vivado log outputs.")
+
+		return self._postamble.ExitDateTime
 
 	@readonly
 	def Duration(self) -> float:
@@ -3810,10 +3905,7 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 		:returns: The observed process' execution duration in seconds.
 		"""
-		startTime = self._preamble.StartDatetime
-		exitTime =  self._postamble.ExitDatetime
-
-		return (exitTime - startTime).total_seconds()
+		return (self.ExitDateTime - self.StartDateTime).total_seconds()
 
 	@readonly
 	def ProcessingDuration(self) -> float:
@@ -3876,95 +3968,15 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 		"""
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
-	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
-
-		# Instantiate and initialize CommandFinder
-		next(cmdFinder := self.CommandFinder())
-
-		lastLine = None
-		lineNumber = 0
-		_errorMessage = "Unknown processing error"
-
-		try:
-			while (tup := next(inputStream)) is not None:
-				timestamp, rawMessageLine = tup
-				lineNumber += 1
-				rawMessageLine = rawMessageLine.rstrip()
-				errorMessage = _errorMessage
-
-				if len(rawMessageLine) == 0:
-					line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
-				elif rawMessageLine.startswith("INFO"):
-					if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
-
-					errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
-				elif rawMessageLine.startswith("WARNING"):
-					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
-
-					errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
-				elif rawMessageLine.startswith("CRITICAL WARNING"):
-					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
-
-					errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-				elif rawMessageLine.startswith("ERROR"):
-					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
-
-					errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
-				elif rawMessageLine.startswith("Command: "):
-					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
-
-					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
-				else:
-					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
-
-					if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
-						line._kind = LineKind.Verbose
-
-				if line is None:
-					# TODO: what to do with this line? attache to exception?
-					line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
-
-					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
-
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
-
-				line = cmdFinder.send(line)
-
-				if line._kind is LineKind.ProcessorError:
-					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
-
-				# TODO: find a better solution/location to assign the timestamp.
-				line._timestamp = timestamp
-
-				self._lines.append(line)
-
-				lastLine = line
-				yield line
-
-		except StopIteration:
-			pass
-
-	def CommandFinder(self) -> Generator[VivadoLine, VivadoLine, None]:
+	def CommandFinder(self, line: Nullable[VivadoLine] = None) -> Generator[VivadoLine, VivadoLine, None]:
 		tclProcedures = {"source"}
 
-		# wait for first line
-		line = yield
-
-		if isinstance(line, VivadoInfoMessage):
-			self._preamble = LogFilePreamble(self)
-		elif line.StartsWith("#------"):
-			self._preamble = LogFilePreamble(self)
-		else:
-			self._preamble = VivadoPipedPreamble(self)
-
+		self._preamble =  Preamble(self)
 		self._postamble = Postamble(self)
+
+		# wait for first line
+		if line is None:
+			line = yield
 
 		# process preamble
 		line = yield from self._preamble.Generator(line)
@@ -4007,6 +4019,10 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 						self._commands[Write_Bitstream] = (cmd := Write_Bitstream(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
+					elif line._tclCommand == Open_Checkpoint._TCL_COMMAND:
+						self._commands[Open_Checkpoint] = (cmd := Open_Checkpoint(self))
+						line = yield next(gen := cmd.SectionDetector(line))
+						break
 					elif line._tclCommand == Report_DRC._TCL_COMMAND:
 						self._commands[Report_DRC] = (cmd := Report_DRC(self))
 						line = yield next(gen := cmd.SectionDetector(line))
@@ -4019,6 +4035,15 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 						self._commands[Report_Power] = (cmd := Report_Power(self))
 						line = yield next(gen := cmd.SectionDetector(line))
 						break
+				elif isinstance(line, DateTimeLine):
+					if (match := Launch._LAUNCHED.match(line._message)) is not None:
+						launchName = match["launchName"]
+						self._nestedLaunches.append(launch := Launch(launchName, parent=self))
+
+						line = yield next(gen := launch.Parser(line))
+						break
+					else:
+						pass
 
 				firstWord = line.Partition(" ")[0]
 				if firstWord in tclProcedures:
@@ -4042,6 +4067,129 @@ class Processor(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 				except StopIteration as ex:
 					line = ex.value
 					break
+
+
+@export
+class Processor(VivadoProcessor):
+	_nestedLaunches: List["Launch"]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
+
+	def __init__(self) -> None:
+		"""
+		Initializes a Vivado log output processor (toplevel processor).
+		"""
+		super().__init__()
+
+		self._nestedLaunches = []
+
+	@readonly
+	def HasNestedLaunches(self) -> bool:
+		"""
+		Read-only property returnning true, if this processor encountered nested launches.
+
+		:returns: True, if nested launches were found.
+
+		.. seealso::
+
+		   :data:`NestedLaunches`
+		     Access the list of nested launches.
+		"""
+		return len(self._nestedLaunches) > 0
+
+	@readonly
+	def NestedLaunches(self) -> List["Launch"]:
+		"""
+		Read-only property to access nested launches.
+
+		.. hint::
+
+		   A nested launch gets created when the outer Vivado instance starts another nested Vivado instance and waits on
+		   its completion. Examples are typically ``synth_1`` and ``impl_1``.
+
+		:returns: The list of nested launches.
+
+		.. seealso::
+
+		   :data:`HasNestedLaunches`
+		     Check if nested launches have been found.
+		"""
+		return self._nestedLaunches
+
+	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+		# Instantiate and initialize CommandFinder
+		next(cmdFinder := self.CommandFinder())
+
+		lastLine = None
+		lineNumber = 0
+		_errorMessage = "Unknown processing error"
+
+		try:
+			while (tup := next(inputStream)) is not None:
+				timestamp, rawMessageLine = tup
+				lineNumber += 1
+				rawMessageLine = rawMessageLine.rstrip()
+				errorMessage = _errorMessage
+
+				if len(rawMessageLine) == 0:
+					line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
+				elif rawMessageLine.startswith("INFO"):
+					if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
+					errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
+				elif rawMessageLine.startswith("WARNING"):
+					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
+					errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
+				elif rawMessageLine.startswith("CRITICAL WARNING"):
+					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
+					errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+				elif rawMessageLine.startswith("ERROR"):
+					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
+					errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
+				elif rawMessageLine.startswith("Command: "):
+					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+
+					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+				elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
+					dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
+					line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
+				else:
+					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
+
+					if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+						line._kind = LineKind.Verbose
+
+				if line is None:
+					# TODO: what to do with this line? attache to exception?
+					line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
+
+					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				line = cmdFinder.send(line)
+
+				if line._kind is LineKind.ProcessorError:
+					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+
+				# TODO: find a better solution/location to assign the timestamp.
+				line._timestamp = timestamp
+
+				self._lines.append(line)
+
+				lastLine = line
+				yield line
+
+		except StopIteration:
+			pass
 
 
 @export
@@ -4083,3 +4231,131 @@ class Document(Processor):
 					pass
 
 		self._processingDuration = sw.Duration
+
+
+@export
+class Launch(Parser, VivadoProcessor):
+	_LAUNCHED:  ClassVar[Pattern] = re_compile(r"^Launched (?P<launchName>\w+)\.\.\.")
+	_LOGFILE:   ClassVar[Pattern] = re_compile(r"^Run output will be captured here: (?P<logfile>.+)")
+	_WAITING:   ClassVar[Pattern] = re_compile(r"^Waiting for (?P<launchName>\w+) to finish \(timeout in (?P<timeout>\d+) minutes\)\.\.\.")
+	_RUNNING:   ClassVar[Pattern] = re_compile(r"^\*\*\*+\s+Running vivado")
+	_WITH_ARGS: ClassVar[Pattern] = re_compile(r"^\s+with args (?P<arguments>.+)")
+	_FINISHED:  ClassVar[Pattern] = re_compile(r"^(?P<launchName>\w+) finished")
+	_TIME:      ClassVar[str] =                 "wait_on_runs: Time (s):"
+
+	_name:            str                  #: Name of the launch.
+	_logfile:         Nullable[Path]       #: Logfile used by nested Vivado instance.
+	_vivadoArguments: Nullable[List[str]]  #: Launch parameters passed to nested Vivado instance.
+	_timeout:         int                  #: Timeout in minutes.
+	_startDateTime:   datetime             #: Date and time when the nested Vivado instance was started.
+	_finishDateTime:  datetime             #: Date and time when the nested Vivado instance finished.
+
+	def __init__(self, name: str, parent: VivadoProcessor) -> None:
+		super().__init__(parent)
+		VivadoProcessor.__init__(self)
+
+		self._name =            name
+		self._logfile =         None
+		self._vivadoArguments = None
+		self._timeout =         0
+		self._startDateTime =   None
+		self._finishDateTime =  None
+
+	@readonly
+	def Name(self) -> str:
+		return self._name
+
+	@readonly
+	def Logfile(self) -> Path:
+		return self._logfile
+
+	@readonly
+	def VivadoArguments(self) -> List[str]:
+		return self._vivadoArguments
+
+	@readonly
+	def Timeout(self) -> int:
+		return self._timeout
+
+	@readonly
+	def LaunchDateTime(self) -> datetime:
+		return self._startDateTime
+
+	@readonly
+	def FinishDateTime(self) -> datetime:
+		return self._finishDateTime
+
+	@readonly
+	def Duration(self) -> float:
+		"""
+		 Duration of the observed nested Vivado instance.
+
+		:returns: The observed nested Vivado instance's execution duration in seconds.
+		"""
+		return (self.FinishDateTime - self.LaunchDateTime).total_seconds()
+
+	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		if isinstance(line, DateTimeLine):
+			self._startDateTime = line._dateTime
+		else:
+			raise TypeError(f"Expected type DateTimeLine for first line.")
+
+		if self._LAUNCHED.match(line._message) is None:
+			raise ValueError(f"Expected a 'Launched xxx...' line, but git '{line._message}'.")
+
+		while True:
+			line = yield line
+
+			if isinstance(line, DateTimeLine):
+				if (match := self._WAITING.match(line._message)) is not None:
+					launchName = match["launchName"]
+					self._timeout = int(match["timeout"])
+
+					if launchName != self._name:
+						WarningCollector.Raise(ProcessorCriticalWarning(f"Detected launch name '{launchName}' doesn't match current's launch's name '{self._name}'."))
+						return line
+				else:
+					pass
+			elif (match := self._LOGFILE.match(line._message)) is not None:
+				self._logfile = Path(match["logfile"])
+			elif (match := self._RUNNING.match(line._message)) is not None:
+				pass
+			elif (match := self._WITH_ARGS.match(line._message)) is not None:
+				self._vivadoArguments = match["arguments"].split(" ")
+				break
+
+		# Consume 3 empty lines
+		line = yield line
+		line = yield line
+		line = yield line
+
+		line = yield from self.CommandFinder(line)
+
+		# Check for 'finished' line
+		if isinstance(line, DateTimeLine):
+			if (match := self._FINISHED.match(line._message)) is not None:
+				self._finishDateTime = line._dateTime
+
+				# TODO: check launchName
+			else:
+				pass  # FIXME: raise error
+		else:
+			pass  # FIXME: raise error
+
+		line = yield line
+
+		# Check for 'wait_on_runs' line
+		if line.StartsWith(self._TIME):
+			pass
+
+		line = yield line
+
+		if isinstance(line, VivadoMessage):
+			self._AddMessage(line)
+
+			line = yield line
+
+		return line
+
+	def __str__(self) -> str:
+		return f"Launch: {self._name} (timeout: {self._timeout} minutes)"

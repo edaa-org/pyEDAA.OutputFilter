@@ -105,7 +105,7 @@ class LinkDesign(TestCase):
 				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDateTime)
 		self.assertEqual(91, processor.Duration)
 		self.assertEqual(8, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))

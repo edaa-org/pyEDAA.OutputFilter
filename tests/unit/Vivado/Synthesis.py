@@ -39,7 +39,7 @@ from pytest               import mark
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Processor, VivadoPipedPreamble, LogFilePreamble, Synth_Design, VivadoLine, timestampIterator
+from pyEDAA.OutputFilter.Xilinx import Processor, Preamble, Synth_Design, VivadoLine, timestampIterator
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
 
@@ -71,13 +71,92 @@ class Preambles(TestCase):
 		#-----------------------------------------------------------""")
 	_POSTAMBLE: ClassVar[str] = ("""\
 		INFO: [Common 17-206] Exiting Vivado at Tue Sep  2 08:44:45 2025...""")
-	_SOURCE_TCL: ClassVar[str] = ("""\
-		source system_top.tcl -notrace""")
+	_OUTER_SOURCE_TCL: ClassVar[str] = ("""\
+		source build_project.tcl -notrace
+		INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/temp/OutputFilterBug/project_1/project_1.gen/sources_1'.
+		Scanning sources...
+		Finished scanning sources
+		WARNING: [Vivado 12-1017] Problems encountered:
+		1. Failed to delete one or more files in run directory C:/temp/OutputFilterBug/project_1/project_1.runs/synth_1""")
+	_LAUNCH_SYNTH_1: ClassVar[str] = ("""\
+
+		[Tue Jul  7 09:59:36 2026] Launched synth_1...
+		Run output will be captured here: C:/temp/OutputFilterBug/project_1/project_1.runs/synth_1/runme.log
+
+		[Tue Jul  7 09:59:36 2026] Waiting for synth_1 to finish (timeout in 120 minutes)...
+
+		*** Running vivado
+				with args -log top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+
+		""")
+	_INNER_SOURCE_TCL: ClassVar[str] = ("""\
+		source top.tcl -notrace
+		Command: synth_design -top top -part xc7z030ffg676-1
+		Starting synth_design
+		Attempting to get a license for feature 'Synthesis' and/or device 'xc7z030'
+		INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z030'
+		INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+		INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+		Synth Design complete | Checksum: 12a8949
+		INFO: [Common 17-83] Releasing license: Synthesis
+		12 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+		synth_design completed successfully
+		synth_design: Time (s): cpu = 00:00:14 ; elapsed = 00:00:17 . Memory (MB): peak = 1541.031 ; gain = 1146.508
+		Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1541.031 ; gain = 0.000
+		INFO: [Common 17-1381] The checkpoint 'C:/temp/OutputFilterBug/project_1/project_1.runs/synth_1/top.dcp' has been generated.
+		INFO: [Vivado 12-24828] Executing command : report_utilization -file top_utilization_synth.rpt -pb top_utilization_synth.pb""")
+	_WAIT_ON_SYNTH_1: ClassVar[str] = ("""\
+		[Tue Jul  7 10:00:06 2026] synth_1 finished
+		wait_on_runs: Time (s): cpu = 00:00:00 ; elapsed = 00:00:30 . Memory (MB): peak = 399.656 ; gain = 0.000
+		INFO: Finished synth_1 successfully (elapsed time = 00:00:18).""")
+	_BETWEEN_STEPS: ClassVar[str] = ("""\
+		Design is defaulting to impl run constrset: constrs_1
+		Design is defaulting to synth run part: xc7z030ffg676-1
+		INFO: [Device 21-403] Loading part xc7z030ffg676-1
+		Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 647.754 ; gain = 0.000
+		INFO: [Project 1-479] Netlist was created with Vivado 2024.2
+		INFO: [Project 1-570] Preparing netlist for logic optimization
+		INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+		Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 775.246 ; gain = 0.000
+		INFO: [Project 1-111] Unisim Transformation Summary:
+		No Unisim elements were transformed.
+
+		WARNING: [Vivado 12-1348] No Latch(s) found
+		INFO: No latches found.
+		Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 780.234 ; gain = 0.000""")
+	_LAUNCH_IMPL_1: ClassVar[str] = ("""\
+		[Tue Jul  7 10:00:11 2026] Launched impl_1...
+		Run output will be captured here: C:/temp/OutputFilterBug/project_1/project_1.runs/impl_1/runme.log
+		[Tue Jul  7 10:00:11 2026] Waiting for impl_1 to finish (timeout in 120 minutes)...
+
+
+		*** Running vivado
+				with args -log top.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top.tcl -notrace
+
+		""")
+	_OPEN_CHECKPOINT: ClassVar[str] = ("""\
+		source top.tcl -notrace
+		Command: open_checkpoint C:/temp/OutputFilterBug/project_1/project_1.runs/impl_1/top.dcp
+		INFO: [Device 21-403] Loading part xc7z030ffg676-1
+		Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 647.539 ; gain = 0.000
+		INFO: [Project 1-479] Netlist was created with Vivado 2024.2
+		INFO: [Project 1-570] Preparing netlist for logic optimization
+		Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 751.297 ; gain = 0.000
+		Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 752.504 ; gain = 0.000
+		INFO: [Project 1-111] Unisim Transformation Summary:
+		No Unisim elements were transformed.
+
+		INFO: [Project 1-604] Checkpoint was created with Vivado v2024.2 (64-bit) build 5239630
+		open_checkpoint: Time (s): cpu = 00:00:06 ; elapsed = 00:00:09 . Memory (MB): peak = 760.539 ; gain = 462.125
+		""")
+	_WAIT_ON_IMPL_1: ClassVar[str] = ("""\
+		[Tue Jul  7 10:01:37 2026] impl_1 finished
+		wait_on_runs: Time (s): cpu = 00:00:01 ; elapsed = 00:01:25 . Memory (MB): peak = 780.234 ; gain = 0.000""")
 
 	def test_VivadoPipedPreamble(self) -> None:
 		print()
 		report = StringIO(rpt := dedent(f"""{self._PIPED_PREAMBLE}
-{self._SOURCE_TCL}
+{self._INNER_SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)
 
@@ -92,18 +171,83 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, VivadoPipedPreamble)
 		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
-		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDatetime)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
 		self.assertEqual(0, len(preamble.ErrorMessages))
+
+	def test_VivadoPipedPreambleWithLicense(self) -> None:
+		print()
+		report = StringIO(rpt := dedent(f"""{self._LICENSE_INFO}
+{self._PIPED_PREAMBLE}
+{self._INNER_SOURCE_TCL}
+{self._POSTAMBLE}""")
+		)
+
+		print("%" * 80)
+		print(rpt)
+		print("%" * 80)
+
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+		with WarningCollector() as warnings:
+			for line in generator:
+				pass
+
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
+		self.assertEqual(1, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+
+	def test_VivadoNestedPipedPreamble(self) -> None:
+		print()
+		report = StringIO(rpt := dedent(f"""{self._PIPED_PREAMBLE}
+{self._OUTER_SOURCE_TCL}
+{self._LAUNCH_SYNTH_1}
+{self._PIPED_PREAMBLE}
+{self._INNER_SOURCE_TCL}
+{self._POSTAMBLE}
+{self._WAIT_ON_SYNTH_1}
+{self._BETWEEN_STEPS}
+{self._LAUNCH_IMPL_1}
+{self._PIPED_PREAMBLE}
+{self._OPEN_CHECKPOINT}
+{self._POSTAMBLE}
+{self._WAIT_ON_IMPL_1}
+{self._POSTAMBLE}""")
+		)
+
+		print("%" * 80)
+		print(rpt)
+		print("%" * 80)
+
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+		with WarningCollector() as warnings:
+			for line in generator:
+				pass
+
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), preamble.StartDateTime)
+		self.assertEqual(0, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+
+		self.assertTrue(processor.HasNestedLaunches)
+		self.assertEqual(2, len(processor.NestedLaunches))
+
 
 	def test_LogfilePreamble(self) -> None:
 		print()
 		report = StringIO(rpt := dedent(f"""{self._LOGFILE_PREAMBLE}
-{self._SOURCE_TCL}
+{self._INNER_SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)
 
@@ -118,20 +262,18 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(0, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
 		self.assertEqual(0, len(preamble.ErrorMessages))
 
-	@mark.xfail(reason="Not yet supported. Needs handling of VivadoInfoMessage in preamble.")
 	def test_LogfilePreambleWithLicense(self) -> None:
 		print()
 		report = StringIO(rpt := dedent(f"""{self._LICENSE_INFO}
 {self._LOGFILE_PREAMBLE}
-{self._SOURCE_TCL}
+{self._INNER_SOURCE_TCL}
 {self._POSTAMBLE}""")
 		)
 
@@ -146,9 +288,8 @@ class Preambles(TestCase):
 				pass
 
 		preamble = processor.Preamble
-		self.assertIsInstance(preamble, LogFilePreamble)
 		self.assertEqual(YearReleaseVersion(2019, 1), preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), preamble.StartDateTime)
 		self.assertEqual(1, len(preamble.InfoMessages))
 		self.assertEqual(0, len(preamble.WarningMessages))
 		self.assertEqual(0, len(preamble.CriticalWarningMessages))
@@ -198,7 +339,7 @@ class SynthDesign(TestCase):
 				pass
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
-		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDatetime)
+		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDateTime)
 		self.assertEqual(32, processor.Duration)
 		self.assertEqual(3, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))

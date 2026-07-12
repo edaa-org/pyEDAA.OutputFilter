@@ -37,7 +37,7 @@ from pytest                     import mark
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, VivadoMessagesMixin
+from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine
 from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
 from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
 
