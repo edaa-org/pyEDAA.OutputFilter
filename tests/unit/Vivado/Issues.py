@@ -84,8 +84,8 @@ class Issue87(TestCase):
 		self.assertEqual(datetime(2026, 7, 7, 10, 0, 2), synth1.ExitDateTime)     #   postamble
 		self.assertEqual(datetime(2026, 7, 7, 10, 0, 6), synth1.FinishDateTime)   # finished
 
-		# self.assertEqual(15, len(synth1.InfoMessages))
-		# self.assertEqual(1, len(synth1.WarningMessages))
+		self.assertEqual(16, len(synth1.InfoMessages))
+		self.assertEqual(1, len(synth1.WarningMessages))
 		self.assertEqual(0, len(synth1.CriticalWarningMessages))
 		self.assertEqual(0, len(synth1.ErrorMessages))
 
@@ -98,8 +98,8 @@ class Issue87(TestCase):
 		self.assertEqual(datetime(2026, 7, 7, 10, 1, 35), impl1.ExitDateTime)     #   postamble
 		self.assertEqual(datetime(2026, 7, 7, 10, 1, 37), impl1.FinishDateTime)   # finished
 
-		# self.assertEqual(80, len(impl1.InfoMessages))
-		# self.assertEqual(3, len(impl1.WarningMessages))
+		self.assertEqual(80, len(impl1.InfoMessages))
+		self.assertEqual(3, len(impl1.WarningMessages))
 		self.assertEqual(0, len(impl1.CriticalWarningMessages))
 		self.assertEqual(0, len(impl1.ErrorMessages))
 

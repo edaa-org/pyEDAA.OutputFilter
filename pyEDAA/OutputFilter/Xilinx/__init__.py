@@ -4330,7 +4330,16 @@ class Launch(Parser, VivadoProcessor):
 		line = yield line
 		line = yield line
 
-		line = yield from self.CommandFinder(line)
+		try:
+			processedLine = next(gen := self.CommandFinder(line))  # create + prime
+			while True:
+				line = yield processedLine
+				if isinstance(line, VivadoMessage):
+					self._AddMessage(line)
+
+				processedLine = gen.send(line)
+		except StopIteration as ex:
+			line = ex.value
 
 		# Check for 'finished' line
 		if isinstance(line, DateTimeLine):
@@ -4352,7 +4361,8 @@ class Launch(Parser, VivadoProcessor):
 		line = yield line
 
 		if isinstance(line, VivadoMessage):
-			self._AddMessage(line)
+			if not (line._toolID == 17 and line._messageKindID == 206):  # Exiting Vivado
+				self._AddMessage(line)
 
 			line = yield line
 
