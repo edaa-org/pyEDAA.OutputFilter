@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   Pipeline:
-    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@dev
+    uses: pyTooling/Actions/.github/workflows/CompletePipeline.yml@r7
     with:
       package_namespace: 'pyEDAA'
       package_name:      'OutputFilter'

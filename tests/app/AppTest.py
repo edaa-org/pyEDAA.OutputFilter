@@ -241,7 +241,7 @@ class Vivado(Testcase):
 class Issues(Testcase):
 	def test_Issue_87_Log(self) -> None:
 		print()
-		completedProcess = self.RunEntrypoint("-q", "vivado", "--config=tests/data/config.yaml", "--file=tests/data/Issues/87/vivado.log")
+		completedProcess = self.RunEntrypoint("-q", "vivado", "--file=tests/data/Issues/87/vivado.log")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
@@ -249,7 +249,7 @@ class Issues(Testcase):
 
 	def test_Issue_87_Interface(self) -> None:
 		print()
-		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--config=tests/data/config.yaml", "--file=tests/data/Issues/87/en_axi_rb_interface.log")
+		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--file=tests/data/Issues/87/en_axi_rb_interface.log")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
