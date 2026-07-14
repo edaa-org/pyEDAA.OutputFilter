@@ -521,8 +521,6 @@ class StdOutTarget(Target):
 			return self._colors["paragraphHeadline"]
 		elif line.Kind is LineKind.LaunchArguments:
 			return self._colors["launchArguments"]
-		# elif line.Kind is LineKind.DateTimeLine:
-		# 	return self._colors["dateTimeLine"]
 		elif line.Kind is LineKind.ProcessorError:
 			raise OutputFilterException(f"Erroneous line {line._lineNumber} '{line._kind}' should have been wrapped in an exception.")
 		elif LineKind.Table in line.Kind:

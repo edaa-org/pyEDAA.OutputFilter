@@ -534,7 +534,6 @@ class Vivado(Tool):
 			"hierarchyEnd":         "DARK_GRAY",
 			"xdcStart":             "DARK_CYAN",
 			"xdcEnd":               "DARK_GRAY",
-			# "dateTimeLine":         "WHITE",
 			"table":                "WHITE",
 		}
 
