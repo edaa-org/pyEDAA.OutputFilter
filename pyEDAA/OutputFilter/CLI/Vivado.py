@@ -462,6 +462,8 @@ class StdOutTarget(Target):
 				return self._colors["nestedTaskStart"]
 			elif LineKind.NestedPhase in line.Kind:
 				return self._colors["nestedPhaseStart"]
+			elif LineKind.Launch in line.Kind:
+				return self._colors["launchStart"]
 			else:
 				raise OutputFilterException(f"Unknown LineKind.****Start '{line._kind}' for line {line._lineNumber}.")
 		elif LineKind.End in line.Kind:
@@ -483,6 +485,8 @@ class StdOutTarget(Target):
 				return self._colors["nestedTaskEnd"]
 			elif LineKind.NestedPhase in line.Kind:
 				return self._colors["nestedPhaseEnd"]
+			elif LineKind.Launch in line.Kind:
+				return self._colors["launchFinished"]
 			else:
 				raise OutputFilterException(f"Unknown LineKind.****End '{line._kind}' for line {line._lineNumber}.")
 		elif LineKind.Time in line.Kind:
@@ -500,6 +504,8 @@ class StdOutTarget(Target):
 				return self._colors["sectionTime"]
 			elif LineKind.SubSection in line.Kind:
 				return self._colors["subsectionTime"]
+			elif LineKind.Launch in line.Kind:
+				return self._colors["launchTime"]
 			else:
 				raise OutputFilterException(f"Unknown LineKind.****Time '{line._kind}' for line {line._lineNumber}.")
 		elif LineKind.Table in line.Kind:
@@ -513,8 +519,8 @@ class StdOutTarget(Target):
 			return self._colors["verbose"]
 		elif line.Kind is LineKind.ParagraphHeadline:
 			return self._colors["paragraphHeadline"]
-		elif line.Kind is LineKind.DateTimeLine:
-			return self._colors["dateTimeLine"]
+		elif line.Kind is LineKind.LaunchArguments:
+			return self._colors["launchArguments"]
 		elif line.Kind is LineKind.ProcessorError:
 			raise OutputFilterException(f"Erroneous line {line._lineNumber} '{line._kind}' should have been wrapped in an exception.")
 		elif LineKind.Table in line.Kind:

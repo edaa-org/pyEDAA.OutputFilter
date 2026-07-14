@@ -239,69 +239,75 @@ class LineKind(Flag):
 	CriticalWarningMessage = Message | CriticalWarning
 	ErrorMessage =           Message | Error
 
-	Task =                   2**31
+	Launch =                 2**31
+	LaunchStart =            Launch | Start
+	LaunchArguments =        Launch | Header
+	LaunchFinished =         Launch | End
+	LaunchTime =             Launch | Time
+
+	Task =                   2**32
 	TaskStart =              Task | Start
 	TaskEnd =                Task | End
 	TaskTime =               Task | Time
 
-	Phase =                  2**32
+	Phase =                  2**33
 	PhaseDelimiter =         Phase | Delimiter
 	PhaseStart =             Phase | Start
 	PhaseEnd =               Phase | End
 	PhaseTime =              Phase | Time
 	PhaseFinal =             Phase | Footer
 
-	SubPhase =               2**33
+	SubPhase =               2**34
 	SubPhaseStart =          SubPhase | Start
 	SubPhaseEnd =            SubPhase | End
 	SubPhaseTime =           SubPhase | Time
 
-	SubSubPhase =            2**34
+	SubSubPhase =            2**35
 	SubSubPhaseStart =       SubSubPhase | Start
 	SubSubPhaseEnd =         SubSubPhase | End
 	SubSubPhaseTime =        SubSubPhase | Time
 
-	SubSubSubPhase =         2**35
+	SubSubSubPhase =         2**36
 	SubSubSubPhaseStart =    SubSubSubPhase | Start
 	SubSubSubPhaseEnd =      SubSubSubPhase | End
 	SubSubSubPhaseTime =     SubSubSubPhase | Time
 
-	NestedTask =             2**36
+	NestedTask =             2**37
 	NestedTaskStart =        NestedTask | Start
 	NestedTaskEnd =          NestedTask | End
 
-	NestedPhase =            2**37
+	NestedPhase =            2**38
 	NestedPhaseStart =       NestedPhase | Start
 	NestedPhaseEnd =         NestedPhase | End
 
-	Section =                2**38
+	Section =                2**39
 	SectionDelimiter =       Section | Delimiter
 	SectionStart =           Section | Start
 	SectionEnd =             Section | End
 
-	SubSection =             2**39
+	SubSection =             2**40
 	SubSectionDelimiter =    SubSection | Delimiter
 	SubSectionStart =        SubSection | Start
 	SubSectionEnd =          SubSection | End
 
-	Paragraph =              2**40
+	Paragraph =              2**41
 	ParagraphHeadline =      Paragraph | Header
 
-	Hierarchy =              2**41
+	Hierarchy =              2**42
 	HierarchyStart =         Hierarchy | Start
 	HierarchyEnd =           Hierarchy | End
 
-	XDC =                    2**42
+	XDC =                    2**43
 	XDCStart =               XDC | Start
 	XDCEnd =                 XDC | End
 
-	Table =                  2**43
+	Table =                  2**44
 	TableFrame =             Table | Delimiter
 	TableHeader =            Table | Header
 	TableRow =               Table | Content
 	TableFooter =            Table | Footer
 
-	TclCommand =             2**44
+	TclCommand =             2**45
 	GenericTclCommand =      TclCommand | 2**0
 	VivadoTclCommand =       TclCommand | 2**1
 
@@ -1262,7 +1268,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 
 	"""
 	_INFO:    Tuple[int, int]   = (17, 206)
-	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)""")
+	_ENDTIME: ClassVar[Pattern] = re_compile(r"""Exiting Vivado at (?P<datetime>\w+ \w+  ?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4})""")
 
 	_exitDateTime: Nullable[datetime]            #: Session exit timestamp.
 
@@ -1304,7 +1310,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 				raise ProcessorException(f"{self.__class__.__name__}.Generator(): Expected '{self._ENDTIME}' at line {line._lineNumber}.")
 
 		if (match := self._ENDTIME.match(line._message)) is not None:
-			self._exitDateTime = datetime.strptime(match[1], "%a %b %d %H:%M:%S %Y")
+			self._exitDateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
 		else:
 			pass
 
@@ -4236,12 +4242,12 @@ class Document(Processor):
 
 @export
 class Launch(Parser, VivadoProcessor):
-	_LAUNCHED:  ClassVar[Pattern] = re_compile(r"^Launched (?P<launchName>\w+)\.\.\.")
+	_LAUNCHED:  ClassVar[Pattern] = re_compile(r"^Launched (?P<launchName>.+?)\.\.\.")
 	_LOGFILE:   ClassVar[Pattern] = re_compile(r"^Run output will be captured here: (?P<logfile>.+)")
-	_WAITING:   ClassVar[Pattern] = re_compile(r"^Waiting for (?P<launchName>\w+) to finish \(timeout in (?P<timeout>\d+) minutes\)\.\.\.")
+	_WAITING:   ClassVar[Pattern] = re_compile(r"^Waiting for (?P<launchName>.+?) to finish(?: \(timeout in (?P<timeout>\d+) minutes\))?\.\.\.")
 	_RUNNING:   ClassVar[Pattern] = re_compile(r"^\*\*\*+\s+Running vivado")
 	_WITH_ARGS: ClassVar[Pattern] = re_compile(r"^\s+with args (?P<arguments>.+)")
-	_FINISHED:  ClassVar[Pattern] = re_compile(r"^(?P<launchName>\w+) finished")
+	_FINISHED:  ClassVar[Pattern] = re_compile(r"^(?P<launchName>.+?) finished")
 	_TIME:      ClassVar[str] =                 "wait_on_runs: Time (s):"
 
 	_name:            str                  #: Name of the launch.
@@ -4297,6 +4303,7 @@ class Launch(Parser, VivadoProcessor):
 
 	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		if isinstance(line, DateTimeLine):
+			line._kind = LineKind.LaunchStart
 			self._startDateTime = line._dateTime
 		else:
 			raise TypeError(f"Expected type DateTimeLine for first line.")
@@ -4309,19 +4316,23 @@ class Launch(Parser, VivadoProcessor):
 
 			if isinstance(line, DateTimeLine):
 				if (match := self._WAITING.match(line._message)) is not None:
-					launchName = match["launchName"]
-					self._timeout = int(match["timeout"])
-
-					if launchName != self._name:
+					line._kind = LineKind.LaunchStart
+					if (launchName := match["launchName"]) != self._name:
 						WarningCollector.Raise(ProcessorCriticalWarning(f"Detected launch name '{launchName}' doesn't match current's launch's name '{self._name}'."))
 						return line
+
+					if (timeout := match["timeout"]) is not None:
+						self._timeout = int(timeout)
+
 				else:
 					pass
 			elif (match := self._LOGFILE.match(line._message)) is not None:
+				line._kind = LineKind.Normal
 				self._logfile = Path(match["logfile"])
 			elif (match := self._RUNNING.match(line._message)) is not None:
-				pass
+				line._kind = LineKind.Normal
 			elif (match := self._WITH_ARGS.match(line._message)) is not None:
+				line._kind = LineKind.LaunchArguments
 				self._vivadoArguments = match["arguments"].split(" ")
 				break
 
@@ -4344,6 +4355,7 @@ class Launch(Parser, VivadoProcessor):
 		# Check for 'finished' line
 		if isinstance(line, DateTimeLine):
 			if (match := self._FINISHED.match(line._message)) is not None:
+				line._kind = LineKind.LaunchFinished
 				self._finishDateTime = line._dateTime
 
 				# TODO: check launchName
@@ -4356,7 +4368,7 @@ class Launch(Parser, VivadoProcessor):
 
 		# Check for 'wait_on_runs' line
 		if line.StartsWith(self._TIME):
-			pass
+			line._kind = LineKind.LaunchTime
 
 		line = yield line
 

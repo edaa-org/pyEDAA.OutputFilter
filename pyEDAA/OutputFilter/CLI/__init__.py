@@ -35,14 +35,9 @@ Tools to extract data from log files.
 
 .. code-block::
 
-   pyedaa-outputfilter vivado-synthesis --file=toplevel.vds \
-     --info     --info-file=info.log \
-     --warning  --warning-file=warning.log \
-     --critical --critical-file=critical.log \
-     --error    --error-file=error.log \
-     --influxdb-file synthesis.line
+   pyedaa-outputfilter vivado --file=toplevel.vds
 """
-from typing   import NoReturn, Optional as Nullable
+from typing   import NoReturn, Optional as Nullable, ClassVar
 
 from argparse import RawDescriptionHelpFormatter, Namespace
 from textwrap import dedent
@@ -52,38 +47,23 @@ from pyTooling.Exceptions                     import ExceptionBase
 from pyTooling.Attributes.ArgParse            import ArgParseHelperMixin, DefaultHandler, CommandHandler
 from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
-from pyTooling.TerminalUI                     import TerminalApplication, Mode, Severity
+from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
-from pyEDAA.OutputFilter                      import __version__, __copyright__, __license__
 from pyEDAA.OutputFilter                      import OutputFilterException
 from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
-# todo: merge into application
-# todo: printheadline, printversion (see pyVersioning)
 @export
-class ProgramBase(TerminalApplication):
-	"""Base-class for all program classes."""
-
-	programTitle: str
-
-	def _PrintHeadline(self, width: int = 80) -> None:
-		"""Print the program's headline."""
-		print("{line}".format(line="=" * 120))
-		print("{headline: ^120s}".format(headline=self.programTitle))
-		print("{line}".format(line="=" * 120))
-
-
-@export
-class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
+class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
-	programTitle = "pyEDAA.OutputFilter Service Program"
-	ISSUE_TRACKER_URL = "https://github.com/edaa-org/pyEDAA.OutputFilter/issues"
+	programTitle: ClassVar[str] = "pyEDAA.OutputFilter Service Program"
 
 	def __init__(self) -> None:
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
+
+		self.HeadLine = self.programTitle  # TODO: needs improvement
 
 		# Call the constructor of the ArgParseMixin
 		textWidth = min(self.Width, 160)
@@ -114,8 +94,8 @@ class Application(ProgramBase, VivadoHandlers, ArgParseHelperMixin):
 
 	@DefaultHandler()
 	@FlagArgument("-q", "--quiet", dest="quiet", help="Reduce messages to a minimum.")
-	# @FlagArgument("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
-	# @FlagArgument("-d", "--debug",   dest="debug",   help="Enable debug mode.")
+	@FlagArgument("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
+	@FlagArgument("-d", "--debug",   dest="debug",   help="Enable debug mode.")
 	def HandleDefault(self, _: Namespace) -> None:
 		"""Handle program calls without any command."""
 		self._PrintHeadline()
