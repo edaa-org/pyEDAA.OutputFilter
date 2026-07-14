@@ -36,8 +36,10 @@ from sys                import executable as PYTHON_EXECUTABLE
 from typing             import ClassVar, Optional as Nullable
 from unittest           import TestCase
 
+
 RUNABLE_MODULE: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
 CONSOLE_SCRIPT: ClassVar[str] = "pyedaa-outputfilter"
+
 
 class Testcase(TestCase):
 	"""
@@ -221,7 +223,7 @@ class Vivado(Testcase):
 
 	def test_SynthesisLogFile(self) -> None:
 		print()
-		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Stopwatch/toplevel.vds")
+		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--file=tests/data/Stopwatch/toplevel.vds")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
@@ -229,7 +231,7 @@ class Vivado(Testcase):
 
 	def test_ImplementationLogFile(self) -> None:
 		print()
-		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Stopwatch/toplevel.vdi")
+		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--file=tests/data/Stopwatch/toplevel.vdi")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
@@ -237,10 +239,18 @@ class Vivado(Testcase):
 
 
 class Issues(Testcase):
-	def test_Issue_87(self) -> None:
+	def test_Issue_87_Log(self) -> None:
 		print()
-		completedProcess = self.RunEntrypoint("vivado", "--file=tests/data/Issues/87/vivado.log")
+		completedProcess = self.RunEntrypoint("-q", "vivado", "--config=tests/data/config.yaml", "--file=tests/data/Issues/87/vivado.log")
 		print(completedProcess.stdout)
 
 		self.assertExitCode(completedProcess, 0)
 		self.assertEqual("", completedProcess.stderr)
+
+	def test_Issue_87_Interface(self) -> None:
+		print()
+		completedProcess = self.RunEntrypoint("--quiet", "vivado", "--config=tests/data/config.yaml", "--file=tests/data/Issues/87/en_axi_rb_interface.log")
+		print(completedProcess.stdout)
+
+		self.assertExitCode(completedProcess, 0)
+		# self.assertEqual("", completedProcess.stderr)

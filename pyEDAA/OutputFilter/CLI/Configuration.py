@@ -503,6 +503,11 @@ class Vivado(Tool):
 			"subsectionStart":      "DARK_CYAN",
 			"subsectionEnd":        "DARK_CYAN",
 			"subsectionTime":       "DARK_GREEN",
+			"launchStart":          "CYAN",
+			"launchWaiting":        "DARK_CYAN",
+			"launchArguments":      "MAGENTA",
+			"launchFinished":       "CYAN",
+			"launchTime":           "DARK_GREEN",
 			"taskStart":            "YELLOW",
 			"taskEnd":              "YELLOW",
 			"taskTime":             "DARK_GREEN",
@@ -529,7 +534,7 @@ class Vivado(Tool):
 			"hierarchyEnd":         "DARK_GRAY",
 			"xdcStart":             "DARK_CYAN",
 			"xdcEnd":               "DARK_GRAY",
-			"dateTimeLine":         "CYAN",
+			# "dateTimeLine":         "WHITE",
 			"table":                "WHITE",
 		}
 

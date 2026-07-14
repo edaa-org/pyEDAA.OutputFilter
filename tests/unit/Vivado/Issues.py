@@ -108,3 +108,66 @@ class Issue87(TestCase):
 		self.assertIn(Place_Design, impl1)
 		self.assertIn(PhyOpt_Design, impl1)
 		self.assertIn(Route_Design, impl1)
+
+	def test_EnAxiRbInterface(self) -> None:
+		print()
+		logfile = Path("tests/data/Issues/87/en_axi_rb_interface.log")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		for warning in warnings:
+			print(f"Warning: {warning}")
+
+		self.assertEqual(186, len(processor.InfoMessages))
+		self.assertEqual(37, len(processor.WarningMessages))
+		self.assertEqual(0, len(processor.CriticalWarningMessages))
+		self.assertEqual(0, len(processor.ErrorMessages))
+
+		self.assertEqual(YearReleaseVersion(2024, 2), processor._preamble.ToolVersion)
+
+		preamble = processor.Preamble
+		self.assertEqual(YearReleaseVersion(2024, 2), preamble.ToolVersion)
+		self.assertEqual(datetime(2026, 7, 1, 23, 47, 43), preamble.StartDateTime)
+		self.assertEqual(0, len(preamble.InfoMessages))
+		self.assertEqual(0, len(preamble.WarningMessages))
+		self.assertEqual(0, len(preamble.CriticalWarningMessages))
+		self.assertEqual(0, len(preamble.ErrorMessages))
+
+		postamble = processor.Postamble
+		# self.assertEqual(datetime(2026, 7, 7, 10, 1, 37), postamble.ExitDateTime)
+
+		self.assertTrue(processor.HasNestedLaunches)
+		self.assertEqual(2, len(processor.NestedLaunches))
+
+		synth1: Launch = processor.NestedLaunches[0]
+		self.assertEqual("synth_xczu5ev-fbvb900-1-i", synth1.Name)
+		self.assertEqual(datetime(2026, 7, 1, 23, 47, 54), synth1.LaunchDateTime)  # launch
+		self.assertEqual(datetime(2026, 7, 1, 23, 47, 58), synth1.StartDateTime)   #   preamble
+		self.assertEqual(datetime(2026, 7, 1, 23, 49, 40), synth1.ExitDateTime)     #   postamble
+		self.assertEqual(datetime(2026, 7, 1, 23, 49, 44), synth1.FinishDateTime)   # finished
+
+		self.assertEqual(26, len(synth1.InfoMessages))
+		self.assertEqual(25, len(synth1.WarningMessages))
+		self.assertEqual(0, len(synth1.CriticalWarningMessages))
+		self.assertEqual(0, len(synth1.ErrorMessages))
+
+		self.assertIn(Synth_Design, synth1)
+
+		impl1: Launch = processor.NestedLaunches[1]
+		self.assertEqual("impl_xczu5ev-fbvb900-1-i", impl1.Name)
+
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 17), impl1.LaunchDateTime)  # launch
+		self.assertEqual(datetime(2026, 7, 1, 23, 50, 26), impl1.StartDateTime)   #   preamble
+		self.assertEqual(datetime(2026, 7, 1, 23, 52, 44), impl1.ExitDateTime)     #   postamble
+		self.assertEqual(datetime(2026, 7, 1, 23, 52, 48), impl1.FinishDateTime)   # finished
+
+		self.assertEqual(117, len(impl1.InfoMessages))
+		self.assertEqual(7, len(impl1.WarningMessages))
+		self.assertEqual(0, len(impl1.CriticalWarningMessages))
+		self.assertEqual(0, len(impl1.ErrorMessages))
+
+		self.assertIn(Opt_Design, impl1)
+		self.assertIn(Place_Design, impl1)
+		self.assertNotIn(PhyOpt_Design, impl1)
+		self.assertIn(Route_Design, impl1)
