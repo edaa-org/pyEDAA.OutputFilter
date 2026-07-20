@@ -32,8 +32,10 @@ from argparse  import Namespace
 from datetime  import datetime
 from json      import dumps
 from pathlib   import Path
+from queue     import Queue as ThreadSafeQueue, Empty
 from sys       import stdin as sys_stdin, stdout as sys_stdout
-from typing    import Optional as Nullable, Dict, List, TextIO, Iterator, Tuple
+from threading import Thread, Event
+from typing    import Optional as Nullable, Dict, List, TextIO, Iterator, Tuple, Generator
 
 from pyTooling.Common                          import getFullyQualifiedName
 from pyTooling.Decorators                      import export
@@ -42,12 +44,12 @@ from pyTooling.Attributes.ArgParse             import CommandHandler
 from pyTooling.Attributes.ArgParse.Flag        import LongFlag
 from pyTooling.Attributes.ArgParse.ValuedFlag  import LongValuedFlag
 from pyTooling.TerminalUI                      import TerminalApplication
-from pyTooling.Warning                         import WarningCollector
+from pyTooling.Streaming                       import Delay, BlockingPut, QueueReader
+from pyTooling.Warning                         import WarningCollector, SupervisedWarningCollector, ThreadSupervisor
 
 from pyEDAA.OutputFilter                   import OutputFilterException
 from pyEDAA.OutputFilter.CLI.Configuration import Configuration, Vivado, ProcessingPipeline, OutputFormat, Rule, StdOutOutput, FileOutput, TimestampFormat
-from pyEDAA.OutputFilter.CLI.Filter        import preprocessing, mirror, postprocessing
-from pyEDAA.OutputFilter.Xilinx            import Processor, LineKind, VivadoLine, Command, LineAction, VivadoMessage
+from pyEDAA.OutputFilter.Xilinx            import LineKind, VivadoLine, Processor, Command, LineAction, VivadoMessage
 
 
 @export
@@ -139,22 +141,66 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 			target.Open()
 
-		processor = Processor()
-		generator = processor.LineClassification(lineIterator)
-		preprocessed = preprocessing(generator, pipeline._preprocessing)
-		mirrored = mirror(preprocessed, len(targets))
-		postProcessed = tuple(postprocessing(mirror, target._rules) for mirror, target in zip(mirrored, targets))
-
-		with WarningCollector() as warnings:
-			for lines in zip(*postProcessed):  # zip_longest(*postProcessed, fillvalue=None):
-				for target, line in zip(targets, lines):
-					target.Write(line)
+		warnings = self.RunVivadoPipeline(
+			lineIterator,
+			pipeline._preprocessing,
+			targets
+		)
 
 		for warning in warnings:
 			self.WriteWarning(warning)
 
 		for target in targets:
 			target.Close()
+
+	def RunVivadoPipeline(
+		self,
+		lineIterator:    Iterator[Tuple[datetime, str]],
+		commonRules:     Nullable[List[Rule]],
+		targets:         List[Target],
+		rawQueueSize:    int = 2000,
+		targetQueueSize: int = 1000,
+		lookbackDelay:   int = 1
+	) -> List[BaseException]:
+		"""
+		Wires up classification -> raw queue -> common filter -> per-target queues -> target filter
+		-> target, runs it to completion, re-raises any worker-thread *exception* on the caller's
+		thread, and returns every collected *warning* (each thread's own ``WarningCollector`` results,
+		merged — see :class:`ThreadErrorBox`) for the caller to report.
+		"""
+		stopEvent =        Event()
+		threadSupervisor = ThreadSupervisor()
+
+		commonQueue =  ThreadSafeQueue(maxsize=rawQueueSize)
+		targetQueues = [ThreadSafeQueue(maxsize=targetQueueSize) for _ in targets]
+
+		consumers =    [TargetConsumerThread(q, t, threadSupervisor, stopEvent) for q, t in zip(targetQueues, targets)]
+		commonFilter = CommonFilterThread(commonQueue, commonRules, targetQueues, threadSupervisor, stopEvent)
+		classifier =   ClassifierThread(lineIterator, commonQueue, threadSupervisor, stopEvent, lookbackDelay)
+
+		# Start order doesn't matter functionally — queues buffer regardless — but starting
+		# downstream-first means consumers are already waiting when the first items arrive.
+		for consumer in consumers:
+			consumer.start()
+		commonFilter.start()
+		classifier.start()
+
+		try:
+			classifier.join()
+			commonFilter.join()
+			for consumer in consumers:
+				consumer.join()
+		except KeyboardInterrupt:
+			stopEvent.set()
+			classifier.join(timeout=2.0)
+			commonFilter.join(timeout=2.0)
+			for consumer in consumers:
+				consumer.join(timeout=2.0)
+			raise
+
+		threadSupervisor.ReRaise()
+
+		return threadSupervisor.Warnings
 
 		#
 		# if args.influxdb:
@@ -553,3 +599,192 @@ class FileTarget(Target):
 	def Close(self) -> None:
 		self._file.flush()
 		self._file.close()
+
+
+@export
+def preprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+	if rules is None:
+		return gen
+
+	def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+		for line in gen:
+			for rule in rules:
+				if rule.Match(line):
+					rule.Process(line)
+
+			yield line
+
+	return filter(gen)
+
+
+@export
+def postprocessing(gen: Generator[VivadoLine, None, None], rules: Nullable[List[Rule]]) -> Generator[VivadoLine, None, None]:
+	if rules is None:
+		return gen
+
+	def filter(gen: Generator[VivadoLine, None, None]) -> Generator[VivadoLine, None, None]:
+		try:
+			for line in gen:
+				for rule in rules:
+					if rule.Match(line):
+						rule.Process(line)
+
+				yield line
+		except RuntimeError:
+			pass
+
+	return filter(gen)
+
+
+@export
+class ClassifierThread(Thread):
+	"""
+	Runs :meth:`Processor.LineClassification` over the raw ``(timestamp, str)`` line source and
+	pushes every classified :class:`VivadoLine` onto ``outputQueue``. Kept as its own thread/queue
+	stage (rather than fused with the common filter) so classification I/O and common-rule
+	evaluation can overlap once the queue has buffered a few items.
+	"""
+
+	def __init__(
+		self,
+		lineIterator:     Iterator[Tuple[datetime, str]],
+		outputQueue:      ThreadSafeQueue[Nullable[VivadoLine]],
+		threadSupervisor: ThreadSupervisor,
+		stopEvent:        Event,
+		lookbackDelay:    int = 1
+	) -> None:
+		super().__init__(name="Classifier", daemon=True)
+
+		self._lineIterator =     lineIterator
+		self._outputQueue =      outputQueue
+		self._threadSupervisor = threadSupervisor
+		self._stopEvent =        stopEvent
+		self._lookbackDelay =    lookbackDelay
+
+	def run(self) -> None:
+		try:
+			with WarningCollector() as warnings:
+				processor = Processor()
+				classified = processor.LineClassification(self._lineIterator)
+
+				# Delay by one line, because some classification needs to process the next line until it can decide about the
+				# current line. Actually, it processes the current line and alters the previous line, therefore the current line
+				# must be hold back from futher processing (e.g. writing to the target).
+				for line in Delay(classified, delay=self._lookbackDelay):
+					if self._stopEvent.is_set():
+						break
+
+					BlockingPut(self._outputQueue, line, self._stopEvent)
+		except BaseException as ex:
+			self._threadSupervisor.AddException(self.name, ex)
+			self._stopEvent.set()
+		finally:
+			self._threadSupervisor.AddWarnings(self.name, warnings.Warnings)
+			self._outputQueue.put(None)
+
+
+@export
+class CommonFilterThread(Thread):
+	"""
+	Consumes the raw classified stream, applies target-independent ``preprocessing`` rules, and
+	fans every surviving line out to every target queue. Filtering happens *before* the fan-out
+	so a line dropped here is only evaluated once, not duplicated across N target queues.
+
+	Each target receives its own shallow copy of every surviving line, not a shared reference.
+	``VivadoLine`` is mutable (``_action``, and the doubly-linked ``_previousLine``/``_nextLine``),
+	and each target's own ``postprocessing`` rules will drop a different subset of lines — so each
+	target needs its own chain to splice. Sharing one instance across targets would mean one
+	target's removal corrupts another target's linkage. Per-target chains are (re-)built here from
+	the common-filtered stream, so each starts from the same content but is independently mutable.
+	"""
+
+	def __init__(
+		self,
+		inputQueue:       ThreadSafeQueue[Nullable[VivadoLine]],
+		commonRules:      Nullable[List[Rule]],
+		targetQueues:     List[ThreadSafeQueue[Nullable[VivadoLine]]],
+		threadSupervisor: ThreadSupervisor,
+		stopEvent:        Event
+	) -> None:
+		super().__init__(name="CommonFilter", daemon=True)
+
+		self._inputQueue =       inputQueue
+		self._commonRules =      commonRules
+		self._targetQueues =     targetQueues
+		self._threadSupervisor = threadSupervisor
+		self._stopEvent =        stopEvent
+
+	def run(self) -> None:
+		previousLinePerTarget: List[Nullable[VivadoLine]] = [None] * len(self._targetQueues)
+
+		def exHandler(ex: BaseException) -> None:
+			self._stopEvent.set()
+
+		def finHandler() -> None:
+			for targetQueue in self._targetQueues:
+				targetQueue.put(None)
+
+		with SupervisedWarningCollector(
+			supervisor=self._threadSupervisor,
+			exceptionHandler=exHandler,
+			finallyHandler=finHandler
+		) as warnings:
+			stream =   QueueReader(self._inputQueue)
+			filtered = preprocessing(stream, self._commonRules)
+
+			for line in filtered:
+				if self._stopEvent.is_set():
+					break
+
+				for i, targetQueue in enumerate(self._targetQueues):
+					previousLinePerTarget[i] = (targetCopy := VivadoLine.Copy(line, previousLinePerTarget[i]))
+
+					BlockingPut(targetQueue, targetCopy, self._stopEvent)
+
+
+@export
+class TargetConsumerThread(Thread):
+	"""
+	Consumes one target's queue, applies that target's ``postprocessing`` rules, and writes
+	surviving lines to the target. Runs independently of every other target — a slow file write
+	no longer throttles stdout output, and vice versa.
+	"""
+
+	def __init__(
+		self,
+		queue:            ThreadSafeQueue[Nullable[VivadoLine]],
+		target:           Target,
+		threadSupervisor: ThreadSupervisor,
+		stopEvent:        Event
+	) -> None:
+		super().__init__(name=f"Target-{target.__class__.__name__}", daemon=True)
+
+		self._queue =            queue
+		self._target =           target
+		self._threadSupervisor = threadSupervisor
+		self._stopEvent =        stopEvent
+
+	def run(self) -> None:
+		def exHandler(ex: BaseException) -> None:
+			self._stopEvent.set()
+
+			# On failure, drain (without processing) so an upstream producer blocked on a full queue via BlockingPut() is
+			# freed once it next checks stopEvent.
+			while True:
+				try:
+					self._queue.get_nowait()
+				except Empty:
+					return
+
+		with SupervisedWarningCollector(
+			supervisor=self._threadSupervisor,
+			exceptionHandler=exHandler
+		) as warnings:
+			stream = QueueReader(self._queue)
+			filtered = postprocessing(stream, self._target._rules)
+
+			for line in filtered:
+				if self._stopEvent.is_set():
+					break
+
+				self._target.Write(line)
