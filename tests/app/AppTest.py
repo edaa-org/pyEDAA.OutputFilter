@@ -28,98 +28,20 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from pathlib            import Path
-from re                 import compile as re_compile
-from shutil             import which
-from subprocess         import CompletedProcess, run as subprocess_run
-from sys                import executable as PYTHON_EXECUTABLE
-from typing             import ClassVar, Optional as Nullable
-from unittest           import TestCase
+from typing import ClassVar
 
+from pyTooling.Testing import ApplicationTestcase, stripANSIColorCodes
 
-RUNABLE_MODULE: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
-CONSOLE_SCRIPT: ClassVar[str] = "pyedaa-outputfilter"
-
-
-class Testcase(TestCase):
-	"""
-	Shared base class: resolves the installed console_scripts executable once per test class and provides a
-	subprocess-invocation helper.
-	"""
-
-	_executable: str
-
-	@classmethod
-	def setUpClass(cls) -> None:
-		if (resolved := which(CONSOLE_SCRIPT)) is None:
-			raise RuntimeError(
-				f"'{CONSOLE_SCRIPT}' not found on PATH. Verify the wheel was installed in this environment and that setup.py's "
-				f"entry_points {{'console_scripts': ['{CONSOLE_SCRIPT}={RUNABLE_MODULE}:main']}} was picked up correctly."
-			)
-		print(f"Found {CONSOLE_SCRIPT} at '{resolved}'.")
-		cls._executable = resolved
-
-	def RunEntrypoint(
-		self,
-		*arguments:       str,
-		timeout:          float = 10.0,
-		stdInput:         Nullable[str] = None,
-		environment:      Nullable[dict[str, str]] = None,
-		workingDirectory: Nullable[Path] = None,
-	) -> CompletedProcess:
-		return subprocess_run(
-			[self._executable, *arguments],
-			capture_output=True,
-			text=True,
-			timeout=timeout,
-			input=stdInput,
-			env=environment,
-			cwd=workingDirectory
-		)
-
-	def RunModule(
-		self,
-		*arguments:       str,
-		timeout:          float = 10.0,
-		stdInput:         Nullable[str] = None,
-		environment:      Nullable[dict[str, str]] = None,
-		workingDirectory: Nullable[Path] = None,
-	) -> CompletedProcess:
-		"""
-		Invokes `python -m myPackage.CLI` directly, bypassing the console_scripts shim. Use to isolate whether a failure
-		originates in the entry-point wiring vs. the CLI logic itself.
-		"""
-		return subprocess_run(
-			[PYTHON_EXECUTABLE, "-m", RUNABLE_MODULE, *arguments],
-			capture_output=True,
-			text=True,
-			timeout=timeout,
-			input=stdInput,
-			env=environment,
-			cwd=workingDirectory
-		)
-
-	def assertExitCode(self, result: CompletedProcess, expected: int) -> None:
-		self.assertEqual(
-			expected,
-			result.returncode,
-			msg=(
-				f"args={result.args!r}\n"
-				f"--- stdout ---\n{result.stdout}\n"
-				f"--- stderr ---\n{result.stderr}"
-			),
-		)
-
-
-
-
-_ANSI_COLOR_CODES = re_compile(r"\x1B\[[0-9;]*m")
-
-def stripANSIColorCodes(text: str) -> str:
-	return _ANSI_COLOR_CODES.sub('', text)
 
 def escape(input: str) -> str:
 	return input.replace("{", "{{").replace("}", "}}")
+
+
+class Testcase(ApplicationTestcase):
+	"""Shared base class: pyTooling resolves the console script and runs it; this names which program to run."""
+
+	_consoleScript:  ClassVar[str] = "pyedaa-outputfilter"
+	_runnableModule: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
 
 
 class Commands(Testcase):

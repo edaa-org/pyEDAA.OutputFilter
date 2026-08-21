@@ -110,6 +110,39 @@ the mandatory dependencies too.
 
 
 
+
+.. _dependency-apptesting:
+
+Application Testing (Optional)
+******************************
+
+Additional Python packages needed to run the application tests, which exercise the installed
+``pyedaa-outputfilter`` command line rather than the package's classes. These packages are only needed for
+developers or on a CI server, thus sub-dependencies are not evaluated further.
+
+
+.. rubric:: Manually Installing Application Test Requirements
+
+Use the :file:`tests/app/requirements.txt` file to install all dependencies via ``pip3``. The file will
+recursively install the mandatory dependencies too.
+
+.. code-block:: shell
+
+   pip3 install -U -r tests/app/requirements.txt
+
+
+.. rubric:: Dependency List
+
++---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
+| **Package**                                                         | **Version** | **License**                                                                            | **Dependencies**     |
++=====================================================================+=============+========================================================================================+======================+
+| `pyTooling[terminal] <https://GitHub.com/pyTooling/pyTooling>`__    | ≥9.0        | `Apache License, 2.0 <https://GitHub.com/pyTooling/pyTooling/blob/main/LICENSE.md>`__  | *None*               |
++---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
+| `ruamel.yaml <https://sourceforge.net/projects/ruamel-yaml/>`__     | ≥0.19       | `MIT <https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/LICENSE>`__           | *Not yet evaluated.* |
++---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
+| `pytest <https://GitHub.com/pytest-dev/pytest>`__                   | ≥9.1        | `MIT <https://GitHub.com/pytest-dev/pytest/blob/master/LICENSE>`__                     | *Not yet evaluated.* |
++---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
+
 .. _DEP/documentation:
 
 Sphinx Documentation (Optional)
