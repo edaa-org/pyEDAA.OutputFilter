@@ -28,10 +28,18 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from enum     import StrEnum
-from pathlib  import Path
-from re       import compile as re_compile, Pattern
-from typing   import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
+from __future__                 import annotations
+
+from enum                       import StrEnum
+from pathlib                    import Path
+from re                         import compile as re_compile, Pattern
+from typing                     import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
+
+from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
+from pyEDAA.OutputFilter        import OutputFilterException
+from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage, LineAction
+from pyEDAA.OutputFilter.Xilinx import Synth_Design, Opt_Design, Link_Design, Place_Design, PhyOpt_Design, Route_Design, Write_Bitstream
+from pyEDAA.OutputFilter.Xilinx import Command, LineKind, VivadoLine
 
 from pyTooling.Decorators       import export
 from pyTooling.Exceptions       import addNoteWithItemList
@@ -39,12 +47,6 @@ from pyTooling.MetaClasses      import ExtendedType, abstractmethod
 from pyTooling.Stopwatch        import Stopwatch
 from pyTooling.TerminalUI       import TerminalBaseApplication
 from pyTooling.Warning          import WarningCollector, Warning
-from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
-
-from pyEDAA.OutputFilter        import OutputFilterException
-from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage, LineAction
-from pyEDAA.OutputFilter.Xilinx import Synth_Design, Opt_Design, Link_Design, Place_Design, PhyOpt_Design, Route_Design, Write_Bitstream
-from pyEDAA.OutputFilter.Xilinx import Command, LineKind, VivadoLine
 
 
 @export
@@ -208,7 +210,7 @@ class VivadoMessageRule(Rule):
 
 @export
 class Output(metaclass=ExtendedType, slots=True):
-	_parent:   "ProcessingPipeline"
+	_parent:   ProcessingPipeline
 	_file:     TextIO
 	_format:   OutputFormat
 	_commands: Nullable[List[Command]]
@@ -216,7 +218,7 @@ class Output(metaclass=ExtendedType, slots=True):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		format:   OutputFormat,
 		commands: Nullable[List[Command]],
 		rules:    Nullable[List[Rule]]
@@ -236,7 +238,7 @@ class StdOutOutput(Output):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		coloring: bool,
 		format:   OutputFormat,
 		commands: Nullable[List[Command]],
@@ -256,7 +258,7 @@ class FileOutput(Output):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		file:     Path,
 		format:   OutputFormat,
 		commands: List[Command],
@@ -287,11 +289,11 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		"write_bitstream": Write_Bitstream
 	}
 
-	_parent:        "Vivado"
+	_parent:        Vivado
 	_preprocessing: Nullable[List[Rule]]
 	_outputs:       Dict[str, Output]
 
-	def __init__(self, parent: "Vivado") -> None:
+	def __init__(self, parent: Vivado) -> None:
 		self._parent =        parent
 		self._preprocessing = None
 		self._outputs =       {
@@ -465,13 +467,13 @@ class Vivado(Tool):
 
 	_VIVADO_MESSAGE_PATTERN: ClassVar[Pattern] = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
 
-	_parent:             "Configuration"
+	_parent:             Configuration
 	_colors:             Dict[str, str]
 	_ruleSets:           Dict[str, Dict[str, Rule]]
 	_processingPipeline: ProcessingPipeline
 	_hasLatches:         Action
 
-	def __init__(self, parent: "Configuration") -> None:
+	def __init__(self, parent: Configuration) -> None:
 		self._parent =   parent
 
 		self._colors =             self._InitializeColors()

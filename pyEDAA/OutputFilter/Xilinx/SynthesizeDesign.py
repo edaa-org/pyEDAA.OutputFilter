@@ -29,13 +29,15 @@
 # ==================================================================================================================== #
 #
 """A filtering anc classification processor for AMD/Xilinx Vivado Synthesis outputs."""
-from re     import compile as re_compile
-from typing import ClassVar, Dict, Generator, Optional as Nullable
+from __future__                 import annotations
 
-from pyTooling.Decorators  import export, readonly
+from re                         import compile as re_compile
+from typing                     import ClassVar, Dict, Generator, Optional as Nullable
 
 from pyEDAA.OutputFilter.Xilinx import Section, SubSection, SectionWithChildren
 from pyEDAA.OutputFilter.Xilinx import VHDLAssertionMessage, VivadoLine, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
+
+from pyTooling.Decorators       import export, readonly
 
 
 __all__ = ["TIME_MEMORY_PATTERN"]
@@ -132,7 +134,7 @@ class LoadingPart(Section):
 
 	_part:   Nullable[str]  #: Part name of the device this design was synthesized for.
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		"""
 		Initializes the section for loading the device information.
 
@@ -468,7 +470,7 @@ class WritingSynthesisReport(Section):
 	_blackboxes: Dict[str, int]  #: Blackbox statistics: blackbox name -> count
 	_cells:      Dict[str, int]  #: Cell statistics: cell name -> count
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._blackboxes = {}
