@@ -50,7 +50,7 @@ from pyTooling.Attributes.ArgParse.Argument   import StringArgument
 from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
 from pyEDAA.OutputFilter                      import OutputFilterException, __issue_tracker_url__
-from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
+from pyTooling.Configuration                  import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
