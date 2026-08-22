@@ -117,7 +117,7 @@ Application Testing (Optional)
 ******************************
 
 Additional Python packages needed to run the application tests, which exercise the installed
-:file:`pyedaa-outputfilter` command line rather than the package's classes. These packages are only needed for
+:program:`pyedaa-outputfilter` command line rather than the package's classes. These packages are only needed for
 developers or on a CI server, thus sub-dependencies are not evaluated further.
 
 
