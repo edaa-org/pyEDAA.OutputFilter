@@ -111,13 +111,13 @@ the mandatory dependencies too.
 
 
 
-.. _dependency-apptesting:
+.. _DEP/apptesting:
 
 Application Testing (Optional)
 ******************************
 
 Additional Python packages needed to run the application tests, which exercise the installed
-``pyedaa-outputfilter`` command line rather than the package's classes. These packages are only needed for
+:file:`pyedaa-outputfilter` command line rather than the package's classes. These packages are only needed for
 developers or on a CI server, thus sub-dependencies are not evaluated further.
 
 
