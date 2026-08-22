@@ -37,7 +37,7 @@ from re                         import compile as re_compile, Pattern
 from typing                     import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
 
 from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
-from pyTooling.Configuration        import ConfigurationException
+from pyTooling.Configuration    import ConfigurationException
 from pyTooling.Decorators       import export
 from pyTooling.Exceptions       import addNoteWithItemList
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
