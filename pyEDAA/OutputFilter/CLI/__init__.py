@@ -52,7 +52,7 @@ from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
 from pyEDAA                                   import OutputFilter
 from pyEDAA.OutputFilter                      import OutputFilterException
-from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
+from pyTooling.Configuration                  import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
