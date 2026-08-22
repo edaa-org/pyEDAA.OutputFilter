@@ -1,2 +1,2 @@
-pyTooling[terminal] ~= 8.17
+pyTooling[terminal] >= 9.0, < 11.0
 ruamel.yaml ~= 0.19.1
