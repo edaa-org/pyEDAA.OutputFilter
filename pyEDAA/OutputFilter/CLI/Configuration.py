@@ -33,6 +33,7 @@ from pathlib  import Path
 from re       import compile as re_compile, Pattern
 from typing   import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
 
+from pyTooling.Configuration        import ConfigurationException
 from pyTooling.Decorators       import export
 from pyTooling.Exceptions       import addNoteWithItemList
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
@@ -41,15 +42,9 @@ from pyTooling.TerminalUI       import TerminalBaseApplication
 from pyTooling.Warning          import WarningCollector, Warning
 from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
 
-from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage, LineAction
 from pyEDAA.OutputFilter.Xilinx import Synth_Design, Opt_Design, Link_Design, Place_Design, PhyOpt_Design, Route_Design, Write_Bitstream
 from pyEDAA.OutputFilter.Xilinx import Command, LineKind, VivadoLine
-
-
-@export
-class ConfigurationException(OutputFilterException):
-	pass
 
 
 @export
