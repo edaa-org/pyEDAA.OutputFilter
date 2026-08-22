@@ -34,10 +34,10 @@ from __future__                 import annotations
 from re                         import compile as re_compile
 from typing                     import ClassVar, Dict, Generator, Optional as Nullable
 
+from pyTooling.Decorators       import export, readonly
+
 from pyEDAA.OutputFilter.Xilinx import Section, SubSection, SectionWithChildren
 from pyEDAA.OutputFilter.Xilinx import VHDLAssertionMessage, VivadoLine, LineKind, VivadoInfoMessage, VHDLReportMessage, VivadoMessage
-
-from pyTooling.Decorators       import export, readonly
 
 
 __all__ = ["TIME_MEMORY_PATTERN"]

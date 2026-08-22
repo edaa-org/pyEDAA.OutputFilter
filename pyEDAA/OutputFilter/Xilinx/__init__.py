@@ -37,15 +37,15 @@ from pathlib               import Path
 from re                    import Pattern, compile as re_compile
 from typing                import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
 
-from pyEDAA.OutputFilter   import Line, OutputFilterException
-from pyEDAA.OutputFilter   import InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
-
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Common      import getFullyQualifiedName
 from pyTooling.Stopwatch   import Stopwatch
 from pyTooling.Versioning  import YearReleaseVersion
 from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
+
+from pyEDAA.OutputFilter   import Line, OutputFilterException
+from pyEDAA.OutputFilter   import InfoMessage, WarningMessage, CriticalWarningMessage, ErrorMessage
 
 
 __all__ = ["MAJOR", "MAJOR_MINOR", "MAJOR_MINOR_MICRO", "MAJOR_MINOR_MICRO_NANO"]
