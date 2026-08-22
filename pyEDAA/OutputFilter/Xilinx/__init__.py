@@ -1559,9 +1559,9 @@ class Section(BaseParser, BaseSection):
 	# _FINISH:     ClassVar[str]
 	# _DUPLICATES: ClassVar[bool]
 
-	_command:  Command  #: Reference to the command (parent).
+	_command:  Command            #: Reference to the command (parent).
 	_next:     Nullable[Section]
-	_duration: float    #: Duration synthesis spent in processing a synthesis step logged in this log output section.
+	_duration: float              #: Duration synthesis spent in processing a synthesis step logged in this log output section.
 
 	def __init__(self, command: Command) -> None:
 		"""
