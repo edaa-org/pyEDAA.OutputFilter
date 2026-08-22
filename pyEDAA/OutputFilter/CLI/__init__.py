@@ -49,7 +49,7 @@ from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
 from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
-from pyEDAA.OutputFilter                      import OutputFilterException
+from pyEDAA.OutputFilter                      import OutputFilterException, __issue_tracker_url__
 from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
@@ -58,12 +58,11 @@ from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
-	programTitle: ClassVar[str] = "pyEDAA.OutputFilter Service Program"
+	HeadLine:          ClassVar[str] = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
+	ISSUE_TRACKER_URL: ClassVar[str] = __issue_tracker_url__                  #: Offered when an unexpected exception is reported.
 
 	def __init__(self) -> None:
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
-
-		self.HeadLine = self.programTitle  # TODO: needs improvement
 
 		# Call the constructor of the ArgParseMixin
 		textWidth = min(self.Width, 160)
@@ -142,8 +141,8 @@ def main() -> NoReturn:
 		program.Run()
 	except ConfigurationException as ex:
 		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
-		if ex.__notes__ is not None:
-			for note in ex.__notes__:
+		if ex.HasNotes:
+			for note in ex.Notes:
 				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.Foreground))
 
 	except OutputFilterException as ex:
@@ -152,7 +151,7 @@ def main() -> NoReturn:
 			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.Foreground))
 
 	except ExceptionBase as ex:
-		program.printExceptionBase(ex)
+		program.PrintExceptionBase(ex)
 	except NotImplementedError as ex:
 		program.PrintNotImplementedError(ex)
 	except Exception as ex:
