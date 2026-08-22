@@ -59,7 +59,7 @@ class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
 	HeadLine:          ClassVar[str] = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
-	ISSUE_TRACKER_URL: ClassVar[str] = __issue_tracker_url__                 #: Offered when an unexpected exception is reported.
+	ISSUE_TRACKER_URL: ClassVar[str] = __issue_tracker_url__                  #: Offered when an unexpected exception is reported.
 
 	def __init__(self) -> None:
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
