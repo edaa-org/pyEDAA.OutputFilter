@@ -703,8 +703,14 @@ class Vivado(Tool):
 			if policies["hasLatches"] == "error":
 				self._hasLatches = Action.Error
 			else:
+				# WORKAROUND: Python <3.12
+				#   Reusing the f-string's own quote character inside its expression needs PEP 701. On Python 3.11
+				#   this is a 'SyntaxError' raised at import, which takes the whole module with it.
+				#   Replace by:
+				#     ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
+				hasLatches = policies["hasLatches"]
 				WarningCollector.Raise(
-					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
+					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{hasLatches}'."))
 
 	def _ParseRuleSetAction(self, actionConfig: Any) -> LineAction:
 		if not isinstance(actionConfig, str):
