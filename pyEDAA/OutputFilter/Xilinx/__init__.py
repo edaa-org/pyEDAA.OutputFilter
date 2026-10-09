@@ -3908,7 +3908,9 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	@readonly
 	def Duration(self) -> float:
 		"""
-		 Duration of the observed process (e.g. start to end of synthesis).
+		Duration of the observed process.
+
+		The observed process is e.g. a synthesis, from its start to its end.
 
 		:returns: The observed process' execution duration in seconds.
 		"""
