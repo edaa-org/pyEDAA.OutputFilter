@@ -3136,7 +3136,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 327 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[327]]
+				return list(synthMessages[327])
 
 		return []
 
@@ -3250,7 +3250,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 6031 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[6031]]
+				return list(synthMessages[6031])
 
 		return []
 
@@ -3271,7 +3271,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 63 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[63]]
+				return list(synthMessages[63])
 
 		return []
 
