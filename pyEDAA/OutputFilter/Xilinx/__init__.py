@@ -3107,8 +3107,8 @@ class Synth_Design(CommandWithSections):
 
 		Latch detection is based on:
 
-		* Vivado message ``synth 8-327``
-		* Cells of lind ``LD`` listed in the *Cell Usage* report.
+		* Vivado message ``Synth 8-327``
+		* Cells of kind ``LD`` listed in the *Cell Usage* report.
 
 		:returns: True, if the design contains latches.
 		"""
@@ -3117,7 +3117,7 @@ class Synth_Design(CommandWithSections):
 		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
 			return True
 
-		return "LD" in self._sections[WritingSynthesisReport]._cells
+		return "LD" in self[WritingSynthesisReport]._cells
 
 	@readonly
 	def Latches(self) -> List[VivadoMessage]:
@@ -3209,7 +3209,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return len(self._sections[WritingSynthesisReport]._blackboxes) > 0
+		return len(self[WritingSynthesisReport]._blackboxes) > 0
 
 	@readonly
 	def Blackboxes(self) -> Dict[str, int]:
@@ -3220,7 +3220,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return self._sections[WritingSynthesisReport]._blackboxes
+		return self[WritingSynthesisReport]._blackboxes
 
 	@readonly
 	def Cells(self) -> Dict[str, int]:
@@ -3231,7 +3231,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return self._sections[WritingSynthesisReport]._cells
+		return self[WritingSynthesisReport]._cells
 
 	@readonly
 	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
