@@ -31,9 +31,9 @@
 """Unit tests for Vivado synthesis log files."""
 from datetime import datetime
 from pathlib  import Path
-from unittest import TestCase as TestCase
 
 from pytest                     import mark
+from pyTooling.Testing          import Testcase
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
@@ -62,7 +62,7 @@ class Aggregator:
 		return self._s
 
 
-class Stopwatch(TestCase):
+class Stopwatch(Testcase):
 	def test_SynthesisLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vds")
@@ -300,7 +300,7 @@ class Stopwatch(TestCase):
 # 	pass
 
 
-class CERN_DevKit(TestCase):
+class CERN_DevKit(Testcase):
 	def test_SynthesisLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vds")
@@ -394,7 +394,7 @@ class CERN_DevKit(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class Enclustra_Mercury_ZX5(TestCase):
+class Enclustra_Mercury_ZX5(Testcase):
 	def test_SynthesisLogfile_2019_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vds")

@@ -33,9 +33,9 @@ from datetime import datetime
 from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
-from unittest import TestCase as TestCase
 
 from pytest               import mark
+from pyTooling.Testing    import Testcase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
@@ -49,7 +49,7 @@ if __name__ == "__main__": # pragma: no cover
 	exit(1)
 
 
-class Preambles(TestCase):
+class Preambles(Testcase):
 	_LICENSE_INFO:   ClassVar[str] = ("""\
 		INFO: [Common 17-3922] A valid Vivado Design Suite ENTERPRISE license has been detected. Your current license is active and will expire on Permanent.""")
 	_PIPED_PREAMBLE: ClassVar[str] = ("""\
@@ -298,7 +298,7 @@ class Preambles(TestCase):
 		self.assertIn(3922, preamble.MessagesByID[17])
 
 
-class SynthDesign(TestCase):
+class SynthDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = ("""\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
