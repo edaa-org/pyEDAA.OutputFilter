@@ -703,8 +703,11 @@ class Vivado(Tool):
 			if policies["hasLatches"] == "error":
 				self._hasLatches = Action.Error
 			else:
+				# WORKAROUND: Python <3.12
+				#   Replace by:
+				#     ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
 				WarningCollector.Raise(
-					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
+					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies['hasLatches']}'."))
 
 	def _ParseRuleSetAction(self, actionConfig: Any) -> LineAction:
 		if not isinstance(actionConfig, str):
