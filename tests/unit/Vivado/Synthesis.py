@@ -701,3 +701,147 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
 			self.assertIsInstance(line, VivadoLine)
+
+	def test_HasLatches_Cell(self) -> None:
+		report = StringIO(dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._SYNTHESIS_START}
+			---------------------------------------------------------------------------------
+			Start Writing Synthesis Report
+			---------------------------------------------------------------------------------
+
+			Report BlackBoxes:
+			+-+--------------+----------+
+			| |BlackBox name |Instances |
+			+-+--------------+----------+
+			+-+--------------+----------+
+
+			Report Cell Usage:
+			+------+------+------+
+			|      |Cell  |Count |
+			+------+------+------+
+			|1     |BUFG  |     1|
+			|2     |LUT2  |     4|
+			|3     |LD    |     2|
+			|4     |FDRE  |     8|
+			+------+------+------+
+			---------------------------------------------------------------------------------
+			Finished Writing Synthesis Report : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 1034.773 ; gain = 364.043
+			---------------------------------------------------------------------------------
+{self._SYNTHESIS_FINISH}
+{self._POSTAMBLE}""")
+		)
+
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+		with WarningCollector() as warnings:
+			for line in generator:
+				pass
+
+		self.assertEqual(0, len(warnings))
+
+		synthDesign = processor[Synth_Design]
+		self.assertTrue(synthDesign.HasLatches)
+		self.assertEqual(0, len(synthDesign.Latches))
+		self.assertFalse(synthDesign.HasBlackboxes)
+		self.assertEqual(0, len(synthDesign.Blackboxes))
+		self.assertDictEqual({"BUFG": 1, "LUT2": 4, "LD": 2, "FDRE": 8}, synthDesign.Cells)
+
+	def test_HasLatches_LatchPrimitives(self) -> None:
+		cells = {
+			"LD": True, "LDE": True, "LDC": True, "LDCE": True, "LDP": True, "LDPE": True, "LDCP": True, "LDCPE": True,
+			"LD_1": True, "LDCE_1": True, "LDPE_1": True, "LDCPE_1": True,
+			"LDPC_Decoder": False, "LDO": False, "LDCE_2": False, "FDRE": False
+		}
+
+		for cell, isLatch in cells.items():
+			with self.subTest(cell=cell):
+				report = StringIO(dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._SYNTHESIS_START}
+			---------------------------------------------------------------------------------
+			Start Writing Synthesis Report
+			---------------------------------------------------------------------------------
+
+			Report BlackBoxes:
+			+-+--------------+----------+
+			| |BlackBox name |Instances |
+			+-+--------------+----------+
+			+-+--------------+----------+
+
+			Report Cell Usage:
+			+------+--------------+------+
+			|      |Cell          |Count |
+			+------+--------------+------+
+			|1     |LUT2          |     4|
+			|2     |{cell:<14}|     2|
+			+------+--------------+------+
+			---------------------------------------------------------------------------------
+			Finished Writing Synthesis Report : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 1034.773 ; gain = 364.043
+			---------------------------------------------------------------------------------
+{self._SYNTHESIS_FINISH}
+{self._POSTAMBLE}""")
+				)
+
+				processor = Processor()
+				generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+				with WarningCollector() as warnings:
+					for line in generator:
+						pass
+
+				self.assertEqual(0, len(warnings))
+				self.assertEqual(isLatch, processor[Synth_Design].HasLatches)
+				self.assertEqual(2, processor[Synth_Design].Cells[cell])
+
+	def test_HasLatches_Message(self) -> None:
+		report = StringIO(dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._SYNTHESIS_START}
+			---------------------------------------------------------------------------------
+			Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 847.230 ; gain = 176.500
+			---------------------------------------------------------------------------------
+			INFO: [Synth 8-638] synthesizing module 'system_top' [C:/Users/tgomes/git/2019_1/src/system_top_PE1.vhd:257]
+			WARNING: [Synth 8-327] inferring latch for variable 'Q_reg' [C:/Users/tgomes/git/2019_1/src/latch.vhd:42]
+			---------------------------------------------------------------------------------
+			Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 917.641 ; gain = 246.910
+			---------------------------------------------------------------------------------
+			---------------------------------------------------------------------------------
+			Start Writing Synthesis Report
+			---------------------------------------------------------------------------------
+
+			Report BlackBoxes:
+			+------+------------------+----------+
+			|      |BlackBox name     |Instances |
+			+------+------------------+----------+
+			|1     |MercuryZX5_xbar_0 |         1|
+			+------+------------------+----------+
+
+			Report Cell Usage:
+			+------+------------------+------+
+			|      |Cell              |Count |
+			+------+------------------+------+
+			|1     |MercuryZX5_xbar_0 |     1|
+			|2     |LUT2              |     4|
+			|3     |FDRE              |     8|
+			+------+------------------+------+
+			---------------------------------------------------------------------------------
+			Finished Writing Synthesis Report : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 1034.773 ; gain = 364.043
+			---------------------------------------------------------------------------------
+{self._SYNTHESIS_FINISH}
+{self._POSTAMBLE}""")
+		)
+
+		processor = Processor()
+		generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+		with WarningCollector() as warnings:
+			for line in generator:
+				pass
+
+		self.assertEqual(0, len(warnings))
+
+		synthDesign = processor[Synth_Design]
+		self.assertTrue(synthDesign.HasLatches)
+		self.assertEqual(1, len(synthDesign.Latches))
+		self.assertTrue(synthDesign.HasBlackboxes)
+		self.assertDictEqual({"MercuryZX5_xbar_0": 1}, synthDesign.Blackboxes)
+		self.assertDictEqual({"MercuryZX5_xbar_0": 1, "LUT2": 4, "FDRE": 8}, synthDesign.Cells)
