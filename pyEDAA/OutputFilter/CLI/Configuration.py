@@ -546,6 +546,7 @@ class Vivado(Tool):
 			return
 		elif not isinstance(toolConfig, CommentedMap):
 			WarningCollector.Raise(ConfigurationWarning(f"{configPath}.{key}: Is not a dictionary."))
+			return
 
 		for name in toolConfig:
 			if name not in self._SECTIONS:
@@ -709,13 +710,16 @@ class Vivado(Tool):
 				WarningCollector.Raise(
 					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies['hasLatches']}'."))
 
-	def _ParseRuleSetAction(self, actionConfig: Any) -> LineAction:
+	def _ParseRuleSetAction(self, actionConfig: Any) -> Action:
 		if not isinstance(actionConfig, str):
 			WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.rule-sets.<ruleset>.<rule>.action: Unsupported value '{actionConfig}'."))
+			return Action.Default
+
 		try:
 			return Action(actionConfig)
 		except ValueError:
 			WarningCollector.Raise(ConfigurationWarning(f"tools.vivado.rule-sets.<ruleset>.<rule>.action: Unknown value '{actionConfig}'."))
+			return Action.Default
 
 
 @export
