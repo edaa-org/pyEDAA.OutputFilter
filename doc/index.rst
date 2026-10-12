@@ -65,13 +65,17 @@ List all warnings
 
 .. code-block:: Python
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+   from pathlib import Path
+
+   from pyTooling.Warning          import WarningCollector
+   from pyEDAA.OutputFilter.Xilinx import Document
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   with WarningCollector() as warnings:
+     processor = Document(logfile)
+     processor.Parse()
 
-   print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages}):")
+   print(f"CRITICAL WARNING Messages ({len(processor.CriticalWarningMessages)}):")
    for message in processor.CriticalWarningMessages:
      print(f"  {message}")
 

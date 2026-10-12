@@ -10,11 +10,15 @@ Processing the ``*.vdi`` File
 
 .. code-block:: Python
 
-   from pyEDAA.OutputFilter.Xilinx.Implementation import Processor
+   from pathlib import Path
+
+   from pyTooling.Warning          import WarningCollector
+   from pyEDAA.OutputFilter.Xilinx import Document
 
    logfile = Path("tests/data/Stopwatch/toplevel.vdi")
-   processor = Processor(logfile)
-   processor.Parse()
+   with WarningCollector() as warnings:
+     processor = Document(logfile)
+     processor.Parse()
 
    print(f"Processing duration: {processor.ProcessingDuration:.3f} seconds")
 
@@ -46,28 +50,36 @@ The tool version is extracted by the Preamble parser.
 
 .. code-block:: Python
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+   from pathlib import Path
+
+   from pyTooling.Warning          import WarningCollector
+   from pyEDAA.OutputFilter.Xilinx import Document
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   with WarningCollector() as warnings:
+     processor = Document(logfile)
+     processor.Parse()
 
-   print(f"Vivado version: v{processor[Preamble].ToolVersion}")
+   print(f"Vivado version: v{processor.Preamble.ToolVersion}")
 
 Synthesis start time and date
 =============================
 
-The start timestamp (:class:`datetime`) is extracted by the Preamble parser.
+The start timestamp (:class:`~datetime.datetime`) is extracted by the Preamble parser.
 
 .. code-block:: Python
 
-   from pyEDAA.OutputFilter.Xilinx.Synthesis import Processor
+   from pathlib import Path
+
+   from pyTooling.Warning          import WarningCollector
+   from pyEDAA.OutputFilter.Xilinx import Document
 
    logfile = Path("tests/data/Stopwatch/toplevel.vds")
-   processor = Processor(logfile)
-   processor.Parse()
+   with WarningCollector() as warnings:
+     processor = Document(logfile)
+     processor.Parse()
 
-   print(f"Synthesis started: v{processor[Preamble].StartDatetime}")
+   print(f"Synthesis started: {processor.StartDateTime}")
 
 Implementation duration
 =======================
