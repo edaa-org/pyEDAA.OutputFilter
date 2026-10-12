@@ -72,8 +72,10 @@ class ProcessorWarnings(Warning):
 	"""
 	Base-class for warnings raised by processors parsing log outputs.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
@@ -198,8 +200,10 @@ class UnknownLine(ProcessorWarnings):
 
 	The parser raises an exception right after reporting the warning.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 	_line: "VivadoLine"  #: The line, which caused the warning.
 
@@ -229,8 +233,10 @@ class UnknownTask(UnknownLine):
 	"""
 	A warning reported, if a command's output contains an unknown task.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
@@ -239,8 +245,10 @@ class UnknownSubTask(UnknownLine):
 	"""
 	A warning reported, if a task's output contains an unknown subtask.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
@@ -249,8 +257,10 @@ class UnknownSection(UnknownLine):
 	"""
 	A warning reported, if a command's output contains an unknown section.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
@@ -259,8 +269,10 @@ class UnknownPhase(UnknownLine):
 	"""
 	A warning reported, if a task's output contains an unknown phase.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
@@ -269,8 +281,10 @@ class UnknownSubPhase(UnknownLine):
 	"""
 	A warning reported, if a phase's output contains an unknown subphase or a deeper nested element.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 

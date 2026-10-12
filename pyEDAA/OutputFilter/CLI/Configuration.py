@@ -59,8 +59,10 @@ class ConfigurationWarning(Warning):
 
 	The setting is skipped or replaced by its default.
 
-	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
-	Without a collector, it's dropped silently.
+	.. attention::
+
+	   It's a non-critical warning: without a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy, it's
+	   dropped silently.
 	"""
 
 
