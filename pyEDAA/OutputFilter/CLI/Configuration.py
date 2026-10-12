@@ -54,7 +54,14 @@ class ConfigurationException(OutputFilterException):
 
 @export
 class ConfigurationWarning(Warning):
-	pass
+	"""
+	A warning reported, if the configuration contains an unknown or malformed setting.
+
+	The setting is skipped or replaced by its default.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export

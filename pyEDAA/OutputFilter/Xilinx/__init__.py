@@ -71,13 +71,23 @@ class ProcessorException(OutputFilterException):
 class ProcessorWarnings(Warning):
 	"""
 	Base-class for warnings raised by processors parsing log outputs.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
 	"""
 
 
 @export
 class ProcessorCriticalWarning(CriticalWarning):
 	"""
-	Base-class for critical warning raised by processors parsing log outputs.
+	Base-class for critical warnings raised by processors parsing log outputs.
+
+	:meth:`Launch.Parser` reports it, if a launch's *waiting* line names another launch than its *launched* line.
+
+	.. important::
+
+	   As a critical warning, it must be collected by a :class:`~pyTooling.Warning.WarningCollector` up the
+	   call-hierarchy, otherwise :exc:`~pyTooling.Warning.UnhandledCriticalWarningError` is raised.
 	"""
 
 
@@ -150,55 +160,118 @@ class NestedTaskNotPresentException(NotPresentException):
 
 @export
 class UndetectedEnd(ProcessorCriticalWarning):
-	_line: "VivadoLine"
+	"""
+	A critical warning reported, if a parser didn't detect the end of a subtask, phase or nested element.
+
+	.. important::
+
+	   As a critical warning, it must be collected by a :class:`~pyTooling.Warning.WarningCollector` up the
+	   call-hierarchy, otherwise :exc:`~pyTooling.Warning.UnhandledCriticalWarningError` is raised.
+	"""
+	_line: "VivadoLine"  #: The line, which caused the warning.
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
+		"""
+		Initializes a warning about an undetected end.
+
+		:param message: Warning message.
+		:param line:    The line, which caused the warning.
+		"""
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
 	def Line(self) -> "VivadoLine":
+		"""
+		Read-only property to access the line, which caused the warning (:attr:`_line`).
+
+		:returns: The line, which caused the warning.
+		"""
 		return self._line
 
 
 @export
 class UnknownLine(ProcessorWarnings):
-	_line: "VivadoLine"
+	"""
+	Base-class for warnings reported, if a parser found an unknown section, task, phase or nested element.
+
+	The parser raises an exception right after reporting the warning.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
+	_line: "VivadoLine"  #: The line, which caused the warning.
 
 	def __init__(self, message: str, line: "VivadoLine") -> None:
+		"""
+		Initializes a warning about an unknown line.
+
+		:param message: Warning message.
+		:param line:    The line, which caused the warning.
+		"""
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
 	def Line(self) -> "VivadoLine":
+		"""
+		Read-only property to access the line, which caused the warning (:attr:`_line`).
+
+		:returns: The line, which caused the warning.
+		"""
 		return self._line
 
 
 @export
 class UnknownTask(UnknownLine):
-	pass
+	"""
+	A warning reported, if a command's output contains an unknown task.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export
 class UnknownSubTask(UnknownLine):
-	pass
+	"""
+	A warning reported, if a task's output contains an unknown subtask.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export
 class UnknownSection(UnknownLine):
-	pass
+	"""
+	A warning reported, if a command's output contains an unknown section.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export
 class UnknownPhase(UnknownLine):
-	pass
+	"""
+	A warning reported, if a task's output contains an unknown phase.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export
 class UnknownSubPhase(UnknownLine):
-	pass
+	"""
+	A warning reported, if a phase's output contains an unknown subphase or a deeper nested element.
+
+	As a non-critical warning, it's collected by a :class:`~pyTooling.Warning.WarningCollector` up the call-hierarchy.
+	Without a collector, it's dropped silently.
+	"""
 
 
 @export
@@ -979,6 +1052,9 @@ class VivadoTclCommand(TclCommand):
 
 @export
 class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
+	"""
+	A mixin collecting Vivado messages (info, warning, critical warning, error).
+	"""
 	_infoMessages:            List[VivadoInfoMessage]
 	_warningMessages:         List[VivadoWarningMessage]
 	_criticalWarningMessages: List[VivadoCriticalWarningMessage]
@@ -998,30 +1074,65 @@ class VivadoMessagesMixin(metaclass=ExtendedType, mixin=True):
 
 	@readonly
 	def ToolIDs(self) -> Dict[int, str]:
+		"""
+		Read-only property to access the tool names by tool ID.
+
+		:returns: A dictionary mapping tool IDs to tool names.
+		"""
 		return self._toolIDs
 
 	@readonly
 	def ToolNames(self) -> Dict[str, int]:
+		"""
+		Read-only property to access the tool IDs by tool name.
+
+		:returns: A dictionary mapping tool names to tool IDs.
+		"""
 		return self._toolNames
 
 	@readonly
 	def MessagesByID(self) -> Dict[int, Dict[int, List[VivadoMessage]]]:
+		"""
+		Read-only property to access Vivado messages grouped by tool ID and message kind ID.
+
+		:returns: A dictionary of dictionaries of message lists.
+		"""
 		return self._messagesByID
 
 	@readonly
 	def InfoMessages(self) -> List[VivadoInfoMessage]:
+		"""
+		Read-only property to access the list of Vivado info messages.
+
+		:returns: A list of info messages in order of appearance.
+		"""
 		return self._infoMessages
 
 	@readonly
 	def WarningMessages(self) -> List[VivadoWarningMessage]:
+		"""
+		Read-only property to access the list of Vivado warning messages.
+
+		:returns: A list of warning messages in order of appearance.
+		"""
 		return self._warningMessages
 
 	@readonly
 	def CriticalWarningMessages(self) -> List[VivadoCriticalWarningMessage]:
+		"""
+		Read-only property to access the list of Vivado critical warning messages.
+
+		:returns: A list of critical warning messages in order of appearance.
+		"""
 		return self._criticalWarningMessages
 
 	@readonly
 	def ErrorMessages(self) -> List[VivadoErrorMessage]:
+		"""
+		Read-only property to access the list of Vivado error messages.
+
+		:returns: A list of error messages in order of appearance.
+		"""
 		return self._errorMessages
 
 	def _AddMessage(self, message: VivadoMessage) -> None:
@@ -3893,6 +4004,12 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 	@readonly
 	def StartDateTime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when Vivado was started.
+
+		:returns:           The start date and time found in the preamble.
+		:raises ValueError: If no preamble was found.
+		"""
 		if self._preamble is None:
 			raise ValueError(f"Preamble was not found when parsing the Vivado log outputs.")
 
@@ -3900,6 +4017,12 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 	@readonly
 	def ExitDateTime(self) -> datetime:
+		"""
+		Read-only property to access the date and time when Vivado exited.
+
+		:returns:           The exit date and time found in the postamble.
+		:raises ValueError: If no postamble was found.
+		"""
 		if self._postamble is None:
 			raise ValueError(f"Postamble was not found when parsing the Vivado log outputs.")
 
@@ -3976,6 +4099,26 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		return 17 in self._messagesByID and 14 in self._messagesByID[17]
 
 	def CommandFinder(self, line: Nullable[VivadoLine] = None) -> Generator[VivadoLine, VivadoLine, None]:
+		"""
+		A generator for finding Vivado commands and nested launches in classified log lines.
+
+		It processes the preamble, passes the output of each Vivado command and nested launch to its parser and processes
+		the postamble.
+
+		Parsers report problems as warnings to a :class:`~pyTooling.Warning.WarningCollector`:
+
+		* An unknown section, task, phase or nested element is reported as a non-critical :exc:`UnknownLine`, then an
+		  exception ends the parsing.
+		* A launch's *waiting* line naming another launch is reported as a critical :exc:`ProcessorCriticalWarning`.
+
+		:param line:                           Optional, first line to process. If ``None``, the generator waits for the
+		                                       first line sent to it.
+		:returns:                              A generator processing log messages.
+		:raises Exception:                     If a section, task, phase or nested element is unknown.
+		:raises UnhandledCriticalWarningError: If a launch's *waiting* line names another launch and no
+		                                       :class:`~pyTooling.Warning.WarningCollector` collects the
+		                                       :exc:`ProcessorCriticalWarning`.
+		"""
 		tclProcedures = {"source"}
 
 		self._preamble =  Preamble(self)
@@ -4122,6 +4265,26 @@ class Processor(VivadoProcessor):
 		return self._nestedLaunches
 
 	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+		"""
+		A generator classifying raw log lines.
+
+		Each line is classified, e.g. as a Vivado message or Tcl command, passed to :meth:`CommandFinder`, appended to
+		:data:`Lines` and yielded.
+
+		Parsers report problems as warnings to a :class:`~pyTooling.Warning.WarningCollector`:
+
+		* An unknown section, task, phase or nested element is reported as a non-critical :exc:`UnknownLine`, then an
+		  exception ends the parsing.
+		* A launch's *waiting* line naming another launch is reported as a critical :exc:`ProcessorCriticalWarning`.
+
+		:param inputStream:                    Iterator of timestamps and raw log lines.
+		:returns:                              A generator yielding classified log lines.
+		:raises ClassificationException:       If a line starting like a Vivado message isn't a Vivado message.
+		:raises Exception:                     If a section, task, phase or nested element is unknown.
+		:raises UnhandledCriticalWarningError: If a launch's *waiting* line names another launch and no
+		                                       :class:`~pyTooling.Warning.WarningCollector` collects the
+		                                       :exc:`ProcessorCriticalWarning`.
+		"""
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
@@ -4231,6 +4394,30 @@ class Document(Processor):
 		return self._logfile
 
 	def Parse(self) -> None:
+		"""
+		Read and parse the log file.
+
+		The log file is processed line-by-line by :meth:`LineClassification`.
+
+		Parsers report problems as warnings to a :class:`~pyTooling.Warning.WarningCollector`:
+
+		* An unknown section, task, phase or nested element is reported as a non-critical :exc:`UnknownLine`, then an
+		  exception ends the parsing.
+		* A launch's *waiting* line naming another launch is reported as a critical :exc:`ProcessorCriticalWarning`.
+
+		.. code-block:: Python
+
+		   with WarningCollector() as warnings:
+		     document = Document(Path("synth_1/toplevel.vds"))
+		     document.Parse()
+
+		:raises FileNotFoundError:             If the log file doesn't exist.
+		:raises ClassificationException:       If a line starting like a Vivado message isn't a Vivado message.
+		:raises Exception:                     If a section, task, phase or nested element is unknown.
+		:raises UnhandledCriticalWarningError: If a launch's *waiting* line names another launch and no
+		                                       :class:`~pyTooling.Warning.WarningCollector` collects the
+		                                       :exc:`ProcessorCriticalWarning`.
+		"""
 		with Stopwatch() as sw:
 			timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
 			with self._logfile.open("r", encoding="utf-8") as file:
@@ -4302,6 +4489,24 @@ class Launch(Parser, VivadoProcessor):
 		return (self.FinishDateTime - self.LaunchDateTime).total_seconds()
 
 	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
+		"""
+		A generator for processing a nested launch line-by-line.
+
+		It processes the launch's header, the nested Vivado instance's output via :meth:`CommandFinder` and the launch's
+		finish lines.
+
+		If the launch's *waiting* line names another launch than its *launched* line, a critical
+		:exc:`ProcessorCriticalWarning` is reported and the launch ends.
+
+		:param line:                           First line to process (*launched* line).
+		:returns:                              A generator processing log messages.
+		:raises TypeError:                     If the first line isn't a :class:`DateTimeLine`.
+		:raises ValueError:                    If the first line isn't a *launched* line.
+		:raises Exception:                     If a section, task, phase or nested element is unknown.
+		:raises UnhandledCriticalWarningError: If a launch's *waiting* line names another launch and no
+		                                       :class:`~pyTooling.Warning.WarningCollector` collects the
+		                                       :exc:`ProcessorCriticalWarning`.
+		"""
 		if isinstance(line, DateTimeLine):
 			line._kind = LineKind.LaunchStart
 			self._startDateTime = line._dateTime
