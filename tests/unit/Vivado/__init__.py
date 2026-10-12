@@ -29,8 +29,8 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado messages."""
-from unittest  import TestCase as TestCase
 
+from pyTooling.Testing          import Testcase
 from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage, LineAction, VivadoDRCInfoMessage, VivadoDRCWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoCriticalWarningMessage, VivadoErrorMessage
@@ -42,7 +42,7 @@ if __name__ == "__main__": # pragma: no cover
 	exit(1)
 
 
-class Instantiation(TestCase):
+class Instantiation(Testcase):
 	def test_Info(self) -> None:
 		message = VivadoInfoMessage(1, LineKind.InfoMessage, LineAction.Default, "some message", "synth", 8, 25)
 
@@ -154,7 +154,7 @@ class Instantiation(TestCase):
 		self.assertEqual("ERROR: [synth 8-25] some message", str(message))
 
 
-class Parsing(TestCase):
+class Parsing(Testcase):
 	def test_Info(self) -> None:
 		messageText = "INFO: [synth 8-25] some message"
 		message = VivadoInfoMessage.Parse(1, messageText)

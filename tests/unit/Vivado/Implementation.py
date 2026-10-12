@@ -33,8 +33,8 @@ from datetime import datetime, timedelta
 from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
-from unittest import TestCase as TestCase
 
+from pyTooling.Testing    import Testcase
 from pyTooling.Versioning import YearReleaseVersion
 from pyTooling.Warning    import WarningCollector
 
@@ -49,7 +49,7 @@ if __name__ == "__main__": # pragma: no cover
 	exit(1)
 
 
-class LinkDesign(TestCase):
+class LinkDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -126,7 +126,7 @@ class LinkDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class OptimizeDesign(TestCase):
+class OptimizeDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -545,7 +545,7 @@ class OptimizeDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class PlaceDesign(TestCase):
+class PlaceDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -620,11 +620,11 @@ class PlaceDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-# class PhysicalOpt_Design(TestCase):
+# class PhysicalOpt_Design(Testcase):
 # 	pass
 
 
-class RouteDesign(TestCase):
+class RouteDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -725,5 +725,5 @@ class RouteDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-# class WriteBitstream(TestCase):
+# class WriteBitstream(Testcase):
 # 	pass
