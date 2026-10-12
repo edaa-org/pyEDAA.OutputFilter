@@ -747,6 +747,52 @@ class SynthDesign(TestCase):
 		self.assertEqual(0, len(synthDesign.Blackboxes))
 		self.assertDictEqual({"BUFG": 1, "LUT2": 4, "LD": 2, "FDRE": 8}, synthDesign.Cells)
 
+	def test_HasLatches_LatchPrimitives(self) -> None:
+		cells = {
+			"LD": True, "LDE": True, "LDC": True, "LDCE": True, "LDP": True, "LDPE": True, "LDCP": True, "LDCPE": True,
+			"LD_1": True, "LDCE_1": True, "LDPE_1": True, "LDCPE_1": True,
+			"LDPC_Decoder": False, "LDO": False, "LDCE_2": False, "FDRE": False
+		}
+
+		for cell, isLatch in cells.items():
+			with self.subTest(cell=cell):
+				report = StringIO(dedent(f"""{self._PREAMBLE}
+{self._SOURCE_TCL}
+{self._SYNTHESIS_START}
+			---------------------------------------------------------------------------------
+			Start Writing Synthesis Report
+			---------------------------------------------------------------------------------
+
+			Report BlackBoxes:
+			+-+--------------+----------+
+			| |BlackBox name |Instances |
+			+-+--------------+----------+
+			+-+--------------+----------+
+
+			Report Cell Usage:
+			+------+--------------+------+
+			|      |Cell          |Count |
+			+------+--------------+------+
+			|1     |LUT2          |     4|
+			|2     |{cell:<14}|     2|
+			+------+--------------+------+
+			---------------------------------------------------------------------------------
+			Finished Writing Synthesis Report : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 1034.773 ; gain = 364.043
+			---------------------------------------------------------------------------------
+{self._SYNTHESIS_FINISH}
+{self._POSTAMBLE}""")
+				)
+
+				processor = Processor()
+				generator = processor.LineClassification(timestampIterator(report, datetime.now()))
+				with WarningCollector() as warnings:
+					for line in generator:
+						pass
+
+				self.assertEqual(0, len(warnings))
+				self.assertEqual(isLatch, processor[Synth_Design].HasLatches)
+				self.assertEqual(2, processor[Synth_Design].Cells[cell])
+
 	def test_HasLatches_Message(self) -> None:
 		report = StringIO(dedent(f"""{self._PREAMBLE}
 {self._SOURCE_TCL}
