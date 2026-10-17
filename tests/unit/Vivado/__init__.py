@@ -34,6 +34,7 @@ from unittest  import TestCase as TestCase
 from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage, LineAction, VivadoDRCInfoMessage, VivadoDRCWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoWarningMessage, VivadoStuntedWarningMessage
 from pyEDAA.OutputFilter.Xilinx import VivadoCriticalWarningMessage, VivadoErrorMessage
+from pyEDAA.OutputFilter.Xilinx import ClassificationException
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -253,3 +254,10 @@ class Parsing(TestCase):
 		message = VivadoErrorMessage.Parse(1, messageText)
 
 		self.assertIsNone(message)
+
+
+class Exceptions(TestCase):
+	def test_ClassificationException(self) -> None:
+		ex = ClassificationException("Unknown line kind.", 42, "INFO: [Foo 1-2] Bar")
+
+		self.assertEqual("Unknown line kind.: INFO: [Foo 1-2] Bar (at line 42)", str(ex))
