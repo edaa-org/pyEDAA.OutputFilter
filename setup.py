@@ -53,7 +53,7 @@ setup(
 			"Topic :: Utilities"
 		],
 		developmentStatus="beta",
-		pythonVersions=("3.11", "3.12", "3.13", "3.14"),
+		pythonVersions=("3.11", "3.12", "3.13", "3.14", "3.15"),
 		consoleScripts={
 			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
 		},
