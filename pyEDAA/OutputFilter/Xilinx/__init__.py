@@ -1232,16 +1232,16 @@ class Preamble(Parser, VivadoMessagesMixin):
 			if self._preambleFormat is PreambleFormat.Unknown:
 				self._preambleFormat = preambleFormat
 			elif self._preambleFormat is not preambleFormat:
-				raise ProcessorException(f"Preamble format is not consistent.")
+				raise ProcessorException("Preamble format is not consistent.")
 
 			line = yield line
 		else:
-			raise OutputFilterException(f"Preamble is longer than 30 lines or delimiter was not detected.")
+			raise OutputFilterException("Preamble is longer than 30 lines or delimiter was not detected.")
 
 		if self._toolVersion is None:
-			raise OutputFilterException(f"Tool version not found in preamble.")
+			raise OutputFilterException("Tool version not found in preamble.")
 		elif self._startDateTime is None:
-			raise OutputFilterException(f"Session start time and date not found in preamble.")
+			raise OutputFilterException("Session start time and date not found in preamble.")
 
 		nextLine = yield line
 		return nextLine
@@ -1459,7 +1459,7 @@ class CommandWithSections(Command):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Section):
-			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex = TypeError("Parameter 'key' is not a Section.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1471,7 +1471,7 @@ class CommandWithSections(Command):
 
 	def __getitem__(self, key: Type["Section"]) -> "Section":
 		if not issubclass(key, Section):
-			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex = TypeError("Parameter 'key' is not a Section.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1519,7 +1519,7 @@ class CommandWithTasks(Command):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Task):
-			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex = TypeError("Parameter 'key' is not a Task.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1765,7 +1765,7 @@ class SectionWithChildren(Section):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSection):
-			ex = TypeError(f"Parameter 'item' is not a SubSection.")
+			ex = TypeError("Parameter 'item' is not a SubSection.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1942,7 +1942,7 @@ class TaskWithSubTasks(Task):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubTask):
-			ex = TypeError(f"Parameter 'key' is not a Subtask.")
+			ex = TypeError("Parameter 'key' is not a Subtask.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2095,7 +2095,7 @@ class TaskWithPhases(Task):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Phase):
-			ex = TypeError(f"Parameter 'key' is not a Phase.")
+			ex = TypeError("Parameter 'key' is not a Phase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2267,7 +2267,7 @@ class PhaseWithChildren(Phase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2420,7 +2420,7 @@ class SubPhaseWithChildren(SubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubSubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubSubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2574,7 +2574,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSubSubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubSubSubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubSubSubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2732,7 +2732,7 @@ class SubSubSubPhaseWithTasks(SubSubSubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, NestedTask):
-			ex = TypeError(f"Parameter 'key' is not a NestedTask.")
+			ex = TypeError("Parameter 'key' is not a NestedTask.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -2918,7 +2918,7 @@ class NestedTaskWithPhases(NestedTask):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, NestedPhase):
-			ex = TypeError(f"Parameter 'key' is not a NestedPhase.")
+			ex = TypeError("Parameter 'key' is not a NestedPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -3894,14 +3894,14 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	@readonly
 	def StartDateTime(self) -> datetime:
 		if self._preamble is None:
-			raise ValueError(f"Preamble was not found when parsing the Vivado log outputs.")
+			raise ValueError("Preamble was not found when parsing the Vivado log outputs.")
 
 		return self._preamble.StartDateTime
 
 	@readonly
 	def ExitDateTime(self) -> datetime:
 		if self._postamble is None:
-			raise ValueError(f"Postamble was not found when parsing the Vivado log outputs.")
+			raise ValueError("Postamble was not found when parsing the Vivado log outputs.")
 
 		return self._postamble.ExitDateTime
 
@@ -3931,7 +3931,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		:returns:   True, if the Vivado command's outputs were found in log outputs.
 		"""
 		if not issubclass(key, Command):
-			ex = TypeError(f"Parameter 'key' is not a Command.")
+			ex = TypeError("Parameter 'key' is not a Command.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -3945,7 +3945,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		:returns:   A Vivado command instance with parsed log messages and extracted data.
 		"""
 		if not issubclass(key, Command):
-			ex = TypeError(f"Parameter 'key' is not a Command.")
+			ex = TypeError("Parameter 'key' is not a Command.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -4144,22 +4144,22 @@ class Processor(VivadoProcessor):
 							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
 								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
+					errorMessage = "Line starting with 'INFO' was not a VivadoInfoMessage."
 				elif rawMessageLine.startswith("WARNING"):
 					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
 						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
 							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
 								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
+					errorMessage = "Line starting with 'WARNING' was not a VivadoWarningMessage."
 				elif rawMessageLine.startswith("CRITICAL WARNING"):
 					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+					errorMessage = "Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
 				elif rawMessageLine.startswith("ERROR"):
 					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
+					errorMessage = "Line starting with 'ERROR' was not a VivadoErrorMessage."
 				elif rawMessageLine.startswith("Command: "):
 					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
@@ -4306,7 +4306,7 @@ class Launch(Parser, VivadoProcessor):
 			line._kind = LineKind.LaunchStart
 			self._startDateTime = line._dateTime
 		else:
-			raise TypeError(f"Expected type DateTimeLine for first line.")
+			raise TypeError("Expected type DateTimeLine for first line.")
 
 		if self._LAUNCHED.match(line._message) is None:
 			raise ValueError(f"Expected a 'Launched xxx...' line, but git '{line._message}'.")
