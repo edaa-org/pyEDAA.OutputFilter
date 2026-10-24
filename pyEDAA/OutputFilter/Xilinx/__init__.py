@@ -3927,6 +3927,10 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		the processor still classifies lines - e.g. a log read live from STDIN - it's the duration up to now; after the last
 		line, it's the final duration.
 
+		A processor processes its input once, so the duration covers exactly one input. A second run of
+		:meth:`Processor.LineClassification` raises :exc:`~pyTooling.Stopwatch.StopwatchError`; create a new processor for
+		another input.
+
 		:returns: The processing duration so far, the final processing duration, or a zero duration if processing hasn't
 		          started.
 		"""
@@ -4131,6 +4135,22 @@ class Processor(VivadoProcessor):
 		return self._nestedLaunches
 
 	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+		"""
+		Classify the lines of a Vivado log output, one line per iteration.
+
+		The processor collects the classified lines, messages and commands, and measures the processing duration
+		(:data:`ProcessingDuration`) from the first line requested to the end of the input.
+
+		A processor processes its input once: the collected lines, messages and commands belong to that input. A second run
+		raises :exc:`~pyTooling.Stopwatch.StopwatchError` when its first line is requested; create a new processor for
+		another input.
+
+		:param inputStream:              Iterator of ``(timestamp, line)`` tuples, e.g. read from a log file or STDIN.
+		:returns:                        A generator of the classified lines.
+		:raises ClassificationException: If a line starting like a message can't be classified as that message.
+		:raises StopwatchError:          If this processor processed an input already. |br|
+		                                 Create a new processor for another input.
+		"""
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
