@@ -31,7 +31,7 @@
 """Basic classes for outputs from AMD/Xilinx Vivado."""
 from __future__            import annotations
 
-from datetime              import datetime
+from datetime              import datetime, timedelta
 from enum                  import Flag, Enum
 from pathlib               import Path
 from re                    import Pattern, compile as re_compile
@@ -3835,8 +3835,8 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
 	doubly-linked list.
 	"""
-	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
-	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
+	_duration:                float                #: Duration of the observed process (e.g. start to end of synthesis).
+	_processingDuration:      Nullable[timedelta]  #: Duration for the log output processor to parse all log messages.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
@@ -3850,7 +3850,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		super().__init__()
 
 		self._duration =                0.0
-		self._processingDuration =      0.0
+		self._processingDuration =      None
 
 		self._lines =                   []
 		self._preamble =                None
@@ -3919,11 +3919,11 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		return (self.ExitDateTime - self.StartDateTime).total_seconds()
 
 	@readonly
-	def ProcessingDuration(self) -> float:
+	def ProcessingDuration(self) -> Nullable[timedelta]:
 		"""
 		Processing duration for the log output processor to parse all log messages.
 
-		:returns: The processing duration in seconds.
+		:returns: The processing duration, or ``None`` if the processor hasn't measured it.
 		"""
 		return self._processingDuration
 

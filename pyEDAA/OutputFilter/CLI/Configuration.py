@@ -30,6 +30,7 @@
 #
 from __future__                 import annotations
 
+from datetime                   import timedelta
 from enum                       import StrEnum
 from pathlib                    import Path
 from re                         import compile as re_compile, Pattern
@@ -462,7 +463,7 @@ class Tool(metaclass=ExtendedType, slots=True):
 
 @export
 class Vivado(Tool):
-	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.Foreground.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
+	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.FOREGROUND.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
 	_SECTIONS:               ClassVar[Set[str]] = {"colors", "rule-sets", "outputs", "exports", "policies"}
 
 	_VIVADO_MESSAGE_PATTERN: ClassVar[Pattern] = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
@@ -727,7 +728,7 @@ class Vivado(Tool):
 class Configuration(metaclass=ExtendedType, slots=True):
 	_file:         Nullable[Path]
 	_yamlDocument: Nullable[YAML]
-	_yamlLoadTime: Nullable[float]
+	_yamlLoadTime: Nullable[timedelta]
 
 	_tools:        Dict[str, Tool]
 

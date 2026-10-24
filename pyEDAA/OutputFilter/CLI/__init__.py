@@ -58,7 +58,7 @@ from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
-	HeadLine:          ClassVar[str] = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
+	HEADLINE:          ClassVar[str] = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
 	ISSUE_TRACKER_URL: ClassVar[str] = __issue_tracker_url__                  #: Offered when an unexpected exception is reported.
 
 	def __init__(self) -> None:
@@ -140,15 +140,15 @@ def main() -> NoReturn:
 	try:
 		program.Run()
 	except ConfigurationException as ex:
-		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
+		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
 		if ex.HasNotes:
 			for note in ex.Notes:
-				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.Foreground))
+				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.FOREGROUND))
 
 	except OutputFilterException as ex:
-		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
+		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
 		if ex.__cause__ is not None:
-			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.Foreground))
+			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.FOREGROUND))
 
 	except ExceptionBase as ex:
 		program.PrintExceptionBase(ex)
