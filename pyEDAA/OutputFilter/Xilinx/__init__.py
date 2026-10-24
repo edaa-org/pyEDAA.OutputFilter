@@ -3835,8 +3835,8 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
 	doubly-linked list.
 	"""
-	_duration:                float                #: Duration of the observed process (e.g. start to end of synthesis).
-	_processingDuration:      Nullable[timedelta]  #: Duration for the log output processor to parse all log messages.
+	_duration:                float      #: Duration of the observed process (e.g. start to end of synthesis).
+	_stopwatch:               Stopwatch  #: Measures how long the log output processor classifies log messages.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
@@ -3850,7 +3850,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		super().__init__()
 
 		self._duration =                0.0
-		self._processingDuration =      None
+		self._stopwatch =               Stopwatch()
 
 		self._lines =                   []
 		self._preamble =                None
@@ -3919,13 +3919,18 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		return (self.ExitDateTime - self.StartDateTime).total_seconds()
 
 	@readonly
-	def ProcessingDuration(self) -> Nullable[timedelta]:
+	def ProcessingDuration(self) -> timedelta:
 		"""
-		Processing duration for the log output processor to parse all log messages.
+		Read-only property to return the duration the log output processor spent classifying log messages.
 
-		:returns: The processing duration, or ``None`` if the processor hasn't measured it.
+		The duration is measured from the first line to the end of the input (:meth:`Processor.LineClassification`). While
+		the processor still classifies lines - e.g. a log read live from STDIN - it's the duration up to now; after the last
+		line, it's the final duration.
+
+		:returns: The processing duration so far, the final processing duration, or a zero duration if processing hasn't
+		          started.
 		"""
-		return self._processingDuration
+		return self._stopwatch.Duration
 
 	def __contains__(self, key: Type[Command]) -> bool:
 		"""
@@ -4133,6 +4138,7 @@ class Processor(VivadoProcessor):
 		lineNumber = 0
 		_errorMessage = "Unknown processing error"
 
+		self._stopwatch.Start()
 		try:
 			while (tup := next(inputStream)) is not None:
 				timestamp, rawMessageLine = tup
@@ -4201,6 +4207,8 @@ class Processor(VivadoProcessor):
 
 		except StopIteration:
 			pass
+		finally:
+			self._stopwatch.Stop()
 
 
 @export
@@ -4235,13 +4243,10 @@ class Document(Processor):
 		return self._logfile
 
 	def Parse(self) -> None:
-		with Stopwatch() as sw:
-			timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
-			with self._logfile.open("r", encoding="utf-8") as file:
-				for line in self.LineClassification(timestampIterator(file, timestamp)):
-					pass
-
-		self._processingDuration = sw.Duration
+		timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
+		with self._logfile.open("r", encoding="utf-8") as file:
+			for line in self.LineClassification(timestampIterator(file, timestamp)):
+				pass
 
 
 @export
