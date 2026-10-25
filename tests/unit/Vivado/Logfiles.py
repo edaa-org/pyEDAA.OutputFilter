@@ -216,6 +216,42 @@ class Stopwatch(TestCase):
 
 			previousLine = line
 
+	def test_SynthesisLogfile_Results(self) -> None:
+		logfile = Path("tests/data/Stopwatch/toplevel.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		self.assertEqual(0, len(warnings))
+
+		synthesis = processor[Synth_Design]
+		writingSynthesisReport = synthesis[_SynthDesign.WritingSynthesisReport]
+
+		self.assertFalse(synthesis.HasLatches)
+		self.assertEqual(0, len(synthesis.Latches))
+
+		self.assertFalse(synthesis.HasBlackboxes)
+		self.assertIs(writingSynthesisReport.Blackboxes, synthesis.Blackboxes)
+		self.assertEqual(0, len(synthesis.Blackboxes))
+
+		self.assertIs(writingSynthesisReport.Cells, synthesis.Cells)
+		self.assertDictEqual({
+			"BUFG":        3,
+			"CARRY4":     11,
+			"LUT1":        9,
+			"LUT2":       13,
+			"LUT3":       14,
+			"LUT4":       22,
+			"LUT5":        8,
+			"LUT6":       14,
+			"MMCME2_ADV":  1,
+			"FD":          8,
+			"FDRE":       81,
+			"FDSE":       12,
+			"IBUF":        3,
+			"OBUF":       16,
+		}, synthesis.Cells)
+
 	def test_ImplementationLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vdi")
@@ -324,6 +360,30 @@ class CERN_DevKit(TestCase):
 		self.assertEqual(0, len(warnings))
 		for line in processor.Lines:
 			self.assertIsInstance(line, VivadoLine)
+
+	def test_SynthesisLogfile_Results(self) -> None:
+		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vds")
+		with WarningCollector() as warnings:
+			processor = Document(logfile)
+			processor.Parse()
+
+		self.assertEqual(0, len(warnings))
+
+		synthesis = processor[Synth_Design]
+		writingSynthesisReport = synthesis[_SynthDesign.WritingSynthesisReport]
+
+		self.assertFalse(synthesis.HasLatches)
+		self.assertEqual(0, len(synthesis.Latches))
+
+		self.assertTrue(synthesis.HasBlackboxes)
+		self.assertIs(writingSynthesisReport.Blackboxes, synthesis.Blackboxes)
+		self.assertEqual(13, len(synthesis.Blackboxes))
+		self.assertEqual(1, synthesis.Blackboxes["devkit_top_bd_zynqmp_ps_0"])
+
+		self.assertIs(writingSynthesisReport.Cells, synthesis.Cells)
+		self.assertEqual(15, len(synthesis.Cells))
+		self.assertEqual(2, synthesis.Cells["devkit_top_bd_system_ila_0"])
+		self.assertEqual(63, synthesis.Cells["IBUF"])
 
 	def test_ImplementationLogfile(self) -> None:
 		print()

@@ -3078,6 +3078,7 @@ class Synth_Design(CommandWithSections):
 	from . import SynthesizeDesign as _SynthDesign
 
 	_TCL_COMMAND: ClassVar[str] = "synth_design"
+	_LATCH_CELLS: ClassVar[Pattern] = re_compile(r"LD(?:C|P|CP)?E?(?:_1)?")  #: Cell names of latch primitives.
 	_PARSERS:     ClassVar[Tuple[Type[Section], ...]] = (
 		_SynthDesign.RTLElaboration,
 		_SynthDesign.HandlingCustomAttributes,
@@ -3109,8 +3110,10 @@ class Synth_Design(CommandWithSections):
 
 		Latch detection is based on:
 
-		* Vivado message ``synth 8-327``
-		* Cells of lind ``LD`` listed in the *Cell Usage* report.
+		* Vivado message ``Synth 8-327``
+		* Cells of a latch primitive listed in the *Cell Usage* report: ``LD``, ``LDE``, ``LDC``, ``LDCE``, ``LDP``,
+		  ``LDPE``, ``LDCP`` and ``LDCPE``, each also with an inverted gate (suffix ``_1``). A hierarchical cell or
+		  blackbox named like ``LDPC_Decoder`` isn't a latch.
 
 		:returns: True, if the design contains latches.
 		"""
@@ -3119,7 +3122,7 @@ class Synth_Design(CommandWithSections):
 		if (8 in self._messagesByID) and (327 in self._messagesByID[8]):
 			return True
 
-		return "LD" in self._sections[WritingSynthesisReport]._cells
+		return any(self._LATCH_CELLS.fullmatch(cell) is not None for cell in self[WritingSynthesisReport]._cells)
 
 	@readonly
 	def Latches(self) -> List[VivadoMessage]:
@@ -3211,7 +3214,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return len(self._sections[WritingSynthesisReport]._blackboxes) > 0
+		return len(self[WritingSynthesisReport]._blackboxes) > 0
 
 	@readonly
 	def Blackboxes(self) -> Dict[str, int]:
@@ -3222,7 +3225,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return self._sections[WritingSynthesisReport]._blackboxes
+		return self[WritingSynthesisReport]._blackboxes
 
 	@readonly
 	def Cells(self) -> Dict[str, int]:
@@ -3233,7 +3236,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		from .SynthesizeDesign import WritingSynthesisReport
 
-		return self._sections[WritingSynthesisReport]._cells
+		return self[WritingSynthesisReport]._cells
 
 	@readonly
 	def VHDLReportMessages(self) -> List[VHDLReportMessage]:
