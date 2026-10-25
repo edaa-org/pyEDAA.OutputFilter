@@ -256,7 +256,7 @@ class Parsing(Testcase):
 		self.assertIsNone(message)
 
 
-class Exceptions(TestCase):
+class Exceptions(Testcase):
 	def test_ClassificationException(self) -> None:
 		ex = ClassificationException("Unknown line kind.", 42, "INFO: [Foo 1-2] Bar")
 
