@@ -3835,8 +3835,8 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
 	doubly-linked list.
 	"""
-	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
-	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
+	_duration:                float      #: Duration of the observed process (e.g. start to end of synthesis).
+	_stopwatch:               Stopwatch  #: Measures how long the log output processor classifies log messages.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
@@ -3850,7 +3850,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		super().__init__()
 
 		self._duration =                0.0
-		self._processingDuration =      0.0
+		self._stopwatch =               Stopwatch()
 
 		self._lines =                   []
 		self._preamble =                None
@@ -3921,11 +3921,20 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	@readonly
 	def ProcessingDuration(self) -> float:
 		"""
-		Processing duration for the log output processor to parse all log messages.
+		Read-only property to return the duration in seconds the log output processor spent classifying log messages.
 
-		:returns: The processing duration in seconds.
+		The duration is measured from the first line to the end of the input (:meth:`Processor.LineClassification`). While
+		the processor still classifies lines - e.g. a log read live from STDIN - it's the duration up to now; after the last
+		line, it's the final duration.
+
+		A processor processes its input once, so the duration covers exactly one input. A second run of
+		:meth:`Processor.LineClassification` raises :exc:`~pyTooling.Stopwatch.StopwatchError`; create a new processor for
+		another input.
+
+		:returns: The processing duration in seconds so far, the final processing duration in seconds, or ``0.0`` if
+		          processing hasn't started.
 		"""
-		return self._processingDuration
+		return self._stopwatch.DurationInSeconds
 
 	def __contains__(self, key: Type[Command]) -> bool:
 		"""
@@ -4126,6 +4135,22 @@ class Processor(VivadoProcessor):
 		return self._nestedLaunches
 
 	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+		"""
+		Classify the lines of a Vivado log output, one line per iteration.
+
+		The processor collects the classified lines, messages and commands, and measures the processing duration
+		(:data:`ProcessingDuration`) from the first line requested to the end of the input.
+
+		A processor processes its input once: the collected lines, messages and commands belong to that input. A second run
+		raises :exc:`~pyTooling.Stopwatch.StopwatchError` when its first line is requested; create a new processor for
+		another input.
+
+		:param inputStream:              Iterator of ``(timestamp, line)`` tuples, e.g. read from a log file or STDIN.
+		:returns:                        A generator of the classified lines.
+		:raises ClassificationException: If a line starting like a message can't be classified as that message.
+		:raises StopwatchError:          If this processor processed an input already. |br|
+		                                 Create a new processor for another input.
+		"""
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
@@ -4133,74 +4158,79 @@ class Processor(VivadoProcessor):
 		lineNumber = 0
 		_errorMessage = "Unknown processing error"
 
-		try:
-			while (tup := next(inputStream)) is not None:
-				timestamp, rawMessageLine = tup
-				lineNumber += 1
-				rawMessageLine = rawMessageLine.rstrip()
-				errorMessage = _errorMessage
+		with self._stopwatch:
+			try:
+				while (tup := next(inputStream)) is not None:
+					timestamp, rawMessageLine = tup
+					lineNumber += 1
+					rawMessageLine = rawMessageLine.rstrip()
+					errorMessage = _errorMessage
 
-				if len(rawMessageLine) == 0:
-					line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
-				elif rawMessageLine.startswith("INFO"):
-					if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					if len(rawMessageLine) == 0:
+						line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
+					elif rawMessageLine.startswith("INFO"):
+						if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								if (line := VivadoIrregularInfoMessage.Parse(
+									lineNumber, rawMessageLine, previousLine=lastLine
+								)) is None:
+									line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'INFO' was not a VivadoInfoMessage."
-				elif rawMessageLine.startswith("WARNING"):
-					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'INFO' was not a VivadoInfoMessage."
+					elif rawMessageLine.startswith("WARNING"):
+						if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+									line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'WARNING' was not a VivadoWarningMessage."
-				elif rawMessageLine.startswith("CRITICAL WARNING"):
-					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'WARNING' was not a VivadoWarningMessage."
+					elif rawMessageLine.startswith("CRITICAL WARNING"):
+						line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-				elif rawMessageLine.startswith("ERROR"):
-					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+					elif rawMessageLine.startswith("ERROR"):
+						line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'ERROR' was not a VivadoErrorMessage."
-				elif rawMessageLine.startswith("Command: "):
-					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'ERROR' was not a VivadoErrorMessage."
+					elif rawMessageLine.startswith("Command: "):
+						line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
-				elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
-					dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
-					line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
-				else:
-					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+					elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
+						dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
+						line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
+					else:
+						line = VivadoLine(
+							lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine
+						)
 
-					if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
-						line._kind = LineKind.Verbose
+						if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+							line._kind = LineKind.Verbose
 
-				if line is None:
-					# TODO: what to do with this line? attache to exception?
-					line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
+					if line is None:
+						# TODO: what to do with this line? attache to exception?
+						line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
-					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
+						raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
+					if isinstance(line, VivadoMessage):
+						self._AddMessage(line)
 
-				line = cmdFinder.send(line)
+					line = cmdFinder.send(line)
 
-				if line._kind is LineKind.ProcessorError:
-					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+					if line._kind is LineKind.ProcessorError:
+						line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-				# TODO: find a better solution/location to assign the timestamp.
-				line._timestamp = timestamp
+					# TODO: find a better solution/location to assign the timestamp.
+					line._timestamp = timestamp
 
-				self._lines.append(line)
+					self._lines.append(line)
 
-				lastLine = line
-				yield line
+					lastLine = line
+					yield line
 
-		except StopIteration:
-			pass
+			except StopIteration:
+				pass
 
 
 @export
@@ -4235,13 +4265,10 @@ class Document(Processor):
 		return self._logfile
 
 	def Parse(self) -> None:
-		with Stopwatch() as sw:
-			timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
-			with self._logfile.open("r", encoding="utf-8") as file:
-				for line in self.LineClassification(timestampIterator(file, timestamp)):
-					pass
-
-		self._processingDuration = sw.DurationInSeconds
+		timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
+		with self._logfile.open("r", encoding="utf-8") as file:
+			for line in self.LineClassification(timestampIterator(file, timestamp)):
+				pass
 
 
 @export
