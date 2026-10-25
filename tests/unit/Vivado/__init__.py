@@ -29,12 +29,12 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado messages."""
-
 from pyTooling.Testing          import Testcase
-from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, VivadoStuntedInfoMessage, LineAction, VivadoDRCInfoMessage, VivadoDRCWarningMessage
-from pyEDAA.OutputFilter.Xilinx import VivadoWarningMessage, VivadoStuntedWarningMessage
-from pyEDAA.OutputFilter.Xilinx import VivadoCriticalWarningMessage, VivadoErrorMessage
-from pyEDAA.OutputFilter.Xilinx import ClassificationException
+
+from pyEDAA.OutputFilter.Xilinx import LineKind, VivadoInfoMessage, VivadoIrregularInfoMessage, \
+                                       VivadoStuntedInfoMessage, LineAction, VivadoDRCInfoMessage, \
+                                       VivadoDRCWarningMessage, VivadoWarningMessage, VivadoStuntedWarningMessage, \
+                                       VivadoCriticalWarningMessage, VivadoErrorMessage, ClassificationException
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")

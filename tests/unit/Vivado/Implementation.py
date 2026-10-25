@@ -29,18 +29,17 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado implementation log files."""
-from datetime import datetime, timedelta
-from io       import StringIO
-from textwrap import dedent
-from typing   import ClassVar
+from datetime                   import datetime, timedelta
+from io                         import StringIO
+from textwrap                   import dedent
+from typing                     import ClassVar
 
-from pyTooling.Testing    import Testcase
-from pyTooling.Versioning import YearReleaseVersion
-from pyTooling.Warning    import WarningCollector
+from pyTooling.Testing          import Testcase
+from pyTooling.Versioning       import YearReleaseVersion
+from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor, timestampIterator
-from pyEDAA.OutputFilter.Xilinx import Link_Design, Opt_Design, Place_Design, Route_Design, Report_DRC
-from pyEDAA.OutputFilter.Xilinx import OptimizeDesign as _OptDesign
+from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor, timestampIterator, Link_Design, Opt_Design, \
+                                       Place_Design, Route_Design, Report_DRC, OptimizeDesign as _OptDesign
 
 
 if __name__ == "__main__": # pragma: no cover

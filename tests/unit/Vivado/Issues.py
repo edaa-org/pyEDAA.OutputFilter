@@ -29,15 +29,15 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado log files reported in issues."""
-from datetime import datetime
-from pathlib  import Path
+from datetime                   import datetime
+from pathlib                    import Path
 
 from pyTooling.Testing          import Testcase
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, Launch, Open_Checkpoint
-from pyEDAA.OutputFilter.Xilinx import Synth_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design
+from pyEDAA.OutputFilter.Xilinx import Document, Launch, Open_Checkpoint, Synth_Design, Opt_Design, Place_Design, \
+                                       Route_Design, PhyOpt_Design
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")

@@ -29,17 +29,17 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
-from datetime import datetime, timedelta
-from pathlib  import Path
+from datetime                   import datetime, timedelta
+from pathlib                    import Path
 
 from pytest                     import mark
+
 from pyTooling.Testing          import Testcase
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine
-from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
-from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, Synth_Design, Link_Design, Opt_Design, Place_Design, \
+                                       Route_Design, PhyOpt_Design, Write_Bitstream, SynthesizeDesign as _SynthDesign
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")

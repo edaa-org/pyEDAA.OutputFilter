@@ -29,18 +29,19 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
-from datetime import datetime, timedelta
-from io       import StringIO
-from textwrap import dedent
-from typing   import ClassVar
+from datetime                   import datetime, timedelta
+from io                         import StringIO
+from textwrap                   import dedent
+from typing                     import ClassVar
 
-from pytest               import mark
-from pyTooling.Testing    import Testcase
-from pyTooling.Versioning import YearReleaseVersion
-from pyTooling.Warning    import WarningCollector
+from pytest                     import mark
 
-from pyEDAA.OutputFilter.Xilinx import Processor, Preamble, Synth_Design, VivadoLine, timestampIterator
-from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+from pyTooling.Testing          import Testcase
+from pyTooling.Versioning       import YearReleaseVersion
+from pyTooling.Warning          import WarningCollector
+
+from pyEDAA.OutputFilter.Xilinx import Processor, Preamble, Synth_Design, VivadoLine, timestampIterator, \
+                                       SynthesizeDesign as _SynthDesign
 
 
 if __name__ == "__main__": # pragma: no cover
