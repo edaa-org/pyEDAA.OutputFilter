@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """Unit tests for the processing duration of Vivado log output processors."""
-from datetime                   import datetime, timedelta
+from datetime                   import datetime
 from pathlib                    import Path
 from time                       import sleep
 from typing                     import ClassVar
@@ -50,7 +50,7 @@ class ProcessingDuration(Testcase):
 	def test_NotStarted(self) -> None:
 		processor = Processor()
 
-		self.assertEqual(timedelta(), processor.ProcessingDuration)
+		self.assertEqual(0.0, processor.ProcessingDuration)
 
 	def test_Processing(self) -> None:
 		processor = Processor()
@@ -64,8 +64,8 @@ class ProcessingDuration(Testcase):
 			sleep(0.01)
 			second = processor.ProcessingDuration
 
-			self.assertGreater(first, timedelta())
-			self.assertGreaterEqual(second - first, timedelta(seconds=0.01))
+			self.assertGreater(first, 0.0)
+			self.assertGreaterEqual(second - first, 0.01)
 
 			for _ in lines:
 				pass
@@ -83,5 +83,5 @@ class ProcessingDuration(Testcase):
 		final = document.ProcessingDuration
 		sleep(0.01)
 
-		self.assertGreater(final, timedelta())
+		self.assertGreater(final, 0.0)
 		self.assertEqual(final, document.ProcessingDuration)

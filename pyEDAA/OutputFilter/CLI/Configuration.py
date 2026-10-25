@@ -30,7 +30,6 @@
 #
 from __future__                 import annotations
 
-from datetime                   import timedelta
 from enum                       import StrEnum
 from pathlib                    import Path
 from re                         import compile as re_compile, Pattern
@@ -728,7 +727,7 @@ class Vivado(Tool):
 class Configuration(metaclass=ExtendedType, slots=True):
 	_file:         Nullable[Path]
 	_yamlDocument: Nullable[YAML]
-	_yamlLoadTime: Nullable[timedelta]
+	_yamlLoadTime: Nullable[float]
 
 	_tools:        Dict[str, Tool]
 
@@ -753,7 +752,7 @@ class Configuration(metaclass=ExtendedType, slots=True):
 			except Exception as ex:
 				raise ConfigurationException(f"Couldn't open '{file}'.") from ex
 
-		self._yamlLoadTime = sw.Duration
+		self._yamlLoadTime = sw.DurationInSeconds
 
 		if self._yamlDocument is None:
 			ex = ConfigurationException("Configuration file is empty.")
