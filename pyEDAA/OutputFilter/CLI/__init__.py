@@ -50,7 +50,7 @@ from pyTooling.Attributes.ArgParse.Argument   import StringArgument
 from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
 from pyEDAA.OutputFilter                      import OutputFilterException, __issue_tracker_url__
-from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
+from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationError
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
@@ -139,7 +139,7 @@ def main() -> NoReturn:
 
 	try:
 		program.Run()
-	except ConfigurationException as ex:
+	except ConfigurationError as ex:
 		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
 		if ex.HasNotes:
 			for note in ex.Notes:

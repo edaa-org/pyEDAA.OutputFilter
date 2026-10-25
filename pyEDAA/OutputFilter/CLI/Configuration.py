@@ -38,7 +38,7 @@ from typing                     import Optional as Nullable, Dict, List, ClassVa
 
 from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
 from pyTooling.Decorators       import export
-from pyTooling.Exceptions       import addNoteWithItemList
+from pyTooling.Exceptions       import addNoteWithItemList, ConfigurationError as CommonConfigurationError
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
 from pyTooling.Stopwatch        import Stopwatch
 from pyTooling.TerminalUI       import TerminalBaseApplication
@@ -51,8 +51,13 @@ from pyEDAA.OutputFilter.Xilinx import Command, LineKind, VivadoLine
 
 
 @export
-class ConfigurationException(OutputFilterException):
-	pass
+class ConfigurationError(OutputFilterException, CommonConfigurationError):
+	"""
+	The exception is raised when the service program's configuration file is invalid.
+
+	It's an :exc:`~pyEDAA.OutputFilter.OutputFilterException` and a :exc:`~pyTooling.Exceptions.ConfigurationError`, so
+	an ``except`` clause for either base-class catches it.
+	"""
 
 
 @export
@@ -348,7 +353,7 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 
 		try:
 			path = self._ParsePath(outputConfig, "path", f"{configPath}.{key}")
-		except ConfigurationException as ex:
+		except ConfigurationError as ex:
 			WarningCollector.Raise(ConfigurationWarning(str(ex)))
 			return
 
@@ -373,16 +378,16 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 
 	def _ParsePath(self, config: CommentedMap, key: str, configPath: str) -> Path:
 		if key not in config:
-			raise ConfigurationException(f"{configPath}: Doesn't exist. A filename is required.")
+			raise ConfigurationError(f"{configPath}: Doesn't exist. A filename is required.")
 		elif (pathConfig := config[key]) is None:
-			raise ConfigurationException(f"{configPath}: Is empty. A filename is required.")
+			raise ConfigurationError(f"{configPath}: Is empty. A filename is required.")
 		elif not isinstance(pathConfig, str):
-			raise ConfigurationException(f"{configPath}: Unknown value '{pathConfig}'.")
+			raise ConfigurationError(f"{configPath}: Unknown value '{pathConfig}'.")
 
 		try:
 			return Path(pathConfig)
 		except ValueError as ex:
-			raise ConfigurationException(f"{configPath}: Value '{pathConfig}' is not a path.") from ex
+			raise ConfigurationError(f"{configPath}: Value '{pathConfig}' is not a path.") from ex
 
 	def _ParseOutputFormat(self, config: CommentedMap, key: str, configPath: str) -> OutputFormat:
 		if key not in config:
@@ -751,30 +756,30 @@ class Configuration(metaclass=ExtendedType, slots=True):
 				yamlReader = YAML()
 				self._yamlDocument = yamlReader.load(file)
 			except Exception as ex:
-				raise ConfigurationException(f"Couldn't open '{file}'.") from ex
+				raise ConfigurationError(f"Couldn't open '{file}'.") from ex
 
 		self._yamlLoadTime = sw.Duration
 
 		if self._yamlDocument is None:
-			ex = ConfigurationException("Configuration file is empty.")
+			ex = ConfigurationError("Configuration file is empty.")
 			raise ex
 		elif not isinstance(self._yamlDocument, CommentedMap):
-			ex = ConfigurationException("Configuration file is not a dictionary.")
+			ex = ConfigurationError("Configuration file is not a dictionary.")
 			raise ex
 
 		self.Parse()
 
 	def Parse(self) ->None:
 		if "version" not in self._yamlDocument:
-			ex = ConfigurationException("Configuration file has no 'version'.")
+			ex = ConfigurationError("Configuration file has no 'version'.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif not isinstance(version := self._yamlDocument["version"], str):
-			ex = ConfigurationException("version: is not a string.")
+			ex = ConfigurationError("version: is not a string.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif version not in self._VERSIONS:
-			ex = ConfigurationException(f"Configuration file version '{version}' is not supported.")
+			ex = ConfigurationError(f"Configuration file version '{version}' is not supported.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 
