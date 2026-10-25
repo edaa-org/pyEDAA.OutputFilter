@@ -103,7 +103,7 @@ class ClassificationException(ProcessorException):
 		self._rawMessage = rawMessageLine
 
 	def __str__(self) -> str:
-		return f"{self.message}: {self._rawMessage} (at line {self._lineNumber})"
+		return f"{super().__str__()}: {self._rawMessage} (at line {self._lineNumber})"
 
 
 @export
