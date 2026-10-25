@@ -28,6 +28,8 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
+from __future__ import annotations
+
 from argparse  import Namespace
 from datetime  import datetime
 from json      import dumps
