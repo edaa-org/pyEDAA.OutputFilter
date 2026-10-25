@@ -437,7 +437,7 @@ class StdOutTarget(Target):
 		if self._coloring:
 			color = self._GetColorOfLine(line)
 			message = str(line).replace("{", "{{").replace("}", "}}")
-			self._file.write(f"{timestamp}{lineNumber}{{{color}}}{message}{{NOCOLOR}}\n".format(**TerminalApplication.Foreground))
+			self._file.write(f"{timestamp}{lineNumber}{{{color}}}{message}{{NOCOLOR}}\n".format(**TerminalApplication.FOREGROUND))
 		else:
 			self._file.write(f"{timestamp}{lineNumber}{line}\n")
 

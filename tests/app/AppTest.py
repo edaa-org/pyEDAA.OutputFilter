@@ -41,8 +41,8 @@ def escape(input: str) -> str:
 class Testcase(ApplicationTestcase):
 	"""Base-class naming the program under test; pyTooling resolves the console script and runs it."""
 
-	_consoleScript:  ClassVar[str] = "pyedaa-outputfilter"
-	_runnableModule: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
+	_CONSOLE_SCRIPT:  ClassVar[str] = "pyedaa-outputfilter"
+	_RUNNABLE_MODULE: ClassVar[str] = "pyEDAA.OutputFilter.CLI"
 
 
 class Commands(Testcase):

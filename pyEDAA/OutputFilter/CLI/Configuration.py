@@ -462,7 +462,7 @@ class Tool(metaclass=ExtendedType, slots=True):
 
 @export
 class Vivado(Tool):
-	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.Foreground.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
+	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.FOREGROUND.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
 	_SECTIONS:               ClassVar[Set[str]] = {"colors", "rule-sets", "outputs", "exports", "policies"}
 
 	_VIVADO_MESSAGE_PATTERN: ClassVar[Pattern] = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
@@ -752,7 +752,7 @@ class Configuration(metaclass=ExtendedType, slots=True):
 			except Exception as ex:
 				raise ConfigurationException(f"Couldn't open '{file}'.") from ex
 
-		self._yamlLoadTime = sw.Duration
+		self._yamlLoadTime = sw.DurationInSeconds
 
 		if self._yamlDocument is None:
 			ex = ConfigurationException("Configuration file is empty.")

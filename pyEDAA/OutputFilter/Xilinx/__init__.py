@@ -4241,7 +4241,7 @@ class Document(Processor):
 				for line in self.LineClassification(timestampIterator(file, timestamp)):
 					pass
 
-		self._processingDuration = sw.Duration
+		self._processingDuration = sw.DurationInSeconds
 
 
 @export
