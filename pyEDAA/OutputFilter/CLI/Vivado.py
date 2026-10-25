@@ -87,13 +87,13 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 
 		if args.stdin is True:
 			if args.logfile is not None:
-				self.WriteError(f"If option '--stdin' is set, then option '--file' can't be set, too.")
+				self.WriteError("If option '--stdin' is set, then option '--file' can't be set, too.")
 				self.Exit(2)
 
 			self.WriteVerbose("Reading lines from STDIN ...")
 			inputSource = StdInSource(self)
 		elif args.logfile is None:
-			self.WriteError(f"No input file (<logfile> or '-' for STDIN) specified via option '--file=<logfile>'.")
+			self.WriteError("No input file (<logfile> or '-' for STDIN) specified via option '--file=<logfile>'.")
 			self.Exit(2)
 		elif args.logfile == "-":
 			self.WriteVerbose("Reading lines from STDIN ...")
@@ -135,7 +135,7 @@ class VivadoHandlers(metaclass=ExtendedType, mixin=True):
 					output._rules
 				))
 			else:
-				ex = OutputFilterException(f"Unknown Output kind.")
+				ex = OutputFilterException("Unknown Output kind.")
 				ex.add_note(f"Got '{getFullyQualifiedName(output)}'.")
 				raise ex
 

@@ -747,21 +747,21 @@ class Configuration(metaclass=ExtendedType, slots=True):
 		self._yamlLoadTime = sw.Duration
 
 		if self._yamlDocument is None:
-			ex = ConfigurationException(f"Configuration file is empty.")
+			ex = ConfigurationException("Configuration file is empty.")
 			raise ex
 		elif not isinstance(self._yamlDocument, CommentedMap):
-			ex = ConfigurationException(f"Configuration file is not a dictionary.")
+			ex = ConfigurationException("Configuration file is not a dictionary.")
 			raise ex
 
 		self.Parse()
 
 	def Parse(self) ->None:
 		if "version" not in self._yamlDocument:
-			ex = ConfigurationException(f"Configuration file has no 'version'.")
+			ex = ConfigurationException("Configuration file has no 'version'.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif not isinstance(version := self._yamlDocument["version"], str):
-			ex = ConfigurationException(f"version: is not a string.")
+			ex = ConfigurationException("version: is not a string.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif version not in self._VERSIONS:
@@ -773,18 +773,18 @@ class Configuration(metaclass=ExtendedType, slots=True):
 
 	def _Parse_v0_1(self) -> None:
 		if "tools" not in self._yamlDocument:
-			WarningCollector.Raise(ConfigurationWarning(f"Configuration doesn't contain tool configurations."))
+			WarningCollector.Raise(ConfigurationWarning("Configuration doesn't contain tool configurations."))
 			return
 		elif (toolsConfig := self._yamlDocument["tools"]) is None:
 			WarningCollector.Raise(
-				ConfigurationWarning(f"tools: Configuration doesn't contain tool specific configurations."),
-				notes=f"Supported keys: vivado"
+				ConfigurationWarning("tools: Configuration doesn't contain tool specific configurations."),
+				notes="Supported keys: vivado"
 			)
 			return
 		elif not isinstance(toolsConfig, CommentedMap):
 			WarningCollector.Raise(
-				ConfigurationWarning(f"tools: Is not a dictionary."),
-				notes=f"Supported keys: vivado"
+				ConfigurationWarning("tools: Is not a dictionary."),
+				notes="Supported keys: vivado"
 			)
 			return
 
