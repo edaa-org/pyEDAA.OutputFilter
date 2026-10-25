@@ -30,6 +30,8 @@
 # ==================================================================================================================== #
 #
 """An abstraction layer of EDA tool output filters."""
+from __future__ import annotations
+
 __author__ =            "Patrick Lehmann"
 __email__ =             "Paebbels@gmail.com"
 __copyright__ =         "2014-2026, Patrick Lehmann"
@@ -69,12 +71,12 @@ class Line(Generic[LineClassification, LineProcessingAction], metaclass=Extended
 	"""
 	_lineNumber:    int
 	_timestamp:     Nullable[datetime]
-	_document:      "Document"
+	_document:      Document
 	_kind:          LineClassification
 	_action:        LineProcessingAction
 	_message:       str
-	_previousLine:  Nullable["Line"]
-	_nextLine:      Nullable["Line"]
+	_previousLine:  Nullable[Line]
+	_nextLine:      Nullable[Line]
 
 	def __init__(
 		self,
@@ -82,7 +84,7 @@ class Line(Generic[LineClassification, LineProcessingAction], metaclass=Extended
 		kind:         LineClassification,
 		action:       LineProcessingAction,
 		message:      str,
-		previousLine: Nullable["Line"] = None
+		previousLine: Nullable[Line] = None
 	) -> None:
 		self._lineNumber =   lineNumber
 		self._kind =         kind
@@ -114,17 +116,17 @@ class Line(Generic[LineClassification, LineProcessingAction], metaclass=Extended
 		return self._message
 
 	@property
-	def PreviousLine(self) -> Nullable["Line"]:
+	def PreviousLine(self) -> Nullable[Line]:
 		return self._previousLine
 
 	@PreviousLine.setter
-	def PreviousLine(self, line: "Line") -> None:
+	def PreviousLine(self, line: Line) -> None:
 		self._previousLine = line
 		if line is not None:
 			line._nextLine = self
 
 	@readonly
-	def NextLine(self) -> Nullable["Line"]:
+	def NextLine(self) -> Nullable[Line]:
 		return self._nextLine
 
 	def StartsWith(self, prefix: Union[str, Tuple[str, ...]]):
@@ -135,12 +137,12 @@ class Line(Generic[LineClassification, LineProcessingAction], metaclass=Extended
 
 	def GetIterator(
 		self,
-		stopPredicate: Nullable[Callable[["Line"], bool]] = None,
+		stopPredicate: Nullable[Callable[[Line], bool]] = None,
 		*,
 		reverse:   bool = False,
 		inclusive: bool = True,
 		maxLines:  Nullable[int] = None,
-	) -> Generator["Line", None, None]:
+	) -> Generator[Line, None, None]:
 		"""
 		Iterate consecutive lines starting from next line towards the end of the log.
 

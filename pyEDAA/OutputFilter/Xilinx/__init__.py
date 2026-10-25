@@ -29,11 +29,13 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
-from datetime import datetime
-from enum     import Flag, Enum
-from pathlib  import Path
-from re       import Pattern, compile as re_compile
-from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
+from __future__            import annotations
+
+from datetime              import datetime
+from enum                  import Flag, Enum
+from pathlib               import Path
+from re                    import Pattern, compile as re_compile
+from typing                import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
@@ -150,29 +152,29 @@ class NestedTaskNotPresentException(NotPresentException):
 
 @export
 class UndetectedEnd(ProcessorCriticalWarning):
-	_line: "VivadoLine"
+	_line: VivadoLine
 
-	def __init__(self, message: str, line: "VivadoLine") -> None:
+	def __init__(self, message: str, line: VivadoLine) -> None:
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
-	def Line(self) -> "VivadoLine":
+	def Line(self) -> VivadoLine:
 		return self._line
 
 
 @export
 class UnknownLine(ProcessorWarnings):
-	_line: "VivadoLine"
+	_line: VivadoLine
 
-	def __init__(self, message: str, line: "VivadoLine") -> None:
+	def __init__(self, message: str, line: VivadoLine) -> None:
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
-	def Line(self) -> "VivadoLine":
+	def Line(self) -> VivadoLine:
 		return self._line
 
 
@@ -327,8 +329,8 @@ class VivadoLine(Line[LineKind, LineAction]):
 	addition, all line objects in a log file form a doubly
 	linked list.
 	"""
-	_processor:     "Processor"
-	_command:       "Nullable[Command]"
+	_processor:     Processor
+	_command:       Nullable[Command]
 
 	def __init__(
 		self,
@@ -336,7 +338,7 @@ class VivadoLine(Line[LineKind, LineAction]):
 		kind:         LineKind,
 		action:       LineAction,
 		message:      str,
-		previousLine: Nullable["VivadoLine"] = None
+		previousLine: Nullable[VivadoLine] = None
 	) -> None:
 		super().__init__(lineNumber, kind, action, message, previousLine)
 
@@ -344,15 +346,15 @@ class VivadoLine(Line[LineKind, LineAction]):
 		self._command =   None
 
 	@readonly
-	def Processor(self) -> "Processor":
+	def Processor(self) -> Processor:
 		return self._processor
 
 	@readonly
-	def Command(self) -> "Nullable[Command]":
+	def Command(self) -> Nullable[Command]:
 		return self._command
 
 	@classmethod
-	def Copy(cls, line: "VivadoLine", previousLine: "VivadoLine") -> "VivadoLine":
+	def Copy(cls, line: VivadoLine, previousLine: VivadoLine) -> VivadoLine:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -382,7 +384,7 @@ class DateTimeLine(VivadoLine):
 		return self._dateTime
 
 	@classmethod
-	def Copy(cls, line: "DateTimeLine", previousLine: "VivadoLine") -> "VivadoLine":
+	def Copy(cls, line: DateTimeLine, previousLine: VivadoLine) -> VivadoLine:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._dateTime, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -467,7 +469,7 @@ class VivadoMessage(VivadoLine):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoMessage", previousLine: "VivadoLine") -> "VivadoMessage":
+	def Copy(cls, line: VivadoMessage, previousLine: VivadoLine) -> VivadoMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -557,7 +559,7 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoDRCInfoMessage", previousLine: "VivadoLine") -> "VivadoDRCInfoMessage":
+	def Copy(cls, line: VivadoDRCInfoMessage, previousLine: VivadoLine) -> VivadoDRCInfoMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -698,7 +700,7 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoDRCWarningMessage", previousLine: "VivadoLine") -> "VivadoDRCWarningMessage":
+	def Copy(cls, line: VivadoDRCWarningMessage, previousLine: VivadoLine) -> VivadoDRCWarningMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -752,7 +754,7 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoXPMWarningMessage", previousLine: "VivadoLine") -> "VivadoXPMWarningMessage":
+	def Copy(cls, line: VivadoXPMWarningMessage, previousLine: VivadoLine) -> VivadoXPMWarningMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._xpmName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -891,7 +893,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VHDLReportMessage", previousLine: "VivadoLine") -> "VHDLReportMessage":
+	def Copy(cls, line: VHDLReportMessage, previousLine: VivadoLine) -> VHDLReportMessage:
 		newLine = cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, line._reportMessage, line._sourceFile, line._sourceLineNumber, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -947,7 +949,7 @@ class TclCommand(VivadoLine):
 		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message, previousLine=line._previousLine)
 
 	@classmethod
-	def Copy(cls, line: "TclCommand", previousLine: VivadoLine) -> "TclCommand":
+	def Copy(cls, line: TclCommand, previousLine: VivadoLine) -> TclCommand:
 		newLine = cls(line._lineNumber, line._tclCommand, line._arguments, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -1057,15 +1059,15 @@ class BaseParser(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 @export
 class Parser(BaseParser):
-	_processor: "Processor"
+	_processor: Processor
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__()
 
 		self._processor = processor
 
 	@readonly
-	def Processor(self) -> "Processor":
+	def Processor(self) -> Processor:
 		return self._processor
 
 
@@ -1147,7 +1149,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 	_toolVersion:    Nullable[YearReleaseVersion]  #: Used Vivado version.
 	_startDateTime:  Nullable[datetime]            #: Session start timestamp.
 
-	def __init__(self, processor: "BaseProcessor") -> None:
+	def __init__(self, processor: BaseProcessor) -> None:
 		"""
 		Initializes a Vivado preamble parser.
 
@@ -1272,7 +1274,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 
 	_exitDateTime: Nullable[datetime]            #: Session exit timestamp.
 
-	def __init__(self, processor: "BaseProcessor") -> None:
+	def __init__(self, processor: BaseProcessor) -> None:
 		"""
 		Initializes a Vivado postamble parser.
 
@@ -1440,16 +1442,16 @@ class CommandWithSections(Command):
 	"""
 	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
 
-	_sections:  List["Section"]  # Dict[Type["Section"], "Section"]
+	_sections:  List[Section]  # Dict[Type["Section"], "Section"]
 
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._sections =  []  # p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Sections(self) -> List["Section"]:  # Dict[Type["Section"], "Section"]:
+	def Sections(self) -> List[Section]:  # Dict[Type["Section"], "Section"]:
 		"""
 		Read-only property to access a dictionary of found sections within the TCL command's output.
 
@@ -1469,7 +1471,7 @@ class CommandWithSections(Command):
 		else:
 			return False
 
-	def __getitem__(self, key: Type["Section"]) -> "Section":
+	def __getitem__(self, key: Type[Section]) -> Section:
 		if not issubclass(key, Section):
 			ex = TypeError("Parameter 'key' is not a Section.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
@@ -1501,15 +1503,15 @@ class CommandWithTasks(Command):
 	"""
 	# _PARSERS: Tuple[Type[Task], ...]
 
-	_tasks: Dict[Type["Task"], "Task"]
+	_tasks: Dict[Type[Task], Task]
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._tasks = {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Tasks(self) -> Dict[Type["Task"], "Task"]:
+	def Tasks(self) -> Dict[Type[Task], Task]:
 		"""
 		Read-only property to access a dictionary of found tasks within the TCL command's output.
 
@@ -1525,7 +1527,7 @@ class CommandWithTasks(Command):
 
 		return key in self._tasks
 
-	def __getitem__(self, key: Type["Task"]) -> "Task":
+	def __getitem__(self, key: Type[Task]) -> Task:
 		try:
 			return self._tasks[key]
 		except KeyError as ex:
@@ -1557,11 +1559,11 @@ class Section(BaseParser, BaseSection):
 	# _FINISH:     ClassVar[str]
 	# _DUPLICATES: ClassVar[bool]
 
-	_command:  "Command"  #: Reference to the command (parent).
-	_next:     Nullable["Section"]
-	_duration: float      #: Duration synthesis spent in processing a synthesis step logged in this log output section.
+	_command:  Command            #: Reference to the command (parent).
+	_next:     Nullable[Section]
+	_duration: float              #: Duration synthesis spent in processing a synthesis step logged in this log output section.
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		"""
 		Initialized a section.
 
@@ -1574,7 +1576,7 @@ class Section(BaseParser, BaseSection):
 		self._duration = 0.0
 
 	@readonly
-	def Next(self) -> Nullable["Section"]:
+	def Next(self) -> Nullable[Section]:
 		"""
 		Read-only property to access the next section in case the section appeared multiple times.
 
@@ -1592,7 +1594,7 @@ class Section(BaseParser, BaseSection):
 		"""
 		return self._duration
 
-	def __iter__(self) -> Generator["Section", None, None]:
+	def __iter__(self) -> Generator[Section, None, None]:
 		section = self._next
 		while section is not None:
 			yield section
@@ -1758,7 +1760,7 @@ class SectionWithChildren(Section):
 	"""
 	_subsections: Dict[Type[SubSection], SubSection]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._subsections = {}
@@ -1803,10 +1805,10 @@ class Task(BaseParser, VivadoMessagesMixin):
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_command:  "Command"  #: Reference to the command (parent).
-	_duration: float      #: Duration of a task according to reported times by Vivado.
+	_command:  Command  #: Reference to the command (parent).
+	_duration: float    #: Duration of a task according to reported times by Vivado.
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		"""
 		Initializes a task (without child elements).
 
@@ -1818,7 +1820,7 @@ class Task(BaseParser, VivadoMessagesMixin):
 		self._command = command
 
 	@readonly
-	def Command(self) -> "Command":
+	def Command(self) -> Command:
 		"""
 		Read-only property to access the command.
 
@@ -1929,15 +1931,15 @@ class TaskWithSubTasks(Task):
 	"""
 	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
-	_subtasks: Dict[Type["SubTask"], "SubTask"]
+	_subtasks: Dict[Type[SubTask], SubTask]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._subtasks =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
+	def SubTasks(self) -> Dict[Type[SubTask], SubTask]:
 		return self._subtasks
 
 	def __contains__(self, key: Any) -> bool:
@@ -1948,7 +1950,7 @@ class TaskWithSubTasks(Task):
 
 		return key in self._subtasks
 
-	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
+	def __getitem__(self, key: Type[SubTask]) -> SubTask:
 		try:
 			return self._subtasks[key]
 		except KeyError as ex:
@@ -2082,15 +2084,15 @@ class SubTask(BaseParser, VivadoMessagesMixin):
 class TaskWithPhases(Task):
 	# _PARSERS: ClassVar[Tuple[Type["Phase"], ...]]
 
-	_phases:  Dict[Type["Phase"], "Phase"]
+	_phases:  Dict[Type[Phase], Phase]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._phases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
+	def Phases(self) -> Dict[Type[Phase], Phase]:
 		return self._phases
 
 	def __contains__(self, key: Any) -> bool:
@@ -2101,7 +2103,7 @@ class TaskWithPhases(Task):
 
 		return key in self._phases
 
-	def __getitem__(self, key: Type["Phase"]) -> "Phase":
+	def __getitem__(self, key: Type[Phase]) -> Phase:
 		try:
 			return self._phases[key]
 		except KeyError as ex:
@@ -2258,7 +2260,7 @@ class Phase(BaseParser, VivadoMessagesMixin):
 class PhaseWithChildren(Phase):
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phaseIndex}."
 
-	_subPhases: Dict[Type["SubPhase"], "SubPhase"]
+	_subPhases: Dict[Type[SubPhase], SubPhase]
 
 	def __init__(self, task: TaskWithPhases) -> None:
 		super().__init__(task)
@@ -2273,7 +2275,7 @@ class PhaseWithChildren(Phase):
 
 		return key in self._subPhases
 
-	def __getitem__(self, key: Type["SubPhase"]) -> "SubPhase":
+	def __getitem__(self, key: Type[SubPhase]) -> SubPhase:
 		try:
 			return self._subPhases[key]
 		except KeyError as ex:
@@ -2411,7 +2413,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubPhaseWithChildren(SubPhase):
-	_subSubPhases: Dict[Type["SubSubPhase"], "SubSubPhase"]
+	_subSubPhases: Dict[Type[SubSubPhase], SubSubPhase]
 
 	def __init__(self, phase: Phase) -> None:
 		super().__init__(phase)
@@ -2426,7 +2428,7 @@ class SubPhaseWithChildren(SubPhase):
 
 		return key in self._subSubPhases
 
-	def __getitem__(self, key: Type["SubSubPhase"]) -> "SubSubPhase":
+	def __getitem__(self, key: Type[SubSubPhase]) -> SubSubPhase:
 		try:
 			return self._subSubPhases[key]
 		except KeyError as ex:
@@ -2435,7 +2437,7 @@ class SubPhaseWithChildren(SubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubPhaseStart(line)
 
-		activeParsers: List["SubSubPhase"] = list(self._subSubPhases.values())
+		activeParsers: List[SubSubPhase] = list(self._subSubPhases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
@@ -2565,7 +2567,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubSubPhaseWithChildren(SubSubPhase):
-	_subSubSubPhases: Dict[Type["SubSubSubPhase"], "SubSubSubPhase"]
+	_subSubSubPhases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
 
 	def __init__(self, subphase: SubPhase) -> None:
 		super().__init__(subphase)
@@ -2580,7 +2582,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 		return key in self._subSubSubPhases
 
-	def __getitem__(self, key: Type["SubSubSubPhase"]) -> "SubSubSubPhase":
+	def __getitem__(self, key: Type[SubSubSubPhase]) -> SubSubSubPhase:
 		try:
 			return self._subSubSubPhases[key]
 		except KeyError as ex:
@@ -2589,7 +2591,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubSubPhaseStart(line)
 
-		activeParsers: List["SubSubSubPhase"] = list(self._subSubSubPhases.values())
+		activeParsers: List[SubSubSubPhase] = list(self._subSubSubPhases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
 
@@ -2723,7 +2725,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubSubSubPhaseWithTasks(SubSubSubPhase):
-	_nestedTasks: Dict[Type["NestedTask"], "NestedTask"]
+	_nestedTasks: Dict[Type[NestedTask], NestedTask]
 
 	def __init__(self, subsubphase: SubSubPhase) -> None:
 		super().__init__(subsubphase)
@@ -2738,7 +2740,7 @@ class SubSubSubPhaseWithTasks(SubSubSubPhase):
 
 		return key in self._nestedTasks
 
-	def __getitem__(self, key: Type["NestedTask"]) -> "NestedTask":
+	def __getitem__(self, key: Type[NestedTask]) -> NestedTask:
 		try:
 			return self._nestedTasks[key]
 		except KeyError as ex:
@@ -2747,7 +2749,7 @@ class SubSubSubPhaseWithTasks(SubSubSubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubSubSubPhaseStart(line)
 
-		activeParsers: List["NestedTask"] = list(self._nestedTasks.values())
+		activeParsers: List[NestedTask] = list(self._nestedTasks.values())
 
 		# START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
 
@@ -2905,7 +2907,7 @@ class NestedTaskWithPhases(NestedTask):
 	"""
 	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
-	_nestedPhases: Dict[Type["NestedPhase"], "NestedPhase"]
+	_nestedPhases: Dict[Type[NestedPhase], NestedPhase]
 
 	def __init__(self, subsubsubPhase: SubSubSubPhaseWithTasks) -> None:
 		super().__init__(subsubsubPhase)
@@ -2913,7 +2915,7 @@ class NestedTaskWithPhases(NestedTask):
 		self._nestedPhases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def NestedPhases(self) -> Dict[Type["NestedPhase"], "NestedPhase"]:
+	def NestedPhases(self) -> Dict[Type[NestedPhase], NestedPhase]:
 		return self._nestedPhases
 
 	def __contains__(self, key: Any) -> bool:
@@ -2924,7 +2926,7 @@ class NestedTaskWithPhases(NestedTask):
 
 		return key in self._nestedPhases
 
-	def __getitem__(self, key: Type["NestedPhase"]) -> "NestedPhase":
+	def __getitem__(self, key: Type[NestedPhase]) -> NestedPhase:
 		try:
 			return self._nestedPhases[key]
 		except KeyError as ex:
@@ -3379,7 +3381,7 @@ class Link_Design(Command):
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
 	_perCellXDCFiles: Dict[Path, Dict[str, List[VivadoMessage]]]
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._commonXDCFiles = {}
@@ -4080,7 +4082,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 @export
 class Processor(VivadoProcessor):
-	_nestedLaunches: List["Launch"]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
+	_nestedLaunches: List[Launch]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 
 	def __init__(self) -> None:
 		"""
@@ -4105,7 +4107,7 @@ class Processor(VivadoProcessor):
 		return len(self._nestedLaunches) > 0
 
 	@readonly
-	def NestedLaunches(self) -> List["Launch"]:
+	def NestedLaunches(self) -> List[Launch]:
 		"""
 		Read-only property to access nested launches.
 
