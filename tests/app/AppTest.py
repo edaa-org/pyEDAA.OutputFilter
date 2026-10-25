@@ -121,7 +121,7 @@ class Commands(Testcase):
 
 		stderr = stripANSIColorCodes(completedProcess.stderr)
 		self.assertExitCode(completedProcess, 2)
-		self.assertStartsWith(stderr, "[ERROR]")
+		self.assertTrue(stderr.startswith("[ERROR]"), f"STDERR doesn't start with '[ERROR]': {stderr[:80]!r}")
 
 
 class Vivado(Testcase):
