@@ -41,6 +41,7 @@ from typing   import NoReturn, Optional as Nullable, ClassVar
 
 from argparse import RawDescriptionHelpFormatter, Namespace
 from textwrap import dedent
+from types    import ModuleType
 
 from pyTooling.Decorators                     import export
 from pyTooling.Exceptions                     import ExceptionBase
@@ -49,7 +50,8 @@ from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
 from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
-from pyEDAA.OutputFilter                      import OutputFilterException, __issue_tracker_url__
+from pyEDAA                                   import OutputFilter
+from pyEDAA.OutputFilter                      import OutputFilterException
 from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
@@ -58,8 +60,8 @@ from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
-	HEADLINE:          ClassVar[str] = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
-	ISSUE_TRACKER_URL: ClassVar[str] = __issue_tracker_url__                  #: Offered when an unexpected exception is reported.
+	HEADLINE:      ClassVar[str]        = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
+	DUNDER_MODULE: ClassVar[ModuleType] = OutputFilter                           #: Package with the dunder variables.
 
 	def __init__(self) -> None:
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
@@ -110,10 +112,8 @@ class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	@CommandHandler("version", help="Display version information.", description="Display version information.")
 	def HandleVersion(self, _: Namespace) -> None:
 		"""Handle program calls with command ``version``."""
-		import pyEDAA.OutputFilter as DunderModule
-
 		self._PrintHeadline()
-		super()._PrintVersion(DunderModule, DunderModule.__name__)
+		super()._PrintVersion("pyEDAA.OutputFilter")
 
 
 @export
