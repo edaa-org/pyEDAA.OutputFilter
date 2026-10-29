@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib  import Path
 from unittest import TestCase as TestCase
 
@@ -70,11 +70,11 @@ class Stopwatch(TestCase):
 			processor = Document(logfile)
 			processor.Parse()
 
-		self.assertEqual(42, processor.Duration)
+		self.assertEqual(timedelta(seconds=42), processor.Duration)
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 16), processor.StartDateTime)
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 58), processor.ExitDateTime)
 		self.assertEqual(358, len(processor.Lines))
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(69, len(processor.InfoMessages))
 		self.assertEqual(3, len(processor.WarningMessages))
@@ -226,7 +226,7 @@ class Stopwatch(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -1224,7 +1224,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(52, len(processor.InfoMessages))
 		self.assertEqual(106, len(processor.WarningMessages))

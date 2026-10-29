@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado implementation log files."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
@@ -106,7 +106,7 @@ class LinkDesign(TestCase):
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDateTime)
-		self.assertEqual(91, processor.Duration)
+		self.assertEqual(timedelta(seconds=91), processor.Duration)
 		self.assertEqual(8, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))

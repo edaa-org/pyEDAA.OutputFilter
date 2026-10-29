@@ -29,7 +29,7 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from io       import StringIO
 from textwrap import dedent
 from typing   import ClassVar
@@ -340,7 +340,7 @@ class SynthDesign(TestCase):
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 13), processor.Preamble.StartDateTime)
-		self.assertEqual(32, processor.Duration)
+		self.assertEqual(timedelta(seconds=32), processor.Duration)
 		self.assertEqual(3, len(processor.InfoMessages))
 		self.assertEqual(1, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))

@@ -16,7 +16,7 @@ Processing the ``*.vdi`` File
    processor = Processor(logfile)
    processor.Parse()
 
-   print(f"Processing duration: {processor.ProcessingDuration:.3f} seconds")
+   print(f"Processing duration: {processor.ProcessingDuration:%s.%L} seconds")
 
 
 .. _XIL/Vivado/Impl/ExtractedInformation:
