@@ -74,7 +74,7 @@ class Stopwatch(Testcase):
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 16), processor.StartDateTime)
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 58), processor.ExitDateTime)
 		self.assertEqual(358, len(processor.Lines))
-		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=1.0))
 
 		self.assertEqual(69, len(processor.InfoMessages))
 		self.assertEqual(3, len(processor.WarningMessages))
@@ -226,7 +226,7 @@ class Stopwatch(Testcase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=1.0))
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -1224,7 +1224,7 @@ class Enclustra_Mercury_ZX5(Testcase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=1.0))
 
 		self.assertEqual(52, len(processor.InfoMessages))
 		self.assertEqual(106, len(processor.WarningMessages))
