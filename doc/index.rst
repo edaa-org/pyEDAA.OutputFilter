@@ -99,6 +99,7 @@ Contributors
    :caption: Introduction
    :hidden:
 
+   News
    Installation
    Dependency
 
