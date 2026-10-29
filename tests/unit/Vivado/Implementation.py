@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2026-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -29,18 +29,17 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado implementation log files."""
-from datetime import datetime
-from io       import StringIO
-from textwrap import dedent
-from typing   import ClassVar
-from unittest import TestCase as TestCase
+from datetime                   import datetime, timedelta
+from io                         import StringIO
+from textwrap                   import dedent
+from typing                     import ClassVar
 
-from pyTooling.Versioning import YearReleaseVersion
-from pyTooling.Warning    import WarningCollector
+from pyTooling.Testing          import Testcase
+from pyTooling.Versioning       import YearReleaseVersion
+from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor, timestampIterator
-from pyEDAA.OutputFilter.Xilinx import Link_Design, Opt_Design, Place_Design, Route_Design, Report_DRC
-from pyEDAA.OutputFilter.Xilinx import OptimizeDesign as _OptDesign
+from pyEDAA.OutputFilter.Xilinx import VivadoLine, Processor, timestampIterator, Link_Design, Opt_Design, \
+                                       Place_Design, Route_Design, Report_DRC, OptimizeDesign as _OptDesign
 
 
 if __name__ == "__main__": # pragma: no cover
@@ -49,7 +48,7 @@ if __name__ == "__main__": # pragma: no cover
 	exit(1)
 
 
-class LinkDesign(TestCase):
+class LinkDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -106,7 +105,7 @@ class LinkDesign(TestCase):
 
 		self.assertEqual(YearReleaseVersion(2019, 1), processor.Preamble.ToolVersion)
 		self.assertEqual(datetime(2025, 9, 2, 8, 44, 52), processor.Preamble.StartDateTime)
-		self.assertEqual(91, processor.Duration)
+		self.assertEqual(timedelta(seconds=91), processor.Duration)
 		self.assertEqual(8, len(processor.InfoMessages))
 		self.assertEqual(0, len(processor.WarningMessages))
 		self.assertEqual(0, len(processor.CriticalWarningMessages))
@@ -126,7 +125,7 @@ class LinkDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class OptimizeDesign(TestCase):
+class OptimizeDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -545,7 +544,7 @@ class OptimizeDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class PlaceDesign(TestCase):
+class PlaceDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -620,11 +619,11 @@ class PlaceDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-# class PhysicalOpt_Design(TestCase):
+# class PhysicalOpt_Design(Testcase):
 # 	pass
 
 
-class RouteDesign(TestCase):
+class RouteDesign(Testcase):
 	_PREAMBLE: ClassVar[str] = """\
 			#-----------------------------------------------------------
 			# Vivado v2019.1 (64-bit)
@@ -725,5 +724,5 @@ class RouteDesign(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-# class WriteBitstream(TestCase):
+# class WriteBitstream(Testcase):
 # 	pass

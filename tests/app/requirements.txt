@@ -1,2 +1,5 @@
+-r ../../requirements.txt
+
 # Test Runner
 pytest ~= 9.1
+pytest-xdist ~= 3.8

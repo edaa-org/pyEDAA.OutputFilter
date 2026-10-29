@@ -11,7 +11,7 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2026-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
 # you may not use this file except in compliance with the License.                                                     #
@@ -28,18 +28,20 @@
 # SPDX-License-Identifier: Apache-2.0                                                                                  #
 # ==================================================================================================================== #
 #
-from enum     import StrEnum
-from pathlib  import Path
-from re       import compile as re_compile, Pattern
-from typing   import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
+from __future__                 import annotations
 
+from enum                       import StrEnum
+from pathlib                    import Path
+from re                         import compile as re_compile, Pattern
+from typing                     import Optional as Nullable, Dict, List, ClassVar, Set, Self, Any, TextIO, Callable
+
+from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
 from pyTooling.Decorators       import export
 from pyTooling.Exceptions       import addNoteWithItemList
 from pyTooling.MetaClasses      import ExtendedType, abstractmethod
 from pyTooling.Stopwatch        import Stopwatch
 from pyTooling.TerminalUI       import TerminalBaseApplication
 from pyTooling.Warning          import WarningCollector, Warning
-from ruamel.yaml                import YAML, CommentedMap, CommentedSeq
 
 from pyEDAA.OutputFilter        import OutputFilterException
 from pyEDAA.OutputFilter.Xilinx import VivadoInfoMessage, VivadoWarningMessage, VivadoCriticalWarningMessage, VivadoErrorMessage, LineAction
@@ -208,7 +210,7 @@ class VivadoMessageRule(Rule):
 
 @export
 class Output(metaclass=ExtendedType, slots=True):
-	_parent:   "ProcessingPipeline"
+	_parent:   ProcessingPipeline
 	_file:     TextIO
 	_format:   OutputFormat
 	_commands: Nullable[List[Command]]
@@ -216,7 +218,7 @@ class Output(metaclass=ExtendedType, slots=True):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		format:   OutputFormat,
 		commands: Nullable[List[Command]],
 		rules:    Nullable[List[Rule]]
@@ -236,7 +238,7 @@ class StdOutOutput(Output):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		coloring: bool,
 		format:   OutputFormat,
 		commands: Nullable[List[Command]],
@@ -256,7 +258,7 @@ class FileOutput(Output):
 
 	def __init__(
 		self,
-		parent:   "ProcessingPipeline",
+		parent:   ProcessingPipeline,
 		file:     Path,
 		format:   OutputFormat,
 		commands: List[Command],
@@ -287,11 +289,11 @@ class ProcessingPipeline(metaclass=ExtendedType, slots=True):
 		"write_bitstream": Write_Bitstream
 	}
 
-	_parent:        "Vivado"
+	_parent:        Vivado
 	_preprocessing: Nullable[List[Rule]]
 	_outputs:       Dict[str, Output]
 
-	def __init__(self, parent: "Vivado") -> None:
+	def __init__(self, parent: Vivado) -> None:
 		self._parent =        parent
 		self._preprocessing = None
 		self._outputs =       {
@@ -460,18 +462,18 @@ class Tool(metaclass=ExtendedType, slots=True):
 
 @export
 class Vivado(Tool):
-	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.Foreground.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
+	_ALLOWED_COLORS:         ClassVar[Set[str]] = set(TerminalBaseApplication.FOREGROUND.keys())  # FIXME: this set contains unwanted color names like ERROR or HEADLINE
 	_SECTIONS:               ClassVar[Set[str]] = {"colors", "rule-sets", "outputs", "exports", "policies"}
 
 	_VIVADO_MESSAGE_PATTERN: ClassVar[Pattern] = re_compile(r"^(?P<toolID>\d+)-(?P<messageID>\d+)$")
 
-	_parent:             "Configuration"
+	_parent:             Configuration
 	_colors:             Dict[str, str]
 	_ruleSets:           Dict[str, Dict[str, Rule]]
 	_processingPipeline: ProcessingPipeline
 	_hasLatches:         Action
 
-	def __init__(self, parent: "Configuration") -> None:
+	def __init__(self, parent: Configuration) -> None:
 		self._parent =   parent
 
 		self._colors =             self._InitializeColors()
@@ -703,8 +705,14 @@ class Vivado(Tool):
 			if policies["hasLatches"] == "error":
 				self._hasLatches = Action.Error
 			else:
+				# WORKAROUND: Python <3.12
+				#   Reusing the f-string's own quote character inside its expression needs PEP 701. On Python 3.11
+				#   this is a 'SyntaxError' raised at import, which takes the whole module with it.
+				#   Replace by:
+				#     ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
+				hasLatches = policies["hasLatches"]
 				WarningCollector.Raise(
-					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{policies["hasLatches"]}'."))
+					ConfigurationWarning(f"tools.vivado.policies.hasLatches: Unknown value '{hasLatches}'."))
 
 	def _ParseRuleSetAction(self, actionConfig: Any) -> LineAction:
 		if not isinstance(actionConfig, str):
@@ -744,24 +752,24 @@ class Configuration(metaclass=ExtendedType, slots=True):
 			except Exception as ex:
 				raise ConfigurationException(f"Couldn't open '{file}'.") from ex
 
-		self._yamlLoadTime = sw.Duration
+		self._yamlLoadTime = sw.DurationInSeconds
 
 		if self._yamlDocument is None:
-			ex = ConfigurationException(f"Configuration file is empty.")
+			ex = ConfigurationException("Configuration file is empty.")
 			raise ex
 		elif not isinstance(self._yamlDocument, CommentedMap):
-			ex = ConfigurationException(f"Configuration file is not a dictionary.")
+			ex = ConfigurationException("Configuration file is not a dictionary.")
 			raise ex
 
 		self.Parse()
 
 	def Parse(self) ->None:
 		if "version" not in self._yamlDocument:
-			ex = ConfigurationException(f"Configuration file has no 'version'.")
+			ex = ConfigurationException("Configuration file has no 'version'.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif not isinstance(version := self._yamlDocument["version"], str):
-			ex = ConfigurationException(f"version: is not a string.")
+			ex = ConfigurationException("version: is not a string.")
 			addNoteWithItemList(ex, "Supported versions: ", self._VERSIONS)
 			raise ex
 		elif version not in self._VERSIONS:
@@ -773,18 +781,18 @@ class Configuration(metaclass=ExtendedType, slots=True):
 
 	def _Parse_v0_1(self) -> None:
 		if "tools" not in self._yamlDocument:
-			WarningCollector.Raise(ConfigurationWarning(f"Configuration doesn't contain tool configurations."))
+			WarningCollector.Raise(ConfigurationWarning("Configuration doesn't contain tool configurations."))
 			return
 		elif (toolsConfig := self._yamlDocument["tools"]) is None:
 			WarningCollector.Raise(
-				ConfigurationWarning(f"tools: Configuration doesn't contain tool specific configurations."),
-				notes=f"Supported keys: vivado"
+				ConfigurationWarning("tools: Configuration doesn't contain tool specific configurations."),
+				notes="Supported keys: vivado"
 			)
 			return
 		elif not isinstance(toolsConfig, CommentedMap):
 			WarningCollector.Raise(
-				ConfigurationWarning(f"tools: Is not a dictionary."),
-				notes=f"Supported keys: vivado"
+				ConfigurationWarning("tools: Is not a dictionary."),
+				notes="Supported keys: vivado"
 			)
 			return
 

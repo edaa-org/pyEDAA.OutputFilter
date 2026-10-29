@@ -29,17 +29,17 @@
 # ==================================================================================================================== #
 #
 """Unit tests for Vivado synthesis log files."""
-from datetime import datetime
-from pathlib  import Path
-from unittest import TestCase as TestCase
+from datetime                   import datetime, timedelta
+from pathlib                    import Path
 
 from pytest                     import mark
+
+from pyTooling.Testing          import Testcase
 from pyTooling.Versioning       import YearReleaseVersion
 from pyTooling.Warning          import WarningCollector
 
-from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine
-from pyEDAA.OutputFilter.Xilinx import Synth_Design, Link_Design, Opt_Design, Place_Design, Route_Design, PhyOpt_Design, Write_Bitstream
-from pyEDAA.OutputFilter.Xilinx import SynthesizeDesign as _SynthDesign
+from pyEDAA.OutputFilter.Xilinx import Document, VivadoLine, Synth_Design, Link_Design, Opt_Design, Place_Design, \
+                                       Route_Design, PhyOpt_Design, Write_Bitstream, SynthesizeDesign as _SynthDesign
 
 if __name__ == "__main__": # pragma: no cover
 	print("ERROR: you called a testcase declaration file as an executable module.")
@@ -62,7 +62,7 @@ class Aggregator:
 		return self._s
 
 
-class Stopwatch(TestCase):
+class Stopwatch(Testcase):
 	def test_SynthesisLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/Stopwatch/toplevel.vds")
@@ -70,11 +70,11 @@ class Stopwatch(TestCase):
 			processor = Document(logfile)
 			processor.Parse()
 
-		self.assertEqual(42, processor.Duration)
+		self.assertEqual(timedelta(seconds=42), processor.Duration)
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 16), processor.StartDateTime)
 		self.assertEqual(datetime(2025, 6, 12, 18, 38, 58), processor.ExitDateTime)
 		self.assertEqual(358, len(processor.Lines))
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(69, len(processor.InfoMessages))
 		self.assertEqual(3, len(processor.WarningMessages))
@@ -226,7 +226,7 @@ class Stopwatch(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(152, len(processor.InfoMessages))
 		self.assertEqual(2, len(processor.WarningMessages))
@@ -300,7 +300,7 @@ class Stopwatch(TestCase):
 # 	pass
 
 
-class CERN_DevKit(TestCase):
+class CERN_DevKit(Testcase):
 	def test_SynthesisLogfile(self) -> None:
 		print()
 		logfile = Path("tests/data/CERN_DevKit/devkit_top_bd_wrapper.vds")
@@ -394,7 +394,7 @@ class CERN_DevKit(TestCase):
 			self.assertIsInstance(line, VivadoLine)
 
 
-class Enclustra_Mercury_ZX5(TestCase):
+class Enclustra_Mercury_ZX5(Testcase):
 	def test_SynthesisLogfile_2019_1(self) -> None:
 		print()
 		logfile = Path("tests/data/Enclustra_Mercury_ZX5/system_top.2019.1.vds")
@@ -1224,7 +1224,7 @@ class Enclustra_Mercury_ZX5(TestCase):
 		for warning in warnings:
 			print(f"Warning: {warning}")
 
-		self.assertLess(processor.ProcessingDuration, 0.4)
+		self.assertLess(processor.ProcessingDuration, timedelta(seconds=0.4))
 
 		self.assertEqual(52, len(processor.InfoMessages))
 		self.assertEqual(106, len(processor.WarningMessages))

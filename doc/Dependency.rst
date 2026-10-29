@@ -47,13 +47,8 @@ PyPI (see :ref:`INSTALL`).
 
 .. rubric:: Dependency List
 
-+---------------------------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Package**                                                                           | **Version** | **License**                                                                                              | **Dependencies**                                                                                                                                            |
-+=======================================================================================+=============+==========================================================================================================+=============================================================================================================================================================+
-| `pyTooling[terminal] <https://GitHub.com/pyTooling/pyTooling>`__                      | ≥8.17       | `Apache License, 2.0 <https://GitHub.com/pyTooling/pyTooling/blob/main/LICENSE.txt>`__                   | * colorama                                                                                                                                                  |
-+---------------------------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `ruamel.yaml <https://sourceforge.net/projects/ruamel-yaml/>`__                       | ≥0.19        | `MIT <https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/LICENSE>`__                            | *Not yet evaluated.*                                                                                                                                        |
-+---------------------------------------------------------------------------------------+--------------+---------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------+
+.. dependency-table:: package
+   :caption: Mandatory dependencies of the pyEDAA.OutputFilter package.
 
 
 
@@ -66,7 +61,7 @@ Unit Testing / Coverage / Type Checking (Optional)
 ==================================================
 
 Additional Python packages needed for testing, code coverage collection and static type checking. These packages are
-only needed for developers or on a CI server, thus sub-dependencies are not evaluated further.
+only needed for developers or on a CI server.
 
 
 .. rubric:: Manually Installing Test Requirements
@@ -92,23 +87,36 @@ the mandatory dependencies too.
 
 .. rubric:: Dependency List - Unit Testing
 
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| **Package**                                                         | **Version** | **License**                                                                            | **Dependencies**     |
-+=====================================================================+=============+========================================================================================+======================+
-| `pytest <https://GitHub.com/pytest-dev/pytest>`__                   | ≥9.1        | `MIT <https://GitHub.com/pytest-dev/pytest/blob/master/LICENSE>`__                     | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `pytest-cov <https://GitHub.com/pytest-dev/pytest-cov>`__           | ≥7.1        | `MIT <https://GitHub.com/pytest-dev/pytest-cov/blob/master/LICENSE>`__                 | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `Coverage <https://GitHub.com/nedbat/coveragepy>`__                 | ≥7.15       | `Apache License, 2.0 <https://GitHub.com/nedbat/coveragepy/blob/master/LICENSE.txt>`__ | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `mypy <https://GitHub.com/python/mypy>`__                           | ≥2.3        | `MIT <https://GitHub.com/python/mypy/blob/master/LICENSE>`__                           | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `typing-extensions <https://GitHub.com/python/typing_extensions>`__ | ≥4.16       | `PSF-2.0 <https://github.com/python/typing_extensions/blob/main/LICENSE>`__            | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
-| `lxml <https://GitHub.com/lxml/lxml>`__                             | ≥6.1        | `BSD 3-Clause <https://GitHub.com/lxml/lxml/blob/master/LICENSE.txt>`__                | *Not yet evaluated.* |
-+---------------------------------------------------------------------+-------------+----------------------------------------------------------------------------------------+----------------------+
+.. dependency-table:: testing
+   :caption: Dependencies for unit testing, code coverage and static type checking.
 
 
+
+
+.. _DEP/apptesting:
+
+Application Testing (Optional)
+******************************
+
+Additional Python packages needed to run the application tests, which exercise the installed
+:program:`pyedaa-outputfilter` command line rather than the package's classes. These packages are only needed for
+developers or on a CI server.
+
+
+.. rubric:: Manually Installing Application Test Requirements
+
+Use the :file:`tests/app/requirements.txt` file to install all dependencies via ``pip3``. The file will
+recursively install the mandatory dependencies too.
+
+.. code-block:: shell
+
+   pip3 install -U -r tests/app/requirements.txt
+
+
+.. rubric:: Dependency List
+
+.. dependency-table:: apptest
+   :caption: Dependencies for application testing.
 
 .. _DEP/documentation:
 
@@ -116,7 +124,7 @@ Sphinx Documentation (Optional)
 *******************************
 
 Additional Python packages needed for documentation generation. These packages are only needed for developers or on a
-CI server, thus sub-dependencies are not evaluated further.
+CI server.
 
 
 .. rubric:: Manually Installing Documentation Requirements
@@ -143,29 +151,8 @@ the mandatory dependencies too.
 
 .. rubric:: Dependency List
 
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Package**                                                                                     | **Version**  | **License**                                                                                              | **Dependencies**                                                                                                                                     |
-+=================================================================================================+==============+==========================================================================================================+======================================================================================================================================================+
-| `pyTooling <https://GitHub.com/pyTooling/pyTooling>`__                                          | ≥8.17        | `Apache License, 2.0 <https://GitHub.com/pyTooling/pyTooling/blob/main/LICENSE.md>`__                    | *None*                                                                                                                                               |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `Sphinx <https://GitHub.com/sphinx-doc/sphinx>`__                                               | ≥9.1         | `BSD 3-Clause <https://GitHub.com/sphinx-doc/sphinx/blob/master/LICENSE>`__                              | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinx_rtd_theme <https://GitHub.com/readthedocs/sphinx_rtd_theme>`__                          | ≥3.1         | `MIT <https://GitHub.com/readthedocs/sphinx_rtd_theme/blob/master/LICENSE>`__                            | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinxcontrib-mermaid <https://GitHub.com/mgaitan/sphinxcontrib-mermaid>`__                    | ≥2.1         | `BSD <https://GitHub.com/mgaitan/sphinxcontrib-mermaid/blob/master/LICENSE.rst>`__                       | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `autoapi <https://GitHub.com/carlos-jenkins/autoapi>`__                                         | ≥2.0.1       | `Apache License, 2.0 <https://GitHub.com/carlos-jenkins/autoapi/blob/master/LICENSE>`__                  | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinx_design <https://GitHub.com/executablebooks/sphinx-design>`__                            | ≥0.7         | `MIT <https://GitHub.com/executablebooks/sphinx-design/blob/main/LICENSE>`__                             | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinx-copybutton <https://GitHub.com/executablebooks/sphinx-copybutton>`__                    | ≥0.5         | `MIT <https://GitHub.com/executablebooks/sphinx-copybutton/blob/master/LICENSE>`__                       | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinx_autodoc_typehints <https://GitHub.com/agronholm/sphinx-autodoc-typehints>`__            | ≥3.12        | `MIT <https://GitHub.com/agronholm/sphinx-autodoc-typehints/blob/master/LICENSE>`__                      | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `ruamel.yaml <https://sourceforge.net/projects/ruamel-yaml/>`__                                 | ≥0.19        | `MIT <https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/LICENSE>`__                             | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `sphinx_reports <https://github.com/pyTooling/sphinx-reports>`__                                | ≥0.11        | `Apache License, 2.0 <https://GitHub.com/pyTooling/sphinx-reports/blob/main/LICENSE.md>`__               | *Not yet evaluated.*                                                                                                                                 |
-+-------------------------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+.. dependency-table:: documentation
+   :caption: Dependencies for building this documentation.
 
 .. _DEP/packaging:
 
@@ -173,13 +160,12 @@ Packaging (Optional)
 ********************
 
 Additional Python packages needed for installation package generation. These packages are only needed for developers or
-on a CI server, thus sub-dependencies are not evaluated further.
+on a CI server.
 
+.. rubric:: Building an Installation Package
 
-.. rubric:: Manually Installing Packaging Requirements
-
-Use the :file:`build/requirements.txt` file to install all dependencies via ``pip3``. The file will recursively
-install the mandatory dependencies too.
+:file:`pyproject.toml` lists them as build requirements (``[build-system]``), so ``build`` installs them into an
+isolated build environment itself.
 
 .. tab-set::
 
@@ -188,25 +174,19 @@ install the mandatory dependencies too.
 
       .. code-block:: bash
 
-         pip install -U -r build/requirements.txt
+         python3 -m build --wheel
 
    .. tab-item:: Windows
       :sync: Windows
 
       .. code-block:: powershell
 
-         pip3 install -U -r build\requirements.txt
-
+         python -m build --wheel
 
 .. rubric:: Dependency List
 
-+----------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Package**                                                                | **Version**  | **License**                                                                                              | **Dependencies**                                                                                                                                     |
-+============================================================================+==============+==========================================================================================================+======================================================================================================================================================+
-| `pyTooling <https://GitHub.com/pyTooling/pyTooling>`__                     | ≥8.17        | `Apache License, 2.0 <https://GitHub.com/pyTooling/pyTooling/blob/main/LICENSE.md>`__                    | *None*                                                                                                                                               |
-+----------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| `wheel <https://GitHub.com/pypa/wheel>`__                                  | ≥0.47        | `MIT <https://github.com/pypa/wheel/blob/main/LICENSE.txt>`__                                            | *Not yet evaluated.*                                                                                                                                 |
-+----------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+.. dependency-table:: packaging
+   :caption: Dependencies for generating an installation package.
 
 
 .. _DEP/publishing:
@@ -215,8 +195,7 @@ Publishing (CI-Server only)
 ***************************
 
 Additional Python packages needed for publishing the generated installation package to e.g, PyPI or any equivalent
-services. These packages are only needed for maintainers or on a CI server, thus sub-dependencies are not evaluated
-further.
+services. These packages are only needed for maintainers or on a CI server.
 
 
 .. rubric:: Manually Installing Publishing Requirements
@@ -243,10 +222,5 @@ install the mandatory dependencies too.
 
 .. rubric:: Dependency List
 
-+----------------------------------------------------------+--------------+-------------------------------------------------------------------------------------------+----------------------+
-| **Package**                                              | **Version**  | **License**                                                                               | **Dependencies**     |
-+==========================================================+==============+===========================================================================================+======================+
-| `wheel <https://GitHub.com/pypa/wheel>`__                | ≥0.47        | `MIT <https://github.com/pypa/wheel/blob/main/LICENSE.txt>`__                             | *Not yet evaluated.* |
-+----------------------------------------------------------+--------------+-------------------------------------------------------------------------------------------+----------------------+
-| `Twine <https://GitHub.com/pypa/twine/>`__               | ≥6.2         | `Apache License, 2.0 <https://github.com/pypa/twine/blob/main/LICENSE>`__                 | *Not yet evaluated.* |
-+----------------------------------------------------------+--------------+-------------------------------------------------------------------------------------------+----------------------+
+.. dependency-table:: publishing
+   :caption: Dependencies for publishing the package.

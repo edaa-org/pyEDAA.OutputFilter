@@ -11,8 +11,8 @@
 #                                                                                                                      #
 # License:                                                                                                             #
 # ==================================================================================================================== #
-# Copyright 2025-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
-# Copyright 2017-2024 Patrick Lehmann - Boetzingen, Germany                                                            #
+# Copyright 2021-2026 Electronic Design Automation Abstraction (EDA²)                                                  #
+# Copyright 2017-2020 Patrick Lehmann - Boetzingen, Germany                                                            #
 # Copyright 2014-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture    #
 #                                                                                                                      #
 # Licensed under the Apache License, Version 2.0 (the "License");                                                      #
@@ -53,7 +53,7 @@ setup(
 			"Topic :: Utilities"
 		],
 		developmentStatus="beta",
-		pythonVersions=("3.11", "3.12", "3.13", "3.14"),
+		pythonVersions=("3.11", "3.12", "3.13", "3.14", "3.15"),
 		consoleScripts={
 			"pyedaa-outputfilter": "pyEDAA.OutputFilter.CLI:main"
 		},

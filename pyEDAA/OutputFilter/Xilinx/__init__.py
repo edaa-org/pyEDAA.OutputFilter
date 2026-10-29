@@ -29,16 +29,18 @@
 # ==================================================================================================================== #
 #
 """Basic classes for outputs from AMD/Xilinx Vivado."""
-from datetime import datetime
-from enum     import Flag, Enum
-from pathlib  import Path
-from re       import Pattern, compile as re_compile
-from typing   import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
+from __future__            import annotations
+
+from datetime              import datetime
+from enum                  import Flag, Enum
+from pathlib               import Path
+from re                    import Pattern, compile as re_compile
+from typing                import Optional as Nullable, Self, Type, ClassVar, Tuple, List, Dict, Generator, Union, Any, Iterator, cast
 
 from pyTooling.Decorators  import export, readonly
 from pyTooling.MetaClasses import ExtendedType, abstractmethod
 from pyTooling.Common      import getFullyQualifiedName
-from pyTooling.Stopwatch   import Stopwatch
+from pyTooling.Stopwatch   import Stopwatch, Duration as _Duration
 from pyTooling.Versioning  import YearReleaseVersion
 from pyTooling.Warning     import WarningCollector, Warning, CriticalWarning
 
@@ -103,7 +105,7 @@ class ClassificationException(ProcessorException):
 		self._rawMessage = rawMessageLine
 
 	def __str__(self) -> str:
-		return f"{self.message}: {self._rawMessage} (at line {self._lineNumber})"
+		return f"{super().__str__()}: {self._rawMessage} (at line {self._lineNumber})"
 
 
 @export
@@ -150,29 +152,29 @@ class NestedTaskNotPresentException(NotPresentException):
 
 @export
 class UndetectedEnd(ProcessorCriticalWarning):
-	_line: "VivadoLine"
+	_line: VivadoLine
 
-	def __init__(self, message: str, line: "VivadoLine") -> None:
+	def __init__(self, message: str, line: VivadoLine) -> None:
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
-	def Line(self) -> "VivadoLine":
+	def Line(self) -> VivadoLine:
 		return self._line
 
 
 @export
 class UnknownLine(ProcessorWarnings):
-	_line: "VivadoLine"
+	_line: VivadoLine
 
-	def __init__(self, message: str, line: "VivadoLine") -> None:
+	def __init__(self, message: str, line: VivadoLine) -> None:
 		super().__init__(message)
 
 		self._line = line
 
 	@readonly
-	def Line(self) -> "VivadoLine":
+	def Line(self) -> VivadoLine:
 		return self._line
 
 
@@ -327,8 +329,8 @@ class VivadoLine(Line[LineKind, LineAction]):
 	addition, all line objects in a log file form a doubly
 	linked list.
 	"""
-	_processor:     "Processor"
-	_command:       "Nullable[Command]"
+	_processor:     Processor
+	_command:       Nullable[Command]
 
 	def __init__(
 		self,
@@ -336,7 +338,7 @@ class VivadoLine(Line[LineKind, LineAction]):
 		kind:         LineKind,
 		action:       LineAction,
 		message:      str,
-		previousLine: Nullable["VivadoLine"] = None
+		previousLine: Nullable[VivadoLine] = None
 	) -> None:
 		super().__init__(lineNumber, kind, action, message, previousLine)
 
@@ -344,15 +346,15 @@ class VivadoLine(Line[LineKind, LineAction]):
 		self._command =   None
 
 	@readonly
-	def Processor(self) -> "Processor":
+	def Processor(self) -> Processor:
 		return self._processor
 
 	@readonly
-	def Command(self) -> "Nullable[Command]":
+	def Command(self) -> Nullable[Command]:
 		return self._command
 
 	@classmethod
-	def Copy(cls, line: "VivadoLine", previousLine: "VivadoLine") -> "VivadoLine":
+	def Copy(cls, line: VivadoLine, previousLine: VivadoLine) -> VivadoLine:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -382,7 +384,7 @@ class DateTimeLine(VivadoLine):
 		return self._dateTime
 
 	@classmethod
-	def Copy(cls, line: "DateTimeLine", previousLine: "VivadoLine") -> "VivadoLine":
+	def Copy(cls, line: DateTimeLine, previousLine: VivadoLine) -> VivadoLine:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._dateTime, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -467,7 +469,7 @@ class VivadoMessage(VivadoLine):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoMessage", previousLine: "VivadoLine") -> "VivadoMessage":
+	def Copy(cls, line: VivadoMessage, previousLine: VivadoLine) -> VivadoMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -557,7 +559,7 @@ class VivadoDRCInfoMessage(VivadoMessage, InfoMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoDRCInfoMessage", previousLine: "VivadoLine") -> "VivadoDRCInfoMessage":
+	def Copy(cls, line: VivadoDRCInfoMessage, previousLine: VivadoLine) -> VivadoDRCInfoMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -698,7 +700,7 @@ class VivadoDRCWarningMessage(VivadoMessage, WarningMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoDRCWarningMessage", previousLine: "VivadoLine") -> "VivadoDRCWarningMessage":
+	def Copy(cls, line: VivadoDRCWarningMessage, previousLine: VivadoLine) -> VivadoDRCWarningMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._drcRuleName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -752,7 +754,7 @@ class VivadoXPMWarningMessage(VivadoMessage, WarningMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VivadoXPMWarningMessage", previousLine: "VivadoLine") -> "VivadoXPMWarningMessage":
+	def Copy(cls, line: VivadoXPMWarningMessage, previousLine: VivadoLine) -> VivadoXPMWarningMessage:
 		newLine = cls(line._lineNumber, line._kind, line._action, line._xpmName, line._message, line._toolName, line._toolID, line._messageKindID, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -891,7 +893,7 @@ class VHDLReportMessage(VivadoInfoMessage):
 		return None
 
 	@classmethod
-	def Copy(cls, line: "VHDLReportMessage", previousLine: "VivadoLine") -> "VHDLReportMessage":
+	def Copy(cls, line: VHDLReportMessage, previousLine: VivadoLine) -> VHDLReportMessage:
 		newLine = cls(line._lineNumber, line._message, line._toolName, line._toolID, line._messageKindID, line._reportMessage, line._sourceFile, line._sourceLineNumber, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -947,7 +949,7 @@ class TclCommand(VivadoLine):
 		return cls(line._lineNumber, args[0], tuple(args[1:]), line._message, previousLine=line._previousLine)
 
 	@classmethod
-	def Copy(cls, line: "TclCommand", previousLine: VivadoLine) -> "TclCommand":
+	def Copy(cls, line: TclCommand, previousLine: VivadoLine) -> TclCommand:
 		newLine = cls(line._lineNumber, line._tclCommand, line._arguments, line._message, previousLine)
 		newLine._timestamp = line._timestamp
 		return newLine
@@ -1057,15 +1059,15 @@ class BaseParser(VivadoMessagesMixin, metaclass=ExtendedType, slots=True):
 
 @export
 class Parser(BaseParser):
-	_processor: "Processor"
+	_processor: Processor
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__()
 
 		self._processor = processor
 
 	@readonly
-	def Processor(self) -> "Processor":
+	def Processor(self) -> Processor:
 		return self._processor
 
 
@@ -1147,7 +1149,7 @@ class Preamble(Parser, VivadoMessagesMixin):
 	_toolVersion:    Nullable[YearReleaseVersion]  #: Used Vivado version.
 	_startDateTime:  Nullable[datetime]            #: Session start timestamp.
 
-	def __init__(self, processor: "BaseProcessor") -> None:
+	def __init__(self, processor: BaseProcessor) -> None:
 		"""
 		Initializes a Vivado preamble parser.
 
@@ -1232,16 +1234,16 @@ class Preamble(Parser, VivadoMessagesMixin):
 			if self._preambleFormat is PreambleFormat.Unknown:
 				self._preambleFormat = preambleFormat
 			elif self._preambleFormat is not preambleFormat:
-				raise ProcessorException(f"Preamble format is not consistent.")
+				raise ProcessorException("Preamble format is not consistent.")
 
 			line = yield line
 		else:
-			raise OutputFilterException(f"Preamble is longer than 30 lines or delimiter was not detected.")
+			raise OutputFilterException("Preamble is longer than 30 lines or delimiter was not detected.")
 
 		if self._toolVersion is None:
-			raise OutputFilterException(f"Tool version not found in preamble.")
+			raise OutputFilterException("Tool version not found in preamble.")
 		elif self._startDateTime is None:
-			raise OutputFilterException(f"Session start time and date not found in preamble.")
+			raise OutputFilterException("Session start time and date not found in preamble.")
 
 		nextLine = yield line
 		return nextLine
@@ -1272,7 +1274,7 @@ class Postamble(Parser, VivadoMessagesMixin):  # todo: double mixin?
 
 	_exitDateTime: Nullable[datetime]            #: Session exit timestamp.
 
-	def __init__(self, processor: "BaseProcessor") -> None:
+	def __init__(self, processor: BaseProcessor) -> None:
 		"""
 		Initializes a Vivado postamble parser.
 
@@ -1440,16 +1442,16 @@ class CommandWithSections(Command):
 	"""
 	# _PARSERS:   ClassVar[Tuple[Type[Section], ...]]
 
-	_sections:  List["Section"]  # Dict[Type["Section"], "Section"]
+	_sections:  List[Section]  # Dict[Type["Section"], "Section"]
 
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._sections =  []  # p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Sections(self) -> List["Section"]:  # Dict[Type["Section"], "Section"]:
+	def Sections(self) -> List[Section]:  # Dict[Type["Section"], "Section"]:
 		"""
 		Read-only property to access a dictionary of found sections within the TCL command's output.
 
@@ -1459,7 +1461,7 @@ class CommandWithSections(Command):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Section):
-			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex = TypeError("Parameter 'key' is not a Section.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1469,9 +1471,9 @@ class CommandWithSections(Command):
 		else:
 			return False
 
-	def __getitem__(self, key: Type["Section"]) -> "Section":
+	def __getitem__(self, key: Type[Section]) -> Section:
 		if not issubclass(key, Section):
-			ex = TypeError(f"Parameter 'key' is not a Section.")
+			ex = TypeError("Parameter 'key' is not a Section.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1501,15 +1503,15 @@ class CommandWithTasks(Command):
 	"""
 	# _PARSERS: Tuple[Type[Task], ...]
 
-	_tasks: Dict[Type["Task"], "Task"]
+	_tasks: Dict[Type[Task], Task]
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._tasks = {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Tasks(self) -> Dict[Type["Task"], "Task"]:
+	def Tasks(self) -> Dict[Type[Task], Task]:
 		"""
 		Read-only property to access a dictionary of found tasks within the TCL command's output.
 
@@ -1519,13 +1521,13 @@ class CommandWithTasks(Command):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Task):
-			ex = TypeError(f"Parameter 'key' is not a Task.")
+			ex = TypeError("Parameter 'key' is not a Task.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._tasks
 
-	def __getitem__(self, key: Type["Task"]) -> "Task":
+	def __getitem__(self, key: Type[Task]) -> Task:
 		try:
 			return self._tasks[key]
 		except KeyError as ex:
@@ -1557,11 +1559,11 @@ class Section(BaseParser, BaseSection):
 	# _FINISH:     ClassVar[str]
 	# _DUPLICATES: ClassVar[bool]
 
-	_command:  "Command"  #: Reference to the command (parent).
-	_next:     Nullable["Section"]
-	_duration: float      #: Duration synthesis spent in processing a synthesis step logged in this log output section.
+	_command:  Command            #: Reference to the command (parent).
+	_next:     Nullable[Section]
+	_duration: float              #: Duration synthesis spent in processing a synthesis step logged in this log output section.
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		"""
 		Initialized a section.
 
@@ -1574,7 +1576,7 @@ class Section(BaseParser, BaseSection):
 		self._duration = 0.0
 
 	@readonly
-	def Next(self) -> Nullable["Section"]:
+	def Next(self) -> Nullable[Section]:
 		"""
 		Read-only property to access the next section in case the section appeared multiple times.
 
@@ -1592,7 +1594,7 @@ class Section(BaseParser, BaseSection):
 		"""
 		return self._duration
 
-	def __iter__(self) -> Generator["Section", None, None]:
+	def __iter__(self) -> Generator[Section, None, None]:
 		section = self._next
 		while section is not None:
 			yield section
@@ -1758,14 +1760,14 @@ class SectionWithChildren(Section):
 	"""
 	_subsections: Dict[Type[SubSection], SubSection]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._subsections = {}
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSection):
-			ex = TypeError(f"Parameter 'item' is not a SubSection.")
+			ex = TypeError("Parameter 'item' is not a SubSection.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -1803,10 +1805,10 @@ class Task(BaseParser, VivadoMessagesMixin):
 	# _FINISH: ClassVar[str]
 	_TIME:   ClassVar[str] = "Time (s):"
 
-	_command:  "Command"  #: Reference to the command (parent).
-	_duration: float      #: Duration of a task according to reported times by Vivado.
+	_command:  Command  #: Reference to the command (parent).
+	_duration: float    #: Duration of a task according to reported times by Vivado.
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		"""
 		Initializes a task (without child elements).
 
@@ -1818,7 +1820,7 @@ class Task(BaseParser, VivadoMessagesMixin):
 		self._command = command
 
 	@readonly
-	def Command(self) -> "Command":
+	def Command(self) -> Command:
 		"""
 		Read-only property to access the command.
 
@@ -1929,26 +1931,26 @@ class TaskWithSubTasks(Task):
 	"""
 	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
-	_subtasks: Dict[Type["SubTask"], "SubTask"]
+	_subtasks: Dict[Type[SubTask], SubTask]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._subtasks =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def SubTasks(self) -> Dict[Type["SubTask"], "SubTask"]:
+	def SubTasks(self) -> Dict[Type[SubTask], SubTask]:
 		return self._subtasks
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubTask):
-			ex = TypeError(f"Parameter 'key' is not a Subtask.")
+			ex = TypeError("Parameter 'key' is not a Subtask.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._subtasks
 
-	def __getitem__(self, key: Type["SubTask"]) -> "SubTask":
+	def __getitem__(self, key: Type[SubTask]) -> SubTask:
 		try:
 			return self._subtasks[key]
 		except KeyError as ex:
@@ -2082,26 +2084,26 @@ class SubTask(BaseParser, VivadoMessagesMixin):
 class TaskWithPhases(Task):
 	# _PARSERS: ClassVar[Tuple[Type["Phase"], ...]]
 
-	_phases:  Dict[Type["Phase"], "Phase"]
+	_phases:  Dict[Type[Phase], Phase]
 
-	def __init__(self, command: "Command") -> None:
+	def __init__(self, command: Command) -> None:
 		super().__init__(command)
 
 		self._phases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def Phases(self) -> Dict[Type["Phase"], "Phase"]:
+	def Phases(self) -> Dict[Type[Phase], Phase]:
 		return self._phases
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, Phase):
-			ex = TypeError(f"Parameter 'key' is not a Phase.")
+			ex = TypeError("Parameter 'key' is not a Phase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._phases
 
-	def __getitem__(self, key: Type["Phase"]) -> "Phase":
+	def __getitem__(self, key: Type[Phase]) -> Phase:
 		try:
 			return self._phases[key]
 		except KeyError as ex:
@@ -2258,7 +2260,7 @@ class Phase(BaseParser, VivadoMessagesMixin):
 class PhaseWithChildren(Phase):
 	_SUBPHASE_PREFIX: ClassVar[str] = "Phase {phaseIndex}."
 
-	_subPhases: Dict[Type["SubPhase"], "SubPhase"]
+	_subPhases: Dict[Type[SubPhase], SubPhase]
 
 	def __init__(self, task: TaskWithPhases) -> None:
 		super().__init__(task)
@@ -2267,13 +2269,13 @@ class PhaseWithChildren(Phase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._subPhases
 
-	def __getitem__(self, key: Type["SubPhase"]) -> "SubPhase":
+	def __getitem__(self, key: Type[SubPhase]) -> SubPhase:
 		try:
 			return self._subPhases[key]
 		except KeyError as ex:
@@ -2411,7 +2413,7 @@ class SubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubPhaseWithChildren(SubPhase):
-	_subSubPhases: Dict[Type["SubSubPhase"], "SubSubPhase"]
+	_subSubPhases: Dict[Type[SubSubPhase], SubSubPhase]
 
 	def __init__(self, phase: Phase) -> None:
 		super().__init__(phase)
@@ -2420,13 +2422,13 @@ class SubPhaseWithChildren(SubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubSubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubSubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._subSubPhases
 
-	def __getitem__(self, key: Type["SubSubPhase"]) -> "SubSubPhase":
+	def __getitem__(self, key: Type[SubSubPhase]) -> SubSubPhase:
 		try:
 			return self._subSubPhases[key]
 		except KeyError as ex:
@@ -2435,7 +2437,7 @@ class SubPhaseWithChildren(SubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubPhaseStart(line)
 
-		activeParsers: List["SubSubPhase"] = list(self._subSubPhases.values())
+		activeParsers: List[SubSubPhase] = list(self._subSubPhases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}."
 		FINISH = self._FINISH.format(phaseIndex=self._phaseIndex, subPhaseIndex=self._subPhaseIndex)
@@ -2565,7 +2567,7 @@ class SubSubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubSubPhaseWithChildren(SubSubPhase):
-	_subSubSubPhases: Dict[Type["SubSubSubPhase"], "SubSubSubPhase"]
+	_subSubSubPhases: Dict[Type[SubSubSubPhase], SubSubSubPhase]
 
 	def __init__(self, subphase: SubPhase) -> None:
 		super().__init__(subphase)
@@ -2574,13 +2576,13 @@ class SubSubPhaseWithChildren(SubSubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, SubSubSubPhase):
-			ex = TypeError(f"Parameter 'item' is not a SubSubSubPhase.")
+			ex = TypeError("Parameter 'item' is not a SubSubSubPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._subSubSubPhases
 
-	def __getitem__(self, key: Type["SubSubSubPhase"]) -> "SubSubSubPhase":
+	def __getitem__(self, key: Type[SubSubSubPhase]) -> SubSubSubPhase:
 		try:
 			return self._subSubSubPhases[key]
 		except KeyError as ex:
@@ -2589,7 +2591,7 @@ class SubSubPhaseWithChildren(SubSubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubSubPhaseStart(line)
 
-		activeParsers: List["SubSubSubPhase"] = list(self._subSubSubPhases.values())
+		activeParsers: List[SubSubSubPhase] = list(self._subSubSubPhases.values())
 
 		START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
 
@@ -2723,7 +2725,7 @@ class SubSubSubPhase(BaseParser, VivadoMessagesMixin):
 
 @export
 class SubSubSubPhaseWithTasks(SubSubSubPhase):
-	_nestedTasks: Dict[Type["NestedTask"], "NestedTask"]
+	_nestedTasks: Dict[Type[NestedTask], NestedTask]
 
 	def __init__(self, subsubphase: SubSubPhase) -> None:
 		super().__init__(subsubphase)
@@ -2732,13 +2734,13 @@ class SubSubSubPhaseWithTasks(SubSubSubPhase):
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, NestedTask):
-			ex = TypeError(f"Parameter 'key' is not a NestedTask.")
+			ex = TypeError("Parameter 'key' is not a NestedTask.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._nestedTasks
 
-	def __getitem__(self, key: Type["NestedTask"]) -> "NestedTask":
+	def __getitem__(self, key: Type[NestedTask]) -> NestedTask:
 		try:
 			return self._nestedTasks[key]
 		except KeyError as ex:
@@ -2747,7 +2749,7 @@ class SubSubSubPhaseWithTasks(SubSubSubPhase):
 	def Generator(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		line = yield from self._SubSubSubPhaseStart(line)
 
-		activeParsers: List["NestedTask"] = list(self._nestedTasks.values())
+		activeParsers: List[NestedTask] = list(self._nestedTasks.values())
 
 		# START_PREFIX = f"Phase {self._phaseIndex}.{self._subPhaseIndex}.{self._subSubPhaseIndex}."
 
@@ -2905,7 +2907,7 @@ class NestedTaskWithPhases(NestedTask):
 	"""
 	# _PARSERS:  ClassVar[Tuple[Type["SubTask"], ...]]
 
-	_nestedPhases: Dict[Type["NestedPhase"], "NestedPhase"]
+	_nestedPhases: Dict[Type[NestedPhase], NestedPhase]
 
 	def __init__(self, subsubsubPhase: SubSubSubPhaseWithTasks) -> None:
 		super().__init__(subsubsubPhase)
@@ -2913,18 +2915,18 @@ class NestedTaskWithPhases(NestedTask):
 		self._nestedPhases =  {p: p(self) for p in self._PARSERS}
 
 	@readonly
-	def NestedPhases(self) -> Dict[Type["NestedPhase"], "NestedPhase"]:
+	def NestedPhases(self) -> Dict[Type[NestedPhase], NestedPhase]:
 		return self._nestedPhases
 
 	def __contains__(self, key: Any) -> bool:
 		if not issubclass(key, NestedPhase):
-			ex = TypeError(f"Parameter 'key' is not a NestedPhase.")
+			ex = TypeError("Parameter 'key' is not a NestedPhase.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
 		return key in self._nestedPhases
 
-	def __getitem__(self, key: Type["NestedPhase"]) -> "NestedPhase":
+	def __getitem__(self, key: Type[NestedPhase]) -> NestedPhase:
 		try:
 			return self._nestedPhases[key]
 		except KeyError as ex:
@@ -3136,7 +3138,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 327 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[327]]
+				return list(synthMessages[327])
 
 		return []
 
@@ -3250,7 +3252,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 6031 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[6031]]
+				return list(synthMessages[6031])
 
 		return []
 
@@ -3271,7 +3273,7 @@ class Synth_Design(CommandWithSections):
 		"""
 		if 8 in self._messagesByID:
 			if 63 in (synthMessages := self._messagesByID[8]):
-				return [message for message in synthMessages[63]]
+				return list(synthMessages[63])
 
 		return []
 
@@ -3379,7 +3381,7 @@ class Link_Design(Command):
 	_commonXDCFiles:  Dict[Path, List[VivadoMessage]]
 	_perCellXDCFiles: Dict[Path, Dict[str, List[VivadoMessage]]]
 
-	def __init__(self, processor: "Processor") -> None:
+	def __init__(self, processor: Processor) -> None:
 		super().__init__(processor)
 
 		self._commonXDCFiles = {}
@@ -3833,8 +3835,8 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	Each output line from Vivado gets processed and converted into a :class:`ProcessedLine` objects. Such lines form a
 	doubly-linked list.
 	"""
-	_duration:                float  #: Duration of the observed process (e.g. start to end of synthesis).
-	_processingDuration:      float  #: Duration for the log output processor to parse all log messages.
+	_duration:                Nullable[_Duration]  #: Duration of the observed process (e.g. start to end of synthesis).
+	_processingDuration:      Nullable[_Duration]  #: Duration for the log output processor to classify all log lines.
 
 	_lines:                   List[VivadoLine]              #: A list of processed log message lines.
 	_preamble:                Nullable[Preamble]            #: Reference to the Vivado preamble written after tool startup.
@@ -3847,8 +3849,8 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		"""
 		super().__init__()
 
-		self._duration =                0.0
-		self._processingDuration =      0.0
+		self._duration =                None
+		self._processingDuration =      None
 
 		self._lines =                   []
 		self._preamble =                None
@@ -3894,32 +3896,42 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 	@readonly
 	def StartDateTime(self) -> datetime:
 		if self._preamble is None:
-			raise ValueError(f"Preamble was not found when parsing the Vivado log outputs.")
+			raise ValueError("Preamble was not found when parsing the Vivado log outputs.")
 
 		return self._preamble.StartDateTime
 
 	@readonly
 	def ExitDateTime(self) -> datetime:
 		if self._postamble is None:
-			raise ValueError(f"Postamble was not found when parsing the Vivado log outputs.")
+			raise ValueError("Postamble was not found when parsing the Vivado log outputs.")
 
 		return self._postamble.ExitDateTime
 
 	@readonly
-	def Duration(self) -> float:
+	def Duration(self) -> _Duration:
 		"""
-		 Duration of the observed process (e.g. start to end of synthesis).
+		Read-only property to return the duration of the observed process.
 
-		:returns: The observed process' execution duration in seconds.
+		The observed process is e.g. a synthesis, from its start (preamble) to its end (postamble).
+
+		:returns: The observed process' execution duration.
 		"""
-		return (self.ExitDateTime - self.StartDateTime).total_seconds()
+		return _Duration.FromTimedelta(self.ExitDateTime - self.StartDateTime)
 
 	@readonly
-	def ProcessingDuration(self) -> float:
+	def ProcessingDuration(self) -> Nullable[_Duration]:
 		"""
-		Processing duration for the log output processor to parse all log messages.
+		Read-only property to access the duration the log output processor spent on its input (:attr:`_processingDuration`).
 
-		:returns: The processing duration in seconds.
+		The duration has two meanings, depending on the input:
+
+		* Lines received as a stream, e.g. from STDIN in a pipe (:meth:`Processor.LineClassification`): the duration from
+		  the request of the first line to the last line received. Its speed is set by the program writing the lines, e.g.
+		  minutes to hours for a Vivado run.
+		* Lines read from a file (:meth:`Document.Parse`): the duration to read the file and to classify all its lines. Its
+		  speed is set by this package.
+
+		:returns: The processing duration, or ``None`` if processing hasn't finished.
 		"""
 		return self._processingDuration
 
@@ -3931,7 +3943,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		:returns:   True, if the Vivado command's outputs were found in log outputs.
 		"""
 		if not issubclass(key, Command):
-			ex = TypeError(f"Parameter 'key' is not a Command.")
+			ex = TypeError("Parameter 'key' is not a Command.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -3945,7 +3957,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 		:returns:   A Vivado command instance with parsed log messages and extracted data.
 		"""
 		if not issubclass(key, Command):
-			ex = TypeError(f"Parameter 'key' is not a Command.")
+			ex = TypeError("Parameter 'key' is not a Command.")
 			ex.add_note(f"Got type '{getFullyQualifiedName(key)}'.")
 			raise ex
 
@@ -4078,7 +4090,7 @@ class VivadoProcessor(VivadoMessagesMixin, mixin=True):
 
 @export
 class Processor(VivadoProcessor):
-	_nestedLaunches: List["Launch"]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
+	_nestedLaunches: List[Launch]  #: Nested Vivado launches (e.g. ``synth_1``/``impl_1``)
 
 	def __init__(self) -> None:
 		"""
@@ -4103,7 +4115,7 @@ class Processor(VivadoProcessor):
 		return len(self._nestedLaunches) > 0
 
 	@readonly
-	def NestedLaunches(self) -> List["Launch"]:
+	def NestedLaunches(self) -> List[Launch]:
 		"""
 		Read-only property to access nested launches.
 
@@ -4122,6 +4134,16 @@ class Processor(VivadoProcessor):
 		return self._nestedLaunches
 
 	def LineClassification(self, inputStream: Iterator[Tuple[datetime, str]]) -> Generator[VivadoLine, None, None]:
+		"""
+		Classify the lines of a Vivado log output, one line per iteration.
+
+		The processor collects the classified lines, messages and commands. It measures the duration from the request of the
+		first line to the end of the input (:data:`ProcessingDuration`), stored when the input ends.
+
+		:param inputStream:              Iterator of ``(timestamp, line)`` tuples, e.g. read from a log file or STDIN.
+		:returns:                        A generator of the classified lines.
+		:raises ClassificationException: If a line starting like a message can't be classified as that message.
+		"""
 		# Instantiate and initialize CommandFinder
 		next(cmdFinder := self.CommandFinder())
 
@@ -4129,74 +4151,81 @@ class Processor(VivadoProcessor):
 		lineNumber = 0
 		_errorMessage = "Unknown processing error"
 
-		try:
-			while (tup := next(inputStream)) is not None:
-				timestamp, rawMessageLine = tup
-				lineNumber += 1
-				rawMessageLine = rawMessageLine.rstrip()
-				errorMessage = _errorMessage
+		with Stopwatch() as stopwatch:
+			try:
+				while (tup := next(inputStream)) is not None:
+					timestamp, rawMessageLine = tup
+					lineNumber += 1
+					rawMessageLine = rawMessageLine.rstrip()
+					errorMessage = _errorMessage
 
-				if len(rawMessageLine) == 0:
-					line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
-				elif rawMessageLine.startswith("INFO"):
-					if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoIrregularInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+					if len(rawMessageLine) == 0:
+						line = VivadoLine(lineNumber, LineKind.Empty, LineAction.Default, rawMessageLine, previousLine=lastLine)
+					elif rawMessageLine.startswith("INFO"):
+						if (line := VivadoInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoDRCInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								if (line := VivadoIrregularInfoMessage.Parse(
+									lineNumber, rawMessageLine, previousLine=lastLine
+								)) is None:
+									line = VivadoStuntedInfoMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'INFO' was not a VivadoInfoMessage."
-				elif rawMessageLine.startswith("WARNING"):
-					if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-						if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-							if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
-								line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'INFO' was not a VivadoInfoMessage."
+					elif rawMessageLine.startswith("WARNING"):
+						if (line := VivadoWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+							if (line := VivadoDRCWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+								if (line := VivadoXPMWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)) is None:
+									line = VivadoStuntedWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'WARNING' was not a VivadoWarningMessage."
-				elif rawMessageLine.startswith("CRITICAL WARNING"):
-					line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'WARNING' was not a VivadoWarningMessage."
+					elif rawMessageLine.startswith("CRITICAL WARNING"):
+						line = VivadoCriticalWarningMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
-				elif rawMessageLine.startswith("ERROR"):
-					line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'CRITICAL WARNING' was not a VivadoCriticalWarningMessage."
+					elif rawMessageLine.startswith("ERROR"):
+						line = VivadoErrorMessage.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = f"Line starting with 'ERROR' was not a VivadoErrorMessage."
-				elif rawMessageLine.startswith("Command: "):
-					line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'ERROR' was not a VivadoErrorMessage."
+					elif rawMessageLine.startswith("Command: "):
+						line = VivadoTclCommand.Parse(lineNumber, rawMessageLine, previousLine=lastLine)
 
-					errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
-				elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
-					dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
-					line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
-				else:
-					line = VivadoLine(lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine)
+						errorMessage = "Line starting with 'Command:' was not a VivadoTclCommand."
+					elif (match := DateTimeLine._PREFIX.match(rawMessageLine)) is not None:
+						dateTime = datetime.strptime(match["datetime"], "%a %b %d %H:%M:%S %Y")
+						line = DateTimeLine(lineNumber, LineKind.DateTimeLine, LineAction.Default, dateTime, match["message"], previousLine=lastLine)
+					else:
+						line = VivadoLine(
+							lineNumber, LineKind.Unprocessed, LineAction.Default, rawMessageLine, previousLine=lastLine
+						)
 
-					if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
-						line._kind = LineKind.Verbose
+						if line.StartsWith("Resolution:") and isinstance(lastLine, VivadoMessage):
+							line._kind = LineKind.Verbose
 
-				if line is None:
-					# TODO: what to do with this line? attache to exception?
-					line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
+					if line is None:
+						# TODO: what to do with this line? attache to exception?
+						line = VivadoLine(lineNumber, LineKind.ProcessorError, LineAction.Default, rawMessageLine, previousLine=lastLine)
 
-					raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
+						raise ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-				if isinstance(line, VivadoMessage):
-					self._AddMessage(line)
+					if isinstance(line, VivadoMessage):
+						self._AddMessage(line)
 
-				line = cmdFinder.send(line)
+					line = cmdFinder.send(line)
 
-				if line._kind is LineKind.ProcessorError:
-					line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
+					if line._kind is LineKind.ProcessorError:
+						line = ClassificationException(errorMessage, lineNumber, rawMessageLine)
 
-				# TODO: find a better solution/location to assign the timestamp.
-				line._timestamp = timestamp
+					# TODO: find a better solution/location to assign the timestamp.
+					line._timestamp = timestamp
 
-				self._lines.append(line)
+					self._lines.append(line)
 
-				lastLine = line
-				yield line
+					lastLine = line
+					yield line
 
-		except StopIteration:
-			pass
+			except StopIteration:
+				pass
+
+		self._processingDuration = stopwatch.Duration
 
 
 @export
@@ -4231,13 +4260,18 @@ class Document(Processor):
 		return self._logfile
 
 	def Parse(self) -> None:
-		with Stopwatch() as sw:
+		"""
+		Read the log file and classify all its lines.
+
+		The processing duration (:data:`ProcessingDuration`) is the duration to read the file and to classify its lines.
+		"""
+		with Stopwatch() as stopwatch:
 			timestamp = datetime.fromtimestamp(self._logfile.stat().st_mtime)
 			with self._logfile.open("r", encoding="utf-8") as file:
 				for line in self.LineClassification(timestampIterator(file, timestamp)):
 					pass
 
-		self._processingDuration = sw.Duration
+		self._processingDuration = stopwatch.Duration
 
 
 @export
@@ -4293,20 +4327,20 @@ class Launch(Parser, VivadoProcessor):
 		return self._finishDateTime
 
 	@readonly
-	def Duration(self) -> float:
+	def Duration(self) -> _Duration:
 		"""
-		 Duration of the observed nested Vivado instance.
+		Read-only property to return the duration of the observed nested Vivado instance.
 
-		:returns: The observed nested Vivado instance's execution duration in seconds.
+		:returns: The observed nested Vivado instance's execution duration.
 		"""
-		return (self.FinishDateTime - self.LaunchDateTime).total_seconds()
+		return _Duration.FromTimedelta(self.FinishDateTime - self.LaunchDateTime)
 
 	def Parser(self, line: VivadoLine) -> Generator[VivadoLine, VivadoLine, VivadoLine]:
 		if isinstance(line, DateTimeLine):
 			line._kind = LineKind.LaunchStart
 			self._startDateTime = line._dateTime
 		else:
-			raise TypeError(f"Expected type DateTimeLine for first line.")
+			raise TypeError("Expected type DateTimeLine for first line.")
 
 		if self._LAUNCHED.match(line._message) is None:
 			raise ValueError(f"Expected a 'Launched xxx...' line, but git '{line._message}'.")

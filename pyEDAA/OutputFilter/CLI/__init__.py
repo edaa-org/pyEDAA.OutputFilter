@@ -41,6 +41,7 @@ from typing   import NoReturn, Optional as Nullable, ClassVar
 
 from argparse import RawDescriptionHelpFormatter, Namespace
 from textwrap import dedent
+from types    import ModuleType
 
 from pyTooling.Decorators                     import export
 from pyTooling.Exceptions                     import ExceptionBase
@@ -49,6 +50,7 @@ from pyTooling.Attributes.ArgParse.Flag       import FlagArgument
 from pyTooling.Attributes.ArgParse.Argument   import StringArgument
 from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
+from pyEDAA                                   import OutputFilter
 from pyEDAA.OutputFilter                      import OutputFilterException
 from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
@@ -58,12 +60,11 @@ from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	"""Program class to implement the command line interface (CLI) using commands and options."""
 
-	programTitle: ClassVar[str] = "pyEDAA.OutputFilter Service Program"
+	HEADLINE:      ClassVar[str]        = "pyEDAA.OutputFilter Service Program"  #: Printed by '_PrintHeadline'.
+	DUNDER_MODULE: ClassVar[ModuleType] = OutputFilter                           #: Package with the dunder variables.
 
 	def __init__(self) -> None:
 		super().__init__(Mode.TextToStdOut_ErrorsToStdErr)
-
-		self.HeadLine = self.programTitle  # TODO: needs improvement
 
 		# Call the constructor of the ArgParseMixin
 		textWidth = min(self.Width, 160)
@@ -111,10 +112,8 @@ class Application(TerminalApplication, VivadoHandlers, ArgParseHelperMixin):
 	@CommandHandler("version", help="Display version information.", description="Display version information.")
 	def HandleVersion(self, _: Namespace) -> None:
 		"""Handle program calls with command ``version``."""
-		import pyEDAA.OutputFilter as DunderModule
-
 		self._PrintHeadline()
-		super()._PrintVersion(DunderModule, DunderModule.__name__)
+		super()._PrintVersion("pyEDAA.OutputFilter")
 
 
 @export
@@ -141,18 +140,18 @@ def main() -> NoReturn:
 	try:
 		program.Run()
 	except ConfigurationException as ex:
-		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
-		if ex.__notes__ is not None:
-			for note in ex.__notes__:
-				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.Foreground))
+		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
+		if ex.HasNotes:
+			for note in ex.Notes:
+				program.WriteLineToStdErr(f"{{DARK_YELLOW}} [NOTE] {note}{{NOCOLOR}}".format(**Application.FOREGROUND))
 
 	except OutputFilterException as ex:
-		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.Foreground))
+		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
 		if ex.__cause__ is not None:
-			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.Foreground))
+			program.WriteLineToStdErr(f"{{DARK_YELLOW}}Because of: {ex.__cause__}{{NOCOLOR}}".format(**Application.FOREGROUND))
 
 	except ExceptionBase as ex:
-		program.printExceptionBase(ex)
+		program.PrintExceptionBase(ex)
 	except NotImplementedError as ex:
 		program.PrintNotImplementedError(ex)
 	except Exception as ex:
