@@ -29,11 +29,12 @@
 # ==================================================================================================================== #
 #
 """Unit tests for the processing duration of Vivado log output processors."""
-from datetime                   import datetime
+from datetime                   import datetime, timedelta
 from pathlib                    import Path
 from time                       import sleep
 from typing                     import ClassVar
 
+from pyTooling.Stopwatch        import Duration
 from pyTooling.Testing          import Testcase
 
 from pyEDAA.OutputFilter.Xilinx import Document, Processor, timestampIterator
@@ -50,22 +51,20 @@ class ProcessingDuration(Testcase):
 	def test_NotStarted(self) -> None:
 		processor = Processor()
 
-		self.assertEqual(0.0, processor.ProcessingDuration)
+		self.assertIsNone(processor.ProcessingDuration)
 
-	def test_Processing(self) -> None:
+	def test_Stream(self) -> None:
+		"""The duration from the first to the last line received is stored when the input ends."""
 		processor = Processor()
 
 		with self._LOGFILE.open("r", encoding="utf-8") as file:
 			lines = processor.LineClassification(timestampIterator(file, datetime.now()))
-			for _ in range(10):
+			next(lines)
+			sleep(0.01)
+			for _ in range(9):
 				next(lines)
 
-			first = processor.ProcessingDuration
-			sleep(0.01)
-			second = processor.ProcessingDuration
-
-			self.assertGreater(first, 0.0)
-			self.assertGreaterEqual(second - first, 0.01)
+			self.assertIsNone(processor.ProcessingDuration)
 
 			for _ in lines:
 				pass
@@ -73,15 +72,18 @@ class ProcessingDuration(Testcase):
 		final = processor.ProcessingDuration
 		sleep(0.01)
 
-		self.assertGreater(final, second)
+		self.assertIsInstance(final, Duration)
+		self.assertGreaterEqual(final, timedelta(seconds=0.01))
 		self.assertEqual(final, processor.ProcessingDuration)
 
 	def test_Parsed(self) -> None:
+		"""The duration to read the file and to classify all its lines."""
 		document = Document(self._LOGFILE)
 		document.Parse()
 
 		final = document.ProcessingDuration
 		sleep(0.01)
 
-		self.assertGreater(final, 0.0)
+		self.assertIsInstance(final, Duration)
+		self.assertGreater(final, timedelta(0))
 		self.assertEqual(final, document.ProcessingDuration)
