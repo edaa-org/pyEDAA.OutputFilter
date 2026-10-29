@@ -44,7 +44,7 @@ Processing the ``*.vds`` File
          processor = Processor(logfile)
          processor.Parse()
 
-         print(f"Processing duration: {processor.ProcessingDuration.total_seconds():.3f} seconds")
+         print(f"Processing duration: {processor.ProcessingDuration:%s.%L} seconds")
 
 
 .. _XIL/Vivado/Synth/ExtractedInformation:
