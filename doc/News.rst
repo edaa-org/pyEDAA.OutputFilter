@@ -10,7 +10,7 @@ release.
 Version 0.17.0 (2026)
 *********************
 
-.. topic:: :gh:`v0.17.0 - 29.10.2026 <edaa-org/pyEDAA.OutputFilter/releases/v0.17.0>`
+.. topic:: :gh:`v0.17.0 - 30.10.2026 <edaa-org/pyEDAA.OutputFilter/releases/v0.17.0>`
 
    .. rubric:: Changes
 
