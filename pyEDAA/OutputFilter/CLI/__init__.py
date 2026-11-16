@@ -52,7 +52,7 @@ from pyTooling.TerminalUI                     import TerminalApplication, Mode
 
 from pyEDAA                                   import OutputFilter
 from pyEDAA.OutputFilter                      import OutputFilterException
-from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationException
+from pyEDAA.OutputFilter.CLI.Configuration    import ConfigurationError
 from pyEDAA.OutputFilter.CLI.Vivado           import VivadoHandlers
 
 
@@ -139,7 +139,7 @@ def main() -> NoReturn:
 
 	try:
 		program.Run()
-	except ConfigurationException as ex:
+	except ConfigurationError as ex:
 		program.WriteLineToStdErr(f"{{RED}}[ERROR] {ex}{{NOCOLOR}}".format(**Application.FOREGROUND))
 		if ex.HasNotes:
 			for note in ex.Notes:
